@@ -1,0 +1,38 @@
+---
+title: "R packages development and documentation: our contribution"
+format: html
+---
+
+## Objecives of this file 
+
+define products and steps 
+unambiguously
+
+## Brush up v2
+
+### JD Cruncher in English
+- check github insee.fr
+- extensive tests and corrections 
+- companion code for BQ in excel and in Quarto ?
+- comm: osmose communité (rappel) / user group
+
+### rjdqa 
+
+
+### rjdworkspace 
+- current version (will be integrated in RJDemetra3)
+
+### ggdemetra
+## RJD3 development stages and philo
+
+cf schema bxls 
+
+## RJD3 testing
+
+asked by JP, r packages to set automatic testing
+
+## RJD3 products and solutions 
+
+### rjdworkspace in RJDemetra3
+perfect launch project
+
