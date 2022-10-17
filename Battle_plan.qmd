@@ -3,7 +3,7 @@ title: "R packages development and documentation: our contribution"
 format: html
 ---
 
-## Objecives of this file 
+## Objectives of this file 
 
 define products and steps 
 unambiguously
