@@ -25,11 +25,17 @@ unambiguously
 ### ggdemetra
 ## RJD3 development stages and philo
 
-cf schema bxls 
+cf schema bxls
+steps 
+- R functions and doc 
+- Actions on R proto (require java class compilation)
+- core algo reviwing in java 
+  - start simple (X-11, extended)
+  - set up orga (Bbk an dor JP)
 
 ## RJD3 testing
 
-asked by JP, r packages to set automatic testing
+asked by JP, R packages to set automatic testing
 
 ## RJD3 products and solutions 
 
