@@ -14,7 +14,7 @@ unambiguously
 - check github insee.fr
 - extensive tests and corrections 
 - companion code for BQ in excel and in Quarto ?
-- comm: osmose communité (rappel) / user group
+- comm: osmose community(rappel) / user group
 
 ### rjdqa 
 
@@ -23,15 +23,17 @@ unambiguously
 - current version (will be integrated in RJDemetra3)
 
 ### ggdemetra
+
+
 ## RJD3 development stages and philo
 
 cf schema bxls
 steps 
 - R functions and doc 
 - Actions on R proto (require java class compilation)
-- core algo reviwing in java 
+- core algo reviewing in java 
   - start simple (X-11, extended)
-  - set up orga (Bbk an dor JP)
+  - set up orga (Bbk and / or JP):  ??
 
 ## RJD3 testing
 
