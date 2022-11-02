@@ -15,6 +15,9 @@ unambiguously
 - extensive tests and corrections 
 - companion code for BQ in excel and in Quarto ?
 - comm: osmose community(rappel) / user group
+- parametrage poids indicateur et construction score dans fonction
+- ajouter valeurs coefficients et p-values (pour selection cjo) : optionnel
+- test validité chemin avant de cruncher 
 
 ### rjdqa 
 
