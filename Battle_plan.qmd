@@ -12,6 +12,7 @@ unambiguously
 
 ### JD Cruncher in English
 - check github insee.fr
+- voir tests sous "V:/DG75-L120/Series temporelles"
 - extensive tests and corrections 
 - companion code for BQ in excel and in Quarto ?
 - comm: osmose community(rappel) / user group
