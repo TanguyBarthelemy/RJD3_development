@@ -21,13 +21,14 @@ unambiguously
 - test validité chemin avant de cruncher 
 
 ### rjdqa 
+- rescusciter ? reparametrer ?
 
 
 ### rjdworkspace 
 - current version (will be integrated in RJDemetra3)
 
 ### ggdemetra
-
+version 3 faite 
 
 ## RJD3 development stages and philo
 
@@ -44,6 +45,17 @@ steps
 asked by JP, R packages to set automatic testing
 
 ## RJD3 products and solutions 
+
+### importer WS v2 to v3
+
+- (cf alain) permet de voir la nouvelle spec 
+
+### point sur regresseurs externes 
+  - cf mail alain JP 
+  - (cf ntts) comment recup ses propres regresseurs externes in v3
+
+### code translation from v2 to v3
+
 
 ### rjdworkspace in RJDemetra3
 perfect launch project
