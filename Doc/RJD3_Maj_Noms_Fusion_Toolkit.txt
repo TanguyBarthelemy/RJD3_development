@@ -1,0 +1,67 @@
+Travaux Alain 
+(retour vers JP)
+
+
+Globalement j’ai harmonisé le nom de toutes les fonctions (plus de aa.bb ou aaBb mais aa_bb) et a priori toutes les fonctions internes commencent par un .
+
+=======Sur les fonctions qui proviennent de rjd3modelling
+J’ai pris en compte tes nouveaux formats de fonctions pour les calendriers : 
+- calendar.new supprimé et remplacé par l’utilisation de national_calendar.  
+
+Toutes les anciennes fonctions calendar. sont également supprimées.
+
+- calendriers chaines composites 
+Pour permettre l’utilisation des calendriers chainés/composites il me semble qu’il manque d’ailleurs une fonction 
+.p2jd_calendardef (je ne sais pas si elle est déjà disponible côté java, je ne l’ai en tout cas pas trouvée).
+
+Fonctions remplacées :
+htd -> calendar_td
+calendar.holiday -> special_day
+calendar.fixedday -> fixed_day
+calendar.fixedweekday -> fixed_week_day
+calendar.easter -> easter_day
+calendar.singledate -> single_day
+calendar.holiday -> special_day
+
+Fonctions renommées (en ne citant pas celles où juste un . a été rajouté) :
+ts_r2jd -> .r2jd_ts
+tsdomain_r2jd -> .r2jd_tsdomain
+ts_jd2r -> .jd2r_ts
+matrix_jd2r -> .jd2r_matrix
+matrix_r2jd -> .r2jd_matrix
+jd3Object -> .jd3_object
+longTermMean -> long_term_mean
+easter.dates -> easter_dates
+stock.td -> stock_td
+sarima.model -> sarima_model
+sarima.properties -> sarima_properties
+sarima.random-> sarima_random
+sarima.decompose -> sarima_decompose
+(uc)arima.model -> (uc)arima_model
+arima.(l)sum -> arima_(l)sum
+arima.properties -> arima_properties
+ucarima.wk/ ucarima.canonical / ucarima.estimate -> ucarima_wk / ucarima_canonical / ucarima_estimate
+sarima.estimate -> sarima_estimate
+do.stationary -> do_stationary
+differencing.fast -> differencing_fast
+rangemean.tstat -> rangemean_tstat
+
+Toutes les fonctions sur les distributions sont renommées. ex : randomsT, densityT, cdfT -> randoms_t, density_t, cdf_t.
+
+Toutes les fonctions sur les tests (seasonality.xxx et td.xx) sont renommées en remplaçant le . par un _
+
+Toutes les fonction xx.variable (ex : ao.variable) sont renommées pour prendre en remplaçant le . par un _
+
+ucarima_estimate : ordre et nom des variables inversés pour harmoniser avec sarima_estimate
+
+rjd3tramoseats et rjd3x13
+seats.decompose -> seats_decompose
+tramo.outliers / regarima.outliers -> tramo_outliers / regarima_outliers
+fast. -> fast_
+tramoseats.refresh -> tramoseats_refresh
+
+J’ai enlevé tous les _default dans la création des specs (ex : x13_spec_default -> x13_spec), 
+apparemment le _default pouvait un peu perturber par rapport à rjd2. (ha ha)
+
+====== Les noms des fonctions de rjdemetra3 ne sont pas encore harmonisées
+
