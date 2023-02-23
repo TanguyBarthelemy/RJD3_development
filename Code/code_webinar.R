@@ -2,37 +2,9 @@
 
 # Code du webinar ---------------------------------------------------------
 
-
-# P1 : Introduction -------------------------------------------------------
-
-install.packages("RJDemetra")
-library("RJDemetra")
-# install.packages("remotes")
-
-remotes::install_github("palatej/rjdemetra3")
-
-remotes::install_github("palatej/rjd3toolkit", ref = "v0.6.0")
-
-remotes::install_github("palatej/rjd3modelling", ref = "v0.6.0")
-remotes::install_github("palatej/rjd3arima", ref = "v0.6.0")
-remotes::install_github("palatej/rjd3sa", ref = "v0.6.0")
-
-remotes::install_github("palatej/rjd3tramoseats", ref = "v0.6.0")
-remotes::install_github("palatej/rjd3x13", ref = "v0.6.0")
-remotes::install_github("palatej/rjdemetra3", ref = "v0.6.0")
-
-remotes::install_github("palatej/rjd3sts", ref = "v0.5.0")
-remotes::install_github("palatej/rjd3highfreq", ref = "v0.5.0")
-remotes::install_github("palatej/rjd3stl", ref = "v0.5.0")
-remotes::install_github("palatej/rjd3bench", ref = "v0.5.0")
-# options : INSTALL_opts = "--no-multiarch"
-
-remotes::install_github("AQLT/ggdemetra3") #additional graphics 
-
-
 # P2 : Seasonal adjustment in R with JD+ ----------------------------------
 
-ipi <- read.csv2("../../00_RJD3_Developpement/Tsace_RJD_Webinar_Dec22/Data/IPI_nace4.csv")
+ipi <- read.csv2("../Tsace_RJD_Webinar_Dec22/Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 # creating a TS object from a data frame 
@@ -42,28 +14,87 @@ y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9
 
 # X13 v2
 sa_x13_v2 <- RJDemetra::x13(y_raw, spec = "RSA5c")
+sa_x13_v2 # Tout est implémenté (jusqu'à un certain niveau)
+
 # see help pages for default spec names, identical in v2 and v3
 #Tramo-Seats
 sa_ts_v2 <- RJDemetra::tramoseats(y_raw, spec = "RSAfull")
+sa_ts_v2 # Tout est implémenté (jusqu'à un certain niveau)
+
+
+
+
+
+
+
 
 
 #X13 v3
 sa_x13_v3 <- rjd3x13::x13(y_raw, spec = "RSA5")
-sa_x13_v3
+sa_x13_v3 # print à compléter ?
+
+sa_x13_v3$result
+
+sa_x13_v3$result$preprocessing
+sa_x13_v3$result$preadjust # Pas de class
+sa_x13_v3$result$decomposition # Pas de print
+sa_x13_v3$result$final # Pas de class
+sa_x13_v3$result$mstats # Pas de class
+sa_x13_v3$result$diagnostics # Pas de class
+
+sa_x13_v3$estimation_spec # Pas de print
+
+sa_x13_v3$estimation_spec$regarima # Pas de print
+# Pour la partie regarima, il existe plusieurs class :
+# - JD3_REGARIMA_SPEC # Pas de print
+# - JD3_REGARIMA_RSLTS # Pas de print
+# - JD3_regarima_output --> JD3_REGARIMA_OUTPUT
+
+# Voir l'intérieur si il faut pas trop re-définir
+
+
+sa_x13_v3$estimation_spec$x11 # Pas de print
+sa_x13_v3$estimation_spec$benchmarking # Pas de class
+
+sa_x13_v3$result_spec # Pareil que pour estimation_spec (recursivement)
+
+sa_x13_v3$user_defined
+
 
 #Tramo seats
 sa_ts_v3 <- rjd3tramoseats::tramoseats(y_raw, spec = "RSAfull")
+
+sa_ts_v3$result
+
+sa_ts_v3$result$preprocessing
+sa_ts_v3$result$decomposition # Pas de print
+sa_ts_v3$result$final # Pas de class
+sa_ts_v3$result$diagnostics # Pas de class
+
+sa_ts_v3$estimation_spec # Pas de print
+
+sa_ts_v3$estimation_spec$tramo # Pas de print
+sa_ts_v3$estimation_spec$seats # Pas de print
+sa_ts_v3$estimation_spec$benchmarking # Pas de class
+
+sa_ts_v3$result_spec # Pareil que pour estimation_spec (recursivement)
+
+sa_ts_v3$user_defined
 
 
 
 # Reg-Arima part from X13 only (different default spec names, cf help pages)
 regA_v2 <- RJDemetra::regarima_x13(y_raw, spec = "RG5c")
+regA_v2
 
 # Tramo only 
 tramo_v2 <- RJDemetra::regarima_tramoseats(y_raw,spec = "TRfull")
+tramo_v2
 
 #X13
 sa_regarima_v3 <- rjd3x13::regarima(y_raw, spec = "RG5c")
+# Tout est inclus dans sa_x13_v3
+
 
 #Tramo seats 
 #sa_tramo_v3 <- rjd3tramoseats::tramo(y_raw, spec = "TRfull")
@@ -73,6 +104,7 @@ sa_regarima_v3 <- rjd3x13::regarima(y_raw, spec = "RG5c")
 
 # X11 (spec option)
 X11_v2 <- RJDemetra::x13(y_raw, spec = "X11")
+X11_v2
 
 #Tramo-Seats ? you 
 #sa_ts_v2<-RJDemetra::tramoseats(y_raw, spec = "RSAfull")
@@ -80,7 +112,7 @@ X11_v2 <- RJDemetra::x13(y_raw, spec = "X11")
 #X11
 x11_v3 <- rjd3x13::x11(y_raw) # specific function
 #Seats: you need an arima model
-
+x11_v3
 
 # v2 "output"
 Model_sa <- RJDemetra::x13(y_raw, spec = "RSA5")
