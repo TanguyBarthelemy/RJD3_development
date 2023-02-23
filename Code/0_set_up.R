@@ -1,4 +1,3 @@
-
 # Installation des packages (dev version) ---------------------------------
 
 remotes::install_github("palatej/rjd3toolkit")
@@ -44,5 +43,3 @@ library("rjd3highfreq")
 # library("timeSeries")
 # library("gridExtra")
 # library("kableExtra")
-
-

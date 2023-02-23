@@ -4,7 +4,7 @@
 
 # P2 : Seasonal adjustment in R with JD+ ----------------------------------
 
-ipi <- read.csv2("../../Présentations/Tsace_RJD_Webinar_Dec22/Data/IPI_nace4.csv")
+ipi <- read.csv2("../Tsace_RJD_Webinar_Dec22/Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 # creating a TS object from a data frame 
