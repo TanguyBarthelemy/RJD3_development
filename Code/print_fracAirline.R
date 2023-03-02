@@ -1,5 +1,27 @@
 print_fracAirline <- function(x, digits = max(3L, getOption("digits") - 3L), starting = as.Date("1968-01-01")) {
     
+    print_vect <- function(.x) {
+        s <- .x
+        n_min <- nchar(s) |> min()
+        n_max <- nchar(s) |> max() + 1
+        s <- s |> paste0(strrep(" ", n_max - n_min + 1)) |> substr(1, n_max)
+        
+        dimension <- 5
+        if (length(s) %% 3 == 0) dimension <- 3
+        if (n_max < 11 && length(s) %% 6 == 0) dimension <- 6
+        if (n_max < 16 && length(s) %% 4 == 0) dimension <- 4
+        if (n_max < 13 && length(s) %% 5 == 0) dimension <- 5
+        
+        out <- matrix(c(s, rep("", dimension - (((length(s) - 1) %% dimension) + 1))), 
+                      ncol = dimension) |> 
+            apply(MARGIN = 1, paste, collapse = "\t") |> 
+            paste(collapse = "\n")
+        
+        cat(out)
+        cat("\n")
+        invisible(.x)
+    }
+    
     nb_outliers <- sum((x$model$variables |> 
                             substr(1L, 2L) |> 
                             toupper()) %in% c("AO", "WO", "LS"))
@@ -14,43 +36,28 @@ print_fracAirline <- function(x, digits = max(3L, getOption("digits") - 3L), sta
     summary_coeff$Coef_SE <- round(summary_coeff$Coef_SE, digits)
     
     summary_coeff$Variable[1L:11L] <- c("14th_july", "8th_may", "1st_jan", "Xmas", "1st_may",
-                                      "asc", "east_mon", "pen_mon",
-                                      "15th_aug", "1st_nov",
-                                      "11th_nov")
-    outliers_coeff <- summary_coeff[(nb_reg_cjo + 1L):nrow(summary_coeff), ]
+                                        "asc", "east_mon", "pen_mon",
+                                        "15th_aug", "1st_nov",
+                                        "11th_nov")
     
-    date_vect <- seq.Date(from = starting, 
-                          to = starting + x$likelihood$nobs, 
-                          by = "days")
-    outliers_coeff$Variable <- paste0(
-        substr(outliers_coeff$Variable, 1L, 3L), 
-        date_vect[substr(outliers_coeff$Variable, 4L, 10L) |> as.numeric()]
-    )
-    
-    reg_cjo_coeff <- summary_coeff[1:nb_reg_cjo, ]
-    
-    reg_cjo <- reg_cjo_coeff$Variable
-    outliers <- outliers_coeff$Variable
-    
-    print_vect <- function(.x) {
-        s <- .x
-        n_min <- nchar(s) |> min()
-        n_max <- nchar(s) |> max() + 1
-        s <- s |> paste0(strrep(" ", n_max - n_min + 1)) |> substr(1, n_max)
+    if (nb_outliers > 0) {
         
-        dimension <- 5
-        if (length(s) %% 3 == 0) dimension <- 3
-        if (length(s) %% 6 == 0) dimension <- 6
-        if (length(s) %% 4 == 0) dimension <- 4
-        if (length(s) %% 5 == 0) dimension <- 5
+        outliers_coeff <- summary_coeff[(nb_reg_cjo + 1L):nrow(summary_coeff), ]
         
-        out <- matrix(c(s, rep("", dimension - (((length(s) - 1) %% dimension) + 1))), ncol = dimension) |> 
-            apply(MARGIN = 1, paste, collapse = "\t") |> 
-            paste(collapse = "\n")
+        date_vect <- seq.Date(from = starting, 
+                              to = starting + x$likelihood$nobs, 
+                              by = "days")
+        outliers_coeff$Variable <- paste0(
+            substr(outliers_coeff$Variable, 1L, 3L), 
+            date_vect[substr(outliers_coeff$Variable, 4L, 10L) |> as.numeric()]
+        )
+        outliers <- outliers_coeff$Variable
         
-        cat(out)
-        cat("\n")
-        invisible(.x)
+    }
+    
+    if(nb_reg_cjo > 0) {
+        reg_cjo_coeff <- summary_coeff[1:nb_reg_cjo, ]
+        reg_cjo <- reg_cjo_coeff$Variable
     }
     
     # Estimated MA parameters (coefs, se, student)
@@ -68,28 +75,39 @@ print_fracAirline <- function(x, digits = max(3L, getOption("digits") - 3L), sta
     
     cat("\n")
     cat("Nbr calendar regressor:", nb_reg_cjo, ", nbr outliers :", nb_outliers)
-    cat("\n")
-    cat("List of regressor:")
-    cat("\n")
-    print_vect(reg_cjo)
-    cat("\n")
-    cat("List of outliers:")
-    cat("\n")
-    print_vect(outliers)
-    cat("\n")
+    cat("\n\n")
     
-    cat("Coefficients CJO regressors:")
-    cat("\n")
-    print(head(reg_cjo_coeff, 10))
-    if (nb_reg_cjo > 10) cat("...\n")
+    if(nb_reg_cjo > 0) {
+        cat("List of regressor:")
+        cat("\n")
+        print_vect(reg_cjo)
+        cat("\n")
+    }
     
-    cat("\n")
-    cat("Coefficients outliers:")
-    cat("\n")
-    print(head(outliers_coeff, 10))
-    if (nb_outliers > 10) cat("...\n")
+    if(nb_outliers > 0) {
+        cat("List of outliers:")
+        cat("\n")
+        print_vect(outliers)
+        cat("\n")
+    }
     
-    cat("\n")
+    
+    if(nb_reg_cjo > 0) {
+        cat("Coefficients CJO regressors:")
+        cat("\n")
+        print(head(reg_cjo_coeff, 10), row.names = FALSE)
+        if (nb_reg_cjo > 10) cat("...\n")
+        cat("\n")
+    }
+    
+    if(nb_outliers > 0) {
+        cat("Coefficients outliers:")
+        cat("\n")
+        print(head(outliers_coeff, 10), row.names = FALSE)
+        if (nb_outliers > 10) cat("...\n")
+        cat("\n")
+    }
+    
     cat("Nbr of observation:", formatC(x$likelihood$nobs, digits = digits))
     cat("\n")
     
@@ -113,3 +131,4 @@ print_fracAirline <- function(x, digits = max(3L, getOption("digits") - 3L), sta
 }
 
 print_fracAirline(pre.mult)
+print_fracAirline(pre.mult_cal)
