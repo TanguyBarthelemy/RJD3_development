@@ -420,10 +420,10 @@ pre.mult$estimation$covariance #" mat var covar des coeffs du modele ARIMA !! at
 ##### le reinjecter pares trt p = 7 ?
 
 ### sauvegarde 
-save(pre.mult, file = "pre.mult.RData")
+# save(pre.mult, file = "pre.mult.RData")
 
 # q alain : 
-recup <- load(file = "pre.mult.RData")
+# recup <- load(file = "pre.mult.RData")
 
 # Estimated outlier & calendar effects (coefs, se, student)
 ### variables are in "model" part as pre-set by the user : pre.mdl$model$variables
