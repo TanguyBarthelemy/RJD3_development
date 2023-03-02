@@ -29,6 +29,7 @@
 
 library("tidyverse")
 library("rjd3toolkit")
+library("kableExtra")
 
 
 # French daily births 1968 2016 
@@ -520,7 +521,7 @@ tail(df_daily_r)
 plot(df_daily_r$births[1:366], type = "l")
 lines(df_daily_r$lin[1:366], col = "blue")
 
-## 
+##
 
 ## seasonality tests
 #### canova h : rjd3sa
@@ -651,6 +652,7 @@ plot(df_daily_r$date[zoom], x11.doy$decomposition$s[zoom], type = "l", col = "re
 #### Run AMB on RAW data first (as lin cal pbs to solve)
 # Extract DOW pattern from linearized series
 # step 1
+
 amb.dow <- rjd3highfreq::fractionalAirlineDecomposition(
     pre.mult$model$linearized, # input time series
     period = 7, # DOW pattern
