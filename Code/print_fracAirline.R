@@ -77,7 +77,7 @@ print_JDFractionalAirlineEstimation <- function(x, digits = max(3L, getOption("d
     print(est_ma_params, row.names = FALSE)
     
     cat("\n")
-    cat("Number calendar regressors:", nb_reg_cjo, ", Number outliers :", nb_outliers)
+    cat("Number of calendar regressors:", nb_reg_cjo, ", Number of outliers :", nb_outliers)
     cat("\n\n")
     
     # if(nb_reg_cjo > 0) {
@@ -155,13 +155,14 @@ print_JDX11 <- function(x, digits = max(3L, getOption("digits") - 3L),
     print(zoo::zoo(decompo_table, intervalle) |> tail(n = 10))
     cat("\n")
     
-    cat("Boundary used for outlier correction in irregular = [", 
-        formatC(x$parameters$extreme.lsig, digits = digits), "; ",  
-        formatC(x$parameters$extreme.usig, digits = digits), "]", sep = "")
+    cat("Boundaries used for outlier correction in irregular :",
+        "\n\t lower_sigma: ", x$parameters$extreme.lsig,
+        "\n\t upper_sigma: ", x$parameters$extreme.usig)
     
     cat("\n\n")
     invisible(x)
 }
+
 print_JDFractionalAirlineDecomposition <- function(x, digits = max(3L, getOption("digits") - 3L), 
                                                    starting = as.Date("1968-01-01")) {
     
@@ -181,7 +182,7 @@ print_JDFractionalAirlineDecomposition <- function(x, digits = max(3L, getOption
     cat("\n")
     print(est_ma_params, row.names = FALSE)
     
-    cat("\n\n")
+    cat("\n")
     cat("Decomposition:")
     cat("\n")
     decompo_table <- do.call(cbind, x$decomposition)
