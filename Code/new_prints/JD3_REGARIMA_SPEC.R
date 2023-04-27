@@ -83,4 +83,3 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     cat("\n")
     return(invisible(x))
 }
-

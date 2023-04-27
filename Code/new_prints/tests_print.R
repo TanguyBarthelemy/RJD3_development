@@ -21,6 +21,9 @@ library("rjd3highfreq")
 source("./Code/new_prints/fractionalAirlineEstimation.R", encoding = "UTF-8")
 source("./Code/new_prints/JDX11.R", encoding = "UTF-8")
 source("./Code/new_prints/JDFractionalAirlineDecomposition.R", encoding = "UTF-8")
+source("./Code/new_prints/JD3_REGARIMA_SPEC.R", encoding = "UTF-8")
+source("./Code/new_prints/JD3_X11_SPEC.R", encoding = "UTF-8")
+source("./Code/new_prints/JD3_X13_SPEC.R", encoding = "UTF-8")
 
 # High-freq --------------------------------------------------------------------
 
@@ -134,22 +137,27 @@ print_JDFractionalAirlineDecomposition(amb.multi)
 
 # Classes de RJD3X13
 # 
-# JDSTS
+# JDSTS --> OK
 # 
 # JD3_REGARIMA_SPEC --> fait !
 # JD3_REGARIMA_OUTPUT -- > OK
 # 
-# JD3X11
+# JD3X11 --> fait !
 # 
-# JD3_X11_SPEC
+# JD3_X11_SPEC --> fait !
 # 
-# JD3_X13_SPEC
+# JD3_X13_SPEC --> fait !
 # JD3_X13_OUTPUT --> OK
 # JD3_X13_RSLTS --> OK
+
+
+## Création des objets ---------------------------------------------------------
 
 serie_ipi <- read.csv("./data/IPI_nace4.csv", sep = ";")
 y_raw <- ts(serie_ipi$RF3030, start = 1990, frequency = 12)
 ud <- ts(serie_ipi$RF3512, start = 1990, frequency = 12)
+
+## Prints ----------------------------------------------------------------------
 
 # Classe JD3_REGARIMA_OUTPUT et JD3_REGARIMA_RSLTS
 reg_v3 <- rjd3x13::regarima(y_raw, spec = "RSA5")
@@ -172,13 +180,37 @@ sp <- rjd3toolkit::set_transform(
 )
 print_JD3_REGARIMA_SPEC(sp)
 
-# Classe JD3_X13_OUTPUT et JD3_X13_RSLT
+# Classe JD3_X11_SPEC
+init_spec <- spec_x11()
+new_spec <- set_x11(init_spec,
+                    mode = "LogAdditive",
+                    seasonal.comp = 1,
+                    seasonal.filter = "S3X9",
+                    henderson.filter = 7,
+                    lsigma = 1.7,
+                    usigma = 2.7,
+                    fcasts = -1,
+                    bcasts = -1,
+                    calendar.sigma ="All",
+                    sigma.vector = NA,
+                    exclude.forecast = FALSE,
+                    bias = "LEGACY")
+print_JD3_X11_SPEC(init_spec)
+print_JD3_X11_SPEC(new_spec)
+
+# Classe JD3_X13_OUTPUT
 sa_x13_v3 <- rjd3x13::x13(y_raw, spec = "RSA5")
 print(sa_x13_v3)
+
+# Classe JD3_X13_RSLT
 print(sa_x13_v3$result)
 
+# Classe JD3_X13_SPEC
+print_JD3_X13_SPEC(sa_x13_v3$estimation_spec)
 
-
+# Classe JD3X11
+sa_x11_v3 <- rjd3x13::x11(y_raw, spec = "RSA5")
+print(sa_x11_v3)
 
 
 
