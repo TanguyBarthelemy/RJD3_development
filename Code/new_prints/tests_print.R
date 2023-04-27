@@ -1,0 +1,192 @@
+
+################################################################################
+#######                   Test des prints en version 3                   ####### 
+################################################################################
+
+# Chargement des packages ------------------------------------------------------
+
+library("rJava")
+
+library("rjd3toolkit")
+
+library("rjd3tramoseats")
+library("rjd3x13")
+library("rjdemetra3")
+library("rjd3sts")
+
+library("rjd3highfreq")
+
+# Chargement fonctions de print ------------------------------------------------
+
+source("./Code/new_prints/fractionalAirlineEstimation.R", encoding = "UTF-8")
+source("./Code/new_prints/JDX11.R", encoding = "UTF-8")
+source("./Code/new_prints/JDFractionalAirlineDecomposition.R", encoding = "UTF-8")
+
+# High-freq --------------------------------------------------------------------
+
+## Import de données -----------------------------------------------------------
+df_daily <- read.csv2("./data/TS_daily_births_franceM_1968_2020.csv") |> 
+    dplyr::mutate(log_births = log(births))
+
+## Création objets -------------------------------------------------------------
+
+### PRE TREATMENT: fractional Airline model ------------------------------------
+
+frenchCalendar <- national_calendar(days = list(
+    fixed_day(7, 14), # Fete nationale
+    fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
+    special_day('NEWYEAR'), # Nouvelle année
+    special_day('CHRISTMAS'), # Noël
+    special_day('MAYDAY'), # 1er mai
+    special_day('EASTERMONDAY'), # Lundi de Pâques
+    special_day('ASCENSION'), # attention +39 et pas 40 jeudi ascension
+    special_day('WHITMONDAY'), # Lundi de Pentecôte (1/2 en 2005 a verif)
+    special_day('ASSUMPTION'), # Assomption
+    special_day('ALLSAINTSDAY'), # Toussaint
+    special_day('ARMISTICE'))
+)
+
+q <- holidays(frenchCalendar, "1968-01-01", length = length(df_daily$births), type = "All", 
+              nonworking = 7L)
+
+pre.mult <-  fractionalAirlineEstimation_new(
+    y = df_daily$log_births, 
+    x = q, # q = regs de calendrier
+    periods = 7, 
+    ndiff = 2, ar = FALSE, mean = FALSE, 
+    outliers = c("ao", "wo"), criticalValue = 0, 
+    precision = 1e-9, approximateHessian = TRUE)
+
+pre.mult_cal <-  fractionalAirlineEstimation_new(
+    y = df_daily$log_births, 
+    x = q, # q = regs de calendrier
+    periods = c(7, 28), 
+    ndiff = 2, ar = FALSE, mean = FALSE, 
+    # outliers = c("ao", "wo"), criticalValue = 0, 
+    precision = 1e-9, approximateHessian = TRUE)
+
+print(pre.mult)
+print(pre.mult_cal)
+print_JDFractionalAirlineEstimation(pre.mult)
+print_JDFractionalAirlineEstimation(pre.mult_cal)
+
+### Extended X11 Decomposition -------------------------------------------------
+
+x11.dow <- rjd3highfreq::x11(
+    exp(pre.mult$model$linearized), 
+    period = 7, # DOW pattern
+    mul = TRUE, 
+    trend.horizon = 9, # 1/2 Filter length : not too long vs p
+    trend.degree = 3, # Polynomial degree
+    trend.kernel = "Henderson", # Kernel function
+    trend.asymmetric = "CutAndNormalize", # Truncation method
+    seas.s0 = "S3X9", seas.s1 = "S3X9", # Seasonal filters
+    extreme.lsig = 1.5, extreme.usig = 2.5)
+
+x11.doy <- rjd3highfreq::x11(
+    x11.dow$decomposition$sa, 
+    period = 365.2425, # DOY pattern
+    mul = TRUE, 
+    trend.horizon = 371, 
+    trend.degree = 3, 
+    trend.kernel = "Henderson", 
+    trend.asymmetric = "CutAndNormalize", 
+    seas.s0 = "S3X3", seas.s1 = "S3X3", 
+    extreme.lsig = 1.5, extreme.usig = 2.5)
+
+print(x11.dow)
+print(x11.doy)
+print_JDX11(x11.dow)
+print_JDX11(x11.doy)
+
+### AMB Decomposition ----------------------------------------------------------
+
+amb.dow <- fractionalAirlineDecomposition_new(
+    df_daily$births, # input time series
+    period = 7,                # DOW pattern
+    sn = FALSE,                # Signal (SA)-noise decomposition 
+    stde = FALSE,              # Calculate standard deviations
+    nbcasts = 0, nfcasts = 0)  # Numbers of back- and forecasts
+
+amb.doy <- fractionalAirlineDecomposition_new(
+    amb.dow$decomposition$sa, # DOW-adjusted linearised data
+    period = 365.2425, # DOY pattern
+    sn = FALSE, 
+    stde = FALSE, 
+    nbcasts = 0, nfcasts = 0)
+
+amb.multi <- multiAirlineDecomposition_new(
+    pre.mult$model$linearized, # input time series
+    periods = c(7, 365.2425), # DOW pattern
+    ar = F, 
+    stde = FALSE, # Calculate standard deviations
+    nbcasts = 0, nfcasts = 0) 
+
+print(amb.dow)
+print(amb.doy)
+print(amb.multi)
+print_JDFractionalAirlineDecomposition(amb.dow)
+print_JDFractionalAirlineDecomposition(amb.doy)
+print_JDFractionalAirlineDecomposition(amb.multi)
+
+
+# X13 --------------------------------------------------------------------------
+
+# Classes de RJD3X13
+# 
+# JDSTS
+# 
+# JD3_REGARIMA_SPEC --> fait !
+# JD3_REGARIMA_OUTPUT -- > OK
+# 
+# JD3X11
+# 
+# JD3_X11_SPEC
+# 
+# JD3_X13_SPEC
+# JD3_X13_OUTPUT --> OK
+# JD3_X13_RSLTS --> OK
+
+serie_ipi <- read.csv("./data/IPI_nace4.csv", sep = ";")
+y_raw <- ts(serie_ipi$RF3030, start = 1990, frequency = 12)
+ud <- ts(serie_ipi$RF3512, start = 1990, frequency = 12)
+
+# Classe JD3_REGARIMA_OUTPUT et JD3_REGARIMA_RSLTS
+reg_v3 <- rjd3x13::regarima(y_raw, spec = "RSA5")
+print(reg_v3) #JD3_REGARIMA_OUTPUT
+print(reg_v3$result) # JD3_REGARIMA_RSLTS
+
+# Classe JD3_REGARIMA_SPEC
+sp <- spec_regarima("RG5C")
+
+sp <- rjd3toolkit::add_outlier(sp, type = c("AO", "LS"), c("2015-01-01", "2010-01-01"))
+
+sp <- set_outlier(sp, span.type = "BETWEEN", d0 = "2000-01-01", d1= "2015-01-01", n0 = 45, n1 = 4531)
+
+sp <- rjd3toolkit::set_transform(
+    rjd3toolkit::set_tradingdays(
+        rjd3toolkit::set_easter(sp, enabled = TRUE, duration = 450),
+        option = "workingdays"
+    ),
+    fun = "None"
+)
+print_JD3_REGARIMA_SPEC(sp)
+
+# Classe JD3_X13_OUTPUT et JD3_X13_RSLT
+sa_x13_v3 <- rjd3x13::x13(y_raw, spec = "RSA5")
+print(sa_x13_v3)
+print(sa_x13_v3$result)
+
+
+
+
+
+
+#Tramo seats
+sa_ts_v3 <- rjd3tramoseats::tramoseats(y_raw, spec = "RSAfull")
+
+
+library(RJDemetra)
+sa_v2 <- RJDemetra::x13(y_raw)
+reg_v2 <- RJDemetra::regarima_x13(y_raw, spec ="RG5c")
+
