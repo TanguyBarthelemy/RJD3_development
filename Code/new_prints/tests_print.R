@@ -202,7 +202,7 @@ print_JD3_X11_SPEC(new_spec)
 sa_x13_v3 <- rjd3x13::x13(y_raw, spec = "RSA5")
 print(sa_x13_v3)
 
-# Classe JD3_X13_RSLT
+# Classe JD3_X13_RSLTS
 print(sa_x13_v3$result)
 
 # Classe JD3_X13_SPEC
@@ -211,6 +211,92 @@ print_JD3_X13_SPEC(sa_x13_v3$estimation_spec)
 # Classe JD3X11
 sa_x11_v3 <- rjd3x13::x11(y_raw, spec = "RSA5")
 print(sa_x11_v3)
+
+
+# Toolkit ----------------------------------------------------------------------
+
+# Classes
+
+# JD3_SARIMA --> ok
+# JD3_ARIMA --> ok
+# JD3_UCARIMA --> ok
+# JD3_UCARIMA_WK --> à voir avec Anna
+# 
+# JD3_SARIMA_ESTIMATE --> ok
+# summary.JD3_SARIMA_ESTIMATE --> à voir avec Anna
+# JD3_SARIMA_ESTIMATION --> ok
+# summary.JD3_SARIMA_ESTIMATION --> ok
+# 
+# JD3_REGARIMA_RSLTS --> ok
+# summary.JD3_REGARIMA_RSLTS --> ok
+# 
+# JD3_CALENDAR --> ok + refait
+# JD3_CALENDARDEFINITION --> à voir avec Anna
+# JD3_WEIGHTEDCALENDAR --> fait
+# JD3_CHAINEDCALENDAR --> fait
+# 
+# JD3_FIXEDDAY --> ok
+# JD3_HOLIDAY --> à voir avec Anna
+# JD3_FIXEDWEEKDAY --> ok
+# JD3_EASTERDAY --> ok
+# JD3_SINGLEDAY --> ok
+# JD3_SPECIALDAY --> ok
+# 
+# JD3_SADECOMPOSITION --> ok
+# 
+# summary.JD3_LIKELIHOOD --> ok
+# 
+# JD3_SPAN --> ok
+# logLik --> ok (stats)
+# 
+# JD3_TEST --> ok
+# JD3 --> à voir avec Anna
+#
+# jd3_utilities : qu'est ce que c'est ?
+# JD3_TSMONIKER
+# JD3_DYNAMICTS
+# 
+# OBJ <- JD3_Object
+# RSLT <- JD3_ProcResults
+# ??? subclasses
+#
+
+# Classe JD3_UCARIMA_WK ??
+model <- sarima_model(period = 12, d = 1, bd = 1, theta = -0.6, btheta = -0.5)
+ucm <- sarima_decompose(model)
+out <- ucarima_wk(ucm, cmp = 1)
+
+# Classe summary.JD3_SARIMA_ESTIMATE ?? Déjà rempli par summary.JD3_REGARIMA_RSLTS
+sarima1 <- sarima_estimate(y_raw, order = c(0, 1, 1), seasonal = c(0, 1, 1))
+sum_sar <- sarima1 |> summary()
+
+# Classe JD3_CALENDARDEFINITION ??
+# Classe JD3_CALENDAR
+frenchCalendar <- national_calendar(days = list(
+    fixed_day(7, 14), # Fete nationale
+    fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
+    special_day('NEWYEAR'), # Nouvelle année
+    special_day('CHRISTMAS'), # Noël
+    special_day('MAYDAY'), # 1er mai
+    special_day('EASTERMONDAY'), # Lundi de Pâques
+    special_day('ASCENSION'), # attention +39 et pas 40 jeudi ascension
+    special_day('WHITMONDAY'), # Lundi de Pentecôte (1/2 en 2005 a verif)
+    special_day('ASSUMPTION'), # Assomption
+    special_day('ALLSAINTSDAY'), # Toussaint
+    special_day('ARMISTICE'))
+)
+print(frenchCalendar)
+print.JD3_CALENDAR_new(frenchCalendar)
+
+# Classe JD3_WEIGHTEDCALENDAR
+weighted_cal <- weighted_calendar(list(frenchCalendar, frenchCalendar), c(0.5, 0.5))
+print(weighted_cal)
+print.JD3_WEIGHTEDCALENDAR_new(weighted_cal)
+
+# Classe JD3_CHAINEDCALENDAR
+final_cal <- chained_calendar(frenchCalendar, weighted_cal, break_date = "2005-05-01")
+print(final_cal)
+print.JD3_CHAINEDCALENDAR_new(final_cal)
 
 
 
