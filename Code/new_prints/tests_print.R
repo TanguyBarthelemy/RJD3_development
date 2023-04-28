@@ -18,12 +18,12 @@ library("rjd3highfreq")
 
 # Chargement fonctions de print ------------------------------------------------
 
-source("./Code/new_prints/fractionalAirlineEstimation.R", encoding = "UTF-8")
-source("./Code/new_prints/JDX11.R", encoding = "UTF-8")
-source("./Code/new_prints/JDFractionalAirlineDecomposition.R", encoding = "UTF-8")
-source("./Code/new_prints/JD3_REGARIMA_SPEC.R", encoding = "UTF-8")
-source("./Code/new_prints/JD3_X11_SPEC.R", encoding = "UTF-8")
-source("./Code/new_prints/JD3_X13_SPEC.R", encoding = "UTF-8")
+path <- "./Code/new_prints/"
+function2import <- list.files(path)
+function2import <- function2import[function2import != "tests_print.R"]
+function2import <- paste0(path, function2import)
+
+sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
 
 # High-freq --------------------------------------------------------------------
 
