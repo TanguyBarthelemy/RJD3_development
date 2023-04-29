@@ -1,4 +1,4 @@
-print.JD3_CHAINEDCALENDAR_new <- function (x, 
+print_JD3_CHAINEDCALENDAR <- function (x, 
                                             enable_print_style = getOption("enable_print_style"), 
                                             ...)
 {

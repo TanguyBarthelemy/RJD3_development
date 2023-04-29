@@ -1,4 +1,4 @@
-print.JD3_WEIGHTEDCALENDAR_new <- function (x, 
+print_JD3_WEIGHTEDCALENDAR <- function (x, 
                                         enable_print_style = getOption("enable_print_style"), 
                                         ...)
 {

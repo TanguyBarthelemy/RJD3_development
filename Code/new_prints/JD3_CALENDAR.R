@@ -1,4 +1,4 @@
-print.JD3_CALENDAR_new <- function(x, ...) {
+print_JD3_CALENDAR <- function(x, ...) {
     cat("Holiday:\n")
     for (day in x$day) {
         cat("\t- ")
