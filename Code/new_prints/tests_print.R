@@ -5,8 +5,6 @@
 
 # Chargement des packages ------------------------------------------------------
 
-library("rJava")
-
 library("rjd3toolkit")
 
 library("rjd3tramoseats")
@@ -15,6 +13,10 @@ library("rjdemetra3")
 library("rjd3sts")
 
 library("rjd3highfreq")
+
+# Options -----------------------------------------------------------------
+
+options(enable_print_style = TRUE)
 
 # Chargement fonctions de print ------------------------------------------------
 
@@ -150,7 +152,6 @@ print_JDFractionalAirlineDecomposition(amb.multi)
 # JD3_X13_OUTPUT --> OK
 # JD3_X13_RSLTS --> OK
 
-
 ## Création des objets ---------------------------------------------------------
 
 serie_ipi <- read.csv("./data/IPI_nace4.csv", sep = ";")
@@ -178,6 +179,7 @@ sp <- rjd3toolkit::set_transform(
     ),
     fun = "None"
 )
+print(sp)
 print_JD3_REGARIMA_SPEC(sp)
 
 # Classe JD3_X11_SPEC
@@ -195,6 +197,7 @@ new_spec <- set_x11(init_spec,
                     sigma.vector = NA,
                     exclude.forecast = FALSE,
                     bias = "LEGACY")
+print(init_spec)
 print_JD3_X11_SPEC(init_spec)
 print_JD3_X11_SPEC(new_spec)
 
@@ -209,8 +212,9 @@ print(sa_x13_v3$result)
 print_JD3_X13_SPEC(sa_x13_v3$estimation_spec)
 
 # Classe JD3X11
-sa_x11_v3 <- rjd3x13::x11(y_raw, spec = "RSA5")
+sa_x11_v3 <- rjd3x13::x11(ts = y_raw, spec = init_spec)
 print(sa_x11_v3)
+print_JD3X11(sa_x11_v3)
 
 
 # Toolkit ----------------------------------------------------------------------
@@ -286,25 +290,21 @@ frenchCalendar <- national_calendar(days = list(
     special_day('ARMISTICE'))
 )
 print(frenchCalendar)
-print.JD3_CALENDAR_new(frenchCalendar)
+print_JD3_CALENDAR(frenchCalendar)
 
 # Classe JD3_WEIGHTEDCALENDAR
 weighted_cal <- weighted_calendar(list(frenchCalendar, frenchCalendar), c(0.5, 0.5))
 print(weighted_cal)
-print.JD3_WEIGHTEDCALENDAR_new(weighted_cal)
+print_JD3_WEIGHTEDCALENDAR(weighted_cal)
 
 # Classe JD3_CHAINEDCALENDAR
 final_cal <- chained_calendar(frenchCalendar, weighted_cal, break_date = "2005-05-01")
 print(final_cal)
-print.JD3_CHAINEDCALENDAR_new(final_cal)
-
+print_JD3_CHAINEDCALENDAR(final_cal)
 
 
 #Tramo seats
 sa_ts_v3 <- rjd3tramoseats::tramoseats(y_raw, spec = "RSAfull")
 
 
-library(RJDemetra)
-sa_v2 <- RJDemetra::x13(y_raw)
-reg_v2 <- RJDemetra::regarima_x13(y_raw, spec ="RG5c")
 
