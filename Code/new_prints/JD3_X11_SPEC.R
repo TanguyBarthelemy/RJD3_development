@@ -11,14 +11,14 @@ print_JD3_X11_SPEC <- function(x, enable_print_style = getOption("enable_print_s
     cat(style_pre_code, "Specification X11", style_post_code, "\n", sep = "")
     
     
-    cat("Mode: ", x$mode, "\n", sep = "")
-    cat("Seasonnal component: ", ifelse(x$seasonal, "Yes", "No"), "\n", sep = "")
+    cat("Seasonal component: ", ifelse(x$seasonal, "Yes", "No"), "\n", sep = "")
     cat("Length of the Henderson filter: ", x$henderson, "\n", sep = "")
-    cat("Seasonnal filter: ", x$sfilters, "\n", sep = "")
-    cat("Boundaries used for outlier correction in irregular :",
+    cat("Seasonal filter: ", x$sfilters, "\n", sep = "")
+    cat("Boundaries used for extreme values correction :",
         "\n\t lower_sigma: ", x$lsig,
         "\n\t upper_sigma: ", x$usig)
-    cat("Nb of forcasts: ", x$nfcasts, "\n", sep = "")
+    cat("\n")
+    cat("Nb of forecasts: ", x$nfcasts, "\n", sep = "")
     cat("Nb of backcasts: ", x$nbcasts, "\n", sep = "")
     cat("Calendar sigma: ", x$sigma, "\n", sep = "")
     

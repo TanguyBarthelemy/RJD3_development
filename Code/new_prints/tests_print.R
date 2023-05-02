@@ -161,7 +161,7 @@ ud <- ts(serie_ipi$RF3512, start = 1990, frequency = 12)
 ## Prints ----------------------------------------------------------------------
 
 # Classe JD3_REGARIMA_OUTPUT et JD3_REGARIMA_RSLTS
-reg_v3 <- rjd3x13::regarima(y_raw, spec = "RSA5")
+reg_v3 <- rjd3x13::regarima(y_raw, spec = "RG5C")
 print(reg_v3) #JD3_REGARIMA_OUTPUT
 print(reg_v3$result) # JD3_REGARIMA_RSLTS
 
@@ -170,7 +170,7 @@ sp <- spec_regarima("RG5C")
 
 sp <- rjd3toolkit::add_outlier(sp, type = c("AO", "LS"), c("2015-01-01", "2010-01-01"))
 
-sp <- set_outlier(sp, span.type = "BETWEEN", d0 = "2000-01-01", d1= "2015-01-01", n0 = 45, n1 = 4531)
+sp <- set_outlier(sp, span.type = "BETWEEN", d0 = "2000-01-01", d1= "2015-01-01", n0 = 10, n1 = 20)
 
 sp <- rjd3toolkit::set_transform(
     rjd3toolkit::set_tradingdays(
@@ -179,6 +179,7 @@ sp <- rjd3toolkit::set_transform(
     ),
     fun = "None"
 )
+
 print(sp)
 print_JD3_REGARIMA_SPEC(sp)
 
@@ -209,6 +210,7 @@ print(sa_x13_v3)
 print(sa_x13_v3$result)
 
 # Classe JD3_X13_SPEC
+print(sa_x13_v3$estimation_spec)
 print_JD3_X13_SPEC(sa_x13_v3$estimation_spec)
 
 # Classe JD3X11

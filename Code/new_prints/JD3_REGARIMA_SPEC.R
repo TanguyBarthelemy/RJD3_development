@@ -22,6 +22,7 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     cat("Model span: ", x$estimate$span$type, "\n", sep = "")
     cat("Tolerance: ", x$estimate$tol, "\n", sep = "")
     
+    
     cat("\n", style_pre_code, "Transformation", style_post_code, "\n", sep = "")
     
     cat("Function: ", x$transform$fn, "\n", sep = "")
