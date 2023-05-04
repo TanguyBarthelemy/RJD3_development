@@ -10,8 +10,8 @@ library("rjd3toolkit")
 library("rjd3tramoseats")
 library("rjd3x13")
 library("rjdemetra3")
-library("rjd3sts")
 
+library("rjd3sts")
 library("rjd3highfreq")
 
 # Options -----------------------------------------------------------------
@@ -139,9 +139,13 @@ print_JDFractionalAirlineDecomposition(amb.multi)
 
 # Classes de RJD3X13
 # 
+<<<<<<< HEAD
 # JDSTS --> OK mais à actualisé depuis old repo
+=======
+# JDSTS --> OK (déjà fait)
+>>>>>>> 94b476ce1711616215e91aa9bc174b15399f0871
 # 
-# JD3_REGARIMA_SPEC --> fait !
+# JD3_REGARIMA_SPEC --> fait ! (par Tanguy)
 # JD3_REGARIMA_OUTPUT -- > OK
 # 
 # JD3X11 --> fait !
@@ -179,6 +183,8 @@ sp <- rjd3toolkit::set_transform(
     ),
     fun = "None"
 )
+
+
 
 print(sp)
 print_JD3_REGARIMA_SPEC(sp)
