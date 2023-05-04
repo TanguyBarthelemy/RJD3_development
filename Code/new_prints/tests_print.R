@@ -139,7 +139,7 @@ print_JDFractionalAirlineDecomposition(amb.multi)
 
 # Classes de RJD3X13
 # 
-# JDSTS --> OK
+# JDSTS --> OK mais à actualisé depuis old repo
 # 
 # JD3_REGARIMA_SPEC --> fait !
 # JD3_REGARIMA_OUTPUT -- > OK
@@ -305,8 +305,32 @@ print(final_cal)
 print_JD3_CHAINEDCALENDAR(final_cal)
 
 
-#Tramo seats
+# Tramo seats ------------------------------------------------------------------
+
+# Classe
+# 
+# JDSTS Ok mais pas actualisé
+# JD3 --> à voir avec Anna
+# JD3_TRAMO_OUTPUT OK
+# JD3_SEATS
+# JD3_TRAMOSEATS_OUTPUT OK
+# JD3_TRAMOSEATS_RSLTS Ok
+# 
+# JD3_TRAMO_SPEC
+# JD3_SEATS_SPEC
+# JD3_TRAMOSEATS_SPEC
+# 
+
+# Classe JD3_SEATS
 sa_ts_v3 <- rjd3tramoseats::tramoseats(y_raw, spec = "RSAfull")
+obj_seats <- sa_ts_v3$result$decomposition
+# Il suffit d'afficher obj_seats$stochastics (les autres sont faits)
 
+# Classe JD3_TRAMO_SPEC
+tramo_spec <- sa_ts_v3$estimation_spec$tramo
 
+# Classe JD3_TRAMO_SPEC
+seats_spec <- sa_ts_v3$estimation_spec$seats
 
+# Classe JD3_TRAMOSEATS_SPEC
+ts_spec <- sa_ts_v3$estimation_spec
