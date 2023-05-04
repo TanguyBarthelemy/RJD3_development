@@ -32,10 +32,10 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     
     cat("\n", style_pre_code, "Regression", style_post_code, "\n", sep = "")
     
-    if (!is.null(sp$regression$td$users) && length(sp$regression$td$users) > 0) {
+    if (!is.null(x$regression$td$users) && length(x$regression$td$users) > 0) {
         cat("Calendar regressor: user-defined calendar", "\n", sep = "")
         cat("Test: ", x$regression$td$test, "\n", sep = "")
-    } else if (sp$regression$td$td == "TD_NONE") {
+    } else if (x$regression$td$td == "TD_NONE") {
         cat("No calendar regressor", "\n", sep = "")
     } else {
         cat("Calendar regressor: ", x$regression$td$td, "\n", sep = "")
@@ -61,7 +61,7 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     cat("\n", style_pre_code, "Outliers", style_post_code, "\n", sep = "")
     
     if (is.null(x$outlier$outliers) || length(x$outlier$outliers) == 0) {
-        cat("Is disable: Yes\n")
+        cat("Is enabled: No\n")
     } else {
         cat("Detection span: ", x$outlier$span$type, sep = "")
         if (toupper(x$outlier$span$type) %in% c("FROM", "BETWEEN")) {
@@ -71,7 +71,7 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
             cat(" to", x$outlier$span$d1)
         }
         cat("\n")
-        cat("Outliers type: ", paste(sapply(sp$outlier$outliers, base::`[[`, "type"), collapse = ", "), "\n", sep = "")
+        cat("Outliers type: ", paste(sapply(x$outlier$outliers, base::`[[`, "type"), collapse = ", "), "\n", sep = "")
         cat("TC rate: ", x$outlier$monthlytcrate, "\n", sep = "")
         cat("Method: ", x$outlier$method, "\n", sep = "")
     }

@@ -20,11 +20,8 @@ options(enable_print_style = TRUE)
 
 # Chargement fonctions de print ------------------------------------------------
 
-path <- "./Code/new_prints/"
-function2import <- list.files(path)
-function2import <- function2import[function2import != "tests_print.R"]
-function2import <- paste0(path, function2import)
-
+path <- "./Code/Study_new_prints/print_functions/"
+function2import <- list.files(path, full.names = TRUE)
 sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
 
 # High-freq --------------------------------------------------------------------
@@ -139,11 +136,7 @@ print_JDFractionalAirlineDecomposition(amb.multi)
 
 # Classes de RJD3X13
 # 
-<<<<<<< HEAD
 # JDSTS --> OK mais à actualisé depuis old repo
-=======
-# JDSTS --> OK (déjà fait)
->>>>>>> 94b476ce1711616215e91aa9bc174b15399f0871
 # 
 # JD3_REGARIMA_SPEC --> fait ! (par Tanguy)
 # JD3_REGARIMA_OUTPUT -- > OK
@@ -330,13 +323,36 @@ print_JD3_CHAINEDCALENDAR(final_cal)
 # Classe JD3_SEATS
 sa_ts_v3 <- rjd3tramoseats::tramoseats(y_raw, spec = "RSAfull")
 obj_seats <- sa_ts_v3$result$decomposition
-# Il suffit d'afficher obj_seats$stochastics (les autres sont faits)
+print(obj_seats)
+print_JD3_SEATS(obj_seats)
 
 # Classe JD3_TRAMO_SPEC
 tramo_spec <- sa_ts_v3$estimation_spec$tramo
+print(tramo_spec)
+print_JD3_TRAMO_SPEC(tramo_spec)
 
-# Classe JD3_TRAMO_SPEC
+# Classe JD3_SEATS_SPEC
 seats_spec <- sa_ts_v3$estimation_spec$seats
+print(seats_spec)
+print_JD3_SEATS_SPEC(seats_spec)
 
 # Classe JD3_TRAMOSEATS_SPEC
 ts_spec <- sa_ts_v3$estimation_spec
+print(ts_spec)
+print_JD3_TRAMOSEATS_SPEC(ts_spec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
