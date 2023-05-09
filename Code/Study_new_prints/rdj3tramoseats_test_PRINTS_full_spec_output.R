@@ -266,6 +266,8 @@ spec_tramoseats_ref <- tramoseats_refresh(current_result_spec, # point spec to b
                                           current_domain_spec, #domain spec (set of constraints)
                                           policy = "FixedParameters")
 
+sa_ts_ref<- tramoseats(y_new,spec_tramoseats_ref,context=my_context, userdefined= c("ycal","reg_t"))
+
 ############## specification details  ###
 ## basic 
 spec_ts_d$tramo$basic$span$type
