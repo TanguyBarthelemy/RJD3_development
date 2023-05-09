@@ -50,14 +50,12 @@ print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
 
 
-### PRINT HOLE in  preprocessing
-# series span 
-# model span 
+
 
 ### quick check if estimation works 
-sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
+sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 sa_x13_d$result$preprocessing
-sa_x13_d$result$final
+print_JD3X11(sa_x13_d$result$decomposition)
 
 # ## test from : ok includes d0
 # # spec_x13_d<-set_basic(spec_x13_d,type = "From",d0 = "2000-01-01",
