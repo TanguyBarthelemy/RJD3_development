@@ -1,18 +1,27 @@
-##### RJD3x13 : creating Enriched spec and output for testing 
-### 1 PRINTS
 
-#####################
-library(rjd3toolkit)
-library(rjd3x13)
-# Data  :
-ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
+################################################################################
+#####        RJD3x13 : creating Enriched spec and output for testing       #####
+################################################################################
+
+
+# Chargement packages ----------------------------------------------------------
+
+library("rjd3toolkit")
+library("rjd3x13")
+
+
+# Import données ---------------------------------------------------------------
+
+ipi <- read.csv2("./Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
+
 # creating a TS object from a data frame 
 y_raw <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2021,12))
 y_new <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022,9))
 
-################# LAYERS 
+
+# LAYERS -----------------------------------------------------------------------
 
 ## Layer 1: customized spec before estimation
 ## Layer 2: post estimation : estimation spec 
@@ -21,18 +30,26 @@ y_new <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022,9)
 ## Layer 5: post estimation with refreshed spec: refreshed estimation spec
 ## Layer 6: post estimation with refreshed spec: refreshed result spec
 
-
-### and prints of output 
-
-# y_raw<-rjd3toolkit::ABS$X0.2.08.10.M
+# y_raw <- rjd3toolkit::ABS$X0.2.08.10.M
 # spec_x13(name = c("rsa4", "rsa0", "rsa1", "rsa2c", "rsa3", "rsa5c"))
-spec_x13_d<-rjd3x13::spec_x13("rsa5c") #### HERE PB !!! issue : rsa4 et pas rsa4c
+spec_x13_d <- rjd3x13::spec_x13("rsa5c") #### HERE PB !!! issue : rsa4 et pas rsa4c
+print_JD3_X13_SPEC(spec_x13_d)
 
-############# CUSTOMIZATION by parts
-# ##### set basic 
-spec_x13_d<-set_basic(spec_x13_d,type = "From",d0 = "2000-01-01",
-                      preliminary.check = TRUE,
-                      preprocessing= TRUE)
+
+## CUSTOMIZATION by parts ------------------------------------------------------
+
+### set basic ------------------------------------------------------------------
+
+spec_x13_d <- set_basic(
+    spec_x13_d,type = "From", 
+    d0 = "2000-01-01",
+    preliminary.check = TRUE,
+    preprocessing = TRUE)
+print_JD3_X13_SPEC(spec_x13_d)
+print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
+
+
+
 ### PRINT HOLE in  preprocessing
 # series span 
 # model span 
@@ -78,9 +95,9 @@ sa_x13_d$result$final
 # spec_x13_d<-rjd3x13::spec_x13("rsa5c")
 
 spec_x13_d<- set_transform(spec_x13_d,
-                         fun = "Log",
-                         adjust="LengthOfPeriod",
-                         outliers = TRUE)
+                           fun = "Log",
+                           adjust="LengthOfPeriod",
+                           outliers = TRUE)
 
 # spec_x13_d<- set_transform(spec_x13_d,
 #                            fun = "Log",
@@ -105,31 +122,31 @@ sa_x13_d$result$final
 
 # #### set automodel 
 spec_x13_d<-set_automodel(spec_x13_d,
-                        enabled = FALSE,
-                        cancel=0.06,
-                        ub1=1.05,
-                        ub2=1.15,
-                        reducecv=0.15,
-                        ljungboxlimit=0.96,
-                        tsig=1.5,
-                        ubfinal=1.06,
-                        checkmu=FALSE,
-                        balanced= TRUE)
+                          enabled = FALSE,
+                          cancel=0.06,
+                          ub1=1.05,
+                          ub2=1.15,
+                          reducecv=0.15,
+                          ljungboxlimit=0.96,
+                          tsig=1.5,
+                          ubfinal=1.06,
+                          checkmu=FALSE,
+                          balanced= TRUE)
 ### quick check if estimation works 
 sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
 sa_x13_d$result$preprocessing
 sa_x13_d$result$final
 
- 
+
 # ### set benchmarking 
 # 
 spec_x13_d<-set_benchmarking(spec_x13_d,
-                            enabled = TRUE,
-                            target = "CALENDARADJUSTED",
-                            rho = 0.8,
-                            lambda = 0.5,
-                            forecast = FALSE,
-                            bias = "None")
+                             enabled = TRUE,
+                             target = "CALENDARADJUSTED",
+                             rho = 0.8,
+                             lambda = 0.5,
+                             forecast = FALSE,
+                             bias = "None")
 # spec_x13_d<-rjd3x13::spec_x13("rsa5c")  
 
 ### quick check if estimation works 
@@ -137,26 +154,26 @@ sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
 sa_x13_d$result$preprocessing
 sa_x13_d$result$final
 sa_x13_d$result$decomposition$
-## ISSUE :where are benchmarking results     
+    ## ISSUE :where are benchmarking results     
     
-### PRINT HOLE
-#### sa_x13_d$result$final : pas bon : faire un table / main results (GUI)
-
-
-#####  set arima 
-spec_x13_d<-set_automodel(spec_x13_d,
-                      enabled = FALSE)
+    ### PRINT HOLE
+    #### sa_x13_d$result$final : pas bon : faire un table / main results (GUI)
+    
+    
+    #####  set arima 
+    spec_x13_d<-set_automodel(spec_x13_d,
+                              enabled = FALSE)
 # all fixed
 spec_x13_d<-set_arima(spec_x13_d,mean = 0.2,
-mean.type = "Fixed",
-p = 1,
-d = 2,
-q = 0,
-bp = 1,
-bd = 1,
-bq = 0,
-coef = c(0.6,0.7),
-coef.type = c("Initial","Fixed"))
+                      mean.type = "Fixed",
+                      p = 1,
+                      d = 2,
+                      q = 0,
+                      bp = 1,
+                      bd = 1,
+                      bq = 0,
+                      coef = c(0.6,0.7),
+                      coef.type = c("Initial","Fixed"))
 ###
 sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
 ### ISSUE verifier resultats ici 
@@ -257,9 +274,9 @@ rjd3toolkit::.r2jd_modellingcontext(my_context)$getTsVariableDictionary()
 ### add calendar regressors to spec 
 # spec_x13_d<-rjd3x13::spec_x13("rsa5c")
 spec_x13_d<- set_tradingdays(spec_x13_d,
-    option = "UserDefined", 
-    uservariable=c("r.Monday","r.Tuesday","r.Wednesday","r.Thursday","r.Friday","r.Saturday"), # forcement en caracteres dans un vecteur 
-    test = "None")
+                             option = "UserDefined", 
+                             uservariable=c("r.Monday","r.Tuesday","r.Wednesday","r.Thursday","r.Friday","r.Saturday"), # forcement en caracteres dans un vecteur 
+                             test = "None")
 
 spec_x13_d # indicates TD_NONE...
 spec_x13_d$regarima$regression$td$users
@@ -281,8 +298,8 @@ sa_x13_d$result$preprocessing
 current_result_spec <- sa_x13_d$result_spec
 current_domain_spec <- sa_x13_d$estimation_spec
 spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                              current_domain_spec, #domain spec (set of constraints)
-                              policy = "FixedParameters")
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "FixedParameters")
 
 ## Layer 5: estimation with spec from refresh
 ### refreshed estimation : keep contexte

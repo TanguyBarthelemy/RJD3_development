@@ -13,13 +13,28 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     
     cat("\n", style_pre_code, "Series", style_post_code, "\n", sep = "")
     
-    cat("Serie span: ", x$basic$span$type, "\n", sep = "")
+    cat("Serie span:")
+    print(x$basic$span)
+    
     cat("Preliminary Check: ", ifelse(x$basic$preliminaryCheck, "Yes", "No"), "\n", sep = "")
     
     
     cat("\n", style_pre_code, "Estimate", style_post_code, "\n", sep = "")
     
-    cat("Model span: ", x$estimate$span$type, "\n", sep = "")
+    cat("Model span: ")
+    print(x$estimate$span$type)
+    
+    cat("Serie span:")
+    if (toupper(x$basic$span$type) %in% c("FROM", "BETWEEN")) {
+        cat(" from", x$basic$span$d0)
+    }
+    if (toupper(x$basic$span$type) %in% c("TO", "BETWEEN")) {
+        cat(" to", x$basic$span$d1)
+    }
+    if (!toupper(x$basic$span$type) %in% c("FROM", "TO", "BETWEEN")){
+        cat(" ", x$basic$span$type, sep = "")
+    }
+    cat("\n")
     cat("Tolerance: ", x$estimate$tol, "\n", sep = "")
     
     
@@ -32,10 +47,10 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     
     cat("\n", style_pre_code, "Regression", style_post_code, "\n", sep = "")
     
-    if (!is.null(sp$regression$td$users) && length(sp$regression$td$users) > 0) {
+    if (!is.null(x$regression$td$users) && length(x$regression$td$users) > 0) {
         cat("Calendar regressor: user-defined calendar", "\n", sep = "")
         cat("Test: ", x$regression$td$test, "\n", sep = "")
-    } else if (sp$regression$td$td == "TD_NONE") {
+    } else if (x$regression$td$td == "TD_NONE") {
         cat("No calendar regressor", "\n", sep = "")
     } else {
         cat("Calendar regressor: ", x$regression$td$td, "\n", sep = "")
@@ -61,17 +76,12 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     cat("\n", style_pre_code, "Outliers", style_post_code, "\n", sep = "")
     
     if (is.null(x$outlier$outliers) || length(x$outlier$outliers) == 0) {
-        cat("Is disable: Yes\n")
+        cat("Is enabled: No\n")
     } else {
-        cat("Detection span: ", x$outlier$span$type, sep = "")
-        if (toupper(x$outlier$span$type) %in% c("FROM", "BETWEEN")) {
-            cat(" from", x$outlier$span$d0)
-        }
-        if (toupper(x$outlier$span$type) %in% c("TO", "BETWEEN")) {
-            cat(" to", x$outlier$span$d1)
-        }
-        cat("\n")
-        cat("Outliers type: ", paste(sapply(sp$outlier$outliers, base::`[[`, "type"), collapse = ", "), "\n", sep = "")
+        cat("Detection span:")
+        print(x$outlier$span)
+        
+        cat("Outliers type: ", paste(sapply(x$outlier$outliers, base::`[[`, "type"), collapse = ", "), "\n", sep = "")
         cat("TC rate: ", x$outlier$monthlytcrate, "\n", sep = "")
         cat("Method: ", x$outlier$method, "\n", sep = "")
     }
