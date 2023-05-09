@@ -177,8 +177,6 @@ sp <- rjd3toolkit::set_transform(
     fun = "None"
 )
 
-
-
 print(sp)
 print_JD3_REGARIMA_SPEC(sp)
 
