@@ -13,18 +13,7 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     
     cat("\n", style_pre_code, "Series", style_post_code, "\n", sep = "")
     
-    cat("Serie span:")
-    print(x$basic$span)
-    
-    cat("Preliminary Check: ", ifelse(x$basic$preliminaryCheck, "Yes", "No"), "\n", sep = "")
-    
-    
-    cat("\n", style_pre_code, "Estimate", style_post_code, "\n", sep = "")
-    
-    cat("Model span: ")
-    print(x$estimate$span$type)
-    
-    cat("Serie span:")
+    cat("Series span:")
     if (toupper(x$basic$span$type) %in% c("FROM", "BETWEEN")) {
         cat(" from", x$basic$span$d0)
     }
@@ -33,6 +22,23 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     }
     if (!toupper(x$basic$span$type) %in% c("FROM", "TO", "BETWEEN")){
         cat(" ", x$basic$span$type, sep = "")
+    }
+    cat("\n")
+    
+    cat("Preliminary Check: ", ifelse(x$basic$preliminaryCheck, "Yes", "No"), "\n", sep = "")
+    
+    
+    cat("\n", style_pre_code, "Estimate", style_post_code, "\n", sep = "")
+    
+    cat("Model span:")
+    if (toupper(x$estimate$span$type) %in% c("FROM", "BETWEEN")) {
+        cat(" from", x$estimate$span$d0)
+    }
+    if (toupper(x$estimate$span$type) %in% c("TO", "BETWEEN")) {
+        cat(" to", x$estimate$span$d1)
+    }
+    if (!toupper(x$estimate$span$type) %in% c("FROM", "TO", "BETWEEN")){
+        cat(" ", x$estimate$span$type, sep = "")
     }
     cat("\n")
     cat("Tolerance: ", x$estimate$tol, "\n", sep = "")
