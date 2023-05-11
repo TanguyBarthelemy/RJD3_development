@@ -86,6 +86,7 @@ print_JD3_TRAMO_SPEC <- function(x, enable_print_style = getOption("enable_print
             cat("Outliers type: ", paste(detected_outliers, collapse = ", "), "\n", sep = "")
         }
         
+        cat("Critical value: ", x$outlier$va, "\n", sep = "")
         cat("TC rate: ", x$outlier$tcrate, "\n", sep = "")
         cat("EML estimation: ", ifelse(x$outlier$ml, "Yes", "No"), "\n", sep = "")
     }
