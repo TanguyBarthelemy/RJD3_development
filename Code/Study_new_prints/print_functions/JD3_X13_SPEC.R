@@ -16,7 +16,7 @@ print_JD3_X13_SPEC <- function(x, enable_print_style = getOption("enable_print_s
     if (!x$benchmarking$enabled) {
         cat("Is enabled: No\n")
     } else {
-        cat("Enabled: Yes", sep = "")
+        cat("Enabled: Yes\n", sep = "")
         cat("Target: ", x$benchmarking$target, "\n", sep = "")
         cat("Lambda: ", x$benchmarking$lambda, "\n", sep = "")
         cat("Rho: ", x$benchmarking$rho, "\n", sep = "")
