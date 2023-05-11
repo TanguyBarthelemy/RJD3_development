@@ -3,6 +3,7 @@
 #######                   Test des prints en version 3                   ####### 
 ################################################################################
 
+
 # Chargement des packages ------------------------------------------------------
 
 library("rjd3toolkit")
@@ -14,15 +15,18 @@ library("rjdemetra3")
 library("rjd3sts")
 library("rjd3highfreq")
 
+
 # Options -----------------------------------------------------------------
 
 options(enable_print_style = TRUE)
+
 
 # Chargement fonctions de print ------------------------------------------------
 
 path <- "./Code/Study_new_prints/print_functions/"
 function2import <- list.files(path, full.names = TRUE)
 sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
+
 
 # High-freq --------------------------------------------------------------------
 
