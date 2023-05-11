@@ -70,7 +70,11 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
         cat("Detection span: ")
         print_JD3_SPAN(x$outlier$span)
         
-        cat("Outliers type: ", paste(sapply(x$outlier$outliers, base::`[[`, "type"), collapse = ", "), "\n", sep = "")
+        cat("Outliers type: \n")
+        for (out in x$outlier$outliers) {
+            cat("\t- ", out$type, ", critical value : ", out$va, "\n", sep = "")
+        }
+        
         cat("TC rate: ", x$outlier$monthlytcrate, "\n", sep = "")
         cat("Method: ", x$outlier$method, "\n", sep = "")
     }
