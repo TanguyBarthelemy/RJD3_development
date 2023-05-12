@@ -9,6 +9,9 @@ print_JD3_X13_SPEC <- function(x, enable_print_style = getOption("enable_print_s
     }
     
     print_JD3_REGARIMA_SPEC(x$regarima, enable_print_style = enable_print_style)
+    
+    cat("\n")
+    
     print_JD3_X11_SPEC(x$x11, enable_print_style = enable_print_style)
     
     cat("\n", style_pre_code, "Benchmarking", style_post_code, "\n", sep = "")
@@ -20,9 +23,9 @@ print_JD3_X13_SPEC <- function(x, enable_print_style = getOption("enable_print_s
         cat("Target: ", x$benchmarking$target, "\n", sep = "")
         cat("Lambda: ", x$benchmarking$lambda, "\n", sep = "")
         cat("Rho: ", x$benchmarking$rho, "\n", sep = "")
+        cat("Bias: ", x$benchmarking$bias, "\n", sep = "")
         cat("Use forecast: ", ifelse(x$benchmarking$forecast, "Yes", "No"), "\n", sep = "")
     }
     
-    cat("\n")
     return(invisible(x))
 }

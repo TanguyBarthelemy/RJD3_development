@@ -4,16 +4,25 @@
 ################################################################################
 
 # Questions :
-# - Qu'est ce que automodel ? --> Comment l'afficher ?
-# - Où est ce que benchmarking devrait s'afficher ? (dans l'estimation)
-# - Quel nom donner aux tables résultats (abréviation de dico) ?
+
+
+# - Qu'est ce qu'il faut regarder à chaque estimation ?
+# - Pour les trading days, comment afficher clairement les informations ?
+# - Meaning de stock td ?
+
+#   - regarder la doc !! on indique le num du jour où est fait l'inventaire du stock et 31 = dernier jour du stock
+
+# - Discuter avec Anna de comment on affiche easter...
+# - Lorsqu'on lance print_JD3_X13_SPEC() sur une result_spec, tous les outliers passent en "pre-specified" outliers :
+#   - Pas de distinction des outliers pre-specified et des outliers détectés automatiquement (dans sa_x13_d$result$preprocessing$description)
 
 # A faire :
 # - Pourquoi ARIMA a un airline de base ?
 # - Ne pas afficher un airline de base pour les ARIMA et SARIMA
 # - faire le tour des valeurs par défault (automatique)
 #   - si 0 est la valeur par défaut, lorsqu'on force 0, faut il marquer 0 ou auto ?
-
+# - changer nom "name" pour les user-defined variables en "label"
+# - Ajouter les rampes (start, stop et coeff)
 
 
 # Chargement packages ----------------------------------------------------------
@@ -241,8 +250,9 @@ print_JD3X11(sa_x13_d$result$decomposition)
 
 spec_x13_d <- rjd3x13::spec_x13("rsa5c")
 
-spec_x13_d <- set_automodel(spec_x13_d, enabled = FALSE)
+spec_x13_d <- set_automodel(spec_x13_d, enabled = FALSE, acceptdefault = TRUE)
 
+sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 spec_x13_d <- set_arima(
     spec_x13_d, 
     mean = 0.2, 
@@ -258,94 +268,137 @@ spec_x13_d <- set_arima(
 
 print_JD3_X13_SPEC(spec_x13_d)
 print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
+print(spec_x13_d$regarima$arima)
 
-
-
-###
+# Estimation
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 ### ISSUE verifier resultats ici 
 sa_x13_d$result$preprocessing
 sa_x13_d$result$final
 
+# Modèle simple sans coefficients imposés
+spec_x13_d <- set_arima(
+    spec_x13_d,
+    p = 1,
+    d = 0,
+    q = 1,
+    bp = 1,
+    bd = 1,
+    bq = 0)
+print_JD3_X13_SPEC(spec_x13_d)
+print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
+print(spec_x13_d$regarima$arima)
 
-# # not fixed
-# spec_x13_d <- set_arima(spec_x13_d, 
-#                       p = 1, 
-#                       d = 0, 
-#                       q = 1, 
-#                       bp = 1, 
-#                       bd = 1, 
-#                       bq = 0)
+### set_tradingdays ------------------------------------------------------------
+# (NOT USER DEF, for user def see below)
 
-# ### set_tradingdays (NOT USER DEF, for user def see below)
-# spec_x13_d <- rjd3x13::spec_x13("rsa5c")
-# spec_x13_d <- set_tradingdays(spec_x13_d, 
-#     option = "TD4", test = "None", 
-#     coef = c(0.7, NA, 0.5), 
-#     coef.type = c("Fixed", "Estimated", "Fixed"), 
-#     leapyear = "LengthOfPeriod", 
-#     leapyear.coef = 0.6
-#     )
+spec_x13_d <- rjd3x13::spec_x13("rsa5c")
+spec_x13_d <- rjd3x13::spec_x13("rsa3")
 
-sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
-sa_x13_d$result$preprocessing
-sa_x13_d$result$final
+# TradingDays
+spec_x13_d <- set_tradingdays(spec_x13_d,
+                              option = "TradingDays")
+# WD
+spec_x13_d <- set_tradingdays(spec_x13_d,
+                              option = "WorkingDays")
+# TD3C
+spec_x13_d <- set_tradingdays(spec_x13_d,
+                              option = "TD3c")
+# None
+spec_x13_d <- set_tradingdays(spec_x13_d,
+                              option = "None")
+# User defined + tard
+
+# Stock td 
+spec_x13_d <- set_tradingdays(spec_x13_d, stocktd = 28)
+
+# Exemple avec TD4
+spec_x13_d <- set_tradingdays(spec_x13_d,
+                              option = "TD4", test = "None",
+                              coef = c(0.7, NA, 0.5),
+                              coef.type = c("Fixed", "Estimated", "Fixed"),
+                              leapyear = "LengthOfPeriod",
+                              leapyear.coef = 0.6)
+
+print_JD3_X13_SPEC(spec_x13_d)
+print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
+spec_x13_d$regarima$regression$td
 
 
-## tester affichage en cas de stock td 
-# # spec_x13_d <- set_tradingdays(spec_x13_d, stocktd = 28)
-# 
-# 
-# 
-# ### set_easter
-# spec_x13_d <- rjd3x13::spec_x13("rsa5c")
+stop("Tester Holidays")
+stop("Stock TD ne peut pas s'affichzer correctement car :
+     - comment est ce que c'est estimé ?
+     - si je fais stock td avant ou après un autre td (on NONE), il n'y a pas de warning ou d'error et les specs sont les mêmes...")
+
+
+### set_easter -----------------------------------------------------------------
+
+spec_x13_d <- rjd3x13::spec_x13("rsa5c")
 spec_x13_d <- set_easter(spec_x13_d, 
                          enabled = TRUE, 
                          duration = 12, 
                          coef = 0.6, 
                          coef.type = "Fixed", 
                          test = "None")
-# # type = "Unused" : TRAMO specific
-# # "Unused", "Standard", "IncludeEaster", "IncludeEasterMonday"
-# spec_x13_d
+# type = "Unused" : TRAMO specific
+# "Unused", "Standard", "IncludeEaster", "IncludeEasterMonday"
+print_JD3_X13_SPEC(spec_x13_d)
+print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
+# Estimation
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 sa_x13_d$result$preprocessing
 sa_x13_d$result$final
 
+### Adding user defined variables ----------------------------------------------
 
+#### add outliers --------------------------------------------------------------
 
-### Adding user defined variables 
-### add outliers
-# spec_x13_d <- rjd3x13::spec_x13("rsa5c")
-spec_x13_d <- rjd3toolkit::add_outlier(spec_x13_d, type = "AO", date = "2020-03-01", coef = 12)
-spec_x13_d <- rjd3toolkit::add_outlier(spec_x13_d, type = "LS", date = "2020-04-01")
-spec_x13_d
+spec_x13_d <- rjd3x13::spec_x13("rsa5c")
+spec_x13_d <- rjd3toolkit::add_outlier(
+    spec_x13_d, 
+    type = "AO", 
+    date = "2020-03-01", 
+    coef = 12)
+spec_x13_d <- rjd3toolkit::add_outlier(
+    spec_x13_d, 
+    type = "LS", 
+    date = "2020-04-01")
+
+print_JD3_X13_SPEC(spec_x13_d)
+print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
 ## quick estimation check 
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
-sa_x13_d$result$preprocessing
-sa_x13_d$result$final
+sa_x13_d$result$preprocessing$description$variables
 
-### add ramp 
+#### add ramp ------------------------------------------------------------------
+
 # ramp on year 2021
-spec_x13_d <- rjd3toolkit::add_ramp(spec_x13_d, start = "2021-01-01", end = "2021-12-01")
+spec_x13_d <- rjd3toolkit::add_ramp(
+    spec_x13_d, 
+    start = "2021-01-01", 
+    end = "2021-12-01")
+
+print_JD3_X13_SPEC(spec_x13_d)
+print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
+
 ## quick check 
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 sa_x13_d$result$preprocessing
-sa_x13_d$result$final
 
+#### add user defined regressors -----------------------------------------------
 
-###################################################################
-#### add user defined regressors
-# (if user defined calendar: dont use set_trading days before )
+# (if user defined calendar: dont use set_trading days before 
 
 # ## add intervention variables (with add_usrdefvar) 
 # y_raw <- rjd3toolkit::ABS$X0.2.08.10.M 
-iv1 <- intervention_variable(12, c(2000, 1), 60, 
-                             starts = "2000-01-01", ends = "2001-12-01")
-iv2 <- intervention_variable(12, c(2000, 1), 60, 
-                             starts = "2010-01-01", ends = "2010-12-01", delta = 1)
+iv1 <- intervention_variable(
+    frequency = 12, start = c(2000, 1), length = 60, 
+    starts = "2000-01-01", ends = "2001-12-01")
+iv2 <- intervention_variable(
+    frequency = 12, start = c(2000, 1), length = 60, 
+    starts = "2010-01-01", ends = "2010-12-01", delta = 1)
 
 ### calendar regressors (to be added with set_trading days)
 regs_td <- td(s = y_raw, groups = c(1, 2, 3, 4, 5, 6, 0), 
@@ -394,7 +447,9 @@ sa_x13_ref <- x13(y_new, spec_x13_ref, context = my_context)
 sa_x13_ref$result$preprocessing
 sa_x13_ref$result$preprocessing$description$variables 
 
-######################################### basic
+
+# Structure des objets ---------------------------------------------------------
+
 spec_x13_d$regarima$basic$span$type
 sa_x13_d$estimation_spec$regarima$basic$span$type
 sa_x13_d$result_spec$regarima$basic$span$type

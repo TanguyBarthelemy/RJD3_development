@@ -173,13 +173,10 @@ sp <- rjd3toolkit::add_outlier(sp, type = c("AO", "LS"), c("2015-01-01", "2010-0
 
 sp <- set_outlier(sp, span.type = "BETWEEN", d0 = "2000-01-01", d1= "2015-01-01", n0 = 10, n1 = 20)
 
-sp <- rjd3toolkit::set_transform(
-    rjd3toolkit::set_tradingdays(
-        rjd3toolkit::set_easter(sp, enabled = TRUE, duration = 450),
-        option = "workingdays"
-    ),
-    fun = "None"
-)
+sp <- sp |> 
+    rjd3toolkit::set_easter(enabled = TRUE, duration = 450) |> 
+    rjd3toolkit::set_tradingdays(option = "workingdays") |> 
+    rjd3toolkit::set_transform(fun = "None")
 
 print(sp)
 print_JD3_REGARIMA_SPEC(sp)

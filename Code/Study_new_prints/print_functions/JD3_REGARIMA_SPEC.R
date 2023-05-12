@@ -39,14 +39,32 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     if (!is.null(x$regression$td$users) && length(x$regression$td$users) > 0) {
         cat("Calendar regressor: user-defined calendar", "\n", sep = "")
         cat("Test: ", x$regression$td$test, "\n", sep = "")
+    } else if (x$regression$td$w > 0) {
+        cat("No calendar regressor", "\n", sep = "")
     } else if (x$regression$td$td == "TD_NONE") {
         cat("No calendar regressor", "\n", sep = "")
     } else {
-        cat("Calendar regressor: ", x$regression$td$td, "\n", sep = "")
-        cat("with Leap Year: ", ifelse(x$regression$td$lp == "LEAPYEAR", "Yes", "No"), "\n", sep = "")
+        if (x$regression$td$td == "TD7") {
+            cat("Calendar regressor: TradingDays\n", sep = "")
+        } else if (x$regression$td$td == "TD2") {
+            cat("Calendar regressor: WorkingDays\n", sep = "")
+        } else if (x$regression$td$td %in% c("TD3", "TD3C", "TD4")) {
+            cat("Calendar regressor: ", x$regression$td$td, "\n", sep = "")
+        } else {
+            message("Trading days regressor unknown.")
+        }
+        cat("with Leap Year: ", 
+            ifelse(x$regression$td$lp == "LEAPYEAR", "Yes", "No"), "\n", sep = "")
         cat("AutoAdjust: ", x$regression$td$autoadjust, "\n", sep = "")
         cat("Test: ", x$regression$td$test, "\n", sep = "")
     }
+    
+    
+    
+    
+    
+    
+    
     cat("\n")
     
     cat("Easter: ", x$regression$easter$type, "\n", sep = "")
@@ -84,6 +102,5 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     
     print(x$arima)
     
-    cat("\n")
     return(invisible(x))
 }
