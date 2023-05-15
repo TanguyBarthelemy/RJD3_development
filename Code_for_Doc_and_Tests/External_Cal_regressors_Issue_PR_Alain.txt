@@ -1,0 +1,186 @@
+====== MOI ===
+
+1)	Comment tu utilises concrètement des regresseurs de calendrier user defined
+Là l’ajout ne se fait pas par add_usrdefvar mais bien dans set_trading days !? …le add_usrdefvar semble marcher, mais il faut encore checker l’estimation 
+
+Step 1 : je genere des regresseurs (peu importe quoi)
+regs_td<- td(s=y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
+             contrasts = TRUE)
+
+Step2 : j’ajuste la spec 
+
+spec_x13_d<-rjd3x13::spec_x13("rsa5c")
+spec_x13_d<- set_tradingdays(spec_x13_d,
+    option = "UserDefined", 
+    uservariable=c("Lundi","Mardi","Mercredi","Jeudi", "Vendredi", "Samedi"),
+    test = "None")
+spec_x13_d # indicates TD_NONE...pas bon signe ?
+# je ne vois pas où indiquer les variables du contexte ..comme avec le id. ???
+
+
+Step 3 : je cree le contexte
+vars<-list(regs_cal=list(variables = regs_td))
+my_context<-modelling_context(variables=vars)
+
+
+# là je n’ajoute que des regs de calendrier mais si autres en même temps comment les distinguer en termes d’allocation (calendar, trend..) ?
+
+Step 4 : estimation  
+
+sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d, context = my_context)
+sa_x13_d$estimation_spec # prêt à estimer les coeffs 
+sa_x13_d$result_spec # vide 
+sa_x13_d$result # vide 
+==== Rep Alain 
+
+
+Dans ton cas tu crées des variables mais tu ne donnes pas le nom complet (i.e. le groupe de variable). 
+Le id. est à définir dans le uservariable, comme pour les autres régresseurs externes. 
+
+
+
+Tu peux avoir un grand ensemble de variables et n’en utiliser qu’une ou encore utiliser une pour la CJO et d’autres pour autre chose, 
+donc pas de conflit sur ce point : si tu en as d’autres tu changes aussi la spécification. 
+Ne pas hésiter à utiliser la fonction rjd3toolkit::.r2jd_modellingcontext(my_context)$getTsVariableDictionary()
+pour observer les noms des variables de ton contexte.
+
+y_raw <- rjd3toolkit::ABS$X0.2.09.10.M
+regs_td<- td(s=y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
+             contrasts = TRUE)
+vars<-list(regs_cal=list(variables = regs_td))
+my_context<-modelling_context(variables=vars)
+rjd3toolkit::.r2jd_modellingcontext(my_context)$getTsVariableDictionary()
+[1] "Java-Object{[regs_cal.variables]}" # tu as donc ici une seule variable regs_cal.variables
+
+Tu n’as en fait qu’une seule variable qui est la première ! (je fais une sous liste pas expres)
+
+spec_x13_d<- set_tradingdays(spec_x13_d,
+                             option = "UserDefined", 
+                             uservariable=paste0("regs_cal.", c("variables")),
+                             test = "None")
+
+sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d, context = my_context)
+sa_x13_d$result$preprocessing
+sa_x13_d$result$preprocessing$estimation$X[,1] - regs_td[,1]
+
+Pour faire ce que tu veux faire il faut renommer tes régresseurs et les importer sous forme de liste dans ton contexte :
+regs_td<- td(s=y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
+             contrasts = TRUE)
+colnames(regs_td) <- c("Lundi","Mardi","Mercredi","Jeudi", "Vendredi", "Samedi")
+vars<-list(regs_cal=zoo:::as.list.ts(regs_td))
+my_context<-modelling_context(variables=vars)
+rjd3toolkit::.r2jd_modellingcontext(my_context)$getTsVariableDictionary()
+
+spec_x13_d<- set_tradingdays(spec_x13_d,
+                             option = "UserDefined", 
+                             uservariable=paste0("regs_cal.", c("Lundi","Mardi","Mercredi","Jeudi", "Vendredi", "Samedi")),
+                             test = "None")
+sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d, context = my_context)
+sa_x13_d$result$preprocessing
+
+Bilan : le contexte ne prend pas bien en compte les variables mts. Je peux faire une PR dans ce sens dans rjd3toolkit 
+
+Mais dans ton code je ne vois pas comment on pourrait gérer la double liste imbriquée (quel nom de groupe retenir ? 
+reg_cal ou variables ?). 
+Je peux réfléchir à un correctif pour prendre en compte ça lorsque l’on ferait 
+vars<-list(regs_cal= regs_td)
+my_context<-modelling_context(variables=vars)
+
+(un équivalent du zoo :::as.list.ts)
+
+C’est normal que l’on ait TD_NONE car c’est pour dire qu’on utilise pas les régresseurs par défaut (peut-être perturbant mais sinon ça bug), 
+tu vois toutefois que spec_x13_d$regarima$regression$td$users donne les régresseurs utilisés.
+
+=============
+2)	Le paramètre calendar dans context ? doit s’utiliser avec l’option holidays comme dans GUI ?
+Cette option est pre ecrite dans la spec 
+Mais n’existe pas comme argument de la fonction set_tradingdays…
+
+== Rep alain 
+
+Concernant ta seconde question je n’ai en fait jamais testé, je pense qu’il suffit de mettre le nom du calendrier ici : 
+spec_x13_d$regarima$regression$td$holidays.
+Tu peux aussi le vérifier en créant une spec sur JDemetra et en important le workspace.
+À l’occasion si tu testes et que ça marche, n’hésite pas à me le dire je pourrai rajouter un paramètre dans set_tradingdays.
+
+
+
+==== alain su complexité contexte 
+Je suis un peu biaisé mais je trouve ça au contraire assez logique, très en phase avec l’interface Java et que ça a ses avantages : 
+tu as une base de données avec l’ensemble de tes variables et en fonction des besoin tu pioches celle qu’il te faut. 
+En plus tu différencies ce qui est lié purement aux spécifications de ce qui est lié aux données ce qui réduit le risque d’erreurs. 
+Imagine par exemple que tu as un régresseur externe que tu mets à jour tous les mois : dans la v2 tu dois mettre à jour la spec à chaque 
+fois alors que maintenant la spec est identique (ce qui est logique car tu lui dis juste de prendre la variable en question). 
+Autre exemple : tu veux tester différentes façons de construire des régresseurs JO (contrastes calculés différemment, différents jours fériés, etc.), 
+tu vois bien que ta spécification reste la même (working-days par exemple) mais la seule chose qui change ce sont les valeurs des régresseurs -> 
+plus facile à tester.
+
+
+================ ALAIN 
+J’ai fait une PR pour gérer les mts plus facilement.
+https://github.com/palatej/rjd3toolkit/pull/20 
+
+Dans l’exemple de la PL, l’ordre des variables est légèrement changé (toutes les variables r. sont à la fin) 
+mais cela n’a bien sûr aucun impact sur le reste.
+
+
+
+
+
+
+
+
+
+N’hésite pas à me dire si ce n’est pas clair ou si j’ai loupé des questions.
+
+Alain
+
+
+De : Smyk Anna <anna.smyk@insee.fr> 
+Envoyé : jeudi 27 avril 2023 11:39
+À : Quartier la tente Alain <alain.quartier-la-tente@insee.fr>
+Objet : user defined calendar correction
+
+
+
+====== MOI ===
+
+1)	Comment tu utilises concrètement des regresseurs de calendrier user defined
+Là l’ajout ne se fait pas par add_usrdefvar mais bien dans set_trading days !? …le add_usrdefvar semble marcher, mais il faut encore checker l’estimation 
+
+Step 1 : je genere des regresseurs (peu importe quoi)
+regs_td<- td(s=y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
+             contrasts = TRUE)
+
+Step2 : j’ajuste la spec 
+
+spec_x13_d<-rjd3x13::spec_x13("rsa5c")
+spec_x13_d<- set_tradingdays(spec_x13_d,
+    option = "UserDefined", 
+    uservariable=c("Lundi","Mardi","Mercredi","Jeudi", "Vendredi", "Samedi"),
+    test = "None")
+spec_x13_d # indicates TD_NONE...pas bon signe ?
+# je ne vois pas où indiquer les variables du contexte ..comme avec le id. ???
+
+
+Step 3 : je cree le contexte
+vars<-list(regs_cal=list(variables = regs_td))
+my_context<-modelling_context(variables=vars)
+
+
+# là je n’ajoute que des regs de calendrier mais si autres en même temps comment les distinguer en termes d’allocation (calendar, trend..) ?
+
+Step 4 : estimation  
+
+sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d, context = my_context)
+sa_x13_d$estimation_spec # prêt à estimer les coeffs 
+sa_x13_d$result_spec # vide 
+sa_x13_d$result # vide 
+
+
+2)	Le paramètre calendar dans context ? doit s’utiliser avec l’option holidays comme dans GUI ?
+Cette option est pre ecrite dans la spec 
+Mais n’existe pas comme argument de la fonction set_tradingdays…
+
+
+

@@ -1,0 +1,19 @@
+======= Issue 1 : noms params not the same as appearing in spec : ex rmod...be sure to enhance doc
+
+
+======= Issue 2 : posted
+bcasts dont work in set_seats unless left to 0
+
+#### Issue on backcasts
+init_spec<-spec_tramoseats("rsafull")
+new_spec<- set_seats(init_spec,bcasts = 18)
+y <- rjd3toolkit::ABS$X0.2.09.10.M
+sa<- rjd3tramoseats::tramoseats(y,spec=new_spec)
+
+Error in .jcall("jdplus/tramoseats/base/r/TramoSeats", "[B", "toBuffer", :
+                    java.lang.IllegalArgumentException 
+
+
+
+
+  

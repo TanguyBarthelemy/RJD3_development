@@ -1,0 +1,229 @@
+Ramping up of rjd3 tool kit doc 
+
+======= voir avec alain (JP ?)
+(questions generales) 
+- sens de (?) dans user defined output 
+- 
+
+Issues concrets 
+- add holidays (cf code)
+
+- add_usrdefvatr
+
+- warning dans refresh (avec T) "span will be ignored ..."
+"span
+
+- pre processing = TRUE, par default et inaccessible à l'utilisateur dans X13 via R
+
+
+See pending issues 
+- user def in tramo by José
+- seasonal filter export 
+
+==== deep param issues 
+- adjust 
+- yc
+- missing value correction 
+
+
+=== objectif = vignette overview
+
+list tool kit parts 
+
+- calendar correction tools 
+
+- auxilary vars (excepted calendar) 
+
+----- context :
+now variables = liste nommee, could be a function, qui renommerait ce qui ne l'est pas 
+
+- seasonality tests 
+
+- arima model estimation 
+
+
+
+===== Pending comments (potential issues)
+
+---------
+pb valeurs dans periodic contrasts ?
+censé mettre des -1, 1 mais met systemenatiquement des -1 en decembre
+ne crée que n-1 series : est ce voulu
+
+-- difference ramps avec gui
+vs 2.2.4: 1 er point pas à -1 (et à -1 dans R)
+def in GUI bizarre : en saisissant 01/2000 il fait commencer en 12/2019 et l'affiche comme ça !?
+vs 3.0
+
+
+-- trigonomentric
+- all the harmonics are used.? what is all ?
+
+- what could seasonal frequency be ?
+(application to HF data)
+
+================================================================ ISSUES 
+
+Same pb with Last and Excluding  
+====
+
+========== ISSUE 2: set_basic if pre-processing = FALSE no estimation (seems obvious)
+
+SMTH to change in code but leave param, cf JP's answer to issue
+
+- if pre-processing = FALSE (paremeter non existing in GUI)
+
+spec_x13_d<-rjd3x13::spec_x13("rsa5c")
+spec_x13_d<-set_basic(spec_x13_d, preprocessing= FALSE)
+
+sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
+
+
+# Error in .jcall("jdplus/x13/base/r/X13", "[B", "toBuffer", jq) :
+#     java.lang.NullPointerException: Cannot 
+# invoke "jdplus.toolkit.base.core.modelling.GeneralLinearModel.getDescription()" 
+# because "model" is null
+
+
+====== ISSUE 4: pb of default behaviour in set_transform ? NOT SURE 
+
+
+====== ISSUE: where is benchmarking output 
+HERE : doc to be expand, in set_benchmarking : tell where results can be found
+benchmarking.original (ambiguous name = series to be benchmarked)
+benchmarking.target	
+benchmarking.result	
+
+========= ISSUES : set trading days 
+=== settrading days 
+
+do user defined trading days require "context modelling" ?
+
+_____ classical 
+1- all coeffs estimated 
+2- coeffs partly fixed  : how to no fix all coeffs 
+    coef=c(0.7,0.6,0.5),
+    coef.type=c("Fixed","Estimated","Fixed"),
+=> vu que value 0.5 le estimated ne sert à rien 
+
+
+
+_____ stock td 
+issues 
+
+- refresh complete ok 
+
+expand doc 
+- recomprendre les regresseurs vu dans  SH, rien dans old doc
+
+
+================ set easter (without user def regressor) 
+
+default = TRUE // should be false ?
+
+coef + coef.type are redundant ?
+
+
+ISSUE
+if 
+coef=0.6,
+coef.type="Estimated",
+
+estimated va primer et la valeur va etre ignoree 
+test has to be set to non
+
+
+
+
+========= Issue set transform and adjust à voir 
+  
+  ==================================== SET_TRANSFORM
+set_transform: should work just like in GUI in fact, no auto adjust 
+
+1) ========= expand doc
+
+- adjust : where can the correction be seen ? yc in GUI rien ?
+direct en lin : detail operations : pas donné dans old doc 
+- notes methodo ?
+- doc x12 : 
+- sh 
+
+--- outliers taken into account for transfo choice : no trace for the user ! true ?
+
+2) ISSUE 
+ISSUE PREP (not posted yet)
+
+ISSUE 1: =====================adjust working  in default ? NONE in GUI
+------ issue hors refresh to rjd3toolkit 
+> # ## here pb de adjust and leap year : not clear
+> spec_x13_d$regarima$transform$adjust
+[1] "NONE"
+> sa_x13_d$estimation_spec$regarima$transform$adjust
+[1] "NONE"
+> sa_x13_d$result_spec$regarima$transform$adjust
+[1] "LEAPYEAR"
+> spec_x13_ref$regarima$transform$adjust
+[1] "LEAPYEAR"
+> sa_x13_ref$estimation_spec$regarima$transform$adjust
+[1] "LEAPYEAR"
+
+ISSUE 2: ================ passer à auto ne reinitialise pas tous les params 
+=il faut surement repartir de la default spec (ds ce cas il faut le signaler ? ds la doc ?)
+
+verifier pour autres que rsa5c
+
+spec_x13_d$regarima$transform$fn
+[1] "AUTO"
+> sa_x13_d$estimation_spec$regarima$transform$fn
+[1] "AUTO"
+> sa_x13_d$result_spec$regarima$transform$fn
+[1] "LOG"
+> spec_x13_ref$regarima$transform$fn
+[1] "LOG"
+> sa_x13_ref$estimation_spec$regarima$transform$fn
+[1] "LOG"
+> sa_x13_ref$result_spec$regarima$transform$fn
+[1] "LOG"
+> # 
+> # ## here pb de adjust and leap year : not clear
+> spec_x13_d$regarima$transform$adjust
+[1] "LENGTHOFPERIOD"
+> sa_x13_d$estimation_spec$regarima$transform$adjust
+[1] "LENGTHOFPERIOD"
+> sa_x13_d$result_spec$regarima$transform$adjust
+[1] "LEAPYEAR"
+> spec_x13_ref$regarima$transform$adjust
+[1] "LEAPYEAR"
+> sa_x13_ref$estimation_spec$regarima$transform$adjust
+[1] "LEAPYEAR"
+> sa_x13_ref$result_spec$regarima$transform$adjust
+[1] "LEAPYEAR"
+
+
+
+
+
+
+====== ISSUE in userdefinef output what is   [1] "adjust"  
+
+leap year stuff 
+get this param 
++ yc series ? equivalent in R ?
+
+===== Clarifier add_usrdefvar: -------------- HERE --------
+
+clairifier « id »  et « name »
+
+
+Vu avec Alain 
+- on va garder le groupe : pour offrir possibilités harmonization qd import ws 
+
+#' @param group,name the name of the regressor in the format (`"group.name"` and `"r.name"` by default, see examples)
+Cal.mardi 
+Mardi=> r.mardi 
+
+#' @param label the label of the variable to be displayed when printing specification or results. By default equals to `name`. 
+
+
+=== ISSUE 6: add HOLIDAYS in ++++ Expand doc
+1 test 

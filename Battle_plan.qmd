@@ -29,61 +29,40 @@ unambiguously
 
 ### ggdemetra
 version 3 faite 
-
-## RJD3 development stages and philo
-
-cf schema bxls (lequel ? histoire couches)
-
-steps 
-- R functions and doc 
-- Actions on R proto (require java class compilation)
-- core algo reviewing in java 
-  - start simple (X-11, extended)
-  - set up orga (Bbk and / or JP):  ??
-
-## RJD3 testing
-
-asked by JP, R packages to set automatic testing
-
-## RJD3 products and solutions 
-
-### importer WS v2 to v3
-
-- (cf alain) permet de voir la nouvelle spec 
-
-### point sur regresseurs externes 
-  - cf mail alain JP 
-  - (cf ntts) comment recup ses propres regresseurs externes in v3
-
-### code translation from v2 to v3
+test it 
 
 
-### rjdworkspace in RJDemetra3
-perfect launch project
 
-### mail JP decembre 2022 à purger
+## RJD3 testing (and incidental documentation)
 
-#### TESTS Ameliorations et maj focntions specs 
+###  New features
 
 -	Pré-identification des gros outliers avant la sélection log/level (impact limité).
--	Intégration du pré-ajustement lp dans Tramo (comparable au X13)
+-	Intégration du pré-ajustement lp dans Tramo (comparable au X13) ? Not clear 
 -	Sélection automatique des variables de jours ouvrables (amélioration dans Tramo et nouveauté dans X13, solution identique dans les deux algorithmes).
 
-Par défaut, ces options ne sont pas activées. J’ai ajusté le code R pour en tenir compte (mais il faudrait adapter les fonctions auxiliaires des specs). Il faudra en tout cas les tester de manière intensive.
-Plus de détail dans les premières semaines de 2023. 
 
-#### Corrections 
-Il y a eu beaucoup de corrections dans les refreshing policies. A tester de nouveau.
 
-#### Futurs developpements
+### Tests
 
-Comme discuté précédemment, je pense fusionner
+- set functions 
 
-- rjd3toolkit, rjd3modelling, rjd3arima et rjd3sa.
+- refresh policies 
 
-Trop de boulot pour la maintenance et pas clair pour les utilisateurs.
+- calendar correction
 
-Il faudra dans un premier temps rendre privées les fonctions uniquement internes et adapter les noms (.r2P_..., noms composés…). S’il y a des volontaires, ils sont les bienvenus.
+- auxilary variables 
+not all done 
+Holes 
+- trigonemetric regressors
+
+### Workspaces in V3
+
+- import ws 
+
+- missing functions 
+
+- adapting rjdworkspace 
 
 
 

@@ -1,0 +1,139 @@
+questions // remarks (mail or pull R): set up doc anyway
+
+- help pages 
+- improve read me (cf RJDemetra)
+- vignettes 
+- online doc (structure chapters for easy feed)
+
+
+=============== GLOBAL "issues"  // display 
+
+- pb de tous es exemples avec les set impossible car la spec doit etre créee en dehors du package, 
+du coup actuellement en commentaire 
+	- les mettre ds x13 (ts) avec spec setting
+	- vignettes (links)
+
+- pb noms à homogeniser 5 4 c ? (mail or issue)
+policy : plus de c in v3 ? in this case all around
+
+
+======== Deep Understanding of params (can be common with TS)
+
+--- lacks : check_mean ? mean ? cf JP on x12: solve this 
+--- pb "adjust"
+
+
+
+
+
+
+
+
+--------------------------------
+### bias correction for X13 : not available in GUI ? and for TS : available in GUI ?
+one additionnal parameter in R ? 
+
+### issue 1: modes x11 yc rjdemetra
+
+### issue 2: v sigmas yc rjdemetra
+
+#### pb default on arima : always airline : more a QUESTION thant an issue ? 
+Impression qu'il Y aura AU MOINS les ordres du airline 
+si parametres pas fixés bien sur à voir ...;
+
+
+d=1..bd= 1 etc ?
+
+3) in refresh tests with rjd3x13 : residuals = 0 ???
+
+
+=== PB 3 : ARIMA model estimation 
+smth else as airline is possible ?======== HERE
+
+a)harminizing names 
+rsa5 in GUI v3, plus de 5..
+
+
+
+a) misleading spec display : rsa3, rsa4, rsa5
+$arima
+SARIMA model:  (0,1,1) (0,1,1)
+
+Coefficients
+          Estimate      Type
+theta(1)         0 UNDEFINED
+btheta(1)        0 UNDEFINED
+
+- pb undefined vs NULL cf theta 
+> sa_x13_d$estimation_spec$regarima$arima$phi
+NULL
+> sa_x13_d$result_spec$regarima$arima$phi
+      [,1]       
+value -0.8308417 
+type  "ESTIMATED"
+
+
+> sa_x13_d$estimation_spec$regarima$arima$theta
+      [,1]       
+value 0          
+type  "UNDEFINED"
+> sa_x13_d$result_spec$regarima$arima$theta
+      [,1]        [,2]       
+value -1.479556   0.4922756  
+type  "ESTIMATED" "ESTIMATED"
+
+
+- NULL vs zero(0)
+
+b) default values not dispalyed in estimation spec OR result spec BUT displayed in spec (before estimation)
+NULL 
+
+
+b) avec RF0811
+GUI 2.2.4 
+rsa3 (3,1,1)(0,1,1) / r idem mais pb display
+rsa4 (0,1,1)(0,1,1) 
+rsa5c (1,1,2)(0,1,1)
+
+===============================================
+- seems to be ok avec rsa3
+
+
+rsa 1 : pb outlier detection ?
+
+================= EXPAND DOC
+example to add back to user defined 
+- #' y = rjd3toolkit::ABS$X0.2.09.10.M
+#' m <- x13(y,"rsa5c", userdefined=c("b20","ycal","residuals.kurtosis" ))
+#' m$user_defined$b20
+#' m$user_defined$ycal
+#' m$user_defined$residuals.kurtosis
+
+- pb series names: alll in mode X11 : illisible !!
+to do in doc :
+
+2) in rjd3toolkit (refreshing in rjd3x13)
+
+
+================================================================================================
+===================Remarks on default specs 
+
+Identifier |	Log/level detection |	Outliers detection |	Calendar effects |	ARIMA
+RSA0/RG0 |	NA |	NA |	NA |	Airline(+mean)
+- level direct (additif)
+
+
+RSA1/RG1 |	automatic |	AO/LS/TC |	NA |	Airline(+mean)
+RSA2c/RG2c |	automatic |	AO/LS/TC |	2 td vars + Easter |	Airline(+mean)
+RSA3/RG3 |	automatic |	AO/LS/TC |	NA |	automatic
+RSA4c/RG4c |	automatic |	AO/LS/TC |	2 td vars + Easter |	automatic
+RSA5c/RG5c |	automatic |	AO/LS/TC |	7 td vars + Easter |	automatic
+
+
+
+
+==================================================================================================
+
+
+
+
