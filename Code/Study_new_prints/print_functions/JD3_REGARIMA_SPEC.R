@@ -66,13 +66,13 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
         cat("No\n")
     } else {
         cat(x$regression$easter$type, "\n")
-        cat("Duration:", x$regression$easter$duration, ifelse(x$regression$easter$duration == 8, " (Auto)", ""), "\n")
-        cat("Test:", x$regression$easter$test, ifelse(x$regression$easter$test == "ADD", " (Auto)", ""), "\n")
+        cat("Duration:", x$regression$easter$duration, ifelse(x$regression$easter$duration == 8, "(Auto)", ""), "\n")
+        cat("Test:", x$regression$easter$test, ifelse(x$regression$easter$test == "ADD", "(Auto)", ""), "\n")
         
         if (!is.null(x$regression$easter$coef)) {
             cat("Coef:\n")
             cat("\t- Type:", x$regression$easter$coefficient$type, 
-                ifelse(x$regression$easter$coefficient$type == "FIXED", " (Auto)", ""), "\n")
+                ifelse(x$regression$easter$coefficient$type == "FIXED", "(Auto)", ""), "\n")
             cat("\t- Value:", x$regression$easter$coefficient$value, "\n")
         }
     }
