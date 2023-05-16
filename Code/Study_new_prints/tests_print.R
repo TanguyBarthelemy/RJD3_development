@@ -24,7 +24,7 @@ options(enable_print_style = TRUE)
 # Chargement fonctions de print ------------------------------------------------
 
 path <- "./Code/Study_new_prints/print_functions/"
-function2import <- list.files(path, full.names = TRUE)
+function2import <- list.files(path, full.names = TRUE, recursive = TRUE)
 sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
 
 
@@ -142,7 +142,7 @@ print_JDFractionalAirlineDecomposition(amb.multi)
 # 
 # JDSTS --> OK mais à actualisé depuis old repo
 # 
-# JD3_REGARIMA_SPEC --> fait ! (par Tanguy)
+# JD3_REGARIMA_SPEC --> fait !
 # JD3_REGARIMA_OUTPUT -- > OK
 # 
 # JD3X11 --> fait !
@@ -310,13 +310,13 @@ print_JD3_CHAINEDCALENDAR(final_cal)
 # JDSTS Ok mais pas actualisé
 # JD3 --> à voir avec Anna
 # JD3_TRAMO_OUTPUT OK
-# JD3_SEATS
+# JD3_SEATS --> Fait !
 # JD3_TRAMOSEATS_OUTPUT OK
 # JD3_TRAMOSEATS_RSLTS Ok
 # 
-# JD3_TRAMO_SPEC
-# JD3_SEATS_SPEC
-# JD3_TRAMOSEATS_SPEC
+# JD3_TRAMO_SPEC --> Fait !
+# JD3_SEATS_SPEC --> fait !
+# JD3_TRAMOSEATS_SPEC --> Fait !
 # 
 
 # Classe JD3_SEATS
@@ -339,17 +339,6 @@ print_JD3_SEATS_SPEC(seats_spec)
 ts_spec <- sa_ts_v3$estimation_spec
 print(ts_spec)
 print_JD3_TRAMOSEATS_SPEC(ts_spec)
-
-
-
-
-
-
-
-
-
-
-
 
 
 

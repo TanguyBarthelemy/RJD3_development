@@ -21,6 +21,8 @@ sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 
 # Easter ---------------------
 
+stop("Specific TRAMO...")
+
 spec_x13_d1 <- rjd3x13::spec_x13("rsa5c")
 spec_x13_d1 <- set_easter(spec_x13_d1, 
                           type = "Standard")
