@@ -18,7 +18,7 @@ print_JD3_SEATS <- function(x, enable_print_style = getOption("enable_print_styl
         x$stochastics$sa$data,
         x$stochastics$i$data
     )
-    colnames(tableau) <- c("series", "Seasonally adjusted", "Trend", "Seasonal", "Irregular")
+    colnames(tableau) <- c("Series", "Seasonally adjusted", "Trend", "Seasonal", "Irregular")
     
     cat("Last values\n")
     print(tail(.preformat.ts(tableau)))
