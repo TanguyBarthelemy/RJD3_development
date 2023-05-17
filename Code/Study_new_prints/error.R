@@ -40,6 +40,12 @@ spec_x13_d3 <- set_easter(spec_x13_d3,
 waldo::compare(spec_x13_d1, spec_x13_d2)
 waldo::compare(spec_x13_d2, spec_x13_d3)
 
+sa1 <- rjd3x13::x13(y_raw, spec_x13_d1)
+sa2 <- rjd3x13::x13(y_raw, spec_x13_d2)
+sa3 <- rjd3x13::x13(y_raw, spec_x13_d3)
+
+waldo::compare(sa1, sa2)
+waldo::compare(sa1, sa3)
 
 # Calendar regressor ------------------
 

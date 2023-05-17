@@ -1,0 +1,172 @@
+=== expurging RJDemetra doc 
+------------ do the same with DSA
+
+==== Testing protocole 
+
+level 1 spec 
+level 2 does it estimate smth, credible output ?
+level 3 : comparision ? with GUI  (ex sigma vector ?)
+
+
+==========================
+questions alain
+- pb restart
+
+- version r oxygen requiered for RJDemetra: modify descrotion line
+	- reference lin can be suppressed
+	
+- links to functions not in rjd3
+
+
+======================== improve V3
+- to improve v3 pages= take advantage of this already done work
+
+a lot is very well done and has just to be propagated to V3
+
+- spot better features, be able to implement them
+
+- params which don'aappear in v3 or to be checked
+
+========================== UPDATE correct while I'am there
+
+	- link to new online doc
+	
+=== ISSUES 
+
+- seasonal filter un par periode ne marche pas, ni en v3
+
+- sigma vector a l'air d'etre pris en compte mais effectif ? comp GUI 
+
+- modes X11 :pris en compte dans spec mais pas operationnels
+doc ambigue 
+
+- sens du "automatic" for TD, in Rsafull,RSA5c: parmi qui il selectionne
+
+
+	
+============ pb globaux, à verif en v3
+---1--ok: FAUX
+pb of span : just model // or model + decomp
+span explanations : no model span notion, just estimation span: modif ! : FAUX REPRENDRE le truc d'origine 
+in R : span = model spen (pour le global span c'est à l'utilisateur de prendre la bonne longueur de serie
+
+---1b--- default forecasts avec regarime = -2 ?? vs GUI 
+
+---2--- vS GUI 
+X11 options : mode ? same as GUI for undefined and the rest 
+conflict with transfo ?
+
+la transfo predomine: vori avec ALAIN, si confirmé, je mets à jour la doc
+ou le mode x11 ne marche t il pas en fait ? test GUI 
+
+---3----
+doc on possible x11 values (cf estp) not changed as in v3
+tests on seasonal different seasonal factors by period (pb in v3)
+
+---4----
+
+test des sigma vectors (car pbs constatés ds rjd3x13, mieux ici ?
+
+
+--------------------------------------------
+PRINTS: 
+-afficher estimation span, always
+	
+======== processing the files 
+files processed: (only those where smth needs to be processed)
+1 export_worksapace: just a typo
+take to v3 ?: nothing on workspaces yet
+
+2 import_workspace: typos
+take to v3 ?: nothing on workspaces yet
+
+3 tramoseats_spec.R: typos+ // adding default values (seats: harmo avec rjd3tramoseats
+link to online documentation
+
+---- methodo questions 
+pb avec noms arguments et noms dans l'object output
+might be a pb with trend boundary: sens, inverse
+
+take to v3 ?: 
+
+4 user_defined.R : harmo avec rjd3tramoseats et rjd3x13
+issue = names of this type "RSA5c": maj in v2 minuscule in v3
+ok
+==========================================
+5 regarima_specTS.R
+- top info on models
+-- TODO: possible and default values ???
+----- what to propagate to v3 HERE
+
+6 x13_spec 
+main pb = mode x11
+harmonize possibe values with rjd3x13
+========= HERE
+test
+- seaso filters by period 
+- sigma vector
+
+
+7 x13.R
+=== HERE setting @details
+multipilcatif = log, for pre adjustment 
+--- 1 enhance v2 :ok 
+
+
+take to v3: HERE
+- x13
+- fast X13
+- X11
+=== ubiquituous, to propagate
+- ref to online doc 
+
+8 regarima_specX13
+- like reg arima TS 
+	- possible values 
+	- transfert what needed to v3
+	
+modifs (out of typos)
+#' (\code{fcst.horizon} set to \code{-1}). et pas -2 (tramo)
+
+9 regarima.R
+- intro review 
+
+10 tramoseats.R
+=== HERE setting @details
+multipilcatif = log in tramo and seats
+=====================================================
+
+======================= explo: alain's suggestions
+ROXYGEN FAMILY
+liens vers functions autres packages 
+rjd3x13::...
+
+========================== Features to add to v3
+
+- better specification of objects
+
+- better references to functions to try out 
+#' Functions to create a 'JDemetra+' workspace (\code{new_workspace()}) and
+#' to add a new multi-processing (\code{new_multiprocessing()}).
+
+- see also
+
+#' @seealso \code{\link{load_workspace}}, \code{\link{save_workspace}},
+#' \code{\link{add_sa_item}}
+
+- external 
+#' @references
+#' Info on 'JDemetra+', usage and functions:
+#' \url{https://ec.europa.eu/eurostat/cros/content/documentation_en/}
+#' BOX G.E.P. and JENKINS G.M. (1970), "Time Series Analysis: Forecasting and Control", Holden-Day, San Francisco.
+
+- separation from title
+
+#' @description
+
+--- spec descrption
+#' @param spec the model specification. It can be the name (\code{character}) of a predefined 'JDemetra+' model specification
+#' (see \emph{Details}), an object of class \code{c("regarima_spec","TRAMO_SEATS")} or an object of class \code{c("regarima", "TRAMO_SEATS")}.
+#' The default is \code{"TRfull"}.
+
+================= FOR dispatch

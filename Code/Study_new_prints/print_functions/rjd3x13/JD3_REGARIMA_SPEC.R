@@ -13,7 +13,7 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     
     cat("\n", style_pre_code, "Series", style_post_code, "\n", sep = "")
     
-    cat("Serie span: ")
+    cat("Series span:")
     print_JD3_SPAN(x$basic$span)
     
     cat("Preliminary Check: ", ifelse(x$basic$preliminaryCheck, "Yes", "No"), "\n", sep = "")
@@ -23,6 +23,7 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
     
     cat("Model span: ")
     print_JD3_SPAN(x$estimate$span)
+    
     cat("\n")
     cat("Tolerance: ", x$estimate$tol, "\n", sep = "")
     

@@ -1,0 +1,37 @@
+======= 
+
+--- lacks : check_mean ? mean ? cf JP on x12: solve this 
+--- pb "adjust"
+
+- estimation with user def variables // yc calendar
+
+QUESTION : where to see the created (not user def) regressors 
+
+
+
+
+
+
+
+
+
+==================================== SET_BASIC
+set_basic: att works just like in GUI in fact 
+ESTIMATE 
+
+1) ========= expand doc
+rectify : no pre proc but estimation span
+add
+between : excludes end 
+from : includes start 
+"to" excludes end : oui 
+
+remove "pre-processing" sub span 
+
+check if doc clear 
+
+2) ========== ISSUE(S)
+
+
+ 
+

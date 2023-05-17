@@ -1,0 +1,153 @@
+=== pending issues 
+
+Mail JP on refesh 
+
+================== sent mai 11th 11h25
+
+Bonjour Jean,
+
+j'ai fait le tour de l'ecriture des specs avec les refresh policies 
+(j'ai utilisé des specs richement modifiées avec "toutes" les user defined variables possibles")
+
+conclusion : les refreshed specs sont "bien ecrites" ! 
+(j'ai regardé la refreshed spec, estimation spec dans refreshed model and result spec dans refreshed model) 
+
+pour X13 et tramo seats...
+
+Toutefois, il y a TROIS points pas clairs
+
+
+
+
+1) Policy = Current: ai je bien compris ?
+objectif : mettre des AO sur tous les nouveaux points comme dans GUI 
+
+- les AO sont des intervention variables comme dans GUI 
+
+- span ici = les point supplementaires ajoutés à la serie ? (pas d'influence des params du span) ?
+
+- ISSUE : j'ai l'impression que la "Current" n'ajoute pas d'AO actuellement (sinon où les voit on) et agir en fait comme "Fixed" ?
+
+(je fais une issue pour memoire)
+
+
+
+2) utilisation des params du span 
+
+- le parametres du span peuvent etre renseignés pour chaque policy, il ne seront pas utilisés sauf pour 
+le span pour le refresh des outliers : il faudrait ajouter un warning non ?
+
+- le span est calculé comme ceci il me semble 
+period=12
+start=c(2020,12) par exemple 
+end=c(2022,9)
+n<-period*(end[1]-start[1])+end[2]-start[2]
+
+ce span devrait definir le "frozen domain" = la periode sur laquelle on applique le refesh ?
+
+en fait non ...
+ 
+car avec "Outliers" et "Outliers_StochasticComponent"
+
+en fait dans la spec la detection d'outliers va etre modifiée comme suit 
+type= FROM 
+d0= end 
+(je n'arrive pas à imposer une autre config, est ce normal ?)
+=> le START ne sert à rien ?: pourtant il faut le renseigner sinon erreur....
+
+pourrait t on demander à l'utilisateur de renseigner la date d0 du FROM (ce qui sert) 
+et remettre tout dans ton format apres ?
+
+Par ailleurs je me demande si la spec est bien ecrite avec "Outliers" policy 
+current_result_spec <- sa_ts_d$result_spec
+current_domain_spec <- sa_ts_d$estimation_spec
+spec_tramoseats_ref <- tramoseats_refresh(current_result_spec, # point spec to be refreshed
+                              current_domain_spec, #domain spec (set of constraints)
+                              policy = "Outliers",
+                              period=12,
+                              start=c(2012,1), # Useless ??
+                              end=c(2021,1))
+
+on a bien 
+ spec_ts_d$tramo$outlier$enabled
+[1] TRUE
+> sa_ts_d$estimation_spec$tramo$outlier$enabled
+[1] TRUE
+> sa_ts_d$result_spec$tramo$outlier$enabled
+[1] FALSE
+> spec_tramoseats_ref$tramo$outlier$enabled
+[1] TRUE
+> sa_ts_ref$estimation_spec$tramo$outlier$enabled
+[1] TRUE
+> sa_ts_ref$result_spec$tramo$outlier$enabled
+[1] FALSE
+> 
+
+ET 
+spec_ts_d$tramo$outlier$span$type
+[1] "ALL"
+> sa_ts_d$estimation_spec$tramo$outlier$span$type
+[1] "ALL"
+> sa_ts_d$result_spec$tramo$outlier$span$type
+[1] "ALL"
+> spec_tramoseats_ref$tramo$outlier$span$type
+[1] "FROM"
+> sa_ts_ref$estimation_spec$tramo$outlier$span$type
+[1] "FROM"
+> sa_ts_ref$result_spec$tramo$outlier$span$type
+[1] "FROM"
+> 
+
+MAIS 
+> spec_ts_d$tramo$outlier$span$d0
+NULL
+> sa_ts_d$estimation_spec$tramo$outlier$span$d0
+NULL
+> sa_ts_d$result_spec$tramo$outlier$span$d0
+NULL
+> spec_tramoseats_ref$tramo$outlier$span$d0
+[1] "2021-01-01"
+> sa_ts_ref$estimation_spec$tramo$outlierspan$d0 : POURQUI NULL ?
+NULL
+> sa_ts_ref$result_spec$tramo$outlier$span$d0: OK ici 
+[1] "2021-01-01"
+
+Voilà mes resultats / interrogations 
+
+Je vais (progressivement) clarifier la doc des packages sur le refesh 
+
+
+
+Je vais purger les issues que j'ai postées et retester celles qui on été fermées 
+
+Bonne Journée
+
+Anna 
+================== sent mai 11th 11h25
+
+======== NEXT jp ......NAMES
+
+Il serait bon de rendre les noms moins ambigus aussi ppour l'utilisateur 
+(apres on les ferait correspondre à "tes" noms dans la fonction)
+
+je te joins une proposition dans le fichier excel ci joint 
+...........
+
+====== > clarifier parametrage ?
+
+
+-- qui si outliers detection touched by user : NO override ever
+
+-- harmonisation noms (joindre excel file) 
+
+
+
+
+
+---- some tests on data comparing with GUI 
+
+---- structure and feed of jd+ online doc chapter 
+
+======= end of refresh 
+
+
