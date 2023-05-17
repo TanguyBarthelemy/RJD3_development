@@ -27,15 +27,24 @@ x13_refresh	Refresh Policy
 #' More information on calendar correction in JDemetra+ online documentation:
 #' \url{https://jdemetra-new-documentation.netlify.app/}
 
+
+-- without calendar
+==== 
+
+available  policies 
+
+current: applying the current pre-adjustment reg-arima model and adding the new raw data points as Additive Outliers (defined as new intervention variables)
+fixed:  applying the current pre-adjustment reg-arima model replacing forecasts by new raw data points.
+FixedParameters: pre-adjustement reg-arima model is partially modified: regression coefficents will be re-estimated but regression variables, Arima orders 
+and coefficients are unchanged.
+FixedAutoRegressiveParameters: same as FixedParameters but Arima Moving Average coefficients (MA) are also reestimated, Auto-regrressive (AR) coefficents are kept fixed. 
+FreeParameters: all regression and Arima model coefficients are reestimated, regression variables and Arima orders are kept fixed.
+Outliers: regression variables and Arima orders are kept fixed, but outliers will be re-detected on the defined span, thus all regression and Arima model coefficients are reestimated
+Outliers_StochasticComponent: same as "Outliers" but Arima model orders (p,d,q)(P,D,Q) can also be re-identified.
+
+
 ============ rjd3toolkit
 gnerating regressors 
--- without calendar
-
-
-### conflict 6 avril potential pb 
-#' @param meanCorrection Boolean indicating if the regressors are corrected for long-term mean (e.g seasonally adjusted).
-
-
 ---------------
 #' Trading day regressors without holidays
 

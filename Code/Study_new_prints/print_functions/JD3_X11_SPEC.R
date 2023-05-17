@@ -22,6 +22,5 @@ print_JD3_X11_SPEC <- function(x, enable_print_style = getOption("enable_print_s
     cat("Nb of backcasts: ", x$nbcasts, "\n", sep = "")
     cat("Calendar sigma: ", x$sigma, "\n", sep = "")
     
-    cat("\n")
     return(invisible(x))
 }

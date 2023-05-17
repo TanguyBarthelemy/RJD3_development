@@ -93,7 +93,7 @@ spec_ts_d<- set_transform(spec_ts_d,
 spec_ts_d<-set_outlier(spec_ts_d,
                        span.type= "Last", n1 = 60,
                        outliers.type = c("LS", "TC"),
-                       critical.value = 5,
+                       # critical.value = 5,
                        tc.rate =0.85)
 ### quick check if estimation works 
 sa_ts_d<- tramoseats(y_raw, spec_ts_d)

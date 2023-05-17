@@ -51,10 +51,10 @@ test it
 
 - calendar correction
 
-- auxilary variables 
+- auxiliary variables 
 not all done 
 Holes 
-- trigonemetric regressors
+- trigonometric regressors
 
 ### Workspaces in V3
 

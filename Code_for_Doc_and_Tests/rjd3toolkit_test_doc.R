@@ -12,7 +12,7 @@ library(rjd3toolkit)
 # c other aux variables 
 ### stop here 
 ####### Part 2
-
+library(rjd3toolkit)
 ### data in case, but better use built in data for examples 
 ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
@@ -25,21 +25,20 @@ y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9
 # ########### ISSUE 1 : posted : OK att type and NOT Type
 # # ### First 60 obs 
 spec_x13_d<-rjd3x13::spec_x13("rsa5c")
-spec_x13_d<-set_basic(spec_x13_d,Type="First", n0 = 60,
+spec_x13_d<-set_basic(spec_x13_d,type="First", n0 = 60,
                       preliminary.check = TRUE,
                       preprocessing= TRUE)
 
 
 ###### ISSUE 2:  preprocessing= FALSE : IMPOSSIBLE: posted 
-spec_x13_d<-rjd3x13::spec_x13("rsa5c")
-spec_x13_d<-set_basic(spec_x13_d, preprocessing= FALSE)
-
-sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
+# spec_x13_d<-rjd3x13::spec_x13("rsa5c")
+# spec_x13_d<-set_basic(spec_x13_d, preprocessing= FALSE)
+# 
+# sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
 
 
 #######  ISSUE 3: check out weighted calendars  too check 
-
-
+## cf tanguy, pb class 
 
 ######## Issue 3: pb default in set transform ? not an issue 
 # ##### set  transform 
@@ -571,6 +570,8 @@ sa_x13$result$preprocessing$description$preadjustment
 ### TEST adding a calendar into holidays (just like in gui: no need to generate external regressors)
 # can we retrieve them
 
+# ISSUE: specifying  
+spec_x13_d<-rjd3x13::spec_x13("rsa5c")
 ### create a calendar
 BE <- national_calendar(list(
     fixed_day(7,21),
@@ -587,7 +588,16 @@ BE <- national_calendar(list(
 my_context<-modelling_context(calendars = list(cal=BE))
 class(my_context)
 my_context$calendars$cal$days
-rjd3toolkit::.r2jd_modellingcontext(my_context)$getTsVariableDictionary()
+rjd3toolkit::.r2jd_modellingcontext(my_context)$getCalendars()$getNames()
+
+spec_x13_d$regarima$regression$td$holidays<-BE
+spec_x13_d$regarima$regression$td$holida
+
+sa_x13<- rjd3x13::x13(ABS$X0.2.09.10.M,spec_x13_d, context = my_context)
+
+
+
+
 
 # built in regressors with specific holidays (like gui)
 

@@ -163,18 +163,33 @@ sa_x13_d$user_defined$adjust
 #                       bq = 0)
 
 # ### set_tradingdays
-# spec_x13_d<-rjd3x13::spec_x13("rsa5c")
-# # spec_x13_d<- set_tradingdays(spec_x13_d,
-# #     option = "TD4", test = "None",
-# #     coef=c(0.7,NA,0.5),
-# #     coef.type=c("Fixed","Estimated","Fixed"),
-# #     leapyear="LengthOfPeriod",
-# #     leapyear.coef=0.6
-# #     )
+spec_x13_d<-rjd3x13::spec_x13("rsa5c")
+
+spec_x13_d<-rjd3x13::spec_x13("rsa3")
+spec_x13_d<- set_tradingdays(spec_x13_d,
+    option = "TD4", test = "None",
+    coef=c(0.7,NA,0.5),
+    coef.type=c("Fixed","Estimated","Fixed"),
+    leapyear="LengthOfPeriod",
+    leapyear.coef=0.6
+    )
+spec_x13_d$regarima$regression$td
 # # 
-# # spec_x13_d<- set_tradingdays(spec_x13_d,stocktd=28)
+y_raw<-rjd3toolkit::ABS$X0.2.08.10.M
+# ISSUE pb estimation with stocktdif rsa3 (not if rsa5c)
+spec_x13_d<-rjd3x13::spec_x13("rsa3")
+spec_x13_d<- set_tradingdays(spec_x13_d,stocktd=28)
+spec_x13_d$regarima$regression$td
+sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
 # 
-# 
+spec_x13_d<-rjd3x13::spec_x13("rsa1")
+spec_x13_d$regarima$regression$td
+spec_x13_d<- set_tradingdays(spec_x13_d,stocktd=28)
+spec_x13_d$regarima$regression$td
+sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
+
+
+
 # 
 # ### set_easter
 # spec_x13_d<-rjd3x13::spec_x13("rsa5c")
