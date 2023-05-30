@@ -1,6 +1,6 @@
 # Installation des packages (dev version) ---------------------------------
 
-remotes::install_github("palatej/rjd3toolkit")
+remotes::install_github("palatej/rjd3toolkit", ref = "9a7f650816ba9b900cad759183d37baa19d2111c")
 # remotes::install_github("palatej/rjd3modelling")
 # remotes::install_github("palatej/rjd3sa")
 # remotes::install_github("palatej/rjd3arima")

@@ -3,7 +3,7 @@
 #######             Test des fonctions v2 de gestion des WS              ####### 
 ################################################################################
 
-# Installation chez AQLT --------------------------------------------------
+# Installation chez AQLT -------------------------------------------------------
 
 # remotes::install_github("https://github.com/AQLT/rjdemetra3")
 
@@ -38,7 +38,9 @@ id2 <- pull_out_fire("ws_output")
 ws_from <- RJDemetra::load_workspace("WS/ws_input.xml")
 ws_to <- RJDemetra::load_workspace("WS/ws_output.xml")
 
-transfer_series(ws2 = ws_from, ws1 = ws_to, mp_from = "SAProcessing-1", mp_to = "SAProcessing-1", print_indications = FALSE)
+transfer_series(ws2 = ws_from, ws1 = ws_to, 
+                mp_from = "SAProcessing-1", 
+                mp_to = "SAProcessing-1")
 
 RJDemetra::save_workspace(ws_to, "./WS/ws_output.xml")
 
@@ -60,7 +62,10 @@ id2 <- pull_out_fire("ws_output")
 ws_from <- RJDemetra::load_workspace("WS/ws_input.xml")
 ws_to <- RJDemetra::load_workspace("WS/ws_output.xml")
 
-replace_series(ws2 = ws_from, ws1 = ws_to, mp_name = "SAProcessing-3", selected_series = c("RF1011", "RF1012"))
+stop("Si une série est présente dans différents MP, laquelle est utilisée ?")
+replace_series(ws2 = ws_from, ws1 = ws_to, 
+               mp_name = "SAProcessing-3", 
+               selected_series = c("RF1011", "RF1012"))
 
 RJDemetra::save_workspace(ws_to, "./WS/ws_output.xml")
 
@@ -82,7 +87,7 @@ id2 <- pull_out_fire("ws_output")
 ws_from <- RJDemetra::load_workspace("WS/ws_input.xml")
 ws_to <- RJDemetra::load_workspace("WS/ws_output.xml")
 
-update_metadata(workspace1 = ws_to, workspace2 = ws_from)
+update_metadata(workspace1 = ws_from, workspace2 = ws_to)
 
 RJDemetra::save_workspace(ws_to, "./WS/ws_output.xml")
 
@@ -92,7 +97,7 @@ bring_back(id2)
 
 # MP manipulation --------------------------------------------------------------
 
-## replace / remove / add sa-item -------------------------------------------------------------
+## replace / remove / add sa-item ----------------------------------------------
 
 # Ici on teste les fonctions :
 #   - rjdworkspace::replace_sa_item()
@@ -104,35 +109,53 @@ bring_back(id2)
 #   - WS output
 
 # Première chose : on met les WS à l'abri
-id <- pull_out_fire("ws_output")
+id1 <- pull_out_fire("ws_output")
+id2 <- pull_out_fire("ws_input")
 
 ws <- RJDemetra::load_workspace("WS/ws_output.xml")
-compute(ws)
+ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
+# compute(ws)
+# compute(ws_input)
 
 mp1 <- ws |> get_object(pos = 1)
 mp2 <- ws |> get_object(pos = 2)
 mp3 <- ws |> get_object(pos = 3)
 
-sa_x13 <- RJDemetra::jx13(ipi_c_eu[, "FR"])
+sa_jx13 <- RJDemetra::jx13(ipi_c_eu[, "FR"])
 sa_x13 <- RJDemetra::x13(ipi_c_eu[, "FR"])
 sa_ts <- RJDemetra::jtramoseats(ipi_c_eu[, "FR"])
 
 # Suppression de tous les SA-item du 2ème MP
 remove_all_sa_item(mp = mp2) # Erreur
 
-# Suppression du 2ème SA-item du 3ème MP (RF1012)
-remove_sa_item(mp = mp3, pos = 2) # Pas d'effet
+# Suppression du 1er SA-item du 1er MP (RF1020)
+remove_sa_item(mp = mp1, pos = 1)
+# mp3 |> get_all_objects() |> length()
+# ws |> get_object(pos = 3) |> get_all_objects() |> length()
 
-# Replacement du 1er SA-item du 1er MP (RF1020)
-replace_sa_item(mp = mp3, pos = 1, sa_item = sa_x13) # Erreur
+# Replacement du 2ème SA-item du 3ème MP (RF1012)
+sa_item <- ws_input |> get_object(pos = 3L) |> get_object(pos = 2L)
+replace_sa_item(mp = mp3, pos = 2, sa_item = sa_item)
 
 # Ajout d'un nouveau SA-item dans le 3ème MP
 add_sa_item(workspace = ws, multiprocessing = "SAProcessing-3", 
-            sa_obj = sa_ts, name = "TramoSeats") # ça a marché !
+            sa_obj = sa_ts, name = "IPI_EU_FR")
 
 RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
 
-bring_back(id)
+bring_back(id1)
+bring_back(id2)
 
 
+# Remaining functions ----------------------------------------------------------
+
+# - set_metadata
+# - set_comment
+# - update_metadata_roughly
+# - get_comment
+# - update_path
+# - set_spec
+# - verif_ws_duplicates
+# - set_ts
+# - set_name
 
