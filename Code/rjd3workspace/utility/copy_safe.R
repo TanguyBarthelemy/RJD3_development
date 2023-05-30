@@ -1,8 +1,8 @@
 
 pull_out_fire <- function(ws_name, id = NULL) {
     
-    ws_path <- file.path("./WS/", ws_name)
-    xml_path <- file.path("./WS/", ws_name, ".xml")
+    ws_path <- file.path("./WS", ws_name)
+    xml_path <- file.path("./WS", paste0(ws_name, ".xml"))
     
     if (!(dir.exists(ws_path) && file.exists(xml_path))) {
         stop("Le WS n'existe pas.")
