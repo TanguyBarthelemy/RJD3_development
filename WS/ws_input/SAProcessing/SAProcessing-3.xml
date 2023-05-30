@@ -3,7 +3,7 @@
     <item name="metadata">
         <subset>
             <item name="timestamp">
-                <string>30 mai 2023 08:57:27</string>
+                <string>30 mai 2023 15:32:08</string>
             </item>
         </subset>
     </item>
@@ -41,57 +41,28 @@
     <family>Modelling</family>
 </method>
                             </item>
-                            <item name="transform">
-<subset>
-    <item name="function">
-        <string>Log</string>
-    </item>
-</subset>
-                            </item>
                             <item name="arima">
 <subset>
     <item name="mu">
         <param type="Estimated">
-            <value>-0.0045259472558670955</value>
+            <value>0.0031366951631526226</value>
         </param>
-    </item>
-    <item name="phi">
-        <params>
-            <coef type="Estimated">
-                <value>-0.3842338987195098</value>
-                <stde>0.10967850455693717</stde>
-                <tstat>-3.5032744134475617</tstat>
-            </coef>
-            <coef type="Estimated">
-                <value>-0.15797431355087027</value>
-                <stde>0.057320021635376084</stde>
-                <tstat>-2.7560058256044617</tstat>
-            </coef>
-            <coef type="Estimated">
-                <value>-0.30868993526455385</value>
-                <stde>0.06618639367405305</stde>
-                <tstat>-4.663948556930805</tstat>
-            </coef>
-        </params>
-    </item>
-    <item name="d">
-        <integer>0</integer>
     </item>
     <item name="theta">
         <params>
             <coef type="Estimated">
-                <value>-0.33726498505732305</value>
-                <stde>0.1127133510397217</stde>
-                <tstat>-2.9922363406484678</tstat>
+                <value>-0.8494072061078385</value>
+                <stde>0.02762306949656581</stde>
+                <tstat>-30.7499210474578</tstat>
             </coef>
         </params>
     </item>
     <item name="btheta">
         <params>
             <coef type="Estimated">
-                <value>-0.9084037019903629</value>
-                <stde>0.02592076634467384</stde>
-                <tstat>-35.04540297578896</tstat>
+                <value>-0.99999995544763</value>
+                <stde>1.5624422235027864E-5</stde>
+                <tstat>-64002.363761378896</tstat>
             </coef>
         </params>
     </item>
@@ -101,54 +72,6 @@
 <subset>
     <item name="enabled">
         <boolean>false</boolean>
-    </item>
-</subset>
-                            </item>
-                            <item name="regression">
-<subset>
-    <item name="calendar">
-        <subset>
-            <item name="td">
-                <subset>
-                    <item name="option">
-                        <string>WorkingDays</string>
-                    </item>
-                    <item name="leapyear">
-                        <boolean>true</boolean>
-                    </item>
-                </subset>
-            </item>
-        </subset>
-    </item>
-    <item name="outliers">
-        <strings>
-            <items>TC.2000-11-01 LS.2018-01-01 TC.1996-07-01 AO.1997-04-01 TC.1990-01-01</items>
-        </strings>
-    </item>
-    <item name="coefficients">
-        <subset>
-            <item name="td">
-                <double>0.01248142986832582</double>
-            </item>
-            <item name="lp">
-                <double>0.0300739161385182</double>
-            </item>
-            <item name="TC (2000-11-01)">
-                <double>-0.20360755076138784</double>
-            </item>
-            <item name="LS (2018-01-01)">
-                <double>0.09962789494724217</double>
-            </item>
-            <item name="TC (1996-07-01)">
-                <double>0.09937328989745679</double>
-            </item>
-            <item name="AO (1997-04-01)">
-                <double>0.07704935225836658</double>
-            </item>
-            <item name="TC (1990-01-01)">
-                <double>-0.09031447280913356</double>
-            </item>
-        </subset>
     </item>
 </subset>
                             </item>
@@ -164,6 +87,13 @@
             </item>
             <item name="policy">
                 <string>Complete</string>
+            </item>
+            <item name="metadata">
+                <subset>
+                    <item name="comment">
+                        <string>Série trop courte</string>
+                    </item>
+                </subset>
             </item>
         </subset>
     </item>
@@ -201,49 +131,28 @@
     <family>Modelling</family>
 </method>
                             </item>
-                            <item name="transform">
-<subset>
-    <item name="function">
-        <string>Log</string>
-    </item>
-</subset>
-                            </item>
                             <item name="arima">
 <subset>
-    <item name="phi">
-        <params>
-            <coef type="Estimated">
-                <value>-0.2969813852882642</value>
-                <stde>0.11920843806205854</stde>
-                <tstat>-2.4912782191950127</tstat>
-            </coef>
-            <coef type="Estimated">
-                <value>-0.08034697615850661</value>
-                <stde>0.08107168288262769</stde>
-                <tstat>-0.9910609142631185</tstat>
-            </coef>
-            <coef type="Estimated">
-                <value>-0.12260474383774099</value>
-                <stde>0.07175081615964006</stde>
-                <tstat>-1.7087574804021022</tstat>
-            </coef>
-        </params>
+    <item name="mu">
+        <param type="Estimated">
+            <value>-0.014188075523317313</value>
+        </param>
     </item>
     <item name="theta">
         <params>
             <coef type="Estimated">
-                <value>-0.8234759687001756</value>
-                <stde>0.10422467563073613</stde>
-                <tstat>-7.900969359863667</tstat>
+                <value>-0.8067181090931971</value>
+                <stde>0.030939906686957553</stde>
+                <tstat>-26.07370853620777</tstat>
             </coef>
         </params>
     </item>
     <item name="btheta">
         <params>
             <coef type="Estimated">
-                <value>-0.7890311622349503</value>
-                <stde>0.03502625066850779</stde>
-                <tstat>-22.526851923216853</tstat>
+                <value>-0.9163021661284987</value>
+                <stde>0.020968497993008917</stde>
+                <tstat>-43.6989891423793</tstat>
             </coef>
         </params>
     </item>
@@ -256,36 +165,6 @@
     </item>
 </subset>
                             </item>
-                            <item name="regression">
-<subset>
-    <item name="calendar">
-        <subset>
-            <item name="td">
-                <subset>
-                    <item name="option">
-                        <string>WorkingDays</string>
-                    </item>
-                </subset>
-            </item>
-        </subset>
-    </item>
-    <item name="outliers">
-        <strings>
-            <items>TC.2006-04-01</items>
-        </strings>
-    </item>
-    <item name="coefficients">
-        <subset>
-            <item name="td">
-                <double>0.012174659732788402</double>
-            </item>
-            <item name="TC (2006-04-01)">
-                <double>-0.13374852798397657</double>
-            </item>
-        </subset>
-    </item>
-</subset>
-                            </item>
                         </subset>
                     </item>
                     <item name="benchmarking">
@@ -294,10 +173,17 @@
                 </subset>
             </item>
             <item name="quality">
-                <string>Uncertain</string>
+                <string>Severe</string>
             </item>
             <item name="policy">
                 <string>Complete</string>
+            </item>
+            <item name="metadata">
+                <subset>
+                    <item name="comment">
+                        <string>Série trop longue</string>
+                    </item>
+                </subset>
             </item>
         </subset>
     </item>
@@ -318,120 +204,6 @@
             </item>
             <item name="domainspec">
                 <string>spec1</string>
-            </item>
-            <item name="pointspec">
-                <subset>
-                    <item name="algorithm">
-                        <method version="0.1.0.0">
-                            <name>tramoseats</name>
-                            <family>Seasonal adjustment</family>
-                        </method>
-                    </item>
-                    <item name="tramo">
-                        <subset>
-                            <item name="algorithm">
-<method version="0.1.0.0">
-    <name>tramo</name>
-    <family>Modelling</family>
-</method>
-                            </item>
-                            <item name="arima">
-<subset>
-    <item name="phi">
-        <params>
-            <coef type="Estimated">
-                <value>-0.6039072277731715</value>
-                <stde>0.09635476866386752</stde>
-                <tstat>-6.267538557223824</tstat>
-            </coef>
-        </params>
-    </item>
-    <item name="theta">
-        <params>
-            <coef type="Estimated">
-                <value>-1.1500261558152436</value>
-                <stde>0.11405224784869289</stde>
-                <tstat>-10.083327400446528</tstat>
-            </coef>
-            <coef type="Estimated">
-                <value>0.18383645481517719</value>
-                <stde>0.1046253985306946</stde>
-                <tstat>1.7570920388058924</tstat>
-            </coef>
-        </params>
-    </item>
-    <item name="btheta">
-        <params>
-            <coef type="Estimated">
-                <value>-0.37702495997635865</value>
-                <stde>0.04805282771854129</stde>
-                <tstat>-7.846051478691289</tstat>
-            </coef>
-        </params>
-    </item>
-</subset>
-                            </item>
-                            <item name="automdl">
-<subset>
-    <item name="enabled">
-        <boolean>false</boolean>
-    </item>
-</subset>
-                            </item>
-                            <item name="regression">
-<subset>
-    <item name="calendar">
-        <subset>
-            <item name="td">
-                <subset>
-                    <item name="option">
-                        <string>WorkingDays</string>
-                    </item>
-                </subset>
-            </item>
-        </subset>
-    </item>
-    <item name="outliers">
-        <strings>
-            <items>AO.1994-07-01 TC.1992-09-01 TC.1991-05-01 AO.1991-07-01 TC.1994-09-01 TC.1993-08-01</items>
-        </strings>
-    </item>
-    <item name="coefficients">
-        <subset>
-            <item name="td">
-                <double>0.8255951214841101</double>
-            </item>
-            <item name="AO (1994-07-01)">
-                <double>32.61831583901102</double>
-            </item>
-            <item name="TC (1992-09-01)">
-                <double>-22.09853797095539</double>
-            </item>
-            <item name="TC (1991-05-01)">
-                <double>-19.41463806098313</double>
-            </item>
-            <item name="AO (1991-07-01)">
-                <double>20.192184702315306</double>
-            </item>
-            <item name="TC (1994-09-01)">
-                <double>-15.435491173296619</double>
-            </item>
-            <item name="TC (1993-08-01)">
-                <double>-16.865639885296947</double>
-            </item>
-        </subset>
-    </item>
-</subset>
-                            </item>
-                        </subset>
-                    </item>
-                    <item name="benchmarking">
-                        <subset/>
-                    </item>
-                </subset>
-            </item>
-            <item name="quality">
-                <string>Good</string>
             </item>
             <item name="policy">
                 <string>Complete</string>
@@ -456,13 +228,6 @@
     <family>Modelling</family>
 </method>
                             </item>
-                            <item name="transform">
-<subset>
-    <item name="function">
-        <string>Auto</string>
-    </item>
-</subset>
-                            </item>
                             <item name="arima">
 <subset>
     <item name="mu">
@@ -483,50 +248,7 @@
                             <item name="automdl">
 <subset>
     <item name="enabled">
-        <boolean>true</boolean>
-    </item>
-</subset>
-                            </item>
-                            <item name="outlier">
-<subset>
-    <item name="types">
-        <strings>
-            <items>AO TC LS</items>
-        </strings>
-    </item>
-</subset>
-                            </item>
-                            <item name="regression">
-<subset>
-    <item name="calendar">
-        <subset>
-            <item name="td">
-                <subset>
-                    <item name="mauto">
-                        <string>FTest</string>
-                    </item>
-                    <item name="option">
-                        <string>TradingDays</string>
-                    </item>
-                    <item name="leapyear">
-                        <boolean>true</boolean>
-                    </item>
-                    <item name="testtype">
-                        <string>Separate_T</string>
-                    </item>
-                </subset>
-            </item>
-            <item name="easter">
-                <subset>
-                    <item name="type">
-                        <string>IncludeEaster</string>
-                    </item>
-                    <item name="test">
-                        <boolean>true</boolean>
-                    </item>
-                </subset>
-            </item>
-        </subset>
+        <boolean>false</boolean>
     </item>
 </subset>
                             </item>
