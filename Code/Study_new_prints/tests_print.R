@@ -169,7 +169,7 @@ print(reg_v3$result) # JD3_REGARIMA_RSLTS
 # Classe JD3_REGARIMA_SPEC
 sp <- spec_regarima("RG5C")
 
-sp <- rjd3toolkit::add_outlier(sp, type = c("AO", "LS"), c("2015-01-01", "2010-01-01"))
+sp <- rjd3toolkit::add_outlier(sp, type = c("AO", "LS"), date = c("2015-01-01", "2010-01-01"))
 
 sp <- set_outlier(sp, span.type = "BETWEEN", d0 = "2000-01-01", d1= "2015-01-01", n0 = 10, n1 = 20)
 

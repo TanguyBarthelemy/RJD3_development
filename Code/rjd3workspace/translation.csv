@@ -1,0 +1,17 @@
+rjdworkspace;Description;java dependance;Version 3
+set_metadata;Copy metadata from a SA item to another;;
+replace_sa_item;Remove/replace/add a sa_item from/to a multiprocessing.;;
+set_comment;;;
+add_new_sa_item;;;
+remove_all_sa_item;;;
+update_metadata_roughly;;;
+get_comment;;;
+update_path;;;
+remove_sa_item;;;
+transfer_series;;;
+set_spec;;;
+verif_ws_duplicates;;;
+update_metadata;;;
+set_ts;;;
+set_name;;;
+replace_series;;;
