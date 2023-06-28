@@ -1,12 +1,12 @@
 # Installation des packages (dev version) ---------------------------------
 
-remotes::install_github("palatej/rjd3toolkit", ref = "9a7f650816ba9b900cad759183d37baa19d2111c")
+remotes::install_github("rjdemetra/rjd3toolkit")
 # remotes::install_github("palatej/rjd3modelling")
 # remotes::install_github("palatej/rjd3sa")
 # remotes::install_github("palatej/rjd3arima")
-remotes::install_github("palatej/rjd3tramoseats")
-remotes::install_github("palatej/rjd3x13")
-remotes::install_github("palatej/rjdemetra3")
+remotes::install_github("rjdemetra/rjd3tramoseats")
+remotes::install_github("rjdemetra/rjd3x13")
+remotes::install_github("rjdemetra/rjdemetra3")
 
 remotes::install_github("palatej/rjdfilters")
 remotes::install_github("palatej/rjd3sts")
@@ -14,7 +14,10 @@ remotes::install_github("palatej/rjd3highfreq")
 remotes::install_github("palatej/rjd3stl")
 remotes::install_github("palatej/rjd3bench")
 
+remotes::install_github("rjdemetra/rjd3revisions")
+
 remotes::install_github("AQLT/ggdemetra3")
+remotes::install_github("AQLT/rjdmarkdown")
 
 # Chargement des packages -------------------------------------------------
 
