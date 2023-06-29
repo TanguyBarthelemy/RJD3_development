@@ -38,3 +38,16 @@ bring_back <- function(id) {
     return(id)
 }
 
+bring_all_back <- function() {
+    
+    ids <- list.dirs(path = "./WS/SECURED/", 
+                     recursive = FALSE, 
+                     full.names = FALSE)
+    
+    for (id in ids) {
+        print(bring_back(id))
+    }
+    
+    return(NULL)
+}
+
