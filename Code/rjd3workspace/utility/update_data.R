@@ -2,7 +2,7 @@
 update_data <- function(file_name, 
                         origin) {
     
-    file_path <- file.path("./data_ws/", file_name)
+    file_path <- file.path("./data_temp/", file_name)
     origin_path <- file.path("./data/", origin)
     
     file.copy(from = origin_path,to = file_path, overwrite = TRUE)
