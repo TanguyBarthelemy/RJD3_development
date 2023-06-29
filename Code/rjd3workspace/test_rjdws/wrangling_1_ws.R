@@ -131,7 +131,8 @@ move_data()
 source("./Code/rjd3workspace/new_developpements/new_change_path.R", encoding = "UTF-8")
 update_path(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.csv", pos_mp = 1)
 update_path(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.xls", pos_mp = 2)
-update_path(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.xlsx", pos_mp = 3)
+update_path(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.xlsx", 
+            pos_mp = 3, pos_sa_item = 4)
 
 move_data()
 bring_all_back()
