@@ -3,6 +3,7 @@ library("purrr")
 
 format_path_to_xml <- function(path) {
     return(path |> 
+               normalizePath() |> 
                gsub(pattern = ":", replacement = "%3A") |> 
                gsub(pattern = "/", replacement = "%5C") |> 
                gsub(pattern = "\\\\", replacement = "%5C") |> 
@@ -45,11 +46,11 @@ check_information <- function(ws_xml_path, pos_mp = NULL, pos_sa_item = NULL) {
     }
     
     ws_folder_path <- gsub(pattern = "\\.xml$", replacement = "", 
-                           x = ws_path)
+                           x = ws_xml_path)
     all_xml_sap <- list.files(sprintf("%s/SAProcessing", ws_folder_path), 
                               pattern = "\\.xml$")
     
-    if ((!is.null(pos_mp)) && (!paste0("SaProcessing-", pos_mp, ".xml") %in% all_xml_sap)) {
+    if ((!is.null(pos_mp)) && (!paste0("SAProcessing-", pos_mp, ".xml") %in% all_xml_sap)) {
         stop("Le multiprocessing n'existe pas.")
     }
     
@@ -88,7 +89,7 @@ update_path <- function(ws_xml_path, raw_data_path, pos_mp = NULL, pos_sa_item =
         nb_sa_item <- ws |> get_object(pos_mp) |> get_all_objects() |> length()
     }
     ws_folder_path <- gsub(pattern = "\\.xml$", replacement = "", 
-                           x = ws_path)
+                           x = ws_xml_path)
     
     new_raw_data_path <- format_path_to_xml(raw_data_path)
     
