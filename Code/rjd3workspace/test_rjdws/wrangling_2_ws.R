@@ -108,55 +108,30 @@ bring_back(id1)
 bring_back(id2)
 
 
-# MP manipulation --------------------------------------------------------------
+## Replace series -----------------------------------------------------
 
-## replace / remove / add sa-item ----------------------------------------------
-
-# Ici on teste les fonctions :
-#   - rjdworkspace::replace_sa_item()
-#   - rjdworkspace::add_sa_item() 
-#   - rjdworkspace::remove_sa_item()
-#   - rjdworkspace::remove_all_sa_item()
+# Ici on teste la fonction :
+#   - rjdworkspace::replace_series()
 # on considère 2 WS :
-#   - WS input
 #   - WS output
+#   - WS input
 
-# Première chose : on met les WS à l'abri
 id1 <- pull_out_fire("ws_output")
 id2 <- pull_out_fire("ws_input")
 
-ws <- RJDemetra::load_workspace("WS/ws_output.xml")
+ws_output <- RJDemetra::load_workspace("WS/ws_output.xml")
 ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
-# compute(ws)
-# compute(ws_input)
 
-mp1 <- ws |> get_object(pos = 1)
-mp2 <- ws |> get_object(pos = 2)
-mp3 <- ws |> get_object(pos = 3)
+replace_series(ws2 = ws_input, ws1 = ws_output, mp_name = "SAProcessing-2", 
+               selected_series = c("RF0812", "RF1020", "RF1039"))
 
-sa_jx13 <- RJDemetra::jx13(ipi_c_eu[, "FR"])
-sa_x13 <- RJDemetra::x13(ipi_c_eu[, "FR"])
-sa_ts <- RJDemetra::jtramoseats(ipi_c_eu[, "FR"])
+replace_series(ws2 = ws_input, ws1 = ws_output, mp_name = "SAProcessing-2", 
+               selected_series = c("RF1041", "RF1042"))
 
-# Suppression de tous les SA-item du 2ème MP
-remove_all_sa_item(mp = mp2) # Erreur
+replace_series(ws2 = ws_input, ws1 = ws_output, mp_name = "SAProcessing-3", 
+               selected_series = c("RF1039", "RF1042"))
 
-# Suppression du 1er SA-item du 1er MP (RF1011)
-remove_sa_item(mp = mp1, pos = 1)
-# mp1 |> get_all_objects() |> length()
+RJDemetra::save_workspace(ws_output, "./WS/ws_output.xml")
 
-# Replacement du 2ème SA-item du 3ème MP (RF1012)
-sa_item <- ws_input |> get_object(pos = 3L) |> get_object(pos = 2L)
-replace_sa_item(mp = mp3, pos = 2, sa_item = sa_item)
-
-# Ajout d'un nouveau SA-item dans le 3ème MP
-add_sa_item(workspace = ws, multiprocessing = "SAProcessing-3", 
-            sa_obj = sa_ts, name = "IPI_EU_FR")
-# mp3 |> get_all_objects() |> length()
-
-RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
-
-bring_back(id1)
-bring_back(id2)
-
+bring_all_back()
 

@@ -24,6 +24,58 @@ sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
 
 # WS manipulation --------------------------------------------------------------
 
+# MP manipulation --------------------------------------------------------------
+
+## replace / remove / add sa-item ----------------------------------------------
+
+# Ici on teste les fonctions :
+#   - rjdworkspace::replace_sa_item()
+#   - rjdworkspace::add_sa_item() 
+#   - rjdworkspace::remove_sa_item()
+#   - rjdworkspace::remove_all_sa_item()
+# on considère 2 WS :
+#   - WS input
+#   - WS output
+
+# Première chose : on met les WS à l'abri
+id1 <- pull_out_fire("ws_output")
+id2 <- pull_out_fire("ws_input")
+
+ws <- RJDemetra::load_workspace("WS/ws_output.xml")
+ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
+# compute(ws)
+# compute(ws_input)
+
+mp1 <- ws |> get_object(pos = 1)
+mp2 <- ws |> get_object(pos = 2)
+mp3 <- ws |> get_object(pos = 3)
+
+sa_jx13 <- RJDemetra::jx13(ipi_c_eu[, "FR"])
+sa_x13 <- RJDemetra::x13(ipi_c_eu[, "FR"])
+sa_ts <- RJDemetra::jtramoseats(ipi_c_eu[, "FR"])
+
+# Suppression de tous les SA-item du 2ème MP
+remove_all_sa_item(mp = mp2) # Erreur
+
+# Suppression du 1er SA-item du 1er MP (RF1011)
+remove_sa_item(mp = mp1, pos = 1)
+# mp1 |> get_all_objects() |> length()
+
+# Replacement du 2ème SA-item du 3ème MP (RF1012)
+sa_item <- ws_input |> get_object(pos = 3L) |> get_object(pos = 2L)
+replace_sa_item(mp = mp3, pos = 2, sa_item = sa_item)
+
+# Ajout d'un nouveau SA-item dans le 3ème MP
+add_sa_item(workspace = ws, multiprocessing = "SAProcessing-3", 
+            sa_obj = sa_ts, name = "IPI_EU_FR")
+# mp3 |> get_all_objects() |> length()
+
+RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
+
+bring_back(id1)
+bring_back(id2)
+
+
 ## Set metadata ----------------------------------------------------------------
 
 # Ici on teste la fonction :
@@ -67,16 +119,18 @@ id1 <- pull_out_fire("ws_output")
 
 ws <- RJDemetra::load_workspace("WS/ws_output.xml")
 
-sa_item_1 <- ws |> get_object(3) |> get_object(3)
-sa_item_2 <- ws |> get_object(3) |> get_object(5)
-sa_item_3 <- ws |> get_object(3) |> get_object(4)
+mp3 <- ws |> get_object(3)
+
+sa_item_1 <- mp3 |> get_object(3)
+sa_item_2 <- mp3 |> get_object(5)
+sa_item_3 <- mp3 |> get_object(4)
 
 get_comment(x = sa_item_1) # erreur
 new_sa_item_2 <- set_comment(x = sa_item_2, comment = "Commentaire depuis R")
 new_sa_item_3 <- set_comment(x = sa_item_3, comment = "Modification du commentaire depuis R")
 
-replace_sa_item(mp = ws |> get_object(3), pos = 5, sa_item = new_sa_item_2)
-replace_sa_item(mp = ws |> get_object(3), pos = 4, sa_item = new_sa_item_3)
+replace_sa_item(mp = mp3, pos = 5, sa_item = new_sa_item_2)
+replace_sa_item(mp = mp3, pos = 4, sa_item = new_sa_item_3)
 
 RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
 
@@ -91,7 +145,6 @@ bring_all_back()
 #   - WS input
 #   - WS output
 
-# Première chose : on met les WS à l'abri
 id1 <- pull_out_fire("ws_output")
 id2 <- pull_out_fire("ws_input")
 
@@ -117,14 +170,13 @@ RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
 bring_all_back()
 
 
-## Set path ----------------------------------------------------------------
+## Set path --------------------------------------------------------------------
 
 # Ici on teste la fonction :
 #   - rjdworkspace::update_path()
-# on considère 2 WS :
+# on considère 1 WS :
 #   - WS path
 
-# Première chose : on met les WS à l'abri
 id <- pull_out_fire("ws_path")
 move_data()
 
@@ -138,10 +190,79 @@ move_data()
 bring_all_back()
 
 
-# Remaining functions ----------------------------------------------------------
+## Set ts ----------------------------------------------------------------------
 
-# - replace_series
-# - verif_ws_duplicates
-# - set_ts
-# - set_name
+# Ici on teste la fonction :
+#   - rjdworkspace::set_ts()
+# on considère 1 WS :
+#   - WS output
+
+id <- pull_out_fire("ws_output")
+
+ws <- RJDemetra::load_workspace("WS/ws_output.xml")
+
+mp1 <- ws |> get_object(1)
+
+ts1 <- nottem
+ts2 <- JohnsonJohnson
+ts3 <- ts(1:200, start = 2000, frequency = 12)
+
+sa_item_1 <- mp1 |> get_object(1)
+sa_item_2 <- mp1 |> get_object(2)
+sa_item_3 <- mp1 |> get_object(3)
+
+new_sa_item_1 <- set_ts(sa_item = sa_item_1, ts = ts1)
+new_sa_item_2 <- set_ts(sa_item = sa_item_2, ts = ts2)
+new_sa_item_3 <- set_ts(sa_item = sa_item_3, ts = ts3)
+
+replace_sa_item(mp = mp1, pos = 1, sa_item = new_sa_item_1)
+replace_sa_item(mp = mp1, pos = 2, sa_item = new_sa_item_2)
+replace_sa_item(mp = mp1, pos = 3, sa_item = new_sa_item_3)
+
+RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
+
+bring_all_back()
+
+
+## Verif duplicated series -----------------------------------------------------
+
+# Ici on teste la fonction :
+#   - rjdworkspace::verif_ws_duplicates()
+# on considère 2 WS :
+#   - WS output
+#   - WS duplicated
+
+id1 <- pull_out_fire("ws_output")
+id2 <- pull_out_fire("ws_duplicated")
+
+ws_out <- RJDemetra::load_workspace("WS/ws_output.xml")
+ws_dup <- RJDemetra::load_workspace("WS/ws_duplicated.xml")
+
+verif_ws_duplicates(ws_out)
+verif_ws_duplicates(ws_dup)
+
+bring_all_back()
+
+
+## Set name ----------------------------------------------------------------------
+
+# Ici on teste la fonction :
+#   - rjdworkspace::set_ts()
+# on considère 1 WS :
+#   - WS output
+
+id <- pull_out_fire("ws_output")
+
+ws <- RJDemetra::load_workspace("WS/ws_output.xml")
+
+mp1 <- ws |> get_object(1)
+sa_item_1 <- mp1 |> get_object(1)
+
+new_sa_item_1 <- set_name(sa_item = sa_item_1, name = "name_from_r")
+
+replace_sa_item(mp = mp1, pos = 1, sa_item = new_sa_item_1)
+
+RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
+
+bring_all_back()
 

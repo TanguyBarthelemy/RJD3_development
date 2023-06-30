@@ -1,3 +1,4 @@
+
 library("XML")
 library("purrr")
 
@@ -14,13 +15,19 @@ update_one_xml <- function(xml_path, pos_sa_item, formated_data_path) {
     
     a <- XML::xmlParse(xml_path)
     
-    node_to_change <- a |> 
+    nodes_metadata <- a |> 
         XML::xmlChildren() |> pluck("informationSet") |> 
         # Premier SA-ITEM (l'indice 1 est réservé pour les metadata du SA-processing)
         XML::xmlChildren() |> pluck(1 + pos_sa_item) |> 
-        XML::xmlChildren() |> pluck("subset", "item", "ts", "metaData") |> 
         # Metadata file
-        XML::xmlChildren() |> pluck(3)
+        XML::xmlChildren() |> pluck("subset", "item", "ts", "metaData") |> 
+        XML::xmlChildren()
+    
+    id_pos <- which(sapply(X = nodes_metadata, FUN = XML::xmlAttrs)["name", ] == "@id")
+    
+    node_to_change <- nodes_metadata |> 
+        # path node
+        pluck(id_pos)
     
     attrib <- node_to_change |> xmlAttrs()
     
@@ -124,15 +131,5 @@ update_path <- function(ws_xml_path, raw_data_path, pos_mp = NULL, pos_sa_item =
     print("Done!")
     return(invisible(NULL))
 }
-
-
-
-
-
-
-
-
-
-
 
 
