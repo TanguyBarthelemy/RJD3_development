@@ -264,8 +264,8 @@ td_reg1 <- rjd3toolkit::td(12, start = start(y_raw), length = length(y_raw),
 spec<-rjd3x13::spec_x13("RSA3")
 # set a new specification from a default specification
 spec_ud_TD<- set_tradingdays(spec,
-  option ="UserDefined",
-  uservariable = "regs.td_reg1")
+                             option ="UserDefined",
+                             uservariable = "regs.td_reg1")
 
 # define a context
 vars<-list(regs=list(td_reg1 = td_reg1))
@@ -331,17 +331,17 @@ sa_x13_v3_refresh <- x13(y_new, refreshed_spec)
 
 ## ordre (anyway) : fixedday 2 easter 3 holiday
 frenchCalendar <- national_calendar(days = list(
-  fixed_day(7, 14), # Bastille Day
-  fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
-  special_day('NEWYEAR'), 
-  special_day('CHRISTMAS'), 
-  special_day('MAYDAY'),
-  special_day('EASTERMONDAY'), 
-  special_day('ASCENSION'), #
-  special_day('WHITMONDAY'), 
-  special_day('ASSUMPTION'), 
-  special_day('ALLSAINTSDAY'),
-  special_day('ARMISTICE'))
+    fixed_day(7, 14), # Bastille Day
+    fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
+    special_day('NEWYEAR'), 
+    special_day('CHRISTMAS'), 
+    special_day('MAYDAY'),
+    special_day('EASTERMONDAY'), 
+    special_day('ASCENSION'), #
+    special_day('WHITMONDAY'), 
+    special_day('ASSUMPTION'), 
+    special_day('ALLSAINTSDAY'),
+    special_day('ARMISTICE'))
 )
 
 # frCal_2005 <- weighted_calendar(list(frenchCalendar), 0.5)
@@ -350,7 +350,7 @@ frenchCalendar <- national_calendar(days = list(
 ### For daily data 
 #### pb "type" and non working days in daily data ?
 q <- rjd3toolkit::holidays(frenchCalendar, "1968-01-01", end="2023-12-01", type = "All", 
-              nonworking = 7L)
+                           nonworking = 7L)
 
 ### For monthly and quarterly data, aggregation by groups 
 # param s : relevant ? not if 3 params
@@ -359,27 +359,27 @@ q <- rjd3toolkit::holidays(frenchCalendar, "1968-01-01", end="2023-12-01", type 
 # In v3 flexible definition of groups and reference day 
 ## holidays as treated as the reference day which doesn't have to be a Sunday 
 td_regs<- calendar_td(frenchCalendar,12, start=c(2000,1), length = 100,
-  groups = c(1, 1, 2, 2, 0, 3, 4),
-  # 1: Mondays = Tuesdays, 2 :Wednesdays=Thursdays
-  # 0: Fridays= reference for contrasts
-  # 3: Saturdays, 4: Sundays
-  holiday = 5, #day for aggregating holidays with (here Fridays)
-  contrasts = TRUE,
-  meanCorrection = contrasts
+                      groups = c(1, 1, 2, 2, 0, 3, 4),
+                      # 1: Mondays = Tuesdays, 2 :Wednesdays=Thursdays
+                      # 0: Fridays= reference for contrasts
+                      # 3: Saturdays, 4: Sundays
+                      holiday = 5, #day for aggregating holidays with (here Fridays)
+                      contrasts = TRUE,
+                      meanCorrection = contrasts
 )
 
 td_regs
 #############################
 
-rjd3highfreq::fractionalAirlineEstimation
-(df_daily$log_births, # here series in log
-  x = q, # q= calendar
-  periods = 7, # approx  c(7,365.25)
-  ndiff = 2, ar = FALSE, mean = FALSE,
-  outliers = c("ao","wo","LS"), 
-  # WO compensation
-  criticalValue = 0, # computed in the algorithm
-  precision = 1e-9, approximateHessian = TRUE)
+rjd3highfreq::fractionalAirlineEstimation(
+    df_daily$log_births, # here series in log
+    x = q, # q= calendar
+    periods = 7, # approx  c(7,365.25)
+    ndiff = 2, ar = FALSE, mean = FALSE,
+    outliers = c("ao","wo","LS"), 
+    # WO compensation
+    criticalValue = 0, # computed in the algorithm
+    precision = 1e-9, approximateHessian = TRUE)
 
 # calendar regressors can be defined with the rjd3toolkit package 
 
@@ -402,11 +402,11 @@ x11.doy <- rjd3highfreq::x11(x11.dow$decomposition$sa,  # previous sa
 #step 1: p=7
 #step 2: p=365.25
 amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
-  amb.dow$decomposition$sa,  # DOW-adjusted linearised data
-  period = 365.2425,         # DOY pattern
-  sn = FALSE,                # Signal (SA)-noise decomposition 
-  stde = FALSE,              # Compute standard deviations
-  nbcasts = 0, nfcasts = 0)  # Numbers of back- and forecasts
+    amb.dow$decomposition$sa,  # DOW-adjusted linearised data
+    period = 365.2425,         # DOY pattern
+    sn = FALSE,                # Signal (SA)-noise decomposition 
+    stde = FALSE,              # Compute standard deviations
+    nbcasts = 0, nfcasts = 0)  # Numbers of back- and forecasts
 
 library("rjd3toolkit")
 # French
@@ -451,21 +451,21 @@ plot(ts.union(ao, ls, tc, so, ramp), plot.type = "single",
 
 # JD+
 print(system.time(
-  for (i in 1:1000) {  
-    j <- rjd3toolkit::sarima.estimate(
-      data = log(rjd3toolkit::ABS$X0.2.09.10.M), 
-      order = c(2, 1, 1), seasonal = list(order = c(0, 1, 1), period = 12))
-  }))
+    for (i in 1:1000) {  
+        j <- rjd3toolkit::sarima.estimate(
+            data = log(rjd3toolkit::ABS$X0.2.09.10.M), 
+            order = c(2, 1, 1), seasonal = list(order = c(0, 1, 1), period = 12))
+    }))
 #       user    system        elapsed (in seconds) 
 #      4.98        0.37        4.63 
 
 #R-native
 print(system.time(
-  for (i in 1:1000) {  
-    r <- arima(
-      x = log(rjd3toolkit::ABS$X0.2.09.10.M), 
-      order = c(2, 1, 1), seasonal = list(order = c(0, 1, 1), period = 12))
-  }))
+    for (i in 1:1000) {  
+        r <- arima(
+            x = log(rjd3toolkit::ABS$X0.2.09.10.M), 
+            order = c(2, 1, 1), seasonal = list(order = c(0, 1, 1), period = 12))
+    }))
 #       user    system        elapsed (in seconds) 
 #     158.74        0.23      160.49 
 
@@ -495,7 +495,7 @@ ws <- rjdemetra3::load_workspace("./WS_input/WS_simple.xml")
 
 # Data preparation
 raw_data <- read.csv2("./data/raw_data.csv", dec = ".") |> 
-  ts(start = 1990, frequency = 12)
+    ts(start = 1990, frequency = 12)
 
 # Create WS
 ws <- RJDemetra::new_workspace()
