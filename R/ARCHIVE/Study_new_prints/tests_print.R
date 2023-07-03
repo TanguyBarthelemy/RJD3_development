@@ -23,7 +23,7 @@ options(enable_print_style = TRUE)
 
 # Chargement fonctions de print ------------------------------------------------
 
-path <- "./Code/Study_new_prints/print_functions/"
+path <- "./R/Study_new_prints/print_functions/"
 function2import <- list.files(path, full.names = TRUE, recursive = TRUE)
 sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
 
