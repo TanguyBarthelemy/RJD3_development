@@ -1,23 +1,18 @@
 
 ################################################################################
-#######             Test des fonctions v2 de gestion des WS              ####### 
+#######              Démonstration du package rjdworkspace               ####### 
 ################################################################################
-
-# Installation chez AQLT -------------------------------------------------------
-
-# remotes::install_github("https://github.com/AQLT/rjdemetra3")
-
 
 # Chargement des packages ------------------------------------------------------
 
-library("RJDemetra")
+# library("RJDemetra")
 # library("rjdemetra3")
 library("rjdworkspace")
 
 
-# Chargement fonctions de print ------------------------------------------------
+# Chargement fonctions utiles --------------------------------------------------
 
-path_fct <- "./Code/rjd3workspace/utility/"
+path_fct <- "./R/rjd3workspace/utility/"
 function2import <- list.files(path_fct, full.names = TRUE, recursive = TRUE)
 sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
 
@@ -270,7 +265,7 @@ bring_all_back()
 id <- pull_out_fire("ws_path")
 move_data()
 
-source("./Code/rjd3workspace/new_developpements/new_change_path.R", encoding = "UTF-8")
+source("./R/rjd3workspace/new_developpements/new_change_path.R", encoding = "UTF-8")
 update_path(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.csv", pos_mp = 1)
 update_path(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.xls", pos_mp = 2)
 update_path(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.xlsx", 
