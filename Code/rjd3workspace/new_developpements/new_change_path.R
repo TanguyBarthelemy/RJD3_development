@@ -1,6 +1,6 @@
 
-library("XML")
-library("purrr")
+# library("XML")
+# library("RJDemetra")
 
 format_path_to_xml <- function(path) {
     return(path |> 
@@ -16,20 +16,24 @@ update_one_xml <- function(xml_path, pos_sa_item, formated_data_path) {
     a <- XML::xmlParse(xml_path)
     
     nodes_metadata <- a |> 
-        XML::xmlChildren() |> pluck("informationSet") |> 
+        XML::xmlChildren() |> base::`[[`("informationSet") |> 
         # Premier SA-ITEM (l'indice 1 est réservé pour les metadata du SA-processing)
-        XML::xmlChildren() |> pluck(1 + pos_sa_item) |> 
+        XML::xmlChildren() |> base::`[[`(1 + pos_sa_item) |> 
         # Metadata file
-        XML::xmlChildren() |> pluck("subset", "item", "ts", "metaData") |> 
+        XML::xmlChildren() |> 
+        base::`[[`("subset") |> 
+        base::`[[`("item") |> 
+        base::`[[`("ts") |> 
+        base::`[[`("metaData") |> 
         XML::xmlChildren()
     
     id_pos <- which(sapply(X = nodes_metadata, FUN = XML::xmlAttrs)["name", ] == "@id")
     
     node_to_change <- nodes_metadata |> 
         # path node
-        pluck(id_pos)
+        base::`[[`(id_pos)
     
-    attrib <- node_to_change |> xmlAttrs()
+    attrib <- node_to_change |> XML::xmlAttrs()
     
     chain_temp <- attrib["value"] |> strsplit(split = "file=") |> unlist()
     chain1 <- chain_temp[1]
@@ -43,10 +47,10 @@ update_one_xml <- function(xml_path, pos_sa_item, formated_data_path) {
     return(invisible(NULL))
 }
 
-check_information <- function(ws_xml_path, pos_mp = NULL, pos_sa_item = NULL) {
+check_information <- function(ws_xml_path, pos_mp, pos_sa_item) {
     
     # Verification that the ws_xml_path leads to a valid workspace 
-    ws <- load_workspace(ws_xml_path)
+    ws <- RJDemetra::load_workspace(ws_xml_path)
     compute(ws)
     if (!inherits(ws, "workspace")) {
         stop("There is an error in the workspace path")
@@ -57,22 +61,22 @@ check_information <- function(ws_xml_path, pos_mp = NULL, pos_sa_item = NULL) {
     all_xml_sap <- list.files(sprintf("%s/SAProcessing", ws_folder_path), 
                               pattern = "\\.xml$")
     
-    if ((!is.null(pos_mp)) && (!paste0("SAProcessing-", pos_mp, ".xml") %in% all_xml_sap)) {
+    if ((!missing(pos_mp)) && (!paste0("SAProcessing-", pos_mp, ".xml") %in% all_xml_sap)) {
         stop("Le multiprocessing n'existe pas.")
     }
     
-    if ((!is.null(pos_sa_item)) && is.null(pos_mp)) {
+    if ((!missing(pos_sa_item)) && missing(pos_mp)) {
         stop("Il faut préciser un multiprocessing.")
     }
     
     nb_sap <- ws |> get_all_objects() |> length()
-    if (!is.null(pos_mp)) {
+    if (!missing(pos_mp)) {
         if (nb_sap < pos_mp) {
             stop("Le multiprocessing n'existe pas.")
         }
         
         nb_sa_item <- ws |> get_object(pos_mp) |> get_all_objects() |> length()
-        if ((!is.null(pos_sa_item))) {
+        if (!missing(pos_sa_item)) {
             if (nb_sa_item < pos_sa_item) {
                 stop("Le SA Item n'existe pas.")
             }
@@ -82,34 +86,60 @@ check_information <- function(ws_xml_path, pos_mp = NULL, pos_sa_item = NULL) {
     return(invisible(NULL))
 }
 
-update_path <- function(ws_xml_path, raw_data_path, pos_mp = NULL, pos_sa_item = NULL) {
+update_path2 <- function(ws_xml_path, raw_data_path, pos_mp, pos_sa_item) {
     
     if (!tools::file_ext(raw_data_path) %in% c("csv", "xls", "xlsx")) {
         stop("Les seuls formats de donnée acceptés sont csv, xls, xlsx.")
     }
-    check_information(ws_xml_path, pos_mp, pos_sa_item)
     
-    ws <- load_workspace(ws_xml_path)
+    # Verification that the ws_xml_path leads to a valid workspace 
+    ws <- RJDemetra::load_workspace(ws_xml_path)
     compute(ws)
-    nb_sap <- ws |> get_all_objects() |> length()
-    if (!is.null(pos_mp)) {
-        nb_sa_item <- ws |> get_object(pos_mp) |> get_all_objects() |> length()
+    if (!inherits(ws, "workspace")) {
+        stop("There is an error in the workspace path")
     }
+    
     ws_folder_path <- gsub(pattern = "\\.xml$", replacement = "", 
                            x = ws_xml_path)
+    all_xml_sap <- list.files(sprintf("%s/SAProcessing", ws_folder_path), 
+                              pattern = "\\.xml$")
+    
+    if ((!missing(pos_mp)) && (!paste0("SAProcessing-", pos_mp, ".xml") %in% all_xml_sap)) {
+        stop("Le multiprocessing n'existe pas.")
+    }
+    
+    if ((!missing(pos_sa_item)) && missing(pos_mp)) {
+        stop("Il faut préciser un multiprocessing.")
+    }
+    
+    nb_sap <- ws |> get_all_objects() |> length()
+    if (!missing(pos_mp)) {
+        if (nb_sap < pos_mp) {
+            stop("Le multiprocessing n'existe pas.")
+        }
+        
+        nb_sa_item <- ws |> get_object(pos_mp) |> get_all_objects() |> length()
+        if (!missing(pos_sa_item)) {
+            if (nb_sa_item < pos_sa_item) {
+                stop("Le SA Item n'existe pas.")
+            }
+        }
+    }
     
     new_raw_data_path <- format_path_to_xml(raw_data_path)
     
-    if (is.null(pos_mp)) {
-        for (pos1 in seq_len(nb_sap)) {
+    if (missing(pos_mp)) {
+        
+        all_xml_sap <- list.files(sprintf("%s/SAProcessing", ws_folder_path), 
+                                  pattern = "\\.xml$", full.names = TRUE)
+        for (pos_mp in seq_along(all_xml_sap)) {
             
-            nb_sa_item <- ws |> get_object(pos1) |> get_all_objects() |> length()
-            xml_path <- paste0(sprintf("%s/SAProcessing/", ws_folder_path), 
-                               "SaProcessing-", pos1, ".xml")
+            xml_path <- all_xml_sap[pos_mp]
+            nb_sa_item <- ws |> get_object(pos_mp) |> get_all_objects() |> length()
             
             for (pos2 in seq_len(nb_sa_item)) {
                 update_one_xml(xml_path = xml_path, 
-                               pos_mp = pos1, pos_sa_item = pos2, 
+                               pos_sa_item = pos2, 
                                formated_data_path = new_raw_data_path)
             }
         }
@@ -117,13 +147,15 @@ update_path <- function(ws_xml_path, raw_data_path, pos_mp = NULL, pos_sa_item =
         xml_path <- paste0(sprintf("%s/SAProcessing/", ws_folder_path), 
                            "SaProcessing-", pos_mp, ".xml")
         
-        if (is.null(pos_sa_item)) {
+        if (missing(pos_sa_item)) {
             for (pos in seq_len(nb_sa_item)) {
-                update_one_xml(xml_path = xml_path, pos_sa_item = pos, 
+                update_one_xml(xml_path = xml_path, 
+                               pos_sa_item = pos, 
                                formated_data_path = new_raw_data_path)
             }
         } else {
-            update_one_xml(xml_path = xml_path, pos_sa_item = pos_sa_item, 
+            update_one_xml(xml_path = xml_path, 
+                           pos_sa_item = pos_sa_item, 
                            formated_data_path = new_raw_data_path)
         }
     }
@@ -132,4 +164,4 @@ update_path <- function(ws_xml_path, raw_data_path, pos_mp = NULL, pos_sa_item =
     return(invisible(NULL))
 }
 
-
+update_path2("./../../../../Production/transport_maritime_2023/WS/Modele_TCU_Mens.xml", raw_data_path = "./../../../../Production/transport_maritime_2023/series_brutes/tcu brutes Mens.xls")
