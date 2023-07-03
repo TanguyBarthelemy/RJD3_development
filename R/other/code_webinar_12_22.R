@@ -297,15 +297,15 @@ refreshed_spec <- x13.refresh(current_result_spec, # point spec to be refreshed
 sa_x13_v3_refresh <- x13(y_new, refreshed_spec)
 
 
-rjd3highfreq::fractionalAirlineEstimation
-(df_daily$log_births, # here series in log
-  x = q, # q= calendar
-  periods = 7, # approx  c(7,365.25)
-  ndiff = 2, ar = FALSE, mean = FALSE,
-  outliers = c("ao","wo","LS"), 
-  # WO compensation
-  criticalValue = 0, # computed in the algorithm
-  precision = 1e-9, approximateHessian = TRUE)
+rjd3highfreq::fractionalAirlineEstimation(
+    df_daily$log_births, # here series in log
+    x = q, # q= calendar
+    periods = 7, # approx  c(7,365.25)
+    ndiff = 2, ar = FALSE, mean = FALSE,
+    outliers = c("ao","wo","LS"), 
+    # WO compensation
+    criticalValue = 0, # computed in the algorithm
+    precision = 1e-9, approximateHessian = TRUE)
 
 # calendar regressors can be defined with the rjd3modelling package 
 
@@ -395,7 +395,7 @@ print(system.time(
 #       user    system        elapsed (in seconds) 
 #     158.74        0.23      160.49 
 
-print(j$likelihood )
+print(j$likelihood)
 print(r)
 
 
