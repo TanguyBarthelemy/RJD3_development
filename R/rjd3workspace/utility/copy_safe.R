@@ -14,6 +14,11 @@ pull_out_fire <- function(ws_name, id = NULL) {
     }
     secured_path <- file.path("./WS/SECURED/", id)
     
+    
+    if (!dir.exists("./WS/SECURED/")) {
+        dir.create("./WS/SECURED/")
+    }
+    
     dir.create(secured_path)
     file.copy(from = ws_path, to = secured_path, recursive = TRUE)
     file.copy(from = xml_path, to = secured_path, recursive = TRUE)
