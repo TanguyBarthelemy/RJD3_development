@@ -1,0 +1,24 @@
+questions // remarks (mail or pull R): set up doc anyway
+
+- help pages 
+- improve read me (cf RJDemetra)
+- vignettes 
+- online doc (structure chapters for easy feed)
+
+=== V R 4.3.0 (reistnatlll rjd3)
+========= pb BUILD ERROR ISSUE (first try in v R 4.2.2)
+==> devtools::document(roclets = c('rd', 'collate', 'namespace'))
+
+ℹ Updating rjd3highfreq documentation
+ℹ Loading rjd3highfreq
+Erreur dans .jcall("demetra/information/InformationExtractors", "V", "reloadExtractors") : 
+  RcallMethod: cannot determine object class
+Appels : suppressPackageStartupMessages ... <Anonymous> -> run_pkg_hook -> <Anonymous> -> .jcall
+Exécution arrêtée
+
+Exited with status 1.
+
+
+
+=============== GLOBAL "issues"  // display 
+

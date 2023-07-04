@@ -1,3 +1,26 @@
+FROM ALAIN : two ways to see how to add a new parameter:
+
+    Create a workspace in JDemetra+, import the model and see how the spec object is modified
+    Look at the proto files to see the type of the parameter: https://github.com/palatej/rjd3x13/blob/main/inst/proto/x13.proto#LL142C1-L142C23
+    Here the holidays parameter is a string. In your case you have created a calendar called cal, you should do the following:....
+
+=== global notes (where to store them)
+
+-- output objects : (?) ! allows to indicate length: cal_f(-2) : 2 yeas.;;
+
+=== Remaining tests 
+- residuals 
+- export filtre saiso
+- seatting different seasonal filters by peridos 
+- setting seasonal sigmas 
+
+=== Tools reprex
+
+=== Skils 
+-  
+
+
+==================
 Ramping up of rjd3 tool kit doc 
 
 ======= voir avec alain (JP ?)
@@ -204,7 +227,8 @@ spec_x13_d$regarima$transform$fn
 
 
 
-====== ISSUE in userdefinef output what is   [1] "adjust"  
+====== ISSUE 
+[1] "adjust"  
 
 leap year stuff 
 get this param 

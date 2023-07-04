@@ -242,7 +242,7 @@ spec_x13_d<- set_tradingdays(spec_x13_d,
                              test = "None")
 
 spec_x13_d<- add_usrdefvar(spec_x13_d,group = "arf", name="reg1",label="iv1", regeffect="Trend")
-
+spec_x13_d$regarima$regression$users
 sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d, context = my_context)
 sa_x13_d$result$preprocessing
 

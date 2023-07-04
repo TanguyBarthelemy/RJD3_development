@@ -69,7 +69,9 @@ y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9
 `spec_tramoseats()`
 # c("rsafull", "rsa0", "rsa1", "rsa2", "rsa3", "rsa4", "rsa5")
 # x has to be a specification objet
-x<-spec_tramo("rsafull")# works with "wrong names" cf alain 
+x<-spec_tramo("rsafull")
+
+# works with "wrong names" cf alain 
 # pb avec full semble donner un modele airline ??
 
 
@@ -101,11 +103,18 @@ new_spec<- set_seats(init_spec,
                 bias = TRUE)
 
 y <- rjd3toolkit::ABS$X0.2.09.10.M
+
+new_spec<-spec_tramoseats("rsafull")
 sa<- rjd3tramoseats::tramoseats(y,spec=new_spec)
+
+sa$result$final$sa
 
 sa$result_spec$seats$nfcasts
 
-
+library(RJDemetra)
+sa_model<-RJDemetra::tramoseats(y,"RSAfull")
+str(sa_model$final$series)
+sa_model$final$forecasts
 
   init_spec<-spec_tramoseats("rsa4")
   init_spec$seats$
