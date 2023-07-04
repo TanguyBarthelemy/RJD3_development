@@ -55,44 +55,35 @@ ws_in <- .jws_open(file = "./WS/ws_input.xml")
 # Fonction d'accès -------------------------------------------------------------
 
 # Ici on teste les fonctions :
-#   - get_all_objects()
-#   - get_object()  
-#   - get_name()    
-#   - get_ts()      
-#   - get_model()   
-#   - get_jmodel()  
-#   - get_dictionary() 
-#   - get_indicators() 
-#   - .jws_multiprocessing_count()      
+#   - .jws_multiprocessing()
+#   - .jmp_load()
+#   - .jmp_sa()
+#   - .jmp_name()
+#   - .jsa_name()
+#   - .jsa_results()
+#   - .jsa_read()
+#   - .jws_multiprocessing_count()
+#   - .jmp_sa_count()
 
 ws_in <- .jws_open(file = "./WS/ws_input.xml")
 .jws_multiprocessing_count(ws_in)
 
-mp1 <- .jws_multiprocessing(ws_in, idx = 1)
-name_mp1 <- .jmp_name(mp1)
-.jmp_sa_count(mp1)
+jmp1 <- .jws_multiprocessing(ws_in, idx = 1)
+name_mp1 <- .jmp_name(jmp1)
+.jmp_sa_count(jmp1)
 
-jsa1_mp1 <- .jmp_sa(mp1, idx = 1)
+jsa1_mp1 <- .jmp_sa(jmp1, idx = 1)
 name_sa1_mp1 <- .jsa_name(jsa1_mp1)
 
 .jws_compute(ws_in)
 
 all_sa_mp1 <- .jmp_load(mp1)
 sa1_mp1 <- .jsa_read(jsa1_mp1)
+res_sa1_mp1 <- .jsa_results(jsa1_mp1)
 
-
-
-mod_ws <- get_model(ws_in)
-mod_mp1 <- get_model(mp1, ws_in)
-mod_sa1_mp1 <- get_model(sa1_mp1, ws_in)
-
-jmod_ws <- get_jmodel(ws_in)
-jmod_mp1 <- get_jmodel(mp1, ws_in)
-jmod_sa1_mp1 <- get_jmodel(sa1_mp1, ws_in)
-
-get_dictionary(jmod_sa1_mp1)
-get_indicators(jmod_sa1_mp1, c("diagnostics.seas-sa-kw", "residuals.tdpeaks"))
-
+jestimation <- .jcall(jsa1_mp1, "Ljdplus/sa/base/api/SaEstimation;", "getEstimation")
+jrslt <- .jcall(jestimation, "Ljdplus/toolkit/base/api/information/Explorable;", "getResults")
+.proc_dictionary2(jrslt)
 
 
 

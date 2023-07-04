@@ -38,10 +38,12 @@ library("rjd3toolkit")
 #       get_name()            --> rjdemetra3::.jmp_name()
 #                                 rjdemetra3::.jsa_name()
 #       get_ts()              --> XXX
-#       get_model()           -->
-#       get_jmodel()          -->
-#       get_dictionary()      -->
-#       get_indicators()      -->
+#       get_model()           --> rjdemetra3::.jsa_results()
+#       get_jmodel()          --> XXX
+#       get_dictionary()      --> rjd3toolkit::.proc_dictionary() (ERR)
+#                                 rjd3toolkit::dictionary() (ERR)
+#                                 rjd3toolkit::.proc_dictionary2() (ERR)
+#       get_indicators()      --> XXX
 #       count()               --> rjdemetra3::.jws_multiprocessing_count() 
 #                                 rjdemetra3::.jmp_sa_count()
 # 
