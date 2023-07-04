@@ -13,6 +13,7 @@ library(rjd3toolkit)
 ### stop here 
 ####### Part 2
 library(rjd3toolkit)
+library(rjd3)
 ### data in case, but better use built in data for examples 
 ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
@@ -570,7 +571,7 @@ sa_x13$result$preprocessing$description$preadjustment
 ### TEST adding a calendar into holidays (just like in gui: no need to generate external regressors)
 # can we retrieve them
 
-# ISSUE: specifying  
+# ISSUE: ("HOLIDAYS" Parameter: specifying User defined calendar for built in regressors  
 spec_x13_d<-rjd3x13::spec_x13("rsa5c")
 ### create a calendar
 BE <- national_calendar(list(
@@ -595,6 +596,31 @@ spec_x13_d$regarima$regression$td$holida
 
 sa_x13<- rjd3x13::x13(ABS$X0.2.09.10.M,spec_x13_d, context = my_context)
 
+# Pre-defined regressors based on user-defined calendar
+library(rjd3toolkit)
+y_raw<-ABS$X0.2.09.10.M
+### create a calendar
+BE <- national_calendar(list(
+    fixed_day(7,21),
+    special_day('NEWYEAR'),
+    special_day('CHRISTMAS'),
+    special_day('MAYDAY'),
+    special_day('EASTERMONDAY'),
+    special_day('ASCENSION'),
+    special_day('WHITMONDAY'),
+    special_day('ASSUMPTION'),
+    special_day('ALLSAINTSDAY'),
+    special_day('ARMISTICE')))
+## put into a context 
+my_context<-modelling_context(calendars = list(cal=BE))
+## create a specification
+# init_spec <- rjd3x13::spec_x13("RSA5c")
+## modify the specification
+# new_spec<-set_tradingdays(init_spec,
+#                          option = "TradingDays", calendar.name="cal")
+## estimate with context
+# sa<-rjd3x13::x13(y_raw,new_spec, context=my_context)
+# sa$result$preprocessing
 
 
 
