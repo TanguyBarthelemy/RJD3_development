@@ -12,20 +12,29 @@ unambiguously
 
 ### JD Cruncher in English
 - check github insee.fr
-- voir tests sous "V:/DG75-L120/Series temporelles"
+- voir tests sous "V:/DG75-L120/Series temporelles" ??
 - extensive tests and corrections 
 - companion code for BQ in excel and in Quarto ?
 - comm: osmose community(rappel) / user group
-- parametrage poids indicateur et construction score dans fonction
+- parametrage poids indicateurs et construction score dans fonction
 - ajouter valeurs coefficients et p-values (pour selection cjo) : optionnel
 - test validité chemin avant de cruncher 
 
 ### rjdqa 
-- rescusciter ? reparametrer ?
+- resuscitate ? reparametrer ? voir avec Alain qui y travaille été 2023
 
 
 ### rjdworkspace 
 - current version (will be integrated in RJDemetra3)
+
+--- replace series : if NULL, prendre tout le sap 
+
+
+Peut on utiliser rjdworkspace pour:
+
+- generarion automatique du WS qui sert à choisir les regresseurs cjo (1 spec par jeu)
+
+- attribution des regrersseurs (pour remplacer la manip directe des xml: TRES UTILE²)
 
 ### ggdemetra
 version 3 faite 
@@ -43,26 +52,34 @@ test it
 
 
 
-### Tests
+### Tests and Doc
+(review notes from Madrid)
+Overall: 
 
-- set functions 
+URGENT correction
+- "frequency" : false ! ("divisor of 12" = NOT true in SA)
 
-- refresh policies 
+In toolkit 
 
-- calendar correction
-
-- auxiliary variables 
-not all done 
-Holes 
 - trigonometric regressors
+- sarima estimation
+- UC arima decomp (cf Ine)
 
-### Workspaces in V3
+In X13
 
-- import ws 
+In tramo seats
 
-- missing functions 
+In highfreeq 
 
-- adapting rjdworkspace 
+In STL 
+
+In sts 
+
+In revisions
+
+
+
+
 
 
 
