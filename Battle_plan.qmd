@@ -11,12 +11,7 @@ unambiguously
 ## Brush up v2
 
 ### JD Cruncher in English
-- check github insee.fr
-- voir tests sous "V:/DG75-L120/Series temporelles" ??
-- extensive tests and corrections 
-- companion code for BQ in excel and in Quarto ?
-- comm: osmose community(rappel) / user group
-- parametrage poids indicateurs et construction score dans fonction
+- parametrage poids indicateurs et construction score dans fonction (without having to modify the package and build it )
 - ajouter valeurs coefficients et p-values (pour selection cjo) : optionnel
 - test validité chemin avant de cruncher 
 
@@ -40,12 +35,11 @@ Peut on utiliser rjdworkspace pour:
 version 3 faite 
 test it 
 
-
-
 ## RJD3 testing (and incidental documentation)
 
 ###  New features
 
+(Anna)
 -	Pré-identification des gros outliers avant la sélection log/level (impact limité)
 (rjdx13 and tramo seats...)
 
@@ -56,14 +50,20 @@ test it
 
 (tramo and or x13 ?)
 
-
-
 ### Tests and Doc
+
+- vignettes 
+
+- improve readme files 
+
+- generate github.io pages...(links for online doc)
+
+
 (review notes from Madrid)
 Overall: 
 
 URGENT correction
-- "frequency" : false ! ("divisor of 12" = NOT true in SA)
+- "frequency" : false ! ("divisor of 12" = NOT true in SA) = > fill in table on frequencies
 
 In toolkit 
 
@@ -78,7 +78,7 @@ In X13
 - bias correction ?
 
 
-In tramo seats
+In tramo seats (look into Java: tnaguy)
 - bias correction ?
 
 In highfreq 
