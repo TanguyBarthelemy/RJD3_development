@@ -46,9 +46,15 @@ test it
 
 ###  New features
 
--	Pré-identification des gros outliers avant la sélection log/level (impact limité).
--	Intégration du pré-ajustement lp dans Tramo (comparable au X13) ? Not clear 
--	Sélection automatique des variables de jours ouvrables (amélioration dans Tramo et nouveauté dans X13, solution identique dans les deux algorithmes).
+-	Pré-identification des gros outliers avant la sélection log/level (impact limité)
+(rjdx13 and tramo seats...)
+
+-	Intégration du pré-ajustement LP dans Tramo (comparable au X13) ? Not clear...(in GUI as well)
+
+
+-	Sélection automatique des variables de jours ouvrables (amélioration dans Tramo et nouveauté dans X13, solution identique dans les deux algorithmes)
+
+(tramo and or x13 ?)
 
 
 
@@ -62,14 +68,20 @@ URGENT correction
 In toolkit 
 
 - trigonometric regressors
+
 - sarima estimation
-- UC arima decomp (cf Ine)
+
+- UC arima decomposition (see Ine) (lack of info)
 
 In X13
 
-In tramo seats
+- bias correction ?
 
-In highfreeq 
+
+In tramo seats
+- bias correction ?
+
+In highfreq 
 
 In STL 
 
