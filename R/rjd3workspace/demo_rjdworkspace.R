@@ -115,7 +115,7 @@ bring_back(id2)
 
 # Ici on teste les fonctions :
 #   - rjdworkspace::replace_sa_item()
-#   - rjdworkspace::add_sa_item() 
+#   - rjdworkspace::add_new_sa_item() 
 #   - rjdworkspace::remove_sa_item()
 #   - rjdworkspace::remove_all_sa_item()
 # on considère 2 WS :
@@ -131,13 +131,13 @@ ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
 # compute(ws)
 # compute(ws_input)
 
-mp1 <- ws |> get_object(pos = 1)
-mp2 <- ws |> get_object(pos = 2)
-mp3 <- ws |> get_object(pos = 3)
+mp1 <- ws |> RJDemetra::get_object(pos = 1)
+mp2 <- ws |> RJDemetra::get_object(pos = 2)
+mp3 <- ws |> RJDemetra::get_object(pos = 3)
 
-sa_jx13 <- RJDemetra::jx13(ipi_c_eu[, "FR"])
-sa_x13 <- RJDemetra::x13(ipi_c_eu[, "FR"])
-sa_ts <- RJDemetra::jtramoseats(ipi_c_eu[, "FR"])
+sa_jx13 <- RJDemetra::jx13(RJDemetra::ipi_c_eu[, "FR"])
+sa_x13 <- RJDemetra::x13(RJDemetra::ipi_c_eu[, "FR"])
+sa_ts <- RJDemetra::jtramoseats(RJDemetra::ipi_c_eu[, "FR"])
 
 # Suppression de tous les SA-item du 2ème MP
 remove_all_sa_item(mp = mp2) # Erreur
@@ -147,18 +147,22 @@ remove_sa_item(mp = mp1, pos = 1)
 # mp1 |> get_all_objects() |> length()
 
 # Replacement du 2ème SA-item du 3ème MP (RF1012)
-sa_item <- ws_input |> get_object(pos = 3L) |> get_object(pos = 2L)
-replace_sa_item(mp = mp3, pos = 2, sa_item = sa_item)
+sa_item_1 <- ws_input |> 
+    RJDemetra::get_object(pos = 3L) |> 
+    RJDemetra::get_object(pos = 2L)
+
+replace_sa_item(mp = mp3, pos = 2, sa_item = sa_item_1)
 
 # Ajout d'un nouveau SA-item dans le 3ème MP
-add_sa_item(workspace = ws, multiprocessing = "SAProcessing-3", 
-            sa_obj = sa_ts, name = "IPI_EU_FR")
+sa_item_2 <- ws_input |> 
+    RJDemetra::get_object(pos = 1L) |> 
+    RJDemetra::get_object(pos = 1L)
+add_new_sa_item(mp = mp1, sa_item = sa_item_2)
 # mp3 |> get_all_objects() |> length()
 
 RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
 
-bring_back(id1)
-bring_back(id2)
+bring_all_back()
 
 
 ## Set metadata ----------------------------------------------------------------
@@ -269,7 +273,7 @@ move_data()
 update_path2(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.csv", pos_mp = 1)
 update_path2(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.xls", pos_mp = 2)
 update_path2(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.xlsx", 
-            pos_mp = 3, pos_sa_item = 4)
+             pos_mp = 3, pos_sa_item = 4)
 
 move_data()
 bring_all_back()

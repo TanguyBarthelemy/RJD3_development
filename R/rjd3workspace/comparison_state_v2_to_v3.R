@@ -3,14 +3,14 @@
 ################################################################################
 
 
-# Chargement packages -----------------------------------------------------
+# Afficher toutes les méthodes existantes ---------------------------------
 
-library("RJDemetra")
-library("rjdworkspace")
-
-library("rjdemetra3")
-library("rjd3toolkit")
-
+View(rbind(
+    cbind(pkg = "rjdemetra3", fct = getNamespace("rjdemetra3") |> getNamespaceExports()), 
+    cbind(pkg = "rjd3toolkit", fct = getNamespace("rjd3toolkit") |> getNamespaceExports()), 
+    cbind(pkg = "RJDemetra", fct = getNamespace("RJDemetra") |> getNamespaceExports()), 
+    cbind(pkg = "rjdworkspace", fct = getNamespace("rjdworkspace") |> getNamespaceExports())
+))
 
 # RJDemetra ---------------------------------------------------------------
 
@@ -40,15 +40,13 @@ library("rjd3toolkit")
 #       get_ts()              --> XXX
 #       get_model()           --> rjdemetra3::.jsa_results()
 #       get_jmodel()          --> XXX
-#       get_dictionary()      --> rjd3toolkit::.proc_dictionary() (ERR)
-#                                 rjd3toolkit::dictionary() (ERR)
-#                                 rjd3toolkit::.proc_dictionary2() (ERR)
+#                             --> rjd3toolkit::.proc_dictionary2() [Forme différente]
 #       get_indicators()      --> XXX
 #       count()               --> rjdemetra3::.jws_multiprocessing_count() 
 #                                 rjdemetra3::.jmp_sa_count()
 # 
 #    - Fonction de modification 
-#       add_sa_item()         -->
+#       add_sa_item()         --> rjdemetra3::add_sa_item()
 # 
 #    - Foction combiné 
 #       XXX                   --> rjdemetra3::load_workspace()
@@ -57,21 +55,25 @@ library("rjd3toolkit")
 
 # TYpe de fonction :
 # 
-#     - Fonction de modification
-#       add_new_sa_item()         -->
-#       remove_all_sa_item()      -->
-#       remove_sa_item()          -->
-#       replace_sa_item()         -->
+#     - Fonction de modification d'un SA-ITEM :
+#       add_new_sa_item()         --> rjdemetra3::add_sa_item()
+#       remove_all_sa_item()      --> XXX
+#       remove_sa_item()          --> rjdemetra3::remove_sa_item()
+#       replace_sa_item()         --> rjdemetra3::replace_sa_item()
+# 
+#     - Fonction de modification des WS (globalement) :
 #       replace_series()          -->
 #       transfer_series()         -->
+#       update_metadata()         -->
+#       update_metadata_roughly() -->
+#       update_path()             -->
+# 
+#     - Fonction de modification des metadatas :
 #       set_comment()             -->
 #       set_metadata()            -->
 #       set_name()                -->
 #       set_spec()                -->
 #       set_ts()                  -->
-#       update_metadata()         -->
-#       update_metadata_roughly() -->
-#       update_path()             -->
 # 
 #     - Fonction d'accès
 #       get_comment()             -->
