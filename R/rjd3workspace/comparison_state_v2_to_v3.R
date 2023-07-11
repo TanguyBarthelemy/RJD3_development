@@ -5,12 +5,13 @@
 
 # Afficher toutes les méthodes existantes ---------------------------------
 
-View(rbind(
+a <- rbind(
     cbind(pkg = "rjdemetra3", fct = getNamespace("rjdemetra3") |> getNamespaceExports()), 
     cbind(pkg = "rjd3toolkit", fct = getNamespace("rjd3toolkit") |> getNamespaceExports()), 
     cbind(pkg = "RJDemetra", fct = getNamespace("RJDemetra") |> getNamespaceExports()), 
     cbind(pkg = "rjdworkspace", fct = getNamespace("rjdworkspace") |> getNamespaceExports())
-))
+)
+View(a)
 
 # RJDemetra ---------------------------------------------------------------
 
@@ -57,26 +58,27 @@ View(rbind(
 # 
 #     - Fonction de modification d'un SA-ITEM :
 #       add_new_sa_item()         --> rjdemetra3::add_sa_item()
-#       remove_all_sa_item()      --> XXX
+#       remove_all_sa_item()      --> DEV
 #       remove_sa_item()          --> rjdemetra3::remove_sa_item()
 #       replace_sa_item()         --> rjdemetra3::replace_sa_item()
 # 
 #     - Fonction de modification des WS (globalement) :
-#       replace_series()          -->
-#       transfer_series()         -->
-#       update_metadata()         -->
-#       update_metadata_roughly() -->
-#       update_path()             -->
+#       replace_series()          --> XXX (matériel OK)
+#       transfer_series()         --> XXX (matériel OK)
+#       update_metadata()         --> XXX
+#       update_metadata_roughly() --> XXX
+#       update_path()             --> XXX (matériel OK)
 # 
 #     - Fonction de modification des metadatas :
-#       set_comment()             -->
-#       set_metadata()            -->
-#       set_name()                -->
-#       set_spec()                -->
-#       set_ts()                  -->
+#       set_comment()             --> XXX
+#       set_metadata()            --> XXX
+#       set_name()                --> XXX
+#       set_spec()                --> rjdemetra3::set_domain_specification()
+#                                     rjdemetra3::set_specification()
+#       set_ts()                  --> rjdemetra3::set_data()
 # 
 #     - Fonction d'accès
-#       get_comment()             -->
+#       get_comment()             --> XXX
 
 
 

@@ -53,6 +53,6 @@ bring_all_back <- function() {
         print(bring_back(id))
     }
     
-    return(NULL)
+    return(invisible(NULL))
 }
 

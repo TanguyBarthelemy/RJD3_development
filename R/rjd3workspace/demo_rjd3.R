@@ -8,6 +8,7 @@
 
 library("rjd3toolkit")
 library("rjdemetra3")
+library("rJava")
 
 
 # Chargement fonctions utiles --------------------------------------------------
@@ -16,6 +17,9 @@ path_fct <- "./R/rjd3workspace/utility/"
 function2import <- list.files(path_fct, full.names = TRUE, recursive = TRUE)
 sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
 
+if (!dir.exists("temp")) {
+    dir.create("temp")
+}
 
 # Fonction de création et de sauvegarde ----------------------------------------
 
@@ -25,10 +29,6 @@ sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
 #   - rjdemetra3::.jws_new()
 #   - rjdemetra3::.jws_multiprocessing_new()
 #   - rjdemetra3::save_workspace()
-
-if (!dir.exists("temp")) {
-    dir.create("temp")
-}
 
 new_ws <- .jws_new()
 mp1 <- .jws_multiprocessing_new(jws = new_ws, name = "SAP-1")
@@ -43,10 +43,6 @@ empty_temp()
 # Ici on teste les fonctions :
 #   - rjdemetra3::.jws_open()
 #   - rjdemetra3::.jws_compute()
-
-if (!dir.exists("temp")) {
-    dir.create("temp")
-}
 
 ws_in <- .jws_open(file = "./WS/ws_input.xml")
 .jws_compute(ws_in)
@@ -77,7 +73,7 @@ name_sa1_mp1 <- .jsa_name(jsa1_mp1)
 
 .jws_compute(ws_in)
 
-all_sa_mp1 <- .jmp_load(mp1)
+all_sa_mp1 <- .jmp_load(jmp1)
 sa1_mp1 <- .jsa_read(jsa1_mp1)
 res_sa1_mp1 <- .jsa_results(jsa1_mp1)
 
@@ -104,14 +100,18 @@ jmp1 <- .jws_multiprocessing(ws, idx = 1)
 jmp2 <- .jws_multiprocessing(ws, idx = 2)
 jmp3 <- .jws_multiprocessing(ws, idx = 3)
 
+jmp2_in <- .jws_multiprocessing(ws_in, idx = 2)
 jmp3_in <- .jws_multiprocessing(ws_in, idx = 3)
 
 sa_x13 <- rjd3x13::x13(rjd3toolkit::ABS[, 1])
 sa_ts <- rjd3tramoseats::tramoseats(rjd3toolkit::ABS[, 2])
 
+spec1 <- rjd3x13::spec_x13(name = "RSA5c")
+
 # Ajout d'un nouveau SA-item dans le 1er MP
 add_sa_item(jmp = jmp1, name = "ABS_1", x = sa_x13)
 add_sa_item(jmp = jmp1, name = "ABS_2", x = sa_ts)
+add_sa_item(jmp = jmp1, name = "ABS_3", x = ABS[, 1], spec = spec1)
 
 # Suppression d'un SA-item du 2ème MP
 remove_sa_item(jmp2, idx = 1)
@@ -124,7 +124,66 @@ remove_sa_item(jmp2, idx = 5)
 jsa1_mp3 <- .jmp_sa(jmp3_in, idx = 1)
 replace_sa_item(jmp = jmp1, jsa = jsa1_mp3, idx = 1)
 
+# Transfert de séries
+transfer_series(jmp_from = jmp2_in, jmp_to = jmp2, selected_series = c("RF0899", "RF1039", "RF1041"))
+
 save_workspace(jws = ws, file = "./temp/new_ws.xml", replace = TRUE)
 
 bring_all_back()
 empty_temp()
+
+
+## Set metadata ----------------------------------------------------------------
+
+# Ici on teste la fonction :
+#   - rjdemetra3::rjdemetra3::set_domain_specification()
+#   - rjdemetra3::rjdemetra3::set_specification()
+# on considère 2 WS :
+#   - WS input
+#   - WS output
+
+id <- pull_out_fire("ws_output")
+
+ws <- .jws_open(file = "./WS/ws_output.xml")
+jmp1 <- .jws_multiprocessing(ws, idx = 1)
+
+spec1 <- rjd3x13::spec_x13(name = "RSA3")
+spec2 <- rjd3tramoseats::spec_tramoseats(name = "trfull")
+
+set_specification(jmp = jmp1, spec = spec1, idx = 1)
+set_specification(jmp = jmp1, spec = spec2, idx = 2)
+
+set_domain_specification(jmp = jmp1, spec = spec2, idx = 1)
+.jws_compute(ws)
+
+save_workspace(jws = ws, file = "./temp/new_ws.xml", replace = TRUE)
+
+bring_all_back()
+empty_temp()
+
+
+## Set ts ----------------------------------------------------------------------
+
+# Ici on teste la fonction :
+#   - rjdemetra3::set_data()
+# on considère 1 WS :
+#   - WS output
+
+id <- pull_out_fire("ws_output")
+
+ws <- .jws_open("WS/ws_output.xml")
+jmp1 <- .jws_multiprocessing(ws, idx = 1)
+
+ts1 <- nottem
+ts2 <- JohnsonJohnson
+ts3 <- ts(1:200, start = 2000, frequency = 12)
+
+set_data(jmp1, ts1, 1)
+set_data(jmp1, ts2, 2)
+set_data(jmp1, ts3, 3)
+
+save_workspace(jws = ws, file = "./temp/new_ws.xml", replace = TRUE)
+
+bring_all_back()
+empty_temp()
+
