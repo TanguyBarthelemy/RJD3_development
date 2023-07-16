@@ -208,11 +208,11 @@ id1 <- pull_out_fire("ws_output")
 
 ws <- RJDemetra::load_workspace("WS/ws_output.xml")
 
-mp3 <- ws |> get_object(3)
+mp3 <- ws |> RJDemetra::get_object(3)
 
-sa_item_1 <- mp3 |> get_object(3)
-sa_item_2 <- mp3 |> get_object(5)
-sa_item_3 <- mp3 |> get_object(4)
+sa_item_1 <- mp3 |> RJDemetra::get_object(3)
+sa_item_2 <- mp3 |> RJDemetra::get_object(5)
+sa_item_3 <- mp3 |> RJDemetra::get_object(4)
 
 get_comment(x = sa_item_1) # erreur
 new_sa_item_2 <- set_comment(x = sa_item_2, comment = "Commentaire depuis R")
