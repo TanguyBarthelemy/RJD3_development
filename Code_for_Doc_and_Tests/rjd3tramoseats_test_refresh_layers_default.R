@@ -8,8 +8,8 @@
 # rsa 4c et pas 4 normally
 
 #####################
-library(rjd3toolkit)
-library(rjd3tramoseats)
+library("rjd3toolkit")
+library("rjd3tramoseats")
 # Data  :
 ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
