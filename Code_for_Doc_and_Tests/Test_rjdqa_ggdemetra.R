@@ -59,8 +59,8 @@ y_raw<-serie_brute
 ###########################################################
 # Graphics for communication
 # GGDemetra in itself 
-library(ggplot2)
-library(ggdemetra)
+library("ggplot2")
+library("ggdemetra")
 
 
 #  il faut une date au format ts 
@@ -122,9 +122,9 @@ print(enhanced_plot)
 
 
 # install.packages("RJDemetra", type="source", INSTALL_opts = "--no-multiarch" )
-# library(RJDemetra)
+# library("RJDemetra")
 install.packages("rjdmarkdown", INSTALL_opts = "--no-multiarch")
-library(rjdmarkdown)
+library("rjdmarkdown")
 
 # print_preprocessing() for the pre-processing model;
 # print_decomposition() for the decomposition;

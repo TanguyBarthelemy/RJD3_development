@@ -1,5 +1,5 @@
 ### Testing rjd3toolkit
-library(rjd3toolkit)
+library("rjd3toolkit")
 ######## Part 1
 # a calendar 
 
@@ -12,7 +12,7 @@ library(rjd3toolkit)
 # c other aux variables 
 ### stop here 
 ####### Part 2
-library(rjd3toolkit)
+library("rjd3toolkit")
 library(rjd3)
 ### data in case, but better use built in data for examples 
 ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
@@ -345,8 +345,8 @@ class(st)
 
 
 ## add outliers and ramps
-library(rjd3toolkit)
-library(rjd3x13)
+library("rjd3toolkit")
+library("rjd3x13")
 init_spec <- rjd3x13::spec_x13("RSA5c")
 init_spec$regarima$basic$span$type
 
@@ -375,7 +375,7 @@ sa1<-rjd3x13::x13(y_new,spec_2)
 sa1$result$preprocessing$estimation$y
 
 
-library(rjd3tramoseats)
+library("rjd3tramoseats")
 init_spec <- rjd3tramoseats::spec_tramoseats("rsafull")
 new_spec<-set_estimate(init_spec, type= "From", d0 = "2012-01-01", tol = 0.0000002,
     exact.ml = FALSE, unit.root.limit = 0.98)
@@ -421,7 +421,7 @@ new_spec<-set_arima(init_spec, ## ISSUE ???
 
 
 # Set Benchmarking Specification
-library(rjd3x13)
+library("rjd3x13")
 init_spec <- rjd3x13::spec_x13("RSA5c")
 new_spec<- set_benchmarking(init_spec,
     enabled = TRUE,
@@ -446,8 +446,8 @@ new_spec<- set_benchmarking(init_spec,
 #' \code{"LeapYear"} = leap year effect; \code{"LengthOfPeriod"} = length of period (REGARIMA/X-13 specific), 
 #' \code{"None"} = no effect included. Default: a leap year effect regressor is included with any built-in set of trad
 
-library(rjd3x13)
-library(rjd3toolkit)
+library("rjd3x13")
+library("rjd3toolkit")
 init_spec <- rjd3x13::spec_x13("RSA5c")
 new_spec<-set_tradingdays(init_spec,
     option = "TD4",
@@ -473,8 +473,8 @@ set_tradingdays(
 )
 
 ## set easter
-library(rjd3x13)
-library(rjd3toolkit)
+library("rjd3x13")
+library("rjd3toolkit")
 init_spec <- rjd3x13::spec_x13("RSA5c")
 new_spec<-set_easter(init_spec,
     enabled = TRUE,
@@ -507,8 +507,8 @@ set_easter(
 #'
 #'set_transform
 #'
-library(rjd3x13)
-library(rjd3toolkit)
+library("rjd3x13")
+library("rjd3toolkit")
 init_spec <- rjd3x13::spec_x13("RSA5c")
 new_spec<- set_transform(init_spec,
     fun = "Log",
@@ -597,7 +597,7 @@ spec_x13_d$regarima$regression$td$holida
 sa_x13<- rjd3x13::x13(ABS$X0.2.09.10.M,spec_x13_d, context = my_context)
 
 # Pre-defined regressors based on user-defined calendar
-library(rjd3toolkit)
+library("rjd3toolkit")
 y_raw<-ABS$X0.2.09.10.M
 ### create a calendar
 BE <- national_calendar(list(

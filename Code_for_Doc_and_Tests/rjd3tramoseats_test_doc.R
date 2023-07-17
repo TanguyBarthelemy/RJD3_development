@@ -1,7 +1,7 @@
 # Data  
 
-library(rjd3toolkit)
-library(rjd3tramoseats)
+library("rjd3toolkit")
+library("rjd3tramoseats")
 
 ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
@@ -111,7 +111,7 @@ sa$result$final$sa
 
 sa$result_spec$seats$nfcasts
 
-library(RJDemetra)
+library("RJDemetra")
 sa_model<-RJDemetra::tramoseats(y,"RSAfull")
 str(sa_model$final$series)
 sa_model$final$forecasts

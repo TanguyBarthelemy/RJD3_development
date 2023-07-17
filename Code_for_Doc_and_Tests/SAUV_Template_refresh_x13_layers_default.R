@@ -5,8 +5,8 @@
 ## start rsa5c : test policies which work 
 
 #####################
-library(rjd3toolkit)
-library(rjd3x13)
+library("rjd3toolkit")
+library("rjd3x13")
 # Data  
 ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
