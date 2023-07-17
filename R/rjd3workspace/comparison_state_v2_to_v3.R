@@ -3,17 +3,18 @@
 ################################################################################
 
 
-# Afficher toutes les méthodes existantes ---------------------------------
+# Afficher toutes les méthodes existantes --------------------------------------
 
 a <- rbind(
     cbind(pkg = "rjdemetra3", fct = getNamespace("rjdemetra3") |> getNamespaceExports()), 
     cbind(pkg = "rjd3toolkit", fct = getNamespace("rjd3toolkit") |> getNamespaceExports()), 
     cbind(pkg = "RJDemetra", fct = getNamespace("RJDemetra") |> getNamespaceExports()), 
     cbind(pkg = "rjdworkspace", fct = getNamespace("rjdworkspace") |> getNamespaceExports())
-)
+) |> as.data.frame()
 View(a)
 
-# RJDemetra ---------------------------------------------------------------
+
+# RJDemetra --------------------------------------------------------------------
 
 # fct_v2()                    --> equivalent_v3()
 # 
@@ -52,7 +53,7 @@ View(a)
 #    - Foction combiné 
 #       XXX                   --> rjdemetra3::load_workspace()
 
-# rjdworkspace ------------------------------------------------------------
+# rjdworkspace -----------------------------------------------------------------
 
 # TYpe de fonction :
 # 

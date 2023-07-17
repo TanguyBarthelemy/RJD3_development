@@ -180,15 +180,17 @@ id2 <- pull_out_fire("ws_input")
 ws <- RJDemetra::load_workspace("WS/ws_output.xml")
 ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
 
+mp3_to <- ws |> 
+    RJDemetra::get_object(3)
+
 sa_item_from <- ws_input |> 
-    get_object(3) |> 
-    get_object(3)
-sa_item_to <- ws |> 
-    get_object(3) |> 
-    get_object(1)
+    RJDemetra::get_object(3) |> 
+    RJDemetra::get_object(3)
+sa_item_to <- mp3_to |> 
+    RJDemetra::get_object(1)
 
 new_sa_item <- set_metadata(sa_from = sa_item_from, sa_to = sa_item_to)
-replace_sa_item(mp = ws |> get_object(3), pos = 1, sa_item = new_sa_item)
+replace_sa_item(mp = mp3_to, pos = 1, sa_item = new_sa_item)
 
 RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
 
@@ -302,7 +304,7 @@ ts3 <- ts(1:200, start = 2000, frequency = 12)
 
 sa_item_1 <- mp1 |> RJDemetra::get_object(1)
 sa_item_2 <- mp1 |> RJDemetra::get_object(2)
-sa_item_3 <- mp1 |> vget_object(3)
+sa_item_3 <- mp1 |> vRJDemetra::get_object(3)
 
 new_sa_item_1 <- set_ts(sa_item = sa_item_1, ts = ts1)
 new_sa_item_2 <- set_ts(sa_item = sa_item_2, ts = ts2)
