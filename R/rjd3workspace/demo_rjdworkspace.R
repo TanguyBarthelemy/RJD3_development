@@ -243,16 +243,17 @@ ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
 RJDemetra::compute(ws_input)
 
 spec <- ws_input |> 
-    get_object(3) |> 
-    get_object(5) |> 
-    get_jmodel(workspace = ws_input)
+    RJDemetra::get_object(3) |> 
+    RJDemetra::get_object(5) |> 
+    RJDemetra::get_jmodel(workspace = ws_input)
 
 sa_item <- ws |> 
-    get_object(3) |> 
-    get_object(5)
+    RJDemetra::get_object(3) |> 
+    RJDemetra::get_object(5)
 
 new_sa_item <- set_spec(sa_item = sa_item, spec = sa_item_input)
-replace_sa_item(mp = ws |> get_object(3), pos = 5, sa_item = new_sa_item)
+replace_sa_item(mp = ws |> RJDemetra::get_object(3), 
+                pos = 5, sa_item = new_sa_item)
 
 RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
 
@@ -270,9 +271,12 @@ id <- pull_out_fire("ws_path")
 move_data()
 
 # source("./R/rjd3workspace/new_developpements/new_change_path.R", encoding = "UTF-8")
-update_path2(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.csv", pos_mp = 1)
-update_path2(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.xls", pos_mp = 2)
-update_path2(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.xlsx", 
+update_path2(ws_xml_path = "./WS/ws_path.xml", 
+             raw_data_path = "./data_temp/path_2/data_ipi.csv", pos_mp = 1)
+update_path2(ws_xml_path = "./WS/ws_path.xml", 
+             raw_data_path = "./data_temp/path_2/data_ipi.xls", pos_mp = 2)
+update_path2(ws_xml_path = "./WS/ws_path.xml", 
+             raw_data_path = "./data_temp/path_2/data_ipi.xlsx", 
              pos_mp = 3, pos_sa_item = 4)
 
 move_data()
@@ -290,15 +294,15 @@ id <- pull_out_fire("ws_output")
 
 ws <- RJDemetra::load_workspace("WS/ws_output.xml")
 
-mp1 <- ws |> get_object(1)
+mp1 <- ws |> RJDemetra::get_object(1)
 
 ts1 <- nottem
 ts2 <- JohnsonJohnson
 ts3 <- ts(1:200, start = 2000, frequency = 12)
 
-sa_item_1 <- mp1 |> get_object(1)
-sa_item_2 <- mp1 |> get_object(2)
-sa_item_3 <- mp1 |> get_object(3)
+sa_item_1 <- mp1 |> RJDemetra::get_object(1)
+sa_item_2 <- mp1 |> RJDemetra::get_object(2)
+sa_item_3 <- mp1 |> vget_object(3)
 
 new_sa_item_1 <- set_ts(sa_item = sa_item_1, ts = ts1)
 new_sa_item_2 <- set_ts(sa_item = sa_item_2, ts = ts2)
@@ -344,8 +348,8 @@ id <- pull_out_fire("ws_output")
 
 ws <- RJDemetra::load_workspace("WS/ws_output.xml")
 
-mp1 <- ws |> get_object(1)
-sa_item_1 <- mp1 |> get_object(1)
+mp1 <- ws |> RJDemetra::get_object(1)
+sa_item_1 <- mp1 |> RJDemetra::get_object(1)
 
 new_sa_item_1 <- set_name(sa_item = sa_item_1, name = "name_from_r")
 
