@@ -2,6 +2,7 @@
 #########          Comparaison wrangling workspace v2 --> v3           #########
 ################################################################################
 
+
 # Afficher toutes les méthodes existantes --------------------------------------
 
 rjdv2 <- cbind(pkg = "RJDemetra", 
@@ -15,8 +16,6 @@ View(rjdv2)
 
 # Wrangling workspaces ---------------------------------------------------------
 
-# fct_v2()                  
-# 
 # Type de fonction :
 # 
 #    - Fonction de création
@@ -61,3 +60,52 @@ rjdv2_without_ws <- rjdv2 |> subset(!fct %in% ws_fct)
 rownames(rjdv2_without_ws) <- NULL
 
 View(rjdv2_without_ws)
+
+
+# SA with X13-Arima or Tramo-Seats ---------------------------------------------
+
+# Pre-processing :
+#   - regarima_x13()
+#   - regarima_tramoseats()
+#   - regarima()
+# 
+# Full SA :
+#   - x13()
+#   - tramoseats()
+# 
+# Spec manipulation :
+#   - regarima_spec_x13()
+#   - regarima_spec_tramoseats()
+#   - regarima_spec()
+#   - x13_spec()
+#   - tramoseats_spec()
+
+
+# Java mirror functions ---------------------------------------------------------
+
+# All functions beginning with j
+
+
+# Access functions ---------------------------------------------------------
+
+# All functions beginning with s_
+
+ws_fct2 <- c("regarima_x13", "regarima_tramoseats", "regarima", 
+             "x13", "tramoseats", 
+             "regarima_spec_x13", "regarima_spec_tramoseats", "regarima_spec", 
+             "x13_spec", "tramoseats_spec")
+
+remaining <- rjdv2_without_ws |> 
+    subset(substr(fct, 1, 2) != "s_") |> 
+    subset(substr(fct, 1, 1) != "j") |>  
+    subset(!fct %in% ws_fct2)
+
+View(remaining)
+
+
+# Other functions ----------------------------------------------------------
+
+#   - get_jspec()
+#   - user_defined_variables()
+#   - get_dictionary()
+
