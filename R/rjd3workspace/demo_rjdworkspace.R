@@ -216,7 +216,9 @@ sa_item_1 <- mp3 |> RJDemetra::get_object(3)
 sa_item_2 <- mp3 |> RJDemetra::get_object(5)
 sa_item_3 <- mp3 |> RJDemetra::get_object(4)
 
-get_comment(x = sa_item_1) # erreur
+print(get_comment(x = sa_item_1))
+print(get_comment(x = mp3))
+
 new_sa_item_2 <- set_comment(x = sa_item_2, comment = "Commentaire depuis R")
 new_sa_item_3 <- set_comment(x = sa_item_3, comment = "Modification du commentaire depuis R")
 
