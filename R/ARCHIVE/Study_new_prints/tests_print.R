@@ -55,7 +55,7 @@ frenchCalendar <- national_calendar(days = list(
 q <- holidays(frenchCalendar, "1968-01-01", length = length(df_daily$births), type = "All", 
               nonworking = 7L)
 
-pre.mult <-  fractionalAirlineEstimation_new(
+pre.mult <- fractionalAirlineEstimation(
     y = df_daily$log_births, 
     x = q, # q = regs de calendrier
     periods = 7, 
@@ -63,7 +63,7 @@ pre.mult <-  fractionalAirlineEstimation_new(
     outliers = c("ao", "wo"), criticalValue = 0, 
     precision = 1e-9, approximateHessian = TRUE)
 
-pre.mult_cal <-  fractionalAirlineEstimation_new(
+pre.mult_cal <- fractionalAirlineEstimation_new(
     y = df_daily$log_births, 
     x = q, # q = regs de calendrier
     periods = c(7, 28), 

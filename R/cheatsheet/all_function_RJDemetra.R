@@ -3,6 +3,17 @@
 ################################################################################
 
 
+# Chargement des library -------------------------------------------------------
+
+library("RJDemetra")
+
+
+# Raw data ---------------------------------------------------------------------
+
+y1 <- mdeaths
+y2 <- JohnsonJohnson
+
+
 # Afficher toutes les méthodes existantes --------------------------------------
 
 rjdv2 <- cbind(pkg = "RJDemetra", 
@@ -80,13 +91,24 @@ View(rjdv2_without_ws)
 #   - x13_spec()
 #   - tramoseats_spec()
 
+spec_reg_x13 <- regarima_spec_x13("RG5c")
+res_regarima_x13 <- regarima(series = y1, spec = spec_reg_x13)
 
-# Java mirror functions ---------------------------------------------------------
+spec_x13 <- x13_spec()
+res_x13 <- x13(series = y1, spec = spec_x13, )
+
+spec_reg_tramoseats <- regarima_spec_tramoseats()
+res_regarima_tramoseats <- regarima(series = y1, spec = spec_reg_tramoseats)
+
+spec_tramoseats <- tramoseats_spec()
+res_tramoseats <- tramoseats(series = y1, spec = spec_tramoseats)
+
+# Java mirror functions --------------------------------------------------------
 
 # All functions beginning with j
 
 
-# Access functions ---------------------------------------------------------
+# Access functions -------------------------------------------------------------
 
 # All functions beginning with s_
 
@@ -103,7 +125,7 @@ remaining <- rjdv2_without_ws |>
 View(remaining)
 
 
-# Other functions ----------------------------------------------------------
+# Other functions --------------------------------------------------------------
 
 #   - get_jspec()
 #   - user_defined_variables()
