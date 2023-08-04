@@ -1,0 +1,13 @@
+Etat de ce mini-projet :
+
+- Faire le tour des 2 étapes d'attribution des régresseurs CJO
+- Les traduire !
+
+# Etape 1 ----------
+
+- Il faut trouver ou écrire certaines nouvelles fonctions :
+    - Obtenir la liste des specs d'un WS
+    - Obtenir la liste des user-defined variables d'un WS
+    - attribuer une des specs définie dans un WS à un SA-ITEM
+    - attribuer un user-defined variable (d'un WS) à un SA-ITEM
+
