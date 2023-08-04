@@ -32,14 +32,26 @@ id2 <- pull_out_fire("ws_output")
 ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
 ws_output <- RJDemetra::load_workspace("WS/ws_output.xml")
 
+# Existing MP
 transfer_series(ws_from = ws_input, ws_to = ws_output, 
-                mp_from = "SAProcessing-1", mp_to = "SAProcessing-1", 
+                mp_from_name = "SAProcessing-1", 
+                mp_to_name = "SAProcessing-1", 
                 print_indications = TRUE)
+
+# Missing MP
+transfer_series(ws_from = ws_input, ws_to = ws_output, 
+                mp_from_name = "SAProcessing-1", 
+                mp_to_name = "New-SAProcessing-from-R", 
+                print_indications = TRUE, create = FALSE)
+
+transfer_series(ws_from = ws_input, ws_to = ws_output, 
+                mp_from_name = "SAProcessing-1", 
+                mp_to_name = "New-SAProcessing-from-R", 
+                print_indications = TRUE, create = TRUE)
 
 RJDemetra::save_workspace(ws_output, "./WS/ws_output.xml")
 
-bring_back(id1)
-bring_back(id2)
+bring_all_back()
 
 
 ## Replace series --------------------------------------------------------------

@@ -30,7 +30,7 @@ if (!dir.exists("temp")) {
 }
 
 new_ws <- new_workspace()
-mp1 <- new_multiprocessing(workspace = new_ws, name = "SAP-1")
+new_multiprocessing(workspace = new_ws, name = "SAP-1")
 
 spec_out <-  x13_spec(spec = "RSA5c", usrdef.outliersEnabled = TRUE,
                       usrdef.outliersType = c("LS", "AO"),
