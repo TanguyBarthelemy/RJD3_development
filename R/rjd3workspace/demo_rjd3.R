@@ -175,32 +175,39 @@ empty_temp()
 #   - set_raw_data()
 #   - set_ts_metadata()
 #   - get_raw_data()
-# on considère 1 WS :
+# on considère 2 WS :
 #   - WS output
+#   - WS input
 
-id <- pull_out_fire("ws_output")
+id1 <- pull_out_fire("ws_output")
+id2 <- pull_out_fire("ws_input")
 
-ws <- .jws_open("WS/ws_output.xml")
-jmp1 <- .jws_multiprocessing(ws, idx = 1)
-jmp2 <- .jws_multiprocessing(ws, idx = 1)
-jmp3 <- .jws_multiprocessing(ws, idx = 1)
+ws_to <- .jws_open("WS/ws_output.xml")
+ws_from <- .jws_open("WS/ws_input.xml")
 
+jmp1 <- .jws_multiprocessing(ws_to, idx = 1)
+jmp2 <- .jws_multiprocessing(ws_to, idx = 2)
+jmp3 <- .jws_multiprocessing(ws_to, idx = 3)
+
+jsa1_mp1 <- .jmp_sa(jmp1, idx = 1)
+jsa1_mp3 <- .jmp_sa(jmp3, idx = 1)
+
+jmp3_in <- .jws_multiprocessing(ws_from, idx = 3)
+jsa1_mp3_in <- .jmp_sa(jmp3_in, idx = 1)
+
+ts1 <- get_raw_data(jsa = jsa1_mp1)
 ts2 <- JohnsonJohnson
 ts3 <- ts(1:200, start = 2000, frequency = 12)
 ts4 <- nottem
-
-jsa1_mp1 <- .jmp_sa(jmp1, idx = 1)
-
-ts1 <- get_raw_data(jsa = jsa1_mp1)
 
 set_raw_data(jmp = jmp2, y = ts1, idx = 1)
 set_raw_data(jmp = jmp2, y = ts2, idx = 2)
 set_raw_data(jmp = jmp2, y = ts3, idx = 3)
 set_raw_data(jmp = jmp2, y = ts4, idx = 4)
 
-set_ts_metadata(jmp = jmp3, ref_jsa = jsa1_mp1, idx = 1)
+set_ts_metadata(jmp = jmp3, ref_jsa = jsa1_mp3_in, idx = 1)
 
-save_workspace(jws = ws, file = "./temp/new_ws.xml", replace = TRUE)
+save_workspace(jws = ws_to, file = "./temp/new_ws.xml", replace = TRUE)
 
 bring_all_back()
 empty_temp()

@@ -7,6 +7,7 @@ remotes::install_github("rjdemetra/rjd3toolkit")
 remotes::install_github("rjdemetra/rjd3tramoseats")
 remotes::install_github("rjdemetra/rjd3x13")
 remotes::install_github("rjdemetra/rjdemetra3")
+# remotes::install_github("AQLT/rjdemetra3")
 
 remotes::install_github("rjdemetra/rjd3x11plus")
 
