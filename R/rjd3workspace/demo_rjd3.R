@@ -200,11 +200,13 @@ ts2 <- JohnsonJohnson
 ts3 <- ts(1:200, start = 2000, frequency = 12)
 ts4 <- nottem
 
+# Changer le contenu des raw data
 set_raw_data(jmp = jmp2, y = ts1, idx = 1)
 set_raw_data(jmp = jmp2, y = ts2, idx = 2)
 set_raw_data(jmp = jmp2, y = ts3, idx = 3)
 set_raw_data(jmp = jmp2, y = ts4, idx = 4)
 
+# Changer les metadata des raw data
 set_ts_metadata(jmp = jmp3, ref_jsa = jsa1_mp3_in, idx = 1)
 
 save_workspace(jws = ws_to, file = "./temp/new_ws.xml", replace = TRUE)
