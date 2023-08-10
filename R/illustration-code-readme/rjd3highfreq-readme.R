@@ -21,7 +21,7 @@ col_s2 <- "#9169be"
 
 ## Import des données ----------------------------------------------------------
 
-df_daily <- read.csv2("https://raw.githubusercontent.com/TanguyBarthelemy/Tsace_RJD_Webinar_Dec22/b5fcf6b14ae47393554950547ef4788a0068a0f6/Data/TS_daily_births_franceM_1968_2020.csv")
+# df_daily <- read.csv2("https://raw.githubusercontent.com/TanguyBarthelemy/Tsace_RJD_Webinar_Dec22/b5fcf6b14ae47393554950547ef4788a0068a0f6/Data/TS_daily_births_franceM_1968_2020.csv")
 df_daily <- read.csv2("./data/TS_daily_births_franceM_1968_2020.csv") |> 
     dplyr::mutate(
         log_births = log(births), 
@@ -86,15 +86,15 @@ colnames(cal_reg) <- c("14th_july", "8th_may", "1st_jan", "1st_may",
 
 ## Pré-ajustement --------------------------------------------------------------
 
-pre.mult <- rjd3highfreq::fractionalAirlineEstimation(
-    y = df_daily$log_births, 
+pre_pro <- fractionalAirlineEstimation(
+    y = df_daily$births, 
     x = cal_reg, 
     periods = 7, # weekly frequency
-    outliers = c("ao", "wo"))
+    outliers = c("ao", "wo"), log = TRUE, y_time = df_daily$date)
 
-print(pre.mult)
+print(pre_pro)
 
-y_lin <- pre.mult$model$linearized
+y_lin <- pre_pro$model$linearized
 
 ## Plot of linearised series ---------------------------------------------------
 
@@ -131,13 +131,15 @@ legend("bottomleft", legend = c("Raw data", "Linearised series"),
 # Decomposition with day of the week
 amb.dow <- rjd3highfreq::fractionalAirlineDecomposition(
     y = y_lin, # input time series
-    period = 7) # weekly decomposition
+    period = 7, # weekly decomposition
+    log = TRUE, y_time = df_daily$date) 
 
 # Extract DOY pattern from DOW-adjusted linearised data
 # step 2 en log
 amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
     y = amb.dow$decomposition$sa, # DOW-adjusted linearised data
-    period = 365.2425) # day of year pattern
+    period = 365.2425, # day of year pattern
+    log = TRUE, y_time = df_daily$date) 
 
 amb.s7 <- exp(amb.dow$decomposition$s)
 amb.s365 <- exp(amb.doy$decomposition$s)
@@ -217,7 +219,8 @@ legend("bottomleft", legend = c("Raw data", "Seasonnal adjusted", "Trend"),
 
 amb.multi <- rjd3highfreq::multiAirlineDecomposition(
     y = y_lin, # input time series
-    periods = c(7, 365.2425))  # 2 frequency
+    periods = c(7, 365.2425), # 2 frequency
+    log = TRUE, y_time = df_daily$date)
 
 amb.multi.t <- exp(amb.multi$decomposition$t)
 amb.multi.s7 <- exp(amb.multi$decomposition$s_7)
