@@ -189,6 +189,7 @@ plot(pre_pro3,
      to = as.POSIXct("2000-01-01 02:30:00"))
 
 plot(amb.dow)
+plot(amb.dow, type_chart = "y-sa-trend")
 plot(amb.dow, type_chart = "cal-seas-irr")
 plot(amb.dow, type_chart = "cal-seas-irr", 
      from = as.Date("2000-01-01"), 
