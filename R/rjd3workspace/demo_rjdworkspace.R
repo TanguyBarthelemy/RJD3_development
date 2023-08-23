@@ -33,23 +33,44 @@ ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
 ws_output <- RJDemetra::load_workspace("WS/ws_output.xml")
 
 # Existing MP
-transfer_series(ws_from = ws_input, ws_to = ws_output, 
-                mp_from_name = "SAProcessing-1", 
-                mp_to_name = "SAProcessing-1", 
+transfer_series(ws_from = ws_input,
+                ws_to = ws_output,
+                name_mp_from = "SAProcessing-1",
+                name_mp_to = "SAProcessing-1",
                 print_indications = TRUE)
 
+transfer_series(ws_from = ws_input,
+                ws_to = ws_output,
+                pos_mp_from = 1,
+                pos_mp_to = 1,
+                print_indications = TRUE)
+
+# Existing series
+transfer_series(ws_from = ws_input, ws_to = ws_output,
+                pos_mp_from = 2,
+                pos_mp_to = 2,
+                print_indications = TRUE,
+                replace_series = FALSE)
+transfer_series(ws_from = ws_input, ws_to = ws_output,
+                pos_mp_from = 2,
+                pos_mp_to = 2,
+                print_indications = TRUE,
+                replace_series = TRUE)
+
 # Missing MP
-transfer_series(ws_from = ws_input, ws_to = ws_output, 
-                mp_from_name = "SAProcessing-1", 
-                mp_to_name = "New-SAProcessing-from-R", 
-                print_indications = TRUE, create = FALSE)
+transfer_series(ws_from = ws_input, ws_to = ws_output,
+                name_mp_from = "SAProcessing-1",
+                name_mp_to = "New-SAProcessing-from-R",
+                print_indications = TRUE,
+                create = FALSE)
 
-transfer_series(ws_from = ws_input, ws_to = ws_output, 
-                mp_from_name = "SAProcessing-1", 
-                mp_to_name = "New-SAProcessing-from-R", 
-                print_indications = TRUE, create = TRUE)
+transfer_series(ws_from = ws_input, ws_to = ws_output,
+                name_mp_from = "SAProcessing-1",
+                name_mp_to = "New-SAProcessing-from-R",
+                print_indications = TRUE,
+                create = TRUE)
 
-RJDemetra::save_workspace(ws_output, "./WS/ws_output.xml")
+RJDemetra::save_workspace(workspace = ws_output, file = path_ws_to)
 
 bring_all_back()
 

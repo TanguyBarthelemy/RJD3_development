@@ -72,14 +72,17 @@ compute(ws_in)
 ws_in <- RJDemetra::load_workspace(file = "./WS/ws_input.xml")
 
 count(ws_in)
+print(get_all_names(ws_in))
 
 all_mp <- get_all_objects(ws_in)
 
 mp1 <- get_object(ws_in, pos = 1)
-name_mp1 <- get_name(mp1)
+print(get_name(mp1))
+print(get_all_names(mp1))
 count(mp1)
 
 all_sa_mp1 <- get_all_objects(mp1)
+get_position(mp1, name = "RF0620")
 sa1_mp1 <- get_object(mp1, pos = 1)
 
 name_sa1_mp1 <- get_name(sa1_mp1)
