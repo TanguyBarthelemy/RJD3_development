@@ -12,7 +12,7 @@ library("rjdworkspace")
 
 # Chargement fonctions utiles --------------------------------------------------
 
-path_fct <- "./R/rjd3workspace/utility/"
+path_fct <- "./R/demo/utility/"
 function2import <- list.files(path_fct, full.names = TRUE, recursive = TRUE)
 sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
 
