@@ -37,6 +37,14 @@ test it
 
 ## RJD3 testing (and incidental documentation)
 
+### Prints
+
+Tanguy
+What is still left ?
+
+- change "airline" display when printing a spec  
+
+
 ###  New features
 
 (Anna)
@@ -49,6 +57,13 @@ test it
 -	Sélection automatique des variables de jours ouvrables (amélioration dans Tramo et nouveauté dans X13, solution identique dans les deux algorithmes)
 
 (tramo and or x13 ?)
+
+
+### Refresh 
+
+left:
+- current policy (AO)
+- time span defintion 
 
 ### Tests and Doc
 
@@ -78,7 +93,7 @@ In X13
 - bias correction ?
 
 
-In tramo seats (look into Java: tnaguy)
+In tramo seats (look into Java: Tanguy)
 - bias correction ?
 
 In highfreq 
@@ -88,6 +103,8 @@ In STL
 In sts 
 
 In revisions
+
+
 
 
 
