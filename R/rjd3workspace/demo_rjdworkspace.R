@@ -32,14 +32,47 @@ id2 <- pull_out_fire("ws_output")
 ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
 ws_output <- RJDemetra::load_workspace("WS/ws_output.xml")
 
-transfer_series(ws_from = ws_input, ws_to = ws_output, 
-                mp_from = "SAProcessing-1", mp_to = "SAProcessing-1", 
+# Existing MP
+transfer_series(ws_from = ws_input,
+                ws_to = ws_output,
+                name_mp_from = "SAProcessing-1",
+                name_mp_to = "SAProcessing-1",
                 print_indications = TRUE)
 
-RJDemetra::save_workspace(ws_output, "./WS/ws_output.xml")
+transfer_series(ws_from = ws_input,
+                ws_to = ws_output,
+                pos_mp_from = 1,
+                pos_mp_to = 1,
+                print_indications = TRUE)
 
-bring_back(id1)
-bring_back(id2)
+# Existing series
+transfer_series(ws_from = ws_input, ws_to = ws_output,
+                pos_mp_from = 2,
+                pos_mp_to = 2,
+                print_indications = TRUE,
+                replace_series = FALSE)
+transfer_series(ws_from = ws_input, ws_to = ws_output,
+                pos_mp_from = 2,
+                pos_mp_to = 2,
+                print_indications = TRUE,
+                replace_series = TRUE)
+
+# Missing MP
+transfer_series(ws_from = ws_input, ws_to = ws_output,
+                name_mp_from = "SAProcessing-1",
+                name_mp_to = "New-SAProcessing-from-R",
+                print_indications = TRUE,
+                create = FALSE)
+
+transfer_series(ws_from = ws_input, ws_to = ws_output,
+                name_mp_from = "SAProcessing-1",
+                name_mp_to = "New-SAProcessing-from-R",
+                print_indications = TRUE,
+                create = TRUE)
+
+RJDemetra::save_workspace(workspace = ws_output, file = path_ws_to)
+
+bring_all_back()
 
 
 ## Replace series --------------------------------------------------------------
@@ -115,7 +148,7 @@ bring_back(id2)
 
 # Ici on teste les fonctions :
 #   - rjdworkspace::replace_sa_item()
-#   - rjdworkspace::add_sa_item() 
+#   - rjdworkspace::add_new_sa_item() 
 #   - rjdworkspace::remove_sa_item()
 #   - rjdworkspace::remove_all_sa_item()
 # on considère 2 WS :
@@ -131,13 +164,13 @@ ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
 # compute(ws)
 # compute(ws_input)
 
-mp1 <- ws |> get_object(pos = 1)
-mp2 <- ws |> get_object(pos = 2)
-mp3 <- ws |> get_object(pos = 3)
+mp1 <- ws |> RJDemetra::get_object(pos = 1)
+mp2 <- ws |> RJDemetra::get_object(pos = 2)
+mp3 <- ws |> RJDemetra::get_object(pos = 3)
 
-sa_jx13 <- RJDemetra::jx13(ipi_c_eu[, "FR"])
-sa_x13 <- RJDemetra::x13(ipi_c_eu[, "FR"])
-sa_ts <- RJDemetra::jtramoseats(ipi_c_eu[, "FR"])
+sa_jx13 <- RJDemetra::jx13(RJDemetra::ipi_c_eu[, "FR"])
+sa_x13 <- RJDemetra::x13(RJDemetra::ipi_c_eu[, "FR"])
+sa_ts <- RJDemetra::jtramoseats(RJDemetra::ipi_c_eu[, "FR"])
 
 # Suppression de tous les SA-item du 2ème MP
 remove_all_sa_item(mp = mp2) # Erreur
@@ -147,18 +180,22 @@ remove_sa_item(mp = mp1, pos = 1)
 # mp1 |> get_all_objects() |> length()
 
 # Replacement du 2ème SA-item du 3ème MP (RF1012)
-sa_item <- ws_input |> get_object(pos = 3L) |> get_object(pos = 2L)
-replace_sa_item(mp = mp3, pos = 2, sa_item = sa_item)
+sa_item_1 <- ws_input |> 
+    RJDemetra::get_object(pos = 3L) |> 
+    RJDemetra::get_object(pos = 2L)
+
+replace_sa_item(mp = mp3, pos = 2, sa_item = sa_item_1)
 
 # Ajout d'un nouveau SA-item dans le 3ème MP
-add_sa_item(workspace = ws, multiprocessing = "SAProcessing-3", 
-            sa_obj = sa_ts, name = "IPI_EU_FR")
+sa_item_2 <- ws_input |> 
+    RJDemetra::get_object(pos = 1L) |> 
+    RJDemetra::get_object(pos = 1L)
+add_new_sa_item(mp = mp1, sa_item = sa_item_2)
 # mp3 |> get_all_objects() |> length()
 
 RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
 
-bring_back(id1)
-bring_back(id2)
+bring_all_back()
 
 
 ## Set metadata ----------------------------------------------------------------
@@ -176,15 +213,17 @@ id2 <- pull_out_fire("ws_input")
 ws <- RJDemetra::load_workspace("WS/ws_output.xml")
 ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
 
+mp3_to <- ws |> 
+    RJDemetra::get_object(3)
+
 sa_item_from <- ws_input |> 
-    get_object(3) |> 
-    get_object(3)
-sa_item_to <- ws |> 
-    get_object(3) |> 
-    get_object(1)
+    RJDemetra::get_object(3) |> 
+    RJDemetra::get_object(3)
+sa_item_to <- mp3_to |> 
+    RJDemetra::get_object(1)
 
 new_sa_item <- set_metadata(sa_from = sa_item_from, sa_to = sa_item_to)
-replace_sa_item(mp = ws |> get_object(3), pos = 1, sa_item = new_sa_item)
+replace_sa_item(mp = mp3_to, pos = 1, sa_item = new_sa_item)
 
 RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
 
@@ -204,13 +243,15 @@ id1 <- pull_out_fire("ws_output")
 
 ws <- RJDemetra::load_workspace("WS/ws_output.xml")
 
-mp3 <- ws |> get_object(3)
+mp3 <- ws |> RJDemetra::get_object(3)
 
-sa_item_1 <- mp3 |> get_object(3)
-sa_item_2 <- mp3 |> get_object(5)
-sa_item_3 <- mp3 |> get_object(4)
+sa_item_1 <- mp3 |> RJDemetra::get_object(3)
+sa_item_2 <- mp3 |> RJDemetra::get_object(5)
+sa_item_3 <- mp3 |> RJDemetra::get_object(4)
 
-get_comment(x = sa_item_1) # erreur
+print(get_comment(x = sa_item_1))
+print(get_comment(x = mp3))
+
 new_sa_item_2 <- set_comment(x = sa_item_2, comment = "Commentaire depuis R")
 new_sa_item_3 <- set_comment(x = sa_item_3, comment = "Modification du commentaire depuis R")
 
@@ -239,16 +280,17 @@ ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
 RJDemetra::compute(ws_input)
 
 spec <- ws_input |> 
-    get_object(3) |> 
-    get_object(5) |> 
-    get_jmodel(workspace = ws_input)
+    RJDemetra::get_object(3) |> 
+    RJDemetra::get_object(5) |> 
+    RJDemetra::get_jmodel(workspace = ws_input)
 
 sa_item <- ws |> 
-    get_object(3) |> 
-    get_object(5)
+    RJDemetra::get_object(3) |> 
+    RJDemetra::get_object(5)
 
 new_sa_item <- set_spec(sa_item = sa_item, spec = sa_item_input)
-replace_sa_item(mp = ws |> get_object(3), pos = 5, sa_item = new_sa_item)
+replace_sa_item(mp = ws |> RJDemetra::get_object(3), 
+                pos = 5, sa_item = new_sa_item)
 
 RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
 
@@ -266,10 +308,13 @@ id <- pull_out_fire("ws_path")
 move_data()
 
 # source("./R/rjd3workspace/new_developpements/new_change_path.R", encoding = "UTF-8")
-update_path2(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.csv", pos_mp = 1)
-update_path2(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.xls", pos_mp = 2)
-update_path2(ws_xml_path = "./WS/ws_path.xml", raw_data_path = "./data_temp/path_2/data_ipi.xlsx", 
-            pos_mp = 3, pos_sa_item = 4)
+update_path2(ws_xml_path = "./WS/ws_path.xml", 
+             raw_data_path = "./data_temp/path_2/data_ipi.csv", pos_mp = 1)
+update_path2(ws_xml_path = "./WS/ws_path.xml", 
+             raw_data_path = "./data_temp/path_2/data_ipi.xls", pos_mp = 2)
+update_path2(ws_xml_path = "./WS/ws_path.xml", 
+             raw_data_path = "./data_temp/path_2/data_ipi.xlsx", 
+             pos_mp = 3, pos_sa_item = 4)
 
 move_data()
 bring_all_back()
@@ -286,15 +331,15 @@ id <- pull_out_fire("ws_output")
 
 ws <- RJDemetra::load_workspace("WS/ws_output.xml")
 
-mp1 <- ws |> get_object(1)
+mp1 <- ws |> RJDemetra::get_object(1)
 
 ts1 <- nottem
 ts2 <- JohnsonJohnson
 ts3 <- ts(1:200, start = 2000, frequency = 12)
 
-sa_item_1 <- mp1 |> get_object(1)
-sa_item_2 <- mp1 |> get_object(2)
-sa_item_3 <- mp1 |> get_object(3)
+sa_item_1 <- mp1 |> RJDemetra::get_object(1)
+sa_item_2 <- mp1 |> RJDemetra::get_object(2)
+sa_item_3 <- mp1 |> vRJDemetra::get_object(3)
 
 new_sa_item_1 <- set_ts(sa_item = sa_item_1, ts = ts1)
 new_sa_item_2 <- set_ts(sa_item = sa_item_2, ts = ts2)
@@ -340,8 +385,8 @@ id <- pull_out_fire("ws_output")
 
 ws <- RJDemetra::load_workspace("WS/ws_output.xml")
 
-mp1 <- ws |> get_object(1)
-sa_item_1 <- mp1 |> get_object(1)
+mp1 <- ws |> RJDemetra::get_object(1)
+sa_item_1 <- mp1 |> RJDemetra::get_object(1)
 
 new_sa_item_1 <- set_name(sa_item = sa_item_1, name = "name_from_r")
 

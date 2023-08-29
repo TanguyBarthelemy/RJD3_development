@@ -30,7 +30,8 @@ bring_back <- function(id) {
     
     secured_path <- file.path("./WS/SECURED/", id)
     if (!dir.exists(secured_path)) {
-        stop("Il n'y a pas de copie à cet id.")
+        warning("Il n'y a pas de copie à cet id.")
+        return(invisible(NULL))
     }
     
     list.files(secured_path, full.names = TRUE) |> 
@@ -53,6 +54,6 @@ bring_all_back <- function() {
         print(bring_back(id))
     }
     
-    return(NULL)
+    return(invisible(NULL))
 }
 

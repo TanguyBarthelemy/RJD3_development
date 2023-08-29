@@ -2,7 +2,7 @@
 
 
 ### pull request pas comprise
-library(rjd3toolkit)
+library("rjd3toolkit")
 y_raw - rjd3toolkit::ABS$X0.2.09.10.M
 regs_td <- td(s = y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
               contrasts = TRUE)

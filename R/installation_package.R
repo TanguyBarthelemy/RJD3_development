@@ -7,12 +7,15 @@ remotes::install_github("rjdemetra/rjd3toolkit")
 remotes::install_github("rjdemetra/rjd3tramoseats")
 remotes::install_github("rjdemetra/rjd3x13")
 remotes::install_github("rjdemetra/rjdemetra3")
+# remotes::install_github("AQLT/rjdemetra3")
 
-remotes::install_github("palatej/rjdfilters")
-remotes::install_github("palatej/rjd3sts")
-remotes::install_github("palatej/rjd3highfreq")
-remotes::install_github("palatej/rjd3stl")
-remotes::install_github("palatej/rjd3bench")
+remotes::install_github("rjdemetra/rjd3x11plus")
+
+remotes::install_github("rjdemetra/rjd3filters")
+remotes::install_github("rjdemetra/rjd3sts")
+remotes::install_github("rjdemetra/rjd3highfreq")
+remotes::install_github("rjdemetra/rjd3stl")
+remotes::install_github("rjdemetra/rjd3bench")
 
 remotes::install_github("rjdemetra/rjd3revisions")
 

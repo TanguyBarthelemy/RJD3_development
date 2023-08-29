@@ -1,7 +1,9 @@
 
 empty_temp <- function() {
     if (dir.exists("temp")) {
-        list.files("./temp/", recursive = TRUE, full.names = TRUE) |> 
+        list.dirs("./temp/", full.names = TRUE, recursive = FALSE) |> 
+            unlink(recursive = TRUE)
+        list.files("./temp/", full.names = TRUE, recursive = TRUE) |> 
             file.remove()
         print("Done!")
     }

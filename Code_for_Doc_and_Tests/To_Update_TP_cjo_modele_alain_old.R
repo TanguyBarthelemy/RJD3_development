@@ -25,13 +25,13 @@ setwd("Z:/Anna_SMYK/0_R_Team/WG_Input")
 
 # les bonnes versions pour le TP
 
-# library(remotes)
+# library("remotes")
 # remotes::install_github("palatej/rjd3toolkit@v0.0.7")
 # remotes::install_github("palatej/rjd3modelling@v0.0.7")
 # remotes::install_github("palatej/rjd3sa@v0.0.7")
 # les bonnes versions pour le TP
 
-library(remotes)
+library("remotes")
 remotes::install_github("aqlt/rjd3toolkit@v0.0.7")
 remotes::install_github("aqlt/rjd3modelling@v0.0.7")
 remotes::install_github("aqlt/rjd3sa@v0.0.7")
@@ -49,7 +49,7 @@ date_deb <- 1990
 ipi <- ts(fichier[,-1], start = date_deb,
                frequency = 12)
 
-library(rjd3modelling)
+library("rjd3modelling")
 frenchCalendar <- calendar.new()
 #  fonctions vs GUI
 # fixed day in gui idem (avantage = code)
@@ -161,7 +161,7 @@ colnames(regresseurs_JO) <- c("REG1_semaine",
 # - en utilisant l’option usrdef.varEnabled = TRUE, en spécifiant les regresseurs dans usrdef.var
 # - en indiquant que les regresseurs sont des regresseurs calendaires avec l’option usrdef.varType = "Calendar"
 
-library(RJDemetra)
+library("RJDemetra")
 ipi_fr <- ipi_c_eu[, "FR"]
 # On arrête la série en décembre 2019 pour éviter les changements de résultats
 # liés aux futures actualisation des données de RJDemetra
@@ -182,7 +182,7 @@ summary(myreg1)
 
 # ### TEST contraintes lineaires avec librairie car
 # package inconnu
-library(car)
+library("car")
 linearHypothesis(myreg1,
                  c("lundi","mardi","mercredi","jeudi","vendredi","samedi"),
                  c(0, 0, 0, 0, 0, 0), test = "F")
@@ -223,7 +223,7 @@ mysa$diagnostics
 
 # Pour l'installer :
 # remotes::install_github("palatej/rjd3sa")\
-library(rjd3sa)
+library("rjd3sa")
 # Schéma multiplicatif :
 mysa$regarima$model$spec_rslt["Log transformation"]
 sa <- mysa$final$series[,"sa"]
