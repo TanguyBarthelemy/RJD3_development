@@ -3,11 +3,40 @@ Etat de ce mini-projet :
 - Faire le tour des 2 étapes d'attribution des régresseurs CJO
 - Les traduire !
 
-# Etape 1 ----------
+But : attribuer des regresseurs CJO personnalisés à chaques séries
 
-- Il faut trouver ou écrire certaines nouvelles fonctions :
+3 idées :
+------------
+
+- Idée 1 : pré-créer des specs et appliquer des specs
+
+Ce qui manque :
     - Obtenir la liste des specs d'un WS
-    - Obtenir la liste des user-defined variables d'un WS
     - attribuer une des specs définie dans un WS à un SA-ITEM
-    - attribuer un user-defined variable (d'un WS) à un SA-ITEM
 
+
+- Idée 2 : Affecter une variable existante à une spec existante
+
+Ce qui manque :
+    - Obtenir la liste des user-defined variables d'un WS
+    - attribuer un user-defined variable (d'un WS) à un SA-ITEM (via la spec)
+
+
+- Idée 3 : Affecter une variable non existante à une spec existante
+
+Ce qui manque :
+    - ✅ attribuer un user-defined variable (d'un WS) à un SA-ITEM (via la spec) 
+
+
+Ce qui manque GLOBALEMENT :
+
+- récupérer une specs d'un WS (dans X13Spec et TramoSeatsSpecs)
+- créer une specs dans un WS (dans X13Spec et TramoSeatsSpecs)
+- récupérer une variable d'un WS
+- créer une variable dans un WS
+
+----------------------------------
+
+
+Step1 : selection via boucle de boucle de série et spec et sans structure de WS
+Step2 : attribution via RJDemetra et set_spec...

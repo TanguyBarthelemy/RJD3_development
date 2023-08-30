@@ -13,14 +13,15 @@ library("rjdworkspace")
 
 # Fct to import ----------------------------------------------------------------
 
-path_fct <- "./R/rjd3workspace/utility/"
+path_fct <- "./R/demo/utility/"
 function2import <- list.files(path_fct, full.names = TRUE, recursive = TRUE)
 sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
 
 # Déclaration des variables ----------------------------------------------------
 
 regs_cjo <- read.csv("./data/regs_cjo.csv", sep = ";", dec = ".")
-reg1 <- ts(subset(regs_cjo, select = REG1_AC1), start = 1990, frequency = 12)
+reg1 <- ts(subset(regs_cjo, select = REG1_AC1), 
+           start = 1990, frequency = 12)
 reg2 <- ts(subset(regs_cjo, select = c(REG2_AC1, REG2_AC2)), 
            start = 1990, frequency = 12)
 reg3 <- ts(subset(regs_cjo, select = c(REG3_AC1, REG3_AC2, REG3_AC3)), 
@@ -73,20 +74,24 @@ predef.variables <- spec_preVar(var = usrdef.var, vartype = usrdef.varType,
 
 sa_item1 <- ws |> 
     RJDemetra::get_object(1) |> 
-    RJDemetra::get_object(1) |> 
-    RJDeemetra
+    RJDemetra::get_object(1)
 
-spec1 <- ws |> 
-    RJDemetra::get_object(1) |> 
-    RJDemetra::get_object(2) |> 
+spec1 <- sa_item1 |> 
     RJDemetra::get_jspec(workspace = ws)
 
-spec2 <- ws |> 
-    RJDemetra::get_object(1) |> 
-    RJDemetra::get_object(5) |> 
+spec2 <- sa_item1 |> 
     RJDemetra::get_model(workspace = ws)
 
-RJDemetra::x13_spec(spec = spec1, usrdef.varEnabled = TRUE)
+spec3 <- sa_item1 |> 
+    RJDemetra::get_jmodel(workspace = ws)
+
+
+new_spec2 <- RJDemetra::x13_spec(spec = spec2, tradingdays.option = "UserDefined",
+                    usrdef.varEnabled = TRUE,
+                    usrdef.var = reg3,
+                    usrdef.varType = c("Calendar", "Calendar", "Calendar"))
+
+
 
 
 
