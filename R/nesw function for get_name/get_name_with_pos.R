@@ -25,5 +25,9 @@ get_name.sa_item <- function(x){
     return(name)
 }
 
+print(get_name(ws_in))
+print(get_name(ws_in, 1))
 print(get_name(mp1))
 print(get_name(mp1, 1))
+print(get_name(sa1_mp1))
+print(get_name(sa1_mp1, 1))

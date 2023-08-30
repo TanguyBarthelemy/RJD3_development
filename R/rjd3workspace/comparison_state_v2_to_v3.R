@@ -64,7 +64,6 @@ View(a)
 #       replace_sa_item()         --> replace_sa_item()
 # 
 #     - Fonction de modification des WS (globalement) :
-#       replace_series()          --> transfer_series()
 #       transfer_series()         --> transfer_series()
 #       update_metadata()         --> XXX
 #       update_metadata_roughly() --> XXX
