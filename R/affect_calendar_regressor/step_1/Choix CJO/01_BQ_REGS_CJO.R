@@ -13,6 +13,8 @@
 library("JDCruncheR")
 library("purrr")
 
+ch <- getwd()
+setwd("../../../../Production/SSMSI/")
 
 # Chemin ------------------------------------------------------------------
 
@@ -42,7 +44,7 @@ getOption("cruncher_bin_directory")
 # Exemple d'option à poser :
 # options(cruncher_bin_directory = "Y:/Logiciels/jwsacruncher-2.2.0/jdemetra-cli-2.2.0/bin")
 # options(cruncher_bin_directory = "Y:/Logiciels/JDemetraplus/jwsacruncher-2.2.3/bin/")
-options(cruncher_bin_directory = "C:/Users/UTZK0M/Software/jwsacruncher-2.2.3-bin/bin")
+options(cruncher_bin_directory = "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.4/bin/")
 
 # Séries issues de la décomposition
 getOption("default_tsmatrix_series")
@@ -167,11 +169,12 @@ for (i_ws in seq_along(WS_xml)) {
         BQ <- extract_QR(paste0(SAP_dossier[i_sap], "/demetra_m.csv"))
         # on calcule le score
         BQ <- compute_score(BQ, n_contrib_score = 5,
-                            conditional_indicator = list(list(indicator = "oos_mse",
-                                                              conditions = c("residuals_independency",
-                                                                             "residuals_homoskedasticity",
-                                                                             "residuals_normality"),
-                                                              conditions_modalities = c("Bad","Severe"))),
+                            conditional_indicator = list(list(
+                                indicator = "oos_mse",
+                                conditions = c("residuals_independency",
+                                               "residuals_homoskedasticity",
+                                               "residuals_normality"),
+                                conditions_modalities = c("Bad","Severe"))),
                             na.rm = TRUE)
         
         liste_BQ_sap <- c(liste_BQ_sap, list(BQ))
