@@ -29,6 +29,9 @@ but lire direct avec JDCruncher (to do 1h)
 
 
 ### rjdworkspace 
+
+- Harmoniser SAP et MP
+
 - current version (will be integrated in RJDemetra3)
 
 --- replace series : if NULL, prendre tout le sap 
