@@ -1,30 +1,4 @@
 
-raw_series_ipi <- read.csv("./data/IPI_nace4.csv", 
-                           sep = ";", dec = ".")
-series_ipi_ts <- raw_series_ipi |> 
-    ts(start = 1990L, frequency = 12L)
-
-regs_cjo_ts <- read.csv("./data/regs_cjo.csv", sep = ";", dec = ".") |> 
-    ts(start = 1990L, frequency = 12L)
-
-
-#-----------------------------------------------------
-spec <- RJDemetra::x13_spec(
-    spec = "RSA3", 
-    tradingdays.option = "UserDefined",
-    usrdef.varEnabled = TRUE,
-    usrdef.var = regs_cjo_sets[[1]],
-    usrdef.varType = c("Calendar", "Calendar", "Calendar"))
-
-mod <- RJDemetra::x13(
-    series = series_ipi_ts[, 3], 
-    spec = spec)
-
-# Ici il ne faut pas formatter en ts
-RJDemetra::x13(ts(raw_series_ipi[, 1], start = 1990, frequency = 12), spec = spec) # erreur à cause du format date
-#-----------------------------------------------------
-
-
 create_reg_cjo_sets <- function(regs_cjo) {
     sets <- list(
         NO_CJO = NULL, 
@@ -51,25 +25,31 @@ create_reg_cjo_sets <- function(regs_cjo) {
 create_spec_sets <- function() {
     regs_cjo_sets <- create_reg_cjo_sets(regs_cjo_ts)
     
+    spec_0 <- RJDemetra::x13_spec(
+        spec = "RSA3", 
+        usrdef.outliersEnabled = TRUE, 
+        usrdef.outliersDate = seq(from = as.Date("2020-03-01"), 
+                                  to = as.Date("2022-02-01"), 
+                                  by = "month") |> as.character(), 
+        usrdef.outliersType = rep("AO", times = 2 * 12), 
+        estimate.from = "2013-01-01")
+    
     spec_sets <- lapply(X = regs_cjo_sets, FUN = function(regs_set) {
-        if (is.null(regs_set)) {
-            spec <- RJDemetra::x13_spec(spec = "RSA3")
-        } else {
+        spec <- spec_0
+        if (!is.null(regs_set)) {
+            nb_regs <- ifelse(is.null(ncol(regs_set)), 1, ncol(regs_set))
             spec <- RJDemetra::x13_spec(
-                spec = "RSA3", 
+                spec = spec, 
                 tradingdays.option = "UserDefined",
                 usrdef.varEnabled = TRUE,
                 usrdef.var = regs_set,
-                usrdef.varType = c("Calendar", "Calendar", "Calendar"))
+                usrdef.varType = rep("Calendar", nb_regs))
         }
         return(spec)
     })
     
-    
     return(spec_sets)
 }
-
-spec_sets <- create_spec_sets()
 
 one_diagnostic <- function(serie, spec) {
     
@@ -84,19 +64,33 @@ one_diagnostic <- function(serie, spec) {
     return(c(note = note, aicc = aicc))
 }
 
-all_diagnostics <- function(serie) {
+all_diagnostics <- function(serie, spec_sets) {
     
-    output <- lapply(X = spec_sets, FUN = one_diagnostic, serie = serie) |> do.call(what = rbind)
-    output <- cbind(regs = rownames(output), 
+    if (missing(spec_sets)) {
+        spec_sets <- create_spec_sets()
+    }
+    
+    output <- lapply(X = seq_along(spec_sets), FUN = function(k) {
+        spec <- spec_sets[[k]]
+        cat("Computing spec", names(spec_sets)[k], "...")
+        output <- one_diagnostic(spec = spec, serie = serie)
+        cat("Done !\n")
+        return(output)
+    }) |> do.call(what = rbind)
+    
+    output <- cbind(regs = names(spec_sets), 
                     data.frame(output))
     
     return(output)
 }
 
-z <- all_diagnostics(series_ipi_ts[, 4])
-
-select_reg_one_serie <- function(serie, name = "") {
-    diag <- all_diagnostics(serie)
+select_reg_one_serie <- function(serie, name = "", spec_sets) {
+    
+    if (missing(spec_sets)) {
+        spec_sets <- create_spec_sets()
+    }
+    
+    diag <- all_diagnostics(serie, spec_sets = spec_sets)
     diag_wo_na <- diag |> 
         subset(!is.na(note) & !is.na(aicc))
     
@@ -124,12 +118,11 @@ select_regs <- function(series) {
     
     output <- sapply(X = seq_len(ncol(series)), FUN = function(k) {
         name_serie <- colnames(series)[k]
-        cat(paste0("Série ", name_serie, " en cours... ", k, "/", ncol(series)), "\n")
+        cat(paste0("\nSérie ", name_serie, " en cours... ", k, "/", ncol(series)), "\n")
         return(select_reg_one_serie(series[, k], name = name_serie))
     })
-    output <- cbind(serie = colnames(series), reg_selected = output)
+    output <- as.data.frame(cbind(serie = colnames(series), 
+                                  reg_selected = output))
     return(output)
 }
-
-a <- select_regs(series_ipi_ts[, 4:7])
 
