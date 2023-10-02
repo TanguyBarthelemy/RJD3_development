@@ -30,7 +30,7 @@ but lire direct avec JDCruncher (to do 1h)
 
 ### rjdworkspace 
 
-- Harmoniser SAP et MP
+- Harmoniser SAP et MP : vu avec alain (02/10/2023) qui le fait ds rjdemetra3
 
 - current version (will be integrated in RJDemetra3)
 
@@ -51,6 +51,29 @@ version 3 faite
 test it 
 
 ## RJD3 testing (and incidental documentation)
+
+### All packages 
+
+- orga github: regrouper tout le R v2 et v3
+
+- ajouter au readme
+installation depuis github: quelle branche 
+- github remotes installe depuis la develop 
+- la release (= le zip vu que pas de cran)
+
+### rjd3x13 and tramoseats 
+noms (alain ?)
+spec_x13-> x13_spec
+idem pour fast 
+idem dans tramo 
+
+### rjdemetra3
+
+disparition mp pour sap : alain ds  (à voir avec jp) + les fonctions .j..
+
+
+
+
 
 ### Prints
 
