@@ -52,6 +52,14 @@ test it
 
 ## RJD3 testing (and incidental documentation)
 
+### For each package 
+
+- pay attention to title, readme
+
+- doc functions, examples 
+
+- vignettes by topic
+
 ### All packages 
 
 - orga github: regrouper tout le R v2 et v3
