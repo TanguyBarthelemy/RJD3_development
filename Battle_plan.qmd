@@ -8,6 +8,18 @@ format: html
 define products and steps 
 unambiguously
 
+## Q&A avec JP 
+
+bxls ans or zoom
+
+- frequences 
+- mode 
+- serie y_c 
+- leap year adj...
+
+completer 
+
+
 ## Brush up v2
 
 ### JD Cruncher in English
