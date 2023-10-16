@@ -14,7 +14,7 @@ unambiguously
 
 bxls ans or zoom
 
-- frequences 
+- frequencies 
 - mode x11
 - serie y_c 
 - leap year adj...
