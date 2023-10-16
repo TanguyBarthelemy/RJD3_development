@@ -3,29 +3,33 @@ title: "R packages development and documentation: our contribution"
 format: html
 ---
 
+
 ## Objectives of this file 
 
 define products and steps 
 unambiguously
 
-## Q&A avec JP 
+
+## Q&A avec JP -----------------------------------------------------------------
 
 bxls ans or zoom
 
 - frequences 
-- mode 
+- mode x11
 - serie y_c 
 - leap year adj...
 
 completer 
 
 
-## Brush up v2
+
+## Brush up v2 -----------------------------------------------------------------
+
 
 ### JD Cruncher in English
 
 - parametrage poids indicateurs et construction score dans fonction (without having to modify the package and build it )
-TO Do (2h)
+To Do (2h)
 
 - ajouter valeurs coefficients et p-values (pour selection cjo) 
 aujourd'hui: ajout params dans options d'output, lecture ad hoc de demetra_m.csv
@@ -33,36 +37,40 @@ but lire direct avec JDCruncher (to do 1h)
 
 - test validité chemin avant de cruncher (to do 1h)
 
+
 ### rjdqa 
 
 - resuscitate ? reparametrer ? voir avec Alain qui y travaille été 2023
 
 
-
-
 ### rjdworkspace 
 
 - Harmoniser SAP et MP : vu avec alain (02/10/2023) qui le fait ds rjdemetra3
+    --> fait
 
 - current version (will be integrated in RJDemetra3)
+    --> voir les metadatas sinon fait
 
---- replace series : if NULL, prendre tout le sap 
+- replace series : if NULL, prendre tout le sap
+    --> à jour avec transfer_series
 
 
 Peut on utiliser rjdworkspace pour:
 
 - generation automatique du WS qui sert à choisir les regresseurs cjo (1 spec par jeu)
+    --> Oui on peut. Fait. (voir section "Affect calendar regressor")
 
-- attribution des regrersseurs (pour remplacer la manip directe des xml: TRES UTILE²)
+- attribution des regresseurs (pour remplacer la manip directe des xml: TRES UTILE)
+    --> Oui on peut. Fait. (voir section "Affect calendar regressor")
 
-à preciser
 
 ### ggdemetra
 
 version 3 faite 
-test it 
+test it (à faire...)
 
-## RJD3 testing (and incidental documentation)
+
+## RJD3 testing (and incidental documentation) ---------------------------------
 
 ### For each package 
 
@@ -71,6 +79,7 @@ test it
 - doc functions, examples 
 
 - vignettes by topic
+
 
 ### All packages 
 
@@ -86,19 +95,19 @@ noms (alain ?)
 spec_x13-> x13_spec
 idem pour fast 
 idem dans tramo 
+    --> fait par Alain !
+
 
 ### rjdemetra3
 
 disparition mp pour sap : alain ds  (à voir avec jp) + les fonctions .j..
-
-
-
-
+    --> Fait !
 
 ### Prints
 
 Tanguy
 What is still left ?
+A faire le tour !
 
 - change "airline" display when printing a spec  
 
@@ -111,17 +120,18 @@ What is still left ?
 
 -	Intégration du pré-ajustement LP dans Tramo (comparable au X13) ? Not clear...(in GUI as well)
 
-
 -	Sélection automatique des variables de jours ouvrables (amélioration dans Tramo et nouveauté dans X13, solution identique dans les deux algorithmes)
 
 (tramo and or x13 ?)
 
 
 ### Refresh 
+
 all ok 
 left:
 - current policy (AO)
 - time span definition 
+
 
 ### Tests and Doc
 
