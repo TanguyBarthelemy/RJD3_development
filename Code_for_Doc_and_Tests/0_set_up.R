@@ -15,9 +15,9 @@ library("rjd3x13")
 library("rjdemetra3")
 
 #### 2nd layer 
-# library("rjd3sts")
-# library("rjd3highfreq")
-# library("rjd3stl")
+library("rjd3sts")
+library("rjd3highfreq")
+library("rjd3stl")
 #### utilities 
 # library("dplyr")
 # # library("tidyr")

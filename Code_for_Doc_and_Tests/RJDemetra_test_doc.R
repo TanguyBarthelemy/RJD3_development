@@ -4,10 +4,19 @@ ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_developme
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 # creating a TS object from a data frame 
-y_raw <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 6))
-y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9))
+y_raw <- ts(ipi[, "RF0811"], frequency = 12, start = c(1990, 1), end = c(2021, 2))
+y_new <- ts(ipi[, "RF0811"], frequency = 12, start = c(1990, 1), end = c(2021, 4))
 
 ## Package Doc remarks 
+
+# decomposition.sa_cmp_e
+user_defined_variables("TRAMO-SEATS")
+
+m <- tramoseats(y_raw,"RSAfull",
+                userdefined=c("decomposition.sa_cmp_e","decomposition.sa_cmp_e_f"))
+
+m$user_defined$decomposition.sa_cmp_e
+
 
 ##
 s<-
