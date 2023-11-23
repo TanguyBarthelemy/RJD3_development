@@ -6,20 +6,24 @@ Etat de ce mini-projet :
 But : attribuer des regresseurs CJO personnalisés à chaques séries
 
 3 idées :
-------------
+---------
 
 - Idée 1 : pré-créer des specs et appliquer des specs
 
 Ce qui manque :
     - Obtenir la liste des specs d'un WS
+        Vu avec Jean : pas possible, il faut faire SA-Item par SA_Item
     - attribuer une des specs définie dans un WS à un SA-ITEM
+        Pareil qu'au dessus, on doit reprendre la spec d'un SA-Item
 
 
 - Idée 2 : Affecter une variable existante à une spec existante
 
 Ce qui manque :
     - Obtenir la liste des user-defined variables d'un WS
+        - ok en v3 (vu avec Jean)
     - attribuer un user-defined variable (d'un WS) à un SA-ITEM (via la spec)
+        - ok en v3 (processing context)
 
 
 - Idée 3 : Affecter une variable non existante à une spec existante
