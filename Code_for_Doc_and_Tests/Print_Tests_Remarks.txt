@@ -1,7 +1,0 @@
-3 meths in R by default
-
-print 
-
-summary 
-
-plot 

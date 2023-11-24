@@ -124,13 +124,6 @@ Dans l’exemple de la PL, l’ordre des variables est légèrement changé (tou
 mais cela n’a bien sûr aucun impact sur le reste.
 
 
-
-
-
-
-
-
-
 N’hésite pas à me dire si ce n’est pas clair ou si j’ai loupé des questions.
 
 Alain
