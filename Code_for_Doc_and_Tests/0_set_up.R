@@ -8,7 +8,7 @@ options(stringasfactors = FALSE)
 # library("rJava")
 # library("RProtoBuf")
 ### core 
-# library("RJDemetra")
+library("RJDemetra")
 library("rjd3toolkit")
 library("rjd3tramoseats")
 library("rjd3x13")
