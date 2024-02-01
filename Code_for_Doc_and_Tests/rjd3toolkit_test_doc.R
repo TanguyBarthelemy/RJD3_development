@@ -418,14 +418,14 @@ new_spec<-set_arima(init_spec, ## ISSUE ???
     bp = 0, bd = 1, bq = 1,
     coef = c(0.7,0.6,0.8),
     coef.type = "Fixed")
-
+########################################
 
 # Set Benchmarking Specification
 library("rjd3x13")
-init_spec <- rjd3x13::spec_x13("RSA5c")
+init_spec <- rjd3x13::x13_spec("RSA5c")
 new_spec<- set_benchmarking(init_spec,
     enabled = TRUE,
-    target = "Normal", # normal NOT original
+    target = "CALENDARADJUSTED", # normal NOT original
     rho = 0.8,
     lambda = 0.5,
     forecast = FALSE,
@@ -623,7 +623,7 @@ my_context<-modelling_context(calendars = list(cal=BE))
 # sa$result$preprocessing
 
 
-
+x13()
 
 # built in regressors with specific holidays (like gui)
 
@@ -647,3 +647,6 @@ spec_x13_d$regarima$regression$td$holidays<-BE
 
 sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d, context = my_context)
 sa_x13_d$result$preprocessing
+
+a<-rjd3x13::x13(y_raw, spec_x13_d, userdefined="bla")
+a$user_defined$bla

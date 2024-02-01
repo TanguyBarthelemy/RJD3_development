@@ -18,6 +18,7 @@ library("rjdemetra3")
 library("rjd3sts")
 library("rjd3highfreq")
 library("rjd3stl")
+library("rjd3x11plus")
 #### utilities 
 # library("dplyr")
 # # library("tidyr")

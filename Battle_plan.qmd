@@ -5,29 +5,10 @@ format: html
 ---
 
 Beware to have 
+
 - a state of affairs / state of the art overview
+
 - goals set in perimeters (according to events)
-
-## Now page
-
-Currently working on (details in TOPICS..)
-
-### JD+ online Documentation 
-
-- GUI chap on SA and modelling features (Tanguy)
-- Documenting new features and Holes (Anna)
-
-
-### R packages 
-
-- create a readme for rjdemetra page (Anna)
-- readme and examples for each package (Both of us)
-- generate github pages for all packages (together): reste : 
-
-### GUI tests
-
-- HF in GUI: start before Bxls (Anna)
-
 
 ## This file 
 
@@ -52,36 +33,47 @@ GUI
 - test new features (HF,...)
 - improve online documentation 
 
-(no mass testing on basic functions, a priori no )
+## Now page
+
+Currently working on (details in TOPICS..)
+
+### JD+ online Documentation 
+
+- GUI chap on SA and modelling features (Tanguy)
+
+- Documenting new v3 features and Holes (Anna)
+
+- Chapter (appendix on output names and defintions)
+
+
+### R packages 
+
+- create a readme for rjdemetra page (Anna): ok 
+- readme and examples for each package (Both of us)
+- generate github pages for all packages (together): 
+reste : 
+
+#### Tests
+
+- mode
+- refresh 
+- seasonal filters and seasonal sigma 
+
+### GUI tests
+
+maj tests and issues on HF post reu stace 
 
 ## Next Events 
 
 What do we expect ? what do we bring ?
 
-### Q&A NBB 23 nov
+### NBB working session fev
+
+### Webinar 28 fev
 
 - be ready on all remaining ABS questions 
 
-### BXLS 4,5 dec 
-
-### TSACE 13 dec 
-
-#### R team update 
-
-- dvlpts ?:  
-- tests
-- doc 
-- communication (Webinar, newlsetters, blog, ...)
-    
-#### JD+ online doc update
-
-### TSAUG 13 dec 
-
-- Presentation on WS wrangling (Tanguy)
-
-- HF with GUI latest test (Anna)
-
-### Webinar in February 
+### STACE-TSAUG meeting in April 
 
 
 ## TOPICS to work on 
@@ -133,9 +125,6 @@ left:
 - orga github: regrouper tout le R v2 et v3
 
 - ajouter au readme
-installation depuis github: quelle branche 
-- github remotes installe depuis la develop 
-- la release (= le zip vu que pas de cran)
 
 #### Prints
 
@@ -143,15 +132,7 @@ installation depuis github: quelle branche
 
 #### rjd3x13
 
-noms (alain ?)
-spec_x13-> x13_spec
-idem pour fast 
-idem dans tramo 
-    --> fait par Alain !
-    
-(id in tramoseats)
-
-bias correction : non existing ?
+bias correction : non existing ? see technical doc
 
 #### rjd3tramoseats 
 
@@ -173,6 +154,7 @@ doc
 
 #### rjdqa en V3 ?
 
+Alain started rjd3report
 
 #### rjd3toolkit 
 
@@ -213,9 +195,19 @@ but lire direct avec JDCruncher (to do 1h)
 
 - test validité chemin avant de cruncher (to do 1h)
 
+- habillage output sans excel 
+
 #### rjdworkspace 
 
 everything up to date ?
+
+No: 
+- test and doc on fuctions post prod IPI/ICA
+
+- pb set spec (domain vs estimation)
+- pb non transport des variables externes 
+
+à verif en v3 d
 
 
 

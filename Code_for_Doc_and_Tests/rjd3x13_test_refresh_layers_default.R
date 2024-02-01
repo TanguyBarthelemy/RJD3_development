@@ -15,7 +15,7 @@ ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_developme
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 # creating a TS object from a data frame 
-y_raw <- ts(ipi[, "RF0811"], frequency = 12, start = c(1990, 1), end = c(2022, 9))
+y_raw <- ts(ipi[, "RF0811"], frequency = 12, start = c(1990, 1), end = c(2022, 1))
 y_new <- ts(ipi[, "RF0811"], frequency = 12, start = c(1990, 1), end = c(2022, 9))
 
 ## make refresh period long too see restimations
@@ -41,7 +41,11 @@ spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
                               current_domain_spec, #domain spec (set of constraints)
                               policy = "FixedParameters")
 
-### comprendre ce que ça fait
+spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "Current")
+
+
 # spec_x13_ref <- x13_refresh(current_domain_spec, # point spec to be refreshed
 #                             current_result_spec, #domain spec (set of constraints)
 #                             policy = "FixedParameters")

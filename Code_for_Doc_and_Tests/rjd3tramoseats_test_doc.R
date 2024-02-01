@@ -92,19 +92,18 @@ init_spec$seats$nbcasts
 init_spec$seats$algorithm
 "ALG_BURMAN"
 
-init_spec<-spec_tramoseats("rsafull")
+init_spec<-tramoseats_spec("rsafull")
 new_spec<- set_seats(init_spec,
                 approximation = "Legacy",
                 trend.boundary = 0.8,
                 seas.boundary = 0.5,
-                fcasts = -3,
-                bcasts=-1,
+                fcasts = 18,
+                bcasts=11,
                 algorithm = "KalmanSmoother",
                 bias = TRUE)
 
 y <- rjd3toolkit::ABS$X0.2.09.10.M
 
-new_spec<-spec_tramoseats("rsafull")
 sa<- rjd3tramoseats::tramoseats(y,spec=new_spec)
 
 sa$result$final$sa
@@ -141,8 +140,6 @@ sa<- rjd3tramoseats::tramoseats(y,spec=new_spec)
 
 
 
-
-sa$result
 
 
 

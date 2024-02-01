@@ -31,6 +31,9 @@ objectif : mettre des AO sur tous les nouveaux points comme dans GUI
 (je fais une issue pour memoire)
 
 
+a
+
+
 
 2) utilisation des params du span 
 

@@ -15,8 +15,10 @@ y_raw
 userdefined_variables_x13()
 
 ### issue 0 (voir ds rjd3toolkit): stuck on airline ? misleading presentation 
-spec_x13_d<-rjd3x13::spec_x13("rsa3")
+x13_d<-rjd3x13::spec_x13("rsa3")
 sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
+sa_x13_d
+
 
 #### set arima
 ## pre-condition
