@@ -26,16 +26,23 @@ RJDemetra::x13(ts(raw_series_ipi[, 1], start = 1990, frequency = 12), spec = spe
 
 
 create_reg_cjo_sets <- function(regs_cjo) {
+    
+    REG1 <- regs_cjo[, "REG1_AC1", drop = FALSE]
+    attr(REG1, "class") <- c("mts", "ts", "matrix", "array")
+    
+    LY <- regs_cjo_ts[, "LY", drop = FALSE]
+    attr(LY, "class") <- c("mts", "ts", "matrix", "array")
+    
     sets <- list(
         NO_CJO = NULL, 
-        REG1 = regs_cjo[, "REG1_AC1"], 
+        REG1 = REG1, 
         REG2 = regs_cjo[, c("REG2_AC1", "REG2_AC2")], 
         REG3 = regs_cjo[, c("REG3_AC1", "REG3_AC2", "REG3_AC3")], 
         REG5 = regs_cjo[, c("REG5_AC1", "REG5_AC2", "REG5_AC3", 
                             "REG5_AC4", "REG5_AC5")], 
         REG6 = regs_cjo[, c("REG6_AC1", "REG6_AC2", "REG6_AC3", 
                             "REG6_AC4", "REG6_AC5", "REG6_AC6")], 
-        NO_CJO_LY = regs_cjo[, "LY"], 
+        NO_CJO_LY = LY, 
         REG1_LY = regs_cjo[, c("REG1_AC1", "LY")], 
         REG2_LY = regs_cjo[, c("REG2_AC1", "REG2_AC2", "LY")], 
         REG3_LY = regs_cjo[, c("REG3_AC1", "REG3_AC2", "REG3_AC3", "LY")], 

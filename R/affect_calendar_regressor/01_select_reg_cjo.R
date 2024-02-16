@@ -1,5 +1,4 @@
 
-
 # Dans ce programme on sélectionne les régresseurs à partir de modèles créés exclusivement sur RJDemetra (sans aucun WS)
 
 # Import data -------------------------------------------------------------
