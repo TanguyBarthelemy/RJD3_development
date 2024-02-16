@@ -1,3 +1,25 @@
+# Pending issues 
+
+## to declare 
+# pb user defined output ???? tres louche car marchait à verifier (T le nom apparait)
+# surement nom pb...: FAIRE message erreur vs argument das liste (voir T)
+# in user defined variables list x13 : tramo stuff 
+# where is benchmarking output
+# check mode !! + formulas + self verif + hd+ online doc 
+# check composite seasonal filters 
+# check sigma vector and illustrate it
+
+## declared 
+
+
+######
+###
+library("rjd3toolkit")
+library("rjd3x13")
+
+
+
+
 # Data  
 
 ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
@@ -14,71 +36,35 @@ y_raw
 
 userdefined_variables_x13()
 
+### series span model span 
+
 ### issue 0 (voir ds rjd3toolkit): stuck on airline ? misleading presentation 
-x13_d<-rjd3x13::spec_x13("rsa3")
-sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
-sa_x13_d
+x13_spec_d<-rjd3x13::x13_spec("rsa3")
+sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d, userdefined = "decomposition.10")
+sa_x13_d$user_defined$decomposition.10
 
 
-#### set arima
-## pre-condition
-# ## automodel
-spec_x13_d$regarima$automodel$enabled
-sa_x13_d$estimation_spec$regarima$automodel$enabled
-sa_x13_d$result_spec$regarima$automodel$enabled
-
-
-# #
-spec_x13_d$regarima$arima$d
-sa_x13_d$estimation_spec$regarima$arima$d
-sa_x13_d$result_spec$regarima$arima$d
-
-#
-spec_x13_d$regarima$arima$bd
-sa_x13_d$estimation_spec$regarima$arima$bd
-sa_x13_d$result_spec$regarima$arima$bd
-
-
-spec_x13_d$regarima$arima$phi
-sa_x13_d$estimation_spec$regarima$arima$phi
-sa_x13_d$result_spec$regarima$arima$phi
-
-
-spec_x13_d$regarima$arima$theta
-sa_x13_d$estimation_spec$regarima$arima$theta
-sa_x13_d$result_spec$regarima$arima$theta
-
-spec_x13_d$regarima$arima$bphi
-sa_x13_d$estimation_spec$regarima$arima$bphi
-sa_x13_d$result_spec$regarima$arima$bphi
-
-
-spec_x13_d$regarima$arima$btheta
-sa_x13_d$estimation_spec$regarima$arima$btheta
-sa_x13_d$result_spec$regarima$arima$btheta
 
 
 ### issue 1: modes x11 yc rjdemetra
 
 ### issue 2: v sigmas yc rjdemetra
 
-### ISSUE benchmarking enabled :POSTED
-spec_x13_d<-rjd3x13::spec_x13("rsa5c")
-spec_x13_d<-set_benchmarking(spec_x13_d,
+### ISSUE benchmarking enabled : ok works 
+x13_spec_d<-rjd3x13::x13_spec("rsa5c")
+x13_spec_d<-rjd3toolkit::set_benchmarking(x13_spec_d,
                              enabled = TRUE,
-                             target = "Normal",
+                             target = "original",
                              rho = 0.8,
                              lambda = 0.5,
                              forecast = FALSE,
                              bias = "None")
+## user defined output list
+rjd3x13::userdefined_variables_x13()
+## benchmarking output 
 y<-rjd3toolkit::ABS$X0.2.09.10.M
-sa_x13_d<- rjd3x13::x13(y, spec_x13_d)
-spec_x13_d<-rjd3x13::spec_x13("rsa5c")
-
-
-
-
-
+sa_x13_d<- rjd3x13::x13(y, x13_spec_d,userdefined =c("y_b"))
+sa_x13_d$user_defined$y_b # NULL !!
 
 ################ outlier detection
 # regarima_outliers.R
@@ -177,7 +163,7 @@ new_spec
 # ok ça marche, mais par exemple va modifier e
 ### obj ; explique ce qui n' pas 
 
-init_spec <- spec_x13()
+init_spec <- x13_spec()
 init_spec
 # issue : seasonal filter and sigma vector
 new_spec <- set_x11(init_spec,
@@ -204,7 +190,7 @@ new_spec
 ################ set X13 spec: how to create one 
 # FILE n°3 : X13_spec.R
 ## homogeneisation noms spec
-#' @rdname x13_spec @rdname spec_x13
+#' @rdname x13_spec @rdname x13_spec
 #' 
 #' quels sont les specs par defaut
 
@@ -213,13 +199,13 @@ s
 s1<-spec_regarima()
 s1 #RG2c ??
 
-s2<-spec_x13()
+s2<-x13_spec()
 s2 #RSA2c ??
 
 ### issue faut il un nom de spec ou un spec object amibgu
 # nom ambigu des examples ente specs regarima et specs X13 (même si tout marche)
 ## spec object useful for mofis 
-sp = spec_x13("rg5c")
+sp = x13_spec("rg5c")
 y = rjd3toolkit::ABS$X0.2.09.10.M
 fast_x13(y, spec = "rsa5c") # works 
 x13(y, spec = "rsa5c") # works ok but issue = no print ? or no automatic print ?
@@ -246,7 +232,7 @@ fast_regarima(y,"rg0") # print exists
 regarima(y,"rg3") # issue: no print 
 #'
 #' If you want to customize a specification you have to create a specification object first
-sp = spec_x13("rsa5c")
+sp = x13_spec("rsa5c")
 sp = rjd3toolkit::add_outlier(sp,
                   type = c("AO"), c("2015-01-01", "2010-01-01"))
 # sp =  rjd3toolkit::set_transform(
@@ -271,7 +257,7 @@ userdefined_variables_x13("x13")
 ################ ISSUE ?
 y <- rjd3toolkit::ABS$X0.2.09.10.M
 m <- x13(y,"rsa5c", userdefined=c("decomposition.b20","ycal"))
-
+m$user_defined$decomposition.b20
 # Error in .jcall(jx, out_class, "getResult") :
 #     method getResult with signature ()Ljdplus/x13/X13Results; not found
 
@@ -286,3 +272,39 @@ m$user_defined$b20
 
 ### mode specific issues 
 
+#### set arima
+## pre-condition
+# ## automodel
+x13_spec_d$regarima$automodel$enabled
+sa_x13_d$estimation_spec$regarima$automodel$enabled
+sa_x13_d$result_spec$regarima$automodel$enabled
+
+
+# #
+x13_spec_d$regarima$arima$d
+sa_x13_d$estimation_spec$regarima$arima$d
+sa_x13_d$result_spec$regarima$arima$d
+
+#
+x13_spec_d$regarima$arima$bd
+sa_x13_d$estimation_spec$regarima$arima$bd
+sa_x13_d$result_spec$regarima$arima$bd
+
+
+x13_spec_d$regarima$arima$phi
+sa_x13_d$estimation_spec$regarima$arima$phi
+sa_x13_d$result_spec$regarima$arima$phi
+
+
+x13_spec_d$regarima$arima$theta
+sa_x13_d$estimation_spec$regarima$arima$theta
+sa_x13_d$result_spec$regarima$arima$theta
+
+x13_spec_d$regarima$arima$bphi
+sa_x13_d$estimation_spec$regarima$arima$bphi
+sa_x13_d$result_spec$regarima$arima$bphi
+
+
+x13_spec_d$regarima$arima$btheta
+sa_x13_d$estimation_spec$regarima$arima$btheta
+sa_x13_d$result_spec$regarima$arima$btheta

@@ -29,7 +29,7 @@ policy : plus de c in v3 ? in this case all around
 
 
 
---------------------------------
+-------------------------------- sse tech doc : harmoniser
 ### bias correction for X13 : not available in GUI ? and for TS : available in GUI ?
 one additionnal parameter in R ? 
 
