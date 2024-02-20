@@ -144,7 +144,7 @@ sa_x13_ref$result$preprocessing$description$variables ## ?
 # sa_x13_ref$result$preprocessing$estimation$res
 
 
-
+####################################
 
 
 ### 3 Current (period not needed): 
@@ -154,7 +154,7 @@ x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
                             policy = "Current",
                             period=12, # use of this ? not needed ?
                             start=c(1990,1),
-                            end=c(2019,12)) # juste pb print
+                            end=c(2022,01)) # juste pb print
 current_domain_spec
 current_result_spec
 x13_spec_ref # outlier detection span shouldn't be all 
@@ -171,6 +171,110 @@ sa_x13_ref$result$preprocessing$description$variables ## ?
 # sa_x13_ref$result$preprocessing$estimation$res
 
 #################################### end default test spec ####################
+# example for git issue : CURRENT 
+
+y<- rjd3toolkit::ABS$X0.2.08.10.M
+# raw series for first estimation
+y_raw <-window(y,end = 2009)
+# raw series for second (refreshed) estimation
+y_new <-window(y,end = 2010)
+# specification for first estimation
+spec_x13_1<-x13_spec("rsa5c")
+# first estimation
+sa_x13<- x13(y_raw, spec_x13_1) # AO (200,6) and TD (2000,7)
+# refreshing the specification
+current_result_spec <- sa_x13$result_spec
+current_domain_spec <- sa_x13$estimation_spec
+spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "Current",
+                            period = 12,
+                            start= c(198,4),
+                            end=c(2008,12)) # should put every new point in AO from there 
+spec_x13_ref # all parameters are fixed
+# 2nd estimation with refreshed specification
+sa_x13_ref <- x13(y_new, spec_x13_ref)
+
+sa_x13_ref$result$preprocessing # no new AOs
+sa_x13_ref$result$preprocessing$description$variables # no new AOs
+
+window(sa_x13_ref$result$final$d11final,start=2009, end=2010)
+
+### refresh with "Fixed" 
+spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "Fixed")
+sa_x13_ref <- x13(y_new, spec_x13_ref)                       
+window(sa_x13_ref$result$final$d11final,start =2009, end=2010) # same result as current
+
+
+
+#######################################################
+#################################### end default test spec ####################
+# example for git issue : outliers 
+
+y<- rjd3toolkit::ABS$X0.2.08.10.M
+# raw series for first estimation
+y_raw <-window(y,end = 2009)
+# raw series for second (refreshed) estimation
+y_new <-window(y,end = 2010)
+# specification for first estimation
+spec_x13_1<-x13_spec("rsa5c")
+# first estimation
+sa_x13<- x13(y_raw, spec_x13_1) # AO (200,6) and TD (2000,7)
+
+# refreshing the specification
+current_result_spec <- sa_x13$result_spec
+current_domain_spec <- sa_x13$estimation_spec
+spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "Outliers",
+                            period = 12,
+                            start= c(2001,1), # outliers should be  identified before 2001
+                            end=c(2008,12)) # outliers should be identified from 2009
+spec_x13_ref # outliers will be identified from 2009 
+# 2nd estimation with refreshed specification
+sa_x13_ref <- x13(y_new, spec_x13_ref)
+
+sa_x13_ref$result$preprocessing # oultliers identified from 2009 but NOT before 2001
+sa_x13_ref$result$preprocessing$description$variables 
+
+
+
+### refresh with "Fixed" 
+spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "Fixed")
+sa_x13_ref <- x13(y_new, spec_x13_ref)                       
+window(sa_x13_ref$result$final$d11final,start =2009, end=2010) # same result as current
+
+
+
+#######################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

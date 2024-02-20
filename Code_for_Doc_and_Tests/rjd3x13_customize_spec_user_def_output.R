@@ -1,6 +1,6 @@
 ##### Customizing a specification
 
-### prio webinaire = spec et refresh 
+## refresh issues are in a separated file 
 
 
 #####################
@@ -210,38 +210,41 @@ m<-rjd3x13::x13(y_raw,x13_spec_d)
 #### Add user def regressors (which are not pre defined in JD+ like outliers or ramps)
 
 ####### STEP 1: create (or import) the regressors
-## here regressors = 2 intervention variables + 6 calendar regressors 
+
+## here regressors = 1 intervention variable + 6 calendar regressors 
 
 # create intervention variables (see doc in rjd3toolkit)
 iv1<-intervention_variable(s=y_raw,
                            starts = "2015-01-01", ends = "2015-12-01")
+# s=y_raw : formats directly your regressor like your raw series (length, frequency..)
 
-iv2<- intervention_variable(s=y_raw, starts = "2010-01-01", ends = "2010-12-01", delta = 1)
-iv2
+iv1
+
+
 ### calendar regressors (to be added with `set_trading days`)
 # set of 6 regressors every day is different, contrast with Sunday, no national calendar
 regs_td<- rjd3toolkit::td(s=y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
              contrasts = TRUE)
 
-
+str(regs_td)
+class(regs_td)
 #### TEST adding an MTS object (Alain ?)
-
-
 
 ####### STEP 2: create a modelling context
 
 #### Creating a modelling context for external regressors (all together)
-variables<-list(Monday=regs_td[,1],Tuesday=regs_td[,2], Wednesday=regs_td[,3],
+
+my_regressors<-list(Monday=regs_td[,1],Tuesday=regs_td[,2], Wednesday=regs_td[,3],
                 Thursday=regs_td[,4],Friday= regs_td[,5], Saturday=regs_td[,6],
-                reg1=iv1, reg2=iv2)
-my_context<-modelling_context(variables=variables)
+                reg1=iv1)
+
+my_context<-modelling_context(variables=my_regressors)
 # check your variables 
 rjd3toolkit::.r2jd_modellingcontext(my_context)$getTsVariableDictionary()
 
 ### here show how to create groups + GUI comp 
 
-
-####### STEP 3: add variables to specification 
+####### STEP 3: add regressors  to specification 
 
 
 ### add calendar regressors to spec 
@@ -255,18 +258,17 @@ x13_spec_d<- rjd3toolkit::set_tradingdays(x13_spec_d,
 # print the spec and see changes 
 print(x13_spec_d) 
 
+### Alain : is it possible to add directly an MTS of external regressors 
 
-
-### add ONE intervention variables to spec, choosing the component to allocate the effects to 
-# has to be done regressor by regressor 
+### add intervention variables to spec, choosing the component to allocate the effects to TREND
 x13_spec_d<- add_usrdefvar(x13_spec_d,group = "r", name="reg1",label="iv1", regeffect="Trend")
 x13_spec_d$regarima$regression$users
 
 ####### STEP 4: estimate WITH context  
-sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d, context = my_context,userdefined = "decomposition.sa_cmp")
+
+sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d, context = my_context)
 sa_x13_d$result$preprocessing
-userdefined_variables_x13("x13")
-sa_x13_d$user_defined$decomposition.sa_cmp
+
 
 
 ########################## to investigate 
