@@ -6,7 +6,7 @@
 # mode : to be tested
 # seasonal filters by period (meaning of "X11Default") : ok 
 # sigma vectors : ok (maybe test it on smth, see impact ?)
-# benchmarking 
+# benchmarking : no bench access (cf ons question)
 
 
 # Data  

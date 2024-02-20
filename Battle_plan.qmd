@@ -179,6 +179,10 @@ see what is M stl
 
 ### R packages V2
 
+#### RJDemetra 
+
+add : porint model span 
+
 
 #### rjdqa 
 

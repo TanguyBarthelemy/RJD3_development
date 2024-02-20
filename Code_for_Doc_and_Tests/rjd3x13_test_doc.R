@@ -1,6 +1,8 @@
 # Pending issues 
 
 ## to declare 
+
+# print arima model in created spec (0,1,1)(0,1,1) : misleading deja vu
 # pb user defined output ???? tres louche car marchait à verifier (T le nom apparait)
 # surement nom pb...: FAIRE message erreur vs argument das liste (voir T)
 # in user defined variables list x13 : tramo stuff 
@@ -10,6 +12,20 @@
 # check sigma vector and illustrate it
 
 ## declared 
+
+################################# To test + doc packs + doc Jd+ to enrich
+
+##### Calendar: all options 
+## leap year (comp gui), auto adjust 
+## stock td 
+## length of period 
+
+##### Missing value correction (vs GUI)
+
+
+##### 1 Output (vs GUI + check preadj effects) 
+# default output 
+# user defined out put 
 
 
 ######
@@ -308,3 +324,9 @@ sa_x13_d$result_spec$regarima$arima$bphi
 x13_spec_d$regarima$arima$btheta
 sa_x13_d$estimation_spec$regarima$arima$btheta
 sa_x13_d$result_spec$regarima$arima$btheta
+
+
+##################### OUTPUT TEST
+## To test vs GUI + check preadj effects: read vs and compare TS ?
+# default output 
+# user defined out put 

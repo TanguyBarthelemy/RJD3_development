@@ -28,31 +28,204 @@ y_new <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022,9)
 
 ## make refresh period long too see re-estimations
 
-################# LAYERS 
+#### Part 1: refresh a default spec with all policies  
+## STEP 1a refresh default spec
+# spec
+x13_spec_d<-rjd3x13::x13_spec("rsa5c")
+x13_spec_d # 3 parts, no concept of estimation or result
+# estimation : model and spec inside the model
+sa_x13_d<-rjd3x13::x13(y_raw,x13_spec_d)
+sa_x13_d$estimation_spec # copy of the used spec = x13_spec_d
 
-## Layer 1: spec (1 default 2 customized)
-## 
-# y_raw<-rjd3toolkit::ABS$X0.2.08.10.M
-# spec_x13(name = c("rsa4", "rsa0", "rsa1", "rsa2c", "rsa3", "rsa5c"))
-spec_x13_d<-rjd3x13::spec_x13("rsa5c") #### HERE PB !!! issue : rsa4 et pas rsa4c
+## building a refreshed spec (show results)
+### question on X11 part: everthing will be redone unless udefined params 
+current_result_spec <- sa_x13_d$result_spec
+current_result_spec
+current_domain_spec <- sa_x13_d$estimation_spec
+sa_x13_d$estimation_spec
+
+# question : why declare period ? is start compulsory ?
+# issue: declaring period doen't work ?
+start(y_new)
+# v1
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "Fixed")
+
+x13_spec_ref
+
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "FixedParameters")
+
+x13_spec_ref
+
+
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "FixedAutoRegressiveParameters")
+
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "FreeParameters")
+
+############################## policies relying on span
+
+
+# obj here : clear issues: solved for webinar
+
+### 1 Outliers (period not needed): defining span were outliers won't be detected 
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "Outliers")
+                            #period=12, # use of this ? not needed ?
+                            #start=c(2011,5), # start is excluded
+                            #end=c(2020,3)) # end is included 
+current_domain_spec
+current_result_spec
+x13_spec_ref # outlier detection span shouldn't be all 
+
+# estimation with spec from refresh
+sa_x13_ref <- x13(y_new, x13_spec_ref)
+sa_x13_ref$estimation_spec
+sa_x13_ref$result_spec
+sa_x13_ref$result$preprocessing
+sa_x13_ref$result$preprocessing$description$variables ## ?
+# sa_x13_ref$result$preprocessing$description$variables
+# sa_x13_ref$result$preprocessing$estimation$res
+
+## obj 1 recreate the traditional last outliers:
+# do I need start and end  ?
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "Outliers",
+                            period=12, # use of this ? not needed ?
+                            start=c(2000,1), # start is excluded
+                            end=c(2019,12)) # end is included 
+
+current_domain_spec
+current_result_spec
+x13_spec_ref # outlier detection span shouldn't be all 
+
+# estimation with spec from refresh
+sa_x13_ref <- x13(y_new, x13_spec_ref)
+sa_x13_ref$estimation_spec
+sa_x13_ref$result_spec
+sa_x13_ref$result$preprocessing
+sa_x13_ref$result$preprocessing$description$variables ## ?
+# sa_x13_ref$result$preprocessing$description$variables
+# sa_x13_ref$result$preprocessing$estimation$res
+
+
+### 2 Outliers_StochasticComponent (period not needed): 
+#defining span were outliers won't be detected 
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "Outliers_StochasticComponent",
+                            period=12, # use of this ? not needed ?
+                            start=c(1999,1),
+                            end=c(2019,12)) # juste pb print 
+current_domain_spec
+current_result_spec
+x13_spec_ref # outlier detection span shouldn't be all 
+
+# mettre 1 veleur extreme avant le start pour voir si AO detecte
+# need modif 1 valeur dans une s temp, extraire 
+y_new[15]<-200
+y_new
+
+# estimation with spec from refresh
+sa_x13_ref <- x13(y_new, x13_spec_ref)
+sa_x13_ref$estimation_spec
+sa_x13_ref$result_spec
+sa_x13_ref$result$preprocessing
+sa_x13_ref$result$preprocessing$description$variables ## ?
+# sa_x13_ref$result$preprocessing$description$variables
+# sa_x13_ref$result$preprocessing$estimation$res
+
+
+
+
+
+### 3 Current (period not needed): 
+#defining span were outliers won't be detected 
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "Current",
+                            period=12, # use of this ? not needed ?
+                            start=c(1990,1),
+                            end=c(2019,12)) # juste pb print
+current_domain_spec
+current_result_spec
+x13_spec_ref # outlier detection span shouldn't be all 
+
+# estimation with spec from refresh
+sa_x13_ref <- x13(y_new, x13_spec_ref)
+sa_x13_ref$estimation_spec
+sa_x13_ref$result_spec
+sa_x13_ref$result$preprocessing
+## où sont les AOs as intervention variables 
+sa_x13_ref$result$preprocessing$description$variables
+sa_x13_ref$result$preprocessing$description$variables ## ?
+# sa_x13_ref$result$preprocessing$description$variables
+# sa_x13_ref$result$preprocessing$estimation$res
+
+#################################### end default test spec ####################
+
+
+
+current_result_spec <- sa_x13_d$result_spec
+current_domain_spec <- sa_x13_d$estimation_spec
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "Current")
+# period=12, # nb of annual observations
+# start=c(2012,1), # why this
+# end=c(2021,1))
+s_ref<-x13(y_new,x13_spec_ref)
+
+# policy = c("FreeParameters",
+#"Complete", "Outliers_StochasticComponent", 
+# "Outliers",
+#            "FixedParameters", "FixedAutoRegressiveParameters", "Fixed")
+####
+# "FixedAutoRegressiveParameters" : works with x13
+
+########################################
+## Layer 5: estimation with spec from refresh
+sa_x13_ref <- x13(y_new, x13_spec_ref, context=my_context)
+sa_x13_ref$result$preprocessing
+sa_x13_ref$result$preprocessing$description$variables ## ?
+# sa_x13_ref$result$preprocessing$description$variables
+# sa_x13_ref$result$preprocessing$estimation$res
+
+sa_x13_d$result$preprocessing
+sa_x13_ref$result$preprocessing
+
+sa_x13_ref$result$preprocessing$description$variables
+
+
+
+
+
 
 # ############ CUSTOMIZATION by parts
 # ### basic: ATT : won't take part to rer
 # ### model or estimation ? make everything clear including vs gui and doc(s)
 # ## test between (excludes last and not first)
-# # spec_x13_d<-rjd3x13::spec_x13("rsa5c") #### HERE PB !!! issue : rsa4 et pas rsa4c
+# # x13_spec_d<-rjd3x13::x13_spec("rsa5c") #### HERE PB !!! issue : rsa4 et pas rsa4c
 # ##### set basic 
-# spec_x13_d<-set_basic(spec_x13_d,type = "From",d0 = "2000-01-01",
+# x13_spec_d<-set_basic(x13_spec_d,type = "From",d0 = "2000-01-01",
 #                       preliminary.check = TRUE,
 #                       preprocessing= TRUE)
 
 # # ## test from : ok includes d0
-# # spec_x13_d<-set_basic(spec_x13_d,type = "From",d0 = "2000-01-01",
+# # x13_spec_d<-set_basic(x13_spec_d,type = "From",d0 = "2000-01-01",
 # #                       preliminary.check = TRUE,
 # #                       preprocessing= TRUE)
 # 
 # # ## test to : ok includes d1 ?
-# # spec_x13_d<-set_basic(spec_x13_d,type = "To",d1 = "2000-01-01",
+# # x13_spec_d<-set_basic(x13_spec_d,type = "To",d1 = "2000-01-01",
 # #                       preliminary.check = TRUE,
 # #                       preprocessing= TRUE)
 # 
@@ -62,16 +235,16 @@ spec_x13_d<-rjd3x13::spec_x13("rsa5c") #### HERE PB !!! issue : rsa4 et pas rsa4
 
 # # 
 # # ### Last 60 obs 
-# # spec_x13_d<-set_basic(spec_x13_d,type="Last", n1 = 60,
+# # x13_spec_d<-set_basic(x13_spec_d,type="Last", n1 = 60,
 # #                       preliminary.check = TRUE,
 # #                       preprocessing= TRUE)
 
 # # ### Excluding : fist 60 and Last 60 obs 
-spec_x13_d<-set_basic(spec_x13_d,type="Excluding", n0= 60, n1 = 60,
+x13_spec_d<-set_basic(x13_spec_d,type="Excluding", n0= 60, n1 = 60,
                       preliminary.check = TRUE,
                       preprocessing= TRUE)
 
-sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
+sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d)
 sa_x13_d$result$preprocessing
 # 
 # ### operations on TS objects 
@@ -79,42 +252,42 @@ sa_x13_d$result$preprocessing
 # end(y_new)
 # 
 # ##### set estimate 
-# spec_x13_d<-set_estimate(spec_x13_d,type = "From",d0 = "2010-01-01")
+# x13_spec_d<-set_estimate(x13_spec_d,type = "From",d0 = "2010-01-01")
 # ## pre processing in estimate ? same tests with n0, n1
 # 
 # # # ### Last 60 obs SAME issue
-spec_x13_d<-rjd3x13::spec_x13("rsa5c")
-spec_x13_d<-set_estimate(spec_x13_d,type="Last", n1 = 60)
+x13_spec_d<-rjd3x13::x13_spec("rsa5c")
+x13_spec_d<-set_estimate(x13_spec_d,type="Last", n1 = 60)
 
-sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
+sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d)
 sa_x13_d$result$preprocessing
 
 # ##### set  transform 
-# spec_x13_d<-rjd3x13::spec_x13("rsa5c")
+# x13_spec_d<-rjd3x13::x13_spec("rsa5c")
 
-# # spec_x13_d<- set_transform(spec_x13_d,
+# # x13_spec_d<- set_transform(x13_spec_d,
 # #                          fun = "Log",
 # #                          adjust="LengthOfPeriod",
 # #                          outliers = TRUE)
 #  where in SPEC                
-# spec_x13_d<- set_transform(spec_x13_d,
+# x13_spec_d<- set_transform(x13_spec_d,
 #                            fun = "Log",
 #                            outliers = TRUE)
 # 
 # ##### set  outlier (see pb in refresh not copied to spec)
-# # spec_x13_d<-set_outlier(spec_x13_d, 
+# # x13_spec_d<-set_outlier(x13_spec_d, 
 # #                     span.type= "From", d0 = "2012-01-01",
 # #                       outliers.type = c("LS", "TC"),
 # #                       critical.value = 5,
 # #                       tc.rate =0.85)
-# spec_x13_d<-set_outlier(spec_x13_d,
+# x13_spec_d<-set_outlier(x13_spec_d,
 #                         span.type= "Last", n1 = 60,
 #                         outliers.type = c("LS", "TC"),
 #                         critical.value = 5,
 #                         tc.rate =0.85)
 
 # #### set automodel 
-# spec_x13_d<-set_automodel(spec_x13_d,
+# x13_spec_d<-set_automodel(x13_spec_d,
 #                         enabled = FALSE,
 #                         cancel=0.06,
 #                         ub1=1.05,
@@ -127,23 +300,23 @@ sa_x13_d$result$preprocessing
 #                         balanced= TRUE)
 # 
 # ### set benchmarking (ok)
-spec_x13_d<-rjd3x13::spec_x13("rsa5c")
-spec_x13_d<-set_benchmarking(spec_x13_d,
+x13_spec_d<-rjd3x13::x13_spec("rsa5c")
+x13_spec_d<-set_benchmarking(x13_spec_d,
                             enabled = TRUE,
                             target = "ORIGINAL",
                             rho = 0.8,
                             lambda = 0.5,
                             forecast = FALSE,
                             bias = "None")
-sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d,userdefined = "adjust")
+sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d,userdefined = "adjust")
 userdefined_variables_x13() ## should understand every item 
 sa_x13_d$user_defined$adjust
-# # spec_x13_d<-rjd3x13::spec_x13("rsa5c")  
-# spec_x13_d<-set_automodel(spec_x13_d,
+# # x13_spec_d<-rjd3x13::x13_spec("rsa5c")  
+# x13_spec_d<-set_automodel(x13_spec_d,
 #                       enabled = FALSE)
 #####  set arima 
 # all fixed
-# spec_x13_d<-set_arima(spec_x13_d,mean = 0.2,
+# x13_spec_d<-set_arima(x13_spec_d,mean = 0.2,
 # mean.type = "Fixed",
 # p = 1,
 # d = 2,
@@ -154,7 +327,7 @@ sa_x13_d$user_defined$adjust
 # coef = c(0.6,0.7),
 # coef.type = c("Initial","Fixed"))
 # # not fixed 
-# spec_x13_d<-set_arima(spec_x13_d,
+# x13_spec_d<-set_arima(x13_spec_d,
 #                       p = 1,
 #                       d = 0,
 #                       q = 1,
@@ -163,37 +336,37 @@ sa_x13_d$user_defined$adjust
 #                       bq = 0)
 
 # ### set_tradingdays
-spec_x13_d<-rjd3x13::spec_x13("rsa5c")
+x13_spec_d<-rjd3x13::x13_spec("rsa5c")
 
-spec_x13_d<-rjd3x13::spec_x13("rsa3")
-spec_x13_d<- set_tradingdays(spec_x13_d,
+x13_spec_d<-rjd3x13::x13_spec("rsa3")
+x13_spec_d<- set_tradingdays(x13_spec_d,
     option = "TD4", test = "None",
     coef=c(0.7,NA,0.5),
     coef.type=c("Fixed","Estimated","Fixed"),
     leapyear="LengthOfPeriod",
     leapyear.coef=0.6
     )
-spec_x13_d$regarima$regression$td
+x13_spec_d$regarima$regression$td
 # # 
 y_raw<-rjd3toolkit::ABS$X0.2.08.10.M
 # ISSUE pb estimation with stocktdif rsa3 (not if rsa5c)
-spec_x13_d<-rjd3x13::spec_x13("rsa3")
-spec_x13_d<- set_tradingdays(spec_x13_d,stocktd=28)
-spec_x13_d$regarima$regression$td
-sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
+x13_spec_d<-rjd3x13::x13_spec("rsa3")
+x13_spec_d<- set_tradingdays(x13_spec_d,stocktd=28)
+x13_spec_d$regarima$regression$td
+sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d)
 # 
-spec_x13_d<-rjd3x13::spec_x13("rsa1")
-spec_x13_d$regarima$regression$td
-spec_x13_d<- set_tradingdays(spec_x13_d,stocktd=28)
-spec_x13_d$regarima$regression$td
-sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
+x13_spec_d<-rjd3x13::x13_spec("rsa1")
+x13_spec_d$regarima$regression$td
+x13_spec_d<- set_tradingdays(x13_spec_d,stocktd=28)
+x13_spec_d$regarima$regression$td
+sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d)
 
 
 
 # 
 # ### set_easter
-# spec_x13_d<-rjd3x13::spec_x13("rsa5c")
-# spec_x13_d<-set_easter(spec_x13_d,
+# x13_spec_d<-rjd3x13::x13_spec("rsa5c")
+# x13_spec_d<-set_easter(x13_spec_d,
 #                        enabled = TRUE,
 #                        duration = 12,
 #                        coef=0.6,
@@ -201,19 +374,19 @@ sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
 #                        test="None")
 # # type = "Unused" : TRAMO specific
 # # "Unused", "Standard", "IncludeEaster", "IncludeEasterMonday"
-# spec_x13_d
+# x13_spec_d
 
 
 ### Adding user defined variables 
 # key = localize new params in spec !!!!!!!!!!!
 # ## add outlier 
-# spec_x13_d<-rjd3x13::spec_x13("rsa5c")
-# spec_x13_d<-rjd3toolkit::add_outlier(spec_x13_d, type="AO", date="2020-03-01", coef=12)
-# spec_x13_d<-rjd3toolkit::add_outlier(spec_x13_d, type="LS", date="2020-04-01")
-# spec_x13_d
+# x13_spec_d<-rjd3x13::x13_spec("rsa5c")
+# x13_spec_d<-rjd3toolkit::add_outlier(x13_spec_d, type="AO", date="2020-03-01", coef=12)
+# x13_spec_d<-rjd3toolkit::add_outlier(x13_spec_d, type="LS", date="2020-04-01")
+# x13_spec_d
 # 
 # ramp on year 2021
-# spec_x13_d<-rjd3toolkit::add_ramp(spec_x13_d,start="2021-01-01",end="2021-12-01")
+# x13_spec_d<-rjd3toolkit::add_ramp(x13_spec_d,start="2021-01-01",end="2021-12-01")
 
 #### add user def regressors
 # ## add interv variables 
@@ -234,16 +407,16 @@ my_context<-modelling_context(variables=variables)
 rjd3toolkit::.r2jd_modellingcontext(my_context)$getTsVariableDictionary()
 
 ### add calendar regressors to spec 
-spec_x13_d<-rjd3x13::spec_x13("rsa5c")
-spec_x13_d<- set_tradingdays(spec_x13_d,
+x13_spec_d<-rjd3x13::x13_spec("rsa5c")
+x13_spec_d<- set_tradingdays(x13_spec_d,
                              option = "UserDefined", 
                              uservariable=c("r.Monday","r.Tuesday","r.Wednesday",
                                             "r.Thursday","r.Friday","r.Saturday"),  
                              test = "None")
 
-spec_x13_d<- add_usrdefvar(spec_x13_d,group = "arf", name="reg1",label="iv1", regeffect="Trend")
-spec_x13_d$regarima$regression$users
-sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d, context = my_context)
+x13_spec_d<- add_usrdefvar(x13_spec_d,group = "arf", name="reg1",label="iv1", regeffect="Trend")
+x13_spec_d$regarima$regression$users
+sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d, context = my_context)
 sa_x13_d$result$preprocessing
 
 ## ISSUE 
@@ -254,16 +427,16 @@ m <- x13(y,"rsa5c", userdefined=c("variancedecomposition.total",
          
 m$user_defined$variancedecomposition.total
 ## adding other external regressors
-# spec_x13_d<- add_usrdefvar(spec_x13_d,group = "arf", name="reg1",label="iv1", regeffect="Trend")
+# x13_spec_d<- add_usrdefvar(x13_spec_d,group = "arf", name="reg1",label="iv1", regeffect="Trend")
 
 ### old way keep as example
-# spec_x13_d<- add_usrdefvar(spec_x13_d,id = "r.reg2", regeffect="Trend", coef=0.7)
+# x13_spec_d<- add_usrdefvar(x13_spec_d,id = "r.reg2", regeffect="Trend", coef=0.7)
 
 
 ## estimation with context and user def output 
-# sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d, context = my_context, 
+# sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d, context = my_context, 
 #                      userdefined = c("ycal","reg_t"))
-# sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d, context = my_context)
+# sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d, context = my_context)
 # sa_x13_d$result$preprocessing
 
 #########################################################################
@@ -272,7 +445,7 @@ spec<-x13_spec("rsa3")
 sa_x13_d<-x13(y_raw,spec)
 current_result_spec <- sa_x13_d$result_spec
 current_domain_spec <- sa_x13_d$estimation_spec
-spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
                             current_domain_spec, #domain spec (set of constraints)
                             policy = "FreeParameters")
 
@@ -284,13 +457,13 @@ spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
 
 current_result_spec <- sa_x13_d$result_spec
 current_domain_spec <- sa_x13_d$estimation_spec
-spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
                               current_domain_spec, #domain spec (set of constraints)
                               policy = "Current")
                               # period=12, # nb of annual observations
                               # start=c(2012,1), # why this
                               # end=c(2021,1))
-s_ref<-x13(y_new,spec_x13_ref)
+s_ref<-x13(y_new,x13_spec_ref)
 
 # policy = c("FreeParameters",
 #"Complete", "Outliers_StochasticComponent", 
@@ -301,7 +474,7 @@ s_ref<-x13(y_new,spec_x13_ref)
 
 
 ## Layer 5: estimation with spec from refresh
-sa_x13_ref <- x13(y_new, spec_x13_ref, context=my_context)
+sa_x13_ref <- x13(y_new, x13_spec_ref, context=my_context)
 sa_x13_ref$result$preprocessing
 sa_x13_ref$result$preprocessing$description$variables ## ?
 # sa_x13_ref$result$preprocessing$description$variables
@@ -323,101 +496,102 @@ sa_x13_ref$result$preprocessing$description$variables
 ## comment 2: understanding of all param purpose (DETAIL HOLES ONLY)
 ##.... + how to change them here, in v2 and in GUI
 
-######################################### basic 
-#### if refreshed: always untouched  / simple copy
-# spec_x13_d$regarima$basic$span$type
+############# STEP 3:  REFRESHED SPEC : check changes 
+### Basic 
+#if refreshed: always untouched  / simple copy
+# x13_spec_d$regarima$basic$span$type
 # sa_x13_d$estimation_spec$regarima$basic$span$type
 # sa_x13_d$result_spec$regarima$basic$span$type
-# spec_x13_ref$regarima$basic$span$type
+# x13_spec_ref$regarima$basic$span$type
 # sa_x13_ref$estimation_spec$regarima$basic$span$type
 # sa_x13_ref$result_spec$regarima$basic$span$type
 # #
-# spec_x13_d$regarima$basic$span$d0
+# x13_spec_d$regarima$basic$span$d0
 # sa_x13_d$estimation_spec$regarima$basic$span$d0
 # sa_x13_d$result_spec$regarima$basic$span$d0
-# spec_x13_ref$regarima$basic$span$d0
+# x13_spec_ref$regarima$basic$span$d0
 # sa_x13_ref$estimation_spec$regarima$basic$span$d0
 # sa_x13_ref$result_spec$regarima$basic$span$d0
 # 
-# spec_x13_d$regarima$basic$span$d1
+# x13_spec_d$regarima$basic$span$d1
 # sa_x13_d$estimation_spec$regarima$basic$span$d1
 # sa_x13_d$result_spec$regarima$basic$span$d1
-# spec_x13_ref$regarima$basic$span$d1
+# x13_spec_ref$regarima$basic$span$d1
 # sa_x13_ref$estimation_spec$regarima$basic$span$d1
 # sa_x13_ref$result_spec$regarima$basic$span$d1
 #
-# spec_x13_d$regarima$basic$span$n0
+# x13_spec_d$regarima$basic$span$n0
 # sa_x13_d$estimation_spec$regarima$basic$span$n0
 # sa_x13_d$result_spec$regarima$basic$span$n0
-# spec_x13_ref$regarima$basic$span$n0
+# x13_spec_ref$regarima$basic$span$n0
 # sa_x13_ref$estimation_spec$regarima$basic$span$n0
 # sa_x13_ref$result_spec$regarima$basic$span$n0
 #
-spec_x13_d$regarima$basic$span$n1
+x13_spec_d$regarima$basic$span$n1
 sa_x13_d$estimation_spec$regarima$basic$span$n1
 # sa_x13_d$result_spec$regarima$basic$span$n1
-# spec_x13_ref$regarima$basic$span$n1
+# x13_spec_ref$regarima$basic$span$n1
 # sa_x13_ref$estimation_spec$regarima$basic$span$n1
 # sa_x13_ref$result_spec$regarima$basic$span$n1
 #
-# spec_x13_d$regarima$basic$preprocessing
+# x13_spec_d$regarima$basic$preprocessing
 # sa_x13_d$estimation_spec$regarima$basic$preprocessing
 # sa_x13_d$result_spec$regarima$basic$preprocessing
-# spec_x13_ref$regarima$basic$preprocessing
+# x13_spec_ref$regarima$basic$preprocessing
 # sa_x13_ref$estimation_spec$regarima$basic$preprocessing
 # sa_x13_ref$result_spec$regarima$basic$preprocessing
 #
-# spec_x13_d$regarima$basic$preliminaryCheck
+# x13_spec_d$regarima$basic$preliminaryCheck
 # sa_x13_d$estimation_spec$regarima$basic$preliminaryCheck
 # sa_x13_d$result_spec$regarima$basic$preliminaryCheck
-# spec_x13_ref$regarima$basic$preliminaryCheck
+# x13_spec_ref$regarima$basic$preliminaryCheck
 # sa_x13_ref$estimation_spec$regarima$basic$preliminaryCheck
 # sa_x13_ref$result_spec$regarima$basic$preliminaryCheck
 
 # # ## estimate
 # # ### question = estimate vs span: c doc ? clear ?
-# spec_x13_d$regarima$estimate$span$type
+# x13_spec_d$regarima$estimate$span$type
 # sa_x13_d$estimation_spec$regarima$estimate$span$type
 # sa_x13_d$result_spec$regarima$estimate$span$type
-# spec_x13_ref$regarima$estimate$span$type
+# x13_spec_ref$regarima$estimate$span$type
 # sa_x13_ref$estimation_spec$regarima$estimate$span$type
 # sa_x13_ref$result_spec$regarima$estimate$span$type
 # # #
 # # #
-# spec_x13_d$regarima$estimate$span$d0
+# x13_spec_d$regarima$estimate$span$d0
 # sa_x13_d$estimation_spec$regarima$estimate$span$d0
 # sa_x13_d$result_spec$regarima$estimate$span$d0
-# spec_x13_ref$regarima$estimate$span$d0
+# x13_spec_ref$regarima$estimate$span$d0
 # sa_x13_ref$estimation_spec$regarima$estimate$span$d0
 # sa_x13_ref$result_spec$regarima$estimate$span$d0
 # #
 # #
-# spec_x13_d$regarima$estimate$span$d1
+# x13_spec_d$regarima$estimate$span$d1
 # sa_x13_d$estimation_spec$regarima$estimate$span$d1
 # sa_x13_d$result_spec$regarima$estimate$span$d1
-# spec_x13_ref$regarima$estimate$span$d1
+# x13_spec_ref$regarima$estimate$span$d1
 # sa_x13_ref$estimation_spec$regarima$estimate$span$d1
 # sa_x13_ref$result_spec$regarima$estimate$span$d1
 # #
 # #
-# spec_x13_d$regarima$estimate$span$n0
+# x13_spec_d$regarima$estimate$span$n0
 # sa_x13_d$estimation_spec$regarima$estimate$span$n0
 # sa_x13_d$result_spec$regarima$estimate$span$n0
-# spec_x13_ref$regarima$estimate$span$n0
+# x13_spec_ref$regarima$estimate$span$n0
 # sa_x13_ref$estimation_spec$regarima$estimate$span$n0
 # sa_x13_ref$result_spec$regarima$estimate$span$n0
 # # #
-# spec_x13_d$regarima$estimate$span$n1
+# x13_spec_d$regarima$estimate$span$n1
 # sa_x13_d$estimation_spec$regarima$estimate$span$n1
 # sa_x13_d$result_spec$regarima$estimate$span$n1
-# spec_x13_ref$regarima$estimate$span$n1
+# x13_spec_ref$regarima$estimate$span$n1
 # sa_x13_ref$estimation_spec$regarima$estimate$span$n1
 # sa_x13_ref$result_spec$regarima$estimate$span$n1
 # #
-# spec_x13_d$regarima$estimate$tol
+# x13_spec_d$regarima$estimate$tol
 # sa_x13_d$estimation_spec$regarima$estimate$tol
 # sa_x13_d$result_spec$regarima$estimate$tol
-# spec_x13_ref$regarima$estimate$tol
+# x13_spec_ref$regarima$estimate$tol
 # sa_x13_ref$estimation_spec$regarima$estimate$tol
 # sa_x13_ref$result_spec$regarima$estimate$tol
 
@@ -431,285 +605,285 @@ sa_x13_d$estimation_spec$regarima$basic$span$n1
 # # #################### transform
 # # ## refresh : is transported, never touched (exception = complete)
 # # ### PB with refresh seems to re-estimate schema
-# spec_x13_d$regarima$transform$fn
+# x13_spec_d$regarima$transform$fn
 # sa_x13_d$estimation_spec$regarima$transform$fn
 # sa_x13_d$result_spec$regarima$transform$fn
-# spec_x13_ref$regarima$transform$fn
+# x13_spec_ref$regarima$transform$fn
 # sa_x13_ref$estimation_spec$regarima$transform$fn
 # sa_x13_ref$result_spec$regarima$transform$fn
 # # #
 # # # ## here pb de adjust and leap year : not clear
-# spec_x13_d$regarima$transform$adjust
+# x13_spec_d$regarima$transform$adjust
 # sa_x13_d$estimation_spec$regarima$transform$adjust
 # sa_x13_d$result_spec$regarima$transform$adjust
-# spec_x13_ref$regarima$transform$adjust
+# x13_spec_ref$regarima$transform$adjust
 # sa_x13_ref$estimation_spec$regarima$transform$adjust
 # sa_x13_ref$result_spec$regarima$transform$adjust
 # 
-# spec_x13_d$regarima$transform$aicdiff
+# x13_spec_d$regarima$transform$aicdiff
 # sa_x13_d$estimation_spec$regarima$transform$aicdiff
 # sa_x13_d$result_spec$regarima$transform$aicdiff
-# spec_x13_ref$regarima$transform$aicdiff
+# x13_spec_ref$regarima$transform$aicdiff
 # sa_x13_ref$estimation_spec$regarima$transform$aicdiff
 # sa_x13_ref$result_spec$regarima$transform$aicdiff
 # #
 # ## outlier (auto detection params)
 # ## pb $ outlier$outlier
 # ### $type : Attention ici copy du span du modelling ? outlier span !!
-spec_x13_d$regarima$outlier$outlier$type
-spec_x13_d$regarima$outlier$outlier$d0
-spec_x13_d$regarima$outlier$outlier$d1
-spec_x13_d$regarima$outlier$outlier$n0
-spec_x13_d$regarima$outlier$outlier$n1
+x13_spec_d$regarima$outlier$outlier$type
+x13_spec_d$regarima$outlier$outlier$d0
+x13_spec_d$regarima$outlier$outlier$d1
+x13_spec_d$regarima$outlier$outlier$n0
+x13_spec_d$regarima$outlier$outlier$n1
 
 ### sa_x13_d$estimation_spec$regarima$outlier$ n'existe plus dans l'estimation spec et apres
 
 #
-spec_x13_d$regarima$outlier$outliers
+x13_spec_d$regarima$outlier$outliers
 sa_x13_d$estimation_spec$regarima$outlier$outliers
 sa_x13_d$result_spec$regarima$outlier$outliers # infos sur type et va critique perdues
-spec_x13_ref$regarima$outlier$outliers
+x13_spec_ref$regarima$outlier$outliers
 sa_x13_ref$estimation_spec$regarima$outlier$outliers
 sa_x13_ref$result_spec$regarima$outlier$outliers
 
 ###
-### deuxieme span marqué dans spec apres spec_x13_d$regarima$outlier$outlier$type ..etc
+### deuxieme span marqué dans spec apres x13_spec_d$regarima$outlier$outlier$type ..etc
 ###### pas rempli
-spec_x13_d$regarima$outlier$span$type
+x13_spec_d$regarima$outlier$span$type
 sa_x13_d$estimation_spec$regarima$outlier$span$type
 sa_x13_d$result_spec$regarima$outlier$span$type
-spec_x13_ref$regarima$outlier$span$type
+x13_spec_ref$regarima$outlier$span$type
 sa_x13_ref$estimation_spec$regarima$outlier$span$type
 sa_x13_ref$result_spec$regarima$outlier$span$type
 #
-spec_x13_d$regarima$outlier$outlier$type
+x13_spec_d$regarima$outlier$outlier$type
 
-spec_x13_d$regarima$outlier$span$d0
+x13_spec_d$regarima$outlier$span$d0
 sa_x13_d$estimation_spec$regarima$outlier$span$d0
 sa_x13_d$result_spec$regarima$outlier$span$d0
-spec_x13_ref$regarima$outlier$span$d0
+x13_spec_ref$regarima$outlier$span$d0
 sa_x13_ref$estimation_spec$regarima$outlierspan$d0
 sa_x13_ref$result_spec$regarima$outlier$span$d0
 
-spec_x13_d$regarima$outlier$span$d1
+x13_spec_d$regarima$outlier$span$d1
 sa_x13_d$estimation_spec$regarima$outlier$span$d1
 sa_x13_d$result_spec$regarima$outlier$span$d1
-spec_x13_ref$regarima$outlier$span$d1
+x13_spec_ref$regarima$outlier$span$d1
 sa_x13_ref$estimation_spec$regarima$outlierspan$d1
 sa_x13_ref$result_spec$regarima$outlier$span$d1
 
 
-spec_x13_d$regarima$outlier$span$n0
+x13_spec_d$regarima$outlier$span$n0
 sa_x13_d$estimation_spec$regarima$outlier$span$n0
 sa_x13_d$result_spec$regarima$outlier$span$n0
-spec_x13_ref$regarima$outlier$span$n0
+x13_spec_ref$regarima$outlier$span$n0
 sa_x13_ref$estimation_spec$regarima$outlier$span$n0
 sa_x13_ref$result_spec$regarima$outlier$span$n0
 #
-spec_x13_d$regarima$outlier$span$n1
+x13_spec_d$regarima$outlier$span$n1
 sa_x13_d$estimation_spec$regarima$outlier$span$n1
 sa_x13_d$result_spec$regarima$outlier$span$n1
-spec_x13_ref$regarima$outlier$span$n1
+x13_spec_ref$regarima$outlier$span$n1
 sa_x13_ref$estimation_spec$regarima$outlier$span$n1
 sa_x13_ref$result_spec$regarima$outlier$span$n1
 # #
-# spec_x13_d$regarima$outlier$defva
-# spec_x13_d$regarima$outlier$defva
+# x13_spec_d$regarima$outlier$defva
+# x13_spec_d$regarima$outlier$defva
 # sa_x13_d$estimation_spec$regarima$outlier$defva
 # sa_x13_d$result_spec$regarima$outlier$defva
-# spec_x13_ref$regarima$outlier$defva
+# x13_spec_ref$regarima$outlier$defva
 # sa_x13_ref$estimation_spec$regarima$outlier$defva
 # sa_x13_ref$result_spec$regarima$outlier$defva
 # #
 # #
-# spec_x13_d$regarima$outlier$method
+# x13_spec_d$regarima$outlier$method
 # sa_x13_d$estimation_spec$regarima$outlier$method
 # sa_x13_d$result_spec$regarima$outlier$method
-# spec_x13_ref$regarima$outlier$method
+# x13_spec_ref$regarima$outlier$method
 # sa_x13_ref$estimation_spec$regarima$outlier$method
 # sa_x13_ref$result_spec$regarima$outlier$method
 # #
 # # # default value doesn't appear ?
-# spec_x13_d$regarima$outlier$monthlytcrate
+# x13_spec_d$regarima$outlier$monthlytcrate
 # sa_x13_d$estimation_spec$regarima$outlier$monthlytcrate
 # sa_x13_d$result_spec$regarima$outlier$monthlytcrate
-# spec_x13_ref$regarima$outlier$monthlytcrate
+# x13_spec_ref$regarima$outlier$monthlytcrate
 # sa_x13_ref$estimation_spec$regarima$outlier$monthlytcrate
 # sa_x13_ref$result_spec$regarima$outlier$monthlytcrate
 # #
-# # spec_x13_d$regarima$outlier$maxiter
+# # x13_spec_d$regarima$outlier$maxiter
 # # sa_x13_d$estimation_spec$regarima$outlier$maxiter
 # # sa_x13_d$result_spec$regarima$outlier$maxiter
-# # spec_x13_ref$regarima$outlier$maxiter
+# # x13_spec_ref$regarima$outlier$maxiter
 # # sa_x13_ref$estimation_spec$regarima$outlier$maxiter
 # # sa_x13_ref$result_spec$regarima$outlier$maxiter
 # #
-# # spec_x13_d$regarima$outlier$lsrun
+# # x13_spec_d$regarima$outlier$lsrun
 # # sa_x13_d$estimation_spec$regarima$outlier$lsrun
 # # sa_x13_d$result_spec$regarima$outlier$lsrun
-# # spec_x13_ref$regarima$outlier$lsrun
+# # x13_spec_ref$regarima$outlier$lsrun
 # # sa_x13_ref$estimation_spec$regarima$outlier$lsrun
 # # sa_x13_ref$result_spec$regarima$outlier$lsrun
 # #
 # # ## arima
-# spec_x13_d$regarima$arima$period
+# x13_spec_d$regarima$arima$period
 # sa_x13_d$estimation_spec$regarima$arima$period
 # sa_x13_d$result_spec$regarima$arima$period
-# spec_x13_ref$regarima$arima$period
+# x13_spec_ref$regarima$arima$period
 # sa_x13_ref$estimation_spec$regarima$arima$period
 # sa_x13_ref$result_spec$regarima$arima$period
 # 
 # #### set arima
 # ## pre-condition
 # # ## automodel
-# spec_x13_d$regarima$automodel$enabled
+# x13_spec_d$regarima$automodel$enabled
 # sa_x13_d$estimation_spec$regarima$automodel$enabled
 # sa_x13_d$result_spec$regarima$automodel$enabled
-# spec_x13_ref$regarima$automodel$enabled
+# x13_spec_ref$regarima$automodel$enabled
 # sa_x13_ref$estimation_spec$regarima$automodel$enabled
 # sa_x13_ref$result_spec$regarima$automodel$enabled
 # # #
-# spec_x13_d$regarima$arima$d
+# x13_spec_d$regarima$arima$d
 # sa_x13_d$estimation_spec$regarima$arima$d
 # sa_x13_d$result_spec$regarima$arima$d
-# spec_x13_ref$regarima$arima$d
+# x13_spec_ref$regarima$arima$d
 # sa_x13_ref$estimation_spec$regarima$arima$d
 # sa_x13_ref$result_spec$regarima$arima$d
 # #
-# spec_x13_d$regarima$arima$bd
+# x13_spec_d$regarima$arima$bd
 # sa_x13_d$estimation_spec$regarima$arima$bd
 # sa_x13_d$result_spec$regarima$arima$bd
-# spec_x13_ref$regarima$arima$bd
+# x13_spec_ref$regarima$arima$bd
 # sa_x13_ref$estimation_spec$regarima$arima$bd
 # sa_x13_ref$result_spec$regarima$arima$bd
 # 
-# spec_x13_d$regarima$arima$phi
+# x13_spec_d$regarima$arima$phi
 # sa_x13_d$estimation_spec$regarima$arima$phi
 # sa_x13_d$result_spec$regarima$arima$phi
-# spec_x13_ref$regarima$arima$phi
+# x13_spec_ref$regarima$arima$phi
 # sa_x13_ref$estimation_spec$regarima$arima$phi
 # sa_x13_ref$result_spec$regarima$arima$phi
 # 
-# spec_x13_d$regarima$arima$theta
+# x13_spec_d$regarima$arima$theta
 # sa_x13_d$estimation_spec$regarima$arima$theta
 # sa_x13_d$result_spec$regarima$arima$theta
-# spec_x13_ref$regarima$arima$theta
+# x13_spec_ref$regarima$arima$theta
 # sa_x13_ref$estimation_spec$regarima$arima$theta
 # sa_x13_ref$result_spec$regarima$arima$theta
 # 
-# spec_x13_d$regarima$arima$bphi
+# x13_spec_d$regarima$arima$bphi
 # sa_x13_d$estimation_spec$regarima$arima$bphi
 # sa_x13_d$result_spec$regarima$arima$bphi
-# spec_x13_ref$regarima$arima$bphi
+# x13_spec_ref$regarima$arima$bphi
 # sa_x13_ref$estimation_spec$regarima$arima$bphi
 # sa_x13_ref$result_spec$regarima$arima$bphi
 # 
-# spec_x13_d$regarima$arima$btheta
+# x13_spec_d$regarima$arima$btheta
 # sa_x13_d$estimation_spec$regarima$arima$btheta
 # sa_x13_d$result_spec$regarima$arima$btheta
-# spec_x13_ref$regarima$arima$btheta
+# x13_spec_ref$regarima$arima$btheta
 # sa_x13_ref$estimation_spec$regarima$arima$btheta
 # sa_x13_ref$result_spec$regarima$arima$btheta
 # 
 # # ## automodel
-# # spec_x13_d$regarima$automodel$enabled
+# # x13_spec_d$regarima$automodel$enabled
 # # sa_x13_d$estimation_spec$regarima$automodel$enabled
 # # sa_x13_d$result_spec$regarima$automodel$enabled
-# # spec_x13_ref$regarima$automodel$enabled
+# # x13_spec_ref$regarima$automodel$enabled
 # # sa_x13_ref$estimation_spec$regarima$automodel$enabled
 # # sa_x13_ref$result_spec$regarima$automodel$enabled
 # #
-# # spec_x13_d$regarima$automodel$ljungbox
+# # x13_spec_d$regarima$automodel$ljungbox
 # # sa_x13_d$estimation_spec$regarima$automodel$ljungbox
 # # sa_x13_d$result_spec$regarima$automodel$ljungbox
-# # spec_x13_ref$regarima$automodel$ljungbox
+# # x13_spec_ref$regarima$automodel$ljungbox
 # # sa_x13_ref$estimation_spec$regarima$automodel$ljungbox
 # # sa_x13_ref$result_spec$regarima$automodel$ljungbox
 # #
-# # spec_x13_d$regarima$automodel$tsig
+# # x13_spec_d$regarima$automodel$tsig
 # # sa_x13_d$estimation_spec$regarima$automodel$tsig
 # # sa_x13_d$result_spec$regarima$automodel$tsig
-# # spec_x13_ref$regarima$automodel$tsig
+# # x13_spec_ref$regarima$automodel$tsig
 # # sa_x13_ref$estimation_spec$regarima$automodel$tsig
 # # sa_x13_ref$result_spec$regarima$automodel$tsig
 # #
-# # spec_x13_d$regarima$automodel$predcv
+# # x13_spec_d$regarima$automodel$predcv
 # # sa_x13_d$estimation_spec$regarima$automodel$predcv
 # # sa_x13_d$result_spec$regarima$automodel$predcv
-# # spec_x13_ref$regarima$automodel$predcv
+# # x13_spec_ref$regarima$automodel$predcv
 # # sa_x13_ref$estimation_spec$regarima$automodel$predcv
 # # sa_x13_ref$result_spec$regarima$automodel$predcv
 # #
-# # spec_x13_d$regarima$automodel$ubfinal
+# # x13_spec_d$regarima$automodel$ubfinal
 # # sa_x13_d$estimation_spec$regarima$automodel$ubfinal
 # # sa_x13_d$result_spec$regarima$automodel$ubfinal
-# # spec_x13_ref$regarima$automodel$ubfinal
+# # x13_spec_ref$regarima$automodel$ubfinal
 # # sa_x13_ref$estimation_spec$regarima$automodel$ubfinal
 # # sa_x13_ref$result_spec$regarima$automodel$ubfinal
 # #
-# # spec_x13_d$regarima$automodel$ub1
+# # x13_spec_d$regarima$automodel$ub1
 # # sa_x13_d$estimation_spec$regarima$automodel$ub1
 # # sa_x13_d$result_spec$regarima$automodel$ub1
-# # spec_x13_ref$regarima$automodel$ub1
+# # x13_spec_ref$regarima$automodel$ub1
 # # sa_x13_ref$estimation_spec$regarima$automodel$ub1
 # # sa_x13_ref$result_spec$regarima$automodel$ub1
 # # #
-# # spec_x13_d$regarima$automodel$ub2
+# # x13_spec_d$regarima$automodel$ub2
 # # sa_x13_d$estimation_spec$regarima$automodel$ub2
 # # sa_x13_d$result_spec$regarima$automodel$ub2
-# # spec_x13_ref$regarima$automodel$ub2
+# # x13_spec_ref$regarima$automodel$ub2
 # # sa_x13_ref$estimation_spec$regarima$automodel$ub2
 # # sa_x13_ref$result_spec$regarima$automodel$ub2
 # #
 # #
-# # spec_x13_d$regarima$automodel$cancel
+# # x13_spec_d$regarima$automodel$cancel
 # # sa_x13_d$estimation_spec$regarima$automodel$cancel
 # # sa_x13_d$result_spec$regarima$automodel$cancel
-# # spec_x13_ref$regarima$automodel$cancel
+# # x13_spec_ref$regarima$automodel$cancel
 # # sa_x13_ref$estimation_spec$regarima$automodel$cancel
 # # sa_x13_ref$result_spec$regarima$automodel$cancel
 # # #
-# # spec_x13_d$regarima$automodel$fct
+# # x13_spec_d$regarima$automodel$fct
 # # sa_x13_d$estimation_spec$regarima$automodel$fct
 # # sa_x13_d$result_spec$regarima$automodel$fct
-# # spec_x13_ref$regarima$automodel$fct
+# # x13_spec_ref$regarima$automodel$fct
 # # sa_x13_ref$estimation_spec$regarima$automodel$fct
 # # sa_x13_ref$result_spec$regarima$automodel$fct
 # #
-# # spec_x13_d$regarima$automodel$acceptdef
+# # x13_spec_d$regarima$automodel$acceptdef
 # # sa_x13_d$estimation_spec$regarima$automodel$acceptdef
 # # sa_x13_d$result_spec$regarima$automodel$acceptdef
-# # spec_x13_ref$regarima$automodel$acceptdef
+# # x13_spec_ref$regarima$automodel$acceptdef
 # # sa_x13_ref$estimation_spec$regarima$automodel$acceptdef
 # # sa_x13_ref$result_spec$regarima$automodel$acceptdef
 # #
-# # spec_x13_d$regarima$automodel$mixed
+# # x13_spec_d$regarima$automodel$mixed
 # # sa_x13_d$estimation_spec$regarima$automodel$mixed
 # # sa_x13_d$result_spec$regarima$automodel$mixed
-# # spec_x13_ref$regarima$automodel$mixed
+# # x13_spec_ref$regarima$automodel$mixed
 # # sa_x13_ref$estimation_spec$regarima$automodel$mixed
 # # sa_x13_ref$result_spec$regarima$automodel$mixed
 # #
 # #
-# # spec_x13_d$regarima$automodel$balanced
+# # x13_spec_d$regarima$automodel$balanced
 # # sa_x13_d$estimation_spec$regarima$automodel$balanced
 # # sa_x13_d$result_spec$regarima$automodel$balanced
-# # spec_x13_ref$regarima$automodel$balanced
+# # x13_spec_ref$regarima$automodel$balanced
 # # sa_x13_ref$estimation_spec$regarima$automodel$balanced
 # # sa_x13_ref$result_spec$regarima$automodel$balanced
 # #
 # # ## regression
-# spec_x13_d$regarima$regression$mean
+# x13_spec_d$regarima$regression$mean
 # sa_x13_d$estimation_spec$regarima$regression$mean
 # sa_x13_d$result_spec$regarima$regression$mean
-# spec_x13_ref$regarima$regression$mean # nothing in spec
+# x13_spec_ref$regarima$regression$mean # nothing in spec
 # sa_x13_ref$estimation_spec$regarima$regression$mean
 # sa_x13_ref$result_spec$regarima$regression$mean # estimated value only here
 # #
-# spec_x13_d$regarima$regression$check_mean
+# x13_spec_d$regarima$regression$check_mean
 # sa_x13_d$estimation_spec$regarima$regression$check_mean
 # sa_x13_d$result_spec$regarima$regression$check_mean
-# spec_x13_ref$regarima$regression$check_mean
+# x13_spec_ref$regarima$regression$check_mean
 # sa_x13_ref$estimation_spec$regarima$regression$check_mean
 # sa_x13_ref$result_spec$regarima$regression$check_mean
 # #
@@ -717,241 +891,241 @@ sa_x13_ref$result_spec$regarima$outlier$span$n1
 # ## regression$td
 # ### what is this
 # ### how to change it
-# spec_x13_d$regarima$regression$td$td
+# x13_spec_d$regarima$regression$td$td
 # sa_x13_d$estimation_spec$regarima$regression$td$td
 # sa_x13_d$result_spec$regarima$regression$td$td
-# spec_x13_ref$regarima$regression$td$td
+# x13_spec_ref$regarima$regression$td$td
 # sa_x13_ref$estimation_spec$regarima$regression$td$td
 # sa_x13_ref$result_spec$regarima$regression$td$td
 # #
-# spec_x13_d$regarima$regression$td$lp
+# x13_spec_d$regarima$regression$td$lp
 # sa_x13_d$estimation_spec$regarima$regression$td$lp
 # sa_x13_d$result_spec$regarima$regression$td$lp
-# spec_x13_ref$regarima$regression$td$lp
+# x13_spec_ref$regarima$regression$td$lp
 # sa_x13_ref$estimation_spec$regarima$regression$td$lp
 # sa_x13_ref$result_spec$regarima$regression$td$lp
 # #
-# spec_x13_d$regarima$regression$td$holidays
+# x13_spec_d$regarima$regression$td$holidays
 # sa_x13_d$estimation_spec$regarima$regression$td$holidays
 # sa_x13_d$result_spec$regarima$regression$td$holidays
-# spec_x13_ref$regarima$regression$td$holidays
+# x13_spec_ref$regarima$regression$td$holidays
 # sa_x13_ref$estimation_spec$regarima$regression$td$holidays
 # sa_x13_ref$result_spec$regarima$regression$td$holidays
 # #
-# spec_x13_d$regarima$regression$td$users
+# x13_spec_d$regarima$regression$td$users
 # sa_x13_d$estimation_spec$regarima$regression$td$users
 # sa_x13_d$result_spec$regarima$regression$td$users
-# spec_x13_ref$regarima$regression$td$users
+# x13_spec_ref$regarima$regression$td$users
 # sa_x13_ref$estimation_spec$regarima$regression$td$users
 # sa_x13_ref$result_spec$regarima$regression$td$users
 # #
-# spec_x13_d$regarima$regression$td$w
+# x13_spec_d$regarima$regression$td$w
 # sa_x13_d$estimation_spec$regarima$regression$td$w
 # sa_x13_d$result_spec$regarima$regression$td$w
-# spec_x13_ref$regarima$regression$td$w
+# x13_spec_ref$regarima$regression$td$w
 # sa_x13_ref$estimation_spec$regarima$regression$td$w
 # sa_x13_ref$result_spec$regarima$regression$td$w
 # #
-# spec_x13_d$regarima$regression$td$test
+# x13_spec_d$regarima$regression$td$test
 # sa_x13_d$estimation_spec$regarima$regression$td$test
 # sa_x13_d$result_spec$regarima$regression$td$test
-# spec_x13_ref$regarima$regression$td$test
+# x13_spec_ref$regarima$regression$td$test
 # sa_x13_ref$estimation_spec$regarima$regression$td$test
 # sa_x13_ref$result_spec$regarima$regression$td$test
 # #
-# spec_x13_d$regarima$regression$td$auto
+# x13_spec_d$regarima$regression$td$auto
 # sa_x13_d$estimation_spec$regarima$regression$td$auto
 # sa_x13_d$result_spec$regarima$regression$td$auto
-# spec_x13_ref$regarima$regression$td$auto
+# x13_spec_ref$regarima$regression$td$auto
 # sa_x13_ref$estimation_spec$regarima$regression$td$auto
 # sa_x13_ref$result_spec$regarima$regression$td$auto
 # #
-# spec_x13_d$regarima$regression$td$autoadjust
+# x13_spec_d$regarima$regression$td$autoadjust
 # sa_x13_d$estimation_spec$regarima$regression$td$autoadjust
 # sa_x13_d$result_spec$regarima$regression$td$autoadjust
-# spec_x13_ref$regarima$regression$td$autoadjust
+# x13_spec_ref$regarima$regression$td$autoadjust
 # sa_x13_ref$estimation_spec$regarima$regression$td$autoadjust
 # sa_x13_ref$result_spec$regarima$regression$td$autoadjust
 # #
-# spec_x13_d$regarima$regression$td$tdcoefficients
+# x13_spec_d$regarima$regression$td$tdcoefficients
 # sa_x13_d$estimation_spec$regarima$regression$td$tdcoefficients
 # sa_x13_d$result_spec$regarima$regression$td$tdcoefficients
-# spec_x13_ref$regarima$regression$td$tdcoefficients
+# x13_spec_ref$regarima$regression$td$tdcoefficients
 # sa_x13_ref$estimation_spec$regarima$regression$td$tdcoefficients
 # sa_x13_ref$result_spec$regarima$regression$td$tdcoefficients
 # #
-# spec_x13_d$regarima$regression$td$lpcoefficient
+# x13_spec_d$regarima$regression$td$lpcoefficient
 # sa_x13_d$estimation_spec$regarima$regression$td$lpcoefficient
 # sa_x13_d$result_spec$regarima$regression$td$lpcoefficient
-# spec_x13_ref$regarima$regression$td$lpcoefficient
+# x13_spec_ref$regarima$regression$td$lpcoefficient
 # sa_x13_ref$estimation_spec$regarima$regression$td$lpcoefficient
 # sa_x13_ref$result_spec$regarima$regression$td$lpcoefficient
 #
 # ## regression$easter
-spec_x13_d$regarima$regression$easter$type
+x13_spec_d$regarima$regression$easter$type
 sa_x13_d$estimation_spec$regarima$regression$easter$type
 sa_x13_d$result_spec$regarima$regression$easter$type
-spec_x13_ref$regarima$regression$easter$type
+x13_spec_ref$regarima$regression$easter$type
 sa_x13_ref$estimation_spec$regarima$regression$easter$type
 sa_x13_ref$result_spec$regarima$regression$easter$type
 #
 #
-spec_x13_d$regarima$regression$easter$test
+x13_spec_d$regarima$regression$easter$test
 sa_x13_d$estimation_spec$regarima$regression$easter$test
 sa_x13_d$result_spec$regarima$regression$easter$test
-spec_x13_ref$regarima$regression$easter$test
+x13_spec_ref$regarima$regression$easter$test
 sa_x13_ref$estimation_spec$regarima$regression$easter$test
 sa_x13_ref$result_spec$regarima$regression$easter$test
 #
-spec_x13_d$regarima$regression$easter$coefficient
+x13_spec_d$regarima$regression$easter$coefficient
 sa_x13_d$estimation_spec$regarima$regression$easter$coefficient
 sa_x13_d$result_spec$regarima$regression$easter$coefficient
-spec_x13_ref$regarima$regression$easter$coefficient
+x13_spec_ref$regarima$regression$easter$coefficient
 sa_x13_ref$estimation_spec$regarima$regression$easter$coefficient
 sa_x13_ref$result_spec$regarima$regression$easter$coefficient
 #
 # # ## outliers / ramps / user def vars
-spec_x13_d$regarima$regression$outliers
+x13_spec_d$regarima$regression$outliers
 sa_x13_d$estimation_spec$regarima$regression$outliers
 sa_x13_d$result_spec$regarima$regression$outliers
-spec_x13_ref$regarima$regression$outliers
+x13_spec_ref$regarima$regression$outliers
 sa_x13_ref$estimation_spec$regarima$regression$outliers
 sa_x13_ref$result_spec$regarima$regression$outliers
 # #
-# spec_x13_d$regarima$regression$ramps
+# x13_spec_d$regarima$regression$ramps
 # sa_x13_d$estimation_spec$regarima$regression$ramps
 # sa_x13_d$result_spec$regarima$regression$ramps
-# spec_x13_ref$regarima$regression$ramps
+# x13_spec_ref$regarima$regression$ramps
 # sa_x13_ref$estimation_spec$regarima$regression$ramps
 # sa_x13_ref$result_spec$regarima$regression$ramps
 # #
-spec_x13_d$regarima$regression$users
+x13_spec_d$regarima$regression$users
 sa_x13_d$estimation_spec$regarima$regression$users
 sa_x13_d$result_spec$regarima$regression$users
-spec_x13_ref$regarima$regression$users
+x13_spec_ref$regarima$regression$users
 sa_x13_ref$estimation_spec$regarima$regression$users
 sa_x13_ref$result_spec$regarima$regression$users
 # #
 # #
 
 # ### decomp avec X11
-# spec_x13_d$x11$mode
+# x13_spec_d$x11$mode
 # sa_x13_d$estimation_spec$x11$mode
 # sa_x13_d$result_spec$x11$mode
-# spec_x13_ref$x11$mode
+# x13_spec_ref$x11$mode
 # sa_x13_ref$estimation_spec$x11$mode
 # sa_x13_ref$result_spec$x11$mode
-# 
-# spec_x13_d$x11$seasonal
+#
+# x13_spec_d$x11$seasonal
 # sa_x13_d$estimation_spec$x11$seasonal
 # sa_x13_d$result_spec$x11$seasonal
-# spec_x13_ref$x11$seasonal
+# x13_spec_ref$x11$seasonal
 # sa_x13_ref$estimation_spec$x11$seasonal
 # sa_x13_ref$result_spec$x11$seasonal
-# 
-# spec_x13_d$x11$henderson
+#
+# x13_spec_d$x11$henderson
 # sa_x13_d$estimation_spec$x11$henderson
 # sa_x13_d$result_spec$x11$henderson
-# spec_x13_ref$x11$henderson
+# x13_spec_ref$x11$henderson
 # sa_x13_ref$estimation_spec$x11$henderson
 # sa_x13_ref$result_spec$x11$henderson
-# 
-# spec_x13_d$x11$sfilters
+#
+# x13_spec_d$x11$sfilters
 # sa_x13_d$estimation_spec$x11$sfilters
 # sa_x13_d$result_spec$x11$sfilters
-# spec_x13_ref$x11$sfilters
+# x13_spec_ref$x11$sfilters
 # sa_x13_ref$estimation_spec$x11$sfilters
 # sa_x13_ref$result_spec$x11$sfilters
-# 
-# 
-# spec_x13_d$x11$lsig
+#
+#
+# x13_spec_d$x11$lsig
 # sa_x13_d$estimation_spec$x11$lsig
 # sa_x13_d$result_spec$x11$lsig
-# spec_x13_ref$x11$lsig
+# x13_spec_ref$x11$lsig
 # sa_x13_ref$estimation_spec$x11$lsig
 # sa_x13_ref$result_spec$x11$lsig
-# 
-# spec_x13_d$x11$usig
+#
+# x13_spec_d$x11$usig
 # sa_x13_d$estimation_spec$x11$usig
 # sa_x13_d$result_spec$x11$usig
-# spec_x13_ref$x11$usig
+# x13_spec_ref$x11$usig
 # sa_x13_ref$estimation_spec$x11$usig
 # sa_x13_ref$result_spec$x11$usig
-# 
-# spec_x13_d$x11$nfcasts
+#
+# x13_spec_d$x11$nfcasts
 # sa_x13_d$estimation_spec$x11$nfcasts
 # sa_x13_d$result_spec$x11$nfcasts
-# spec_x13_ref$x11$nfcasts
+# x13_spec_ref$x11$nfcasts
 # sa_x13_ref$estimation_spec$x11$nfcasts
 # sa_x13_ref$result_spec$x11$nfcasts
-# 
-# spec_x13_d$x11$nbcasts
+#
+# x13_spec_d$x11$nbcasts
 # sa_x13_d$estimation_spec$x11$nbcasts
 # sa_x13_d$result_spec$x11$nbcasts
-# spec_x13_ref$x11$nbcasts
+# x13_spec_ref$x11$nbcasts
 # sa_x13_ref$estimation_spec$x11$nbcasts
 # sa_x13_ref$result_spec$x11$nbcasts
-# 
-# 
-# spec_x13_d$x11$vsigmas
+#
+#
+# x13_spec_d$x11$vsigmas
 # sa_x13_d$estimation_spec$x11$vsigmas
 # sa_x13_d$result_spec$x11$vsigmas
-# spec_x13_ref$x11$vsigmas
+# x13_spec_ref$x11$vsigmas
 # sa_x13_ref$estimation_spec$x11$vsigmas
 # sa_x13_ref$result_spec$x11$vsigmas
-# 
-# spec_x13_d$x11$excludefcasts
+#
+# x13_spec_d$x11$excludefcasts
 # sa_x13_d$estimation_spec$x11$excludefcasts
 # sa_x13_d$result_spec$x11$excludefcasts
-# spec_x13_ref$x11$excludefcasts
+# x13_spec_ref$x11$excludefcasts
 # sa_x13_ref$estimation_spec$x11$excludefcasts
 # sa_x13_ref$result_spec$x11$excludefcasts
-# 
-# 
-# spec_x13_d$x11$bias
+#
+#
+# x13_spec_d$x11$bias
 # sa_x13_d$estimation_spec$x11$bias
 # sa_x13_d$result_spec$x11$bias
-# spec_x13_ref$x11$bias
+# x13_spec_ref$x11$bias
 # sa_x13_ref$estimation_spec$x11$bias
 # sa_x13_ref$result_spec$x11$bias
-# 
-# 
+#
+#
 # ### benchmarking
-# 
-# spec_x13_d$benchmarking$enabled
+#
+# x13_spec_d$benchmarking$enabled
 # sa_x13_d$estimation_spec$benchmarking$enabled
 # sa_x13_d$result_spec$benchmarking$enabled
-# spec_x13_ref$benchmarking$enabled
+# x13_spec_ref$benchmarking$enabled
 # sa_x13_ref$estimation_spec$benchmarking$enabled
 # sa_x13_ref$result_spec$benchmarking$enabled
-# 
-# spec_x13_d$benchmarking$target
+#
+# x13_spec_d$benchmarking$target
 # sa_x13_d$estimation_spec$benchmarking$target
 # sa_x13_d$result_spec$benchmarking$target
-# spec_x13_ref$benchmarking$target
+# x13_spec_ref$benchmarking$target
 # sa_x13_ref$estimation_spec$benchmarking$target
 # sa_x13_ref$result_spec$benchmarking$target
-# 
-# spec_x13_d$benchmarking$lambda
+#
+# x13_spec_d$benchmarking$lambda
 # sa_x13_d$estimation_spec$benchmarking$lambda
 # sa_x13_d$result_spec$benchmarking$lambda
-# spec_x13_ref$benchmarking$lambda
+# x13_spec_ref$benchmarking$lambda
 # sa_x13_ref$estimation_spec$benchmarking$lambda
 # sa_x13_ref$result_spec$benchmarking$lambda
-# 
-# spec_x13_d$benchmarking$bias
+#
+# x13_spec_d$benchmarking$bias
 # sa_x13_d$estimation_spec$benchmarking$bias
 # sa_x13_d$result_spec$benchmarking$bias
-# spec_x13_ref$benchmarking$bias
+# x13_spec_ref$benchmarking$bias
 # sa_x13_ref$estimation_spec$benchmarking$bias
 # sa_x13_ref$result_spec$benchmarking$bias
-# 
-# spec_x13_d$benchmarking$forecast
+#
+# x13_spec_d$benchmarking$forecast
 # sa_x13_d$estimation_spec$benchmarking$forecast
 # sa_x13_d$result_spec$benchmarking$forecast
-# spec_x13_ref$benchmarking$forecast
+# x13_spec_ref$benchmarking$forecast
 # sa_x13_ref$estimation_spec$benchmarking$forecast
 # sa_x13_ref$result_spec$benchmarking$forecast
-# 
+
 
 
