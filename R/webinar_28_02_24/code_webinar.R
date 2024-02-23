@@ -80,15 +80,15 @@ add_sa_item(jsap = new_jsap, name = "ABS_2", x = sa_ts)
 
 # add a raw series with a spec created in R
 add_sa_item(
-    jsap = new_jsap, 
-    name = "ABS_3", 
-    x = rjd3toolkit::ABS[, 3], 
+    jsap = new_jsap,
+    name = "ABS_3",
+    x = rjd3toolkit::ABS[, 3],
     spec = rjd3x13::x13_spec(name = "RSA5c")
 )
 add_sa_item(
-    jsap = new_jsap, 
-    name = "ABS_4", 
-    x = rjd3toolkit::ABS[, 4], 
+    jsap = new_jsap,
+    name = "ABS_4",
+    x = rjd3toolkit::ABS[, 4],
     spec = rjd3tramoseats::tramoseats_spec(name = "rsafull")
 )
 
@@ -117,14 +117,14 @@ replace_sa_item(jsap = new_jsap, jsa = jsai_from, idx = 1)
 
 ## transfer_series() -----------------------------------------------------------
 
-transfer_series(jsap_from = jsap_from, 
-                jsap_to = new_jsap, 
+transfer_series(jsap_from = jsap_from,
+                jsap_to = new_jsap,
                 selected_series = c("RF0899", "RF1039", "RF1041"))
 
 
 # Initialising a project: update_path ------------------------------------------
 
-new_jd3_ts <- spreadsheet_series(file = xlsx_file, sheet = 1L, 
+new_jd3_ts <- spreadsheet_series(file = xlsx_file, sheet = 1L,
                                  series = 3)
 
 # open an existing WS
@@ -134,5 +134,5 @@ jsap <- .jws_sap(ws, idx = 1L)
 
 # Change the TS object with the new moniker
 set_ts(jsap = jsap, idx = 1, y = new_jd3_ts)
-save_workspace(jws = ws_path, file = "./WS/WS_path_V3.xml", 
+save_workspace(jws = ws_path, file = "./WS/WS_path_V3.xml",
                replace = TRUE)

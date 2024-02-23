@@ -8,7 +8,7 @@
 
 # Mettre les données de l'année passée dans le répertoire Donnees
 # À partir des workspace types (workspace_type_ini_mensuel.xml et workspace_type_ini_trimestriel.xml),
-# contenus dans le dossier Workspaces_vides_avec_specs_cjo : 
+# contenus dans le dossier Workspaces_vides_avec_specs_cjo :
 # 1 les ouvrir et les enregistrer dans le dossier Workspaces_automatiques
 #   Faire cela pour chaque ws à traiter (donc 1 mens et 2 trim) en les renommant
 # 2 puis, pour chaque ws:
@@ -37,7 +37,7 @@ chemin_sa_proc <- sprintf("%s/%s/SAProcessing/%s",
                           chemin_vers_workspace,
                           ws,
                           nom_sa_proc)
-chemin_sa_proc  
+chemin_sa_proc
 
 
 # Lecture et traitement des données --------------------------------------------
@@ -62,7 +62,7 @@ colnames(reg_cjo_series)[c(1, 2)] <- c("series", "choix_reg_cjo")
 head(reg_cjo_series)
 # on ajoute le numéro des specs
 reg_cjo_series <- merge(reg_cjo_series[, c("series", "choix_reg_cjo")], data_names_spec,
-    by.x = "choix_reg_cjo", by.y = "name_reg_cjo", all.x = TRUE) 
+    by.x = "choix_reg_cjo", by.y = "name_reg_cjo", all.x = TRUE)
 
 
 # all.x = TRUE : si certaines specs n'ont été retenues pour aucune série, on ne crée pas de ligne associée
@@ -99,15 +99,15 @@ nouvelles_spec <- unlist(lapply(seq_len(nrow(data_names_spec)), function(num_spe
     )
     spec <- readLines(fichier_spec)
     spec <- spec[-1] # On enlève la première ligne
-    
+
     # La première ligne sera <item name="spec1"> si num_spec = 1 :
-    prem_ligne <- sprintf("<item name=\"%s\">", data_names_spec[num_spec, 2]) 
+    prem_ligne <- sprintf("<item name=\"%s\">", data_names_spec[num_spec, 2])
     # La dernière ligne sera </item> :
     der_ligne <- "</item>"
-    
+
     spec[1] <- "<subset>"
     spec[length(spec)] <- "</subset>"
-    
+
     c(prem_ligne,
       sprintf("    %s", spec),
       der_ligne)
@@ -141,17 +141,17 @@ i_domainspec
 series_oubliees <- c()
 
 for (n_serie in nom_series) {
-    #n_serie="AEFRANCETRCOM"    
-    
+    #n_serie="AEFRANCETRCOM"
+
     if (n_serie %in% reg_cjo_series$series) {
-        
+
         domainspec_serie <- subset(x = reg_cjo_series, series == n_serie, select = domainspec)
-        
+
         # on règle le pb des séries AEREG06 qui sont vides et qu'on veut garder intactes dans le ws
         if (is.na(domainspec_serie)) {
             warning(sprintf("Attention, la série %s n'a pas de domainspec. Elle ne sera donc pas traitée.", n_serie))
         } else{
-            
+
             # Pour chaque série on remplace la spécification actuelle
             n_blanc_domainspec <- gsub("<.*", "",
                                        sa_proc[i_domainspec[n_serie]])
@@ -176,5 +176,4 @@ writeLines(sa_proc, chemin_sa_proc)
 
 
 
-# Faire tourner le code de vérif RJD_recup_et_compare_regresseurs_CJO.R 
-
+# Faire tourner le code de vérif RJD_recup_et_compare_regresseurs_CJO.R

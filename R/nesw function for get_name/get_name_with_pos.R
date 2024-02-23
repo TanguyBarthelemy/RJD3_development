@@ -1,13 +1,13 @@
-get_name <- function(x, ...){
+get_name <- function(x, ...) {
     UseMethod("get_name", x)
 }
 #' @export
-get_name.workspace <- function(x, pos){
+get_name.workspace <- function(x, pos) {
     sap_i <- get_object(x, pos = pos)
     return(get_name(sap_i))
 }
 #' @export
-get_name.multiprocessing <- function(x, pos){
+get_name.multiprocessing <- function(x, pos) {
     if (missing(pos)) {
         return(.jcall(x, "S", "getName"))
     } else {
@@ -16,7 +16,7 @@ get_name.multiprocessing <- function(x, pos){
     }
 }
 #' @export
-get_name.sa_item <- function(x){
+get_name.sa_item <- function(x) {
     jt <- .jcall(x, "Ljd2/datatypes/sa/SaItemType;", "getSaDefinition")
     jts <- .jcall(jt, "Ljd2/datatypes/Ts;", "getTs")
     name <- .jcall(jts, "S", "getName")

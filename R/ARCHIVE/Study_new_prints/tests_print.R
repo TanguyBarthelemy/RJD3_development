@@ -1,6 +1,6 @@
 
 ################################################################################
-#######                   Test des prints en version 3                   ####### 
+#######                   Test des prints en version 3                   #######
 ################################################################################
 
 
@@ -31,7 +31,7 @@ sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
 # High-freq --------------------------------------------------------------------
 
 ## Import de données -----------------------------------------------------------
-df_daily <- read.csv2("./data/TS_daily_births_franceM_1968_2020.csv") |> 
+df_daily <- read.csv2("./data/TS_daily_births_franceM_1968_2020.csv") |>
     dplyr::mutate(log_births = log(births))
 
 ## Création objets -------------------------------------------------------------
@@ -52,23 +52,23 @@ frenchCalendar <- national_calendar(days = list(
     special_day('ARMISTICE'))
 )
 
-q <- holidays(frenchCalendar, "1968-01-01", length = length(df_daily$births), type = "All", 
+q <- holidays(frenchCalendar, "1968-01-01", length = length(df_daily$births), type = "All",
               nonworking = 7L)
 
 pre.mult <- fractionalAirlineEstimation(
-    y = df_daily$log_births, 
+    y = df_daily$log_births,
     x = q, # q = regs de calendrier
-    periods = 7, 
-    ndiff = 2, ar = FALSE, mean = FALSE, 
-    outliers = c("ao", "wo"), criticalValue = 0, 
+    periods = 7,
+    ndiff = 2, ar = FALSE, mean = FALSE,
+    outliers = c("ao", "wo"), criticalValue = 0,
     precision = 1e-9, approximateHessian = TRUE)
 
 pre.mult_cal <- fractionalAirlineEstimation_new(
-    y = df_daily$log_births, 
+    y = df_daily$log_births,
     x = q, # q = regs de calendrier
-    periods = c(7, 28), 
-    ndiff = 2, ar = FALSE, mean = FALSE, 
-    # outliers = c("ao", "wo"), criticalValue = 0, 
+    periods = c(7, 28),
+    ndiff = 2, ar = FALSE, mean = FALSE,
+    # outliers = c("ao", "wo"), criticalValue = 0,
     precision = 1e-9, approximateHessian = TRUE)
 
 print(pre.mult)
@@ -79,9 +79,9 @@ print_JDFractionalAirlineEstimation(pre.mult_cal)
 ### Extended X11 Decomposition -------------------------------------------------
 
 x11.dow <- rjd3highfreq::x11(
-    exp(pre.mult$model$linearized), 
+    exp(pre.mult$model$linearized),
     period = 7, # DOW pattern
-    mul = TRUE, 
+    mul = TRUE,
     trend.horizon = 9, # 1/2 Filter length : not too long vs p
     trend.degree = 3, # Polynomial degree
     trend.kernel = "Henderson", # Kernel function
@@ -90,14 +90,14 @@ x11.dow <- rjd3highfreq::x11(
     extreme.lsig = 1.5, extreme.usig = 2.5)
 
 x11.doy <- rjd3highfreq::x11(
-    x11.dow$decomposition$sa, 
+    x11.dow$decomposition$sa,
     period = 365.2425, # DOY pattern
-    mul = TRUE, 
-    trend.horizon = 371, 
-    trend.degree = 3, 
-    trend.kernel = "Henderson", 
-    trend.asymmetric = "CutAndNormalize", 
-    seas.s0 = "S3X3", seas.s1 = "S3X3", 
+    mul = TRUE,
+    trend.horizon = 371,
+    trend.degree = 3,
+    trend.kernel = "Henderson",
+    trend.asymmetric = "CutAndNormalize",
+    seas.s0 = "S3X3", seas.s1 = "S3X3",
     extreme.lsig = 1.5, extreme.usig = 2.5)
 
 print(x11.dow)
@@ -110,23 +110,23 @@ print_JDX11(x11.doy)
 amb.dow <- fractionalAirlineDecomposition_new(
     df_daily$births, # input time series
     period = 7,                # DOW pattern
-    sn = FALSE,                # Signal (SA)-noise decomposition 
+    sn = FALSE,                # Signal (SA)-noise decomposition
     stde = FALSE,              # Calculate standard deviations
     nbcasts = 0, nfcasts = 0)  # Numbers of back- and forecasts
 
 amb.doy <- fractionalAirlineDecomposition_new(
     amb.dow$decomposition$sa, # DOW-adjusted linearised data
     period = 365.2425, # DOY pattern
-    sn = FALSE, 
-    stde = FALSE, 
+    sn = FALSE,
+    stde = FALSE,
     nbcasts = 0, nfcasts = 0)
 
 amb.multi <- multiAirlineDecomposition_new(
     pre.mult$model$linearized, # input time series
     periods = c(7, 365.2425), # DOW pattern
-    ar = F, 
+    ar = FALSE,
     stde = FALSE, # Calculate standard deviations
-    nbcasts = 0, nfcasts = 0) 
+    nbcasts = 0, nfcasts = 0)
 
 print(amb.dow)
 print(amb.doy)
@@ -139,16 +139,16 @@ print_JDFractionalAirlineDecomposition(amb.multi)
 # X13 --------------------------------------------------------------------------
 
 # Classes de RJD3X13
-# 
+#
 # JDSTS --> OK mais à actualisé depuis old repo
-# 
+#
 # JD3_REGARIMA_SPEC --> fait !
 # JD3_REGARIMA_OUTPUT -- > OK
-# 
+#
 # JD3X11 --> fait !
-# 
+#
 # JD3_X11_SPEC --> fait !
-# 
+#
 # JD3_X13_SPEC --> fait !
 # JD3_X13_OUTPUT --> OK
 # JD3_X13_RSLTS --> OK
@@ -173,9 +173,9 @@ sp <- rjd3toolkit::add_outlier(sp, type = c("AO", "LS"), date = c("2015-01-01", 
 
 sp <- set_outlier(sp, span.type = "BETWEEN", d0 = "2000-01-01", d1= "2015-01-01", n0 = 10, n1 = 20)
 
-sp <- sp |> 
-    rjd3toolkit::set_easter(enabled = TRUE, duration = 450) |> 
-    rjd3toolkit::set_tradingdays(option = "workingdays") |> 
+sp <- sp |>
+    rjd3toolkit::set_easter(enabled = TRUE, duration = 450) |>
+    rjd3toolkit::set_tradingdays(option = "workingdays") |>
     rjd3toolkit::set_transform(fun = "None")
 
 print(sp)
@@ -225,41 +225,41 @@ print_JD3X11(sa_x11_v3)
 # JD3_ARIMA --> ok
 # JD3_UCARIMA --> ok
 # JD3_UCARIMA_WK --> à voir avec Anna
-# 
+#
 # JD3_SARIMA_ESTIMATE --> ok
 # summary.JD3_SARIMA_ESTIMATE --> à voir avec Anna
 # JD3_SARIMA_ESTIMATION --> ok
 # summary.JD3_SARIMA_ESTIMATION --> ok
-# 
+#
 # JD3_REGARIMA_RSLTS --> ok
 # summary.JD3_REGARIMA_RSLTS --> ok
-# 
+#
 # JD3_CALENDAR --> ok + refait
 # JD3_CALENDARDEFINITION --> à voir avec Anna
 # JD3_WEIGHTEDCALENDAR --> fait
 # JD3_CHAINEDCALENDAR --> fait
-# 
+#
 # JD3_FIXEDDAY --> ok
 # JD3_HOLIDAY --> à voir avec Anna
 # JD3_FIXEDWEEKDAY --> ok
 # JD3_EASTERDAY --> ok
 # JD3_SINGLEDAY --> ok
 # JD3_SPECIALDAY --> ok
-# 
+#
 # JD3_SADECOMPOSITION --> ok
-# 
+#
 # summary.JD3_LIKELIHOOD --> ok
-# 
+#
 # JD3_SPAN --> ok
 # logLik --> ok (stats)
-# 
+#
 # JD3_TEST --> ok
 # JD3 --> à voir avec Anna
 #
 # jd3_utilities : qu'est ce que c'est ?
 # JD3_TSMONIKER
 # JD3_DYNAMICTS
-# 
+#
 # OBJ <- JD3_Object
 # RSLT <- JD3_ProcResults
 # ??? subclasses
@@ -306,18 +306,18 @@ print_JD3_CHAINEDCALENDAR(final_cal)
 # Tramo seats ------------------------------------------------------------------
 
 # Classe
-# 
+#
 # JDSTS Ok mais pas actualisé
 # JD3 --> à voir avec Anna
 # JD3_TRAMO_OUTPUT OK
 # JD3_SEATS --> Fait !
 # JD3_TRAMOSEATS_OUTPUT OK
 # JD3_TRAMOSEATS_RSLTS Ok
-# 
+#
 # JD3_TRAMO_SPEC --> Fait !
 # JD3_SEATS_SPEC --> fait !
 # JD3_TRAMOSEATS_SPEC --> Fait !
-# 
+#
 
 # Classe JD3_SEATS
 sa_ts_v3 <- rjd3tramoseats::tramoseats(y_raw, spec = "RSAfull")
@@ -339,8 +339,3 @@ print_JD3_SEATS_SPEC(seats_spec)
 ts_spec <- sa_ts_v3$estimation_spec
 print(ts_spec)
 print_JD3_TRAMOSEATS_SPEC(ts_spec)
-
-
-
-
-

@@ -2,10 +2,10 @@
 # (0) General information
 # -------------------------------------------------------------------------------------------------
 
-# Aims: 
+# Aims:
 # 1) illustration of model based seasonal adjustment with the {rjd3highfreq} package (version 1.0.1)
 # Package repositories: https://github.com/rjdemetra/rjd3highfreq (version 1.0.1)
-#                        
+#
 ## 2) illustration of model based seasonal adjustment with the {rjd3x11plus} package (version 1.0.1)
 # Package repositories: https://github.com/rjdemetra/rjd3x11plus (version 1.0.1)
 # Dependencies: {RProtoBuf}, {rJava}, {checkmate}, {rjd3toolkit}, Java 17 (or higher)
@@ -18,7 +18,7 @@
 # -------------------------------------------------------------------------------------------------
 library(ggplot2)
 
-df_daily = readRDS("Births.RDS")
+df_daily <- readRDS("Births.RDS")
 
 # This dataframe contains the following variables:
 # date       = from 01/01/1968 to 12/31/2000
@@ -32,23 +32,23 @@ df_daily = readRDS("Births.RDS")
 # -------------------------------------------------------------------------------------------------
 
 
-ch.sp = 2:367 # Seasonal periodicities to be tested for 
+ch.sp <- 2:367 # Seasonal periodicities to be tested for
 
-df_ch = data.frame(
+df_ch <- data.frame(
   "sp" = ch.sp,
   "ch.raw" = rjd3toolkit::seasonality_canovahansen(df_daily$births,
-                                              p0 = min(ch.sp), p1 = max(ch.sp), 
+                                              p0 = min(ch.sp), p1 = max(ch.sp),
                                               np = max(ch.sp) - min(ch.sp) + 1, original = TRUE),
   "ch.log" = rjd3toolkit::seasonality_canovahansen(df_daily$log_births,
-                                              p0 = min(ch.sp), p1 = max(ch.sp), 
+                                              p0 = min(ch.sp), p1 = max(ch.sp),
                                               np = max(ch.sp) - min(ch.sp) + 1, original = TRUE),
   "ch.dlg" = rjd3toolkit::seasonality_canovahansen(diff(df_daily$log_births, lag = 1, differences = 1),
-                                              p0 = min(ch.sp), p1 = max(ch.sp), 
+                                              p0 = min(ch.sp), p1 = max(ch.sp),
                                               np = max(ch.sp) - min(ch.sp) + 1, original = TRUE))
 
 # Significant periodicities (Harvey, 2001, Table I(b))
 
-which(df_ch$ch.raw > .211) + 1 # 10% level of significance 
+which(df_ch$ch.raw > .211) + 1 # 10% level of significance
 which(df_ch$ch.raw > .247) + 1 #  5% level of significance
 which(df_ch$ch.raw > .329) + 1 #  1% level of significance
 
@@ -60,7 +60,7 @@ ggplot(df_ch) +
   ggthemes::theme_hc()
 
 # -------------------------------------------------------------------------------------------------
-# (3) Calendar regressors 
+# (3) Calendar regressors
 # -------------------------------------------------------------------------------------------------
 
 library(rjd3toolkit)
@@ -69,17 +69,17 @@ library(rjd3toolkit)
 frenchCalendar <- national_calendar(days = list(
   fixed_day(7, 14), # Bastille Day
   fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victory Day
-  special_day('NEWYEAR'), 
+  special_day('NEWYEAR'),
   special_day('CHRISTMAS'),
-  special_day('MAYDAY'), 
-  special_day('EASTERMONDAY'), 
+  special_day('MAYDAY'),
+  special_day('EASTERMONDAY'),
   special_day('ASCENSION'),
   special_day('WHITMONDAY'),
   special_day('ASSUMPTION'),
-  special_day('ALLSAINTSDAY'), 
-  special_day('ARMISTICE')) 
+  special_day('ALLSAINTSDAY'),
+  special_day('ARMISTICE'))
 )
-# Generrate calendar regressors 
+# Generrate calendar regressors
 q<-holidays(frenchCalendar, "1968-01-01", length = length(df_daily$births), type="All",
             nonworking = as.integer(7))
 
@@ -90,7 +90,7 @@ q<-holidays(frenchCalendar, "1968-01-01", length = length(df_daily$births), type
 
 # Reg-Arima estimation
 
-pre.mult<- rjd3highfreq::fractionalAirlineEstimation(df_daily$log_births, 
+pre.mult<- rjd3highfreq::fractionalAirlineEstimation(df_daily$log_births,
                       x = q,             # q= calendar regressors matrix
                       periods = c(7,365.25),
                       ndiff = 2, ar = FALSE, mean = FALSE,
@@ -130,7 +130,7 @@ MA_coeffs<- data.frame(
   "MA parameter" = c("MA1", "DOW"),
   "Coef"         = pre.mult$estimation$parameters,
   "Coef_SE"      = sqrt(diag(pre.mult$estimation$covariance)),
-  check.names = FALSE) %>% 
+  check.names = FALSE) %>%
   mutate(Tstat = Coef / Coef_SE)
 
 # -------------------------------------------------------------------------------------------------
@@ -142,7 +142,7 @@ MA_coeffs<- data.frame(
 amb.dow <- rjd3highfreq::fractionalAirlineDecomposition(
   pre.mult$model$linearized, # input time series
   period = 7,                # DOW pattern
-  sn = FALSE,                # Signal (SA)-noise decomposition 
+  sn = FALSE,                # Signal (SA)-noise decomposition
   stde = FALSE,              # Calculate standard deviations
   nbcasts = 0, nfcasts = 0)  # Numbers of back- and forecasts
 
@@ -150,26 +150,26 @@ amb.dow <- rjd3highfreq::fractionalAirlineDecomposition(
 amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
   amb.dow$decomposition$sa,  # DOW-adjusted linearised data
   period = 365.2425,         # DOY pattern
-  sn = FALSE, 
-  stde = FALSE, 
+  sn = FALSE,
+  stde = FALSE,
   nbcasts = 0, nfcasts = 0)
 
 
-# Compute final components and SA series 
-#calendar component 
+# Compute final components and SA series
+#calendar component
 df_daily<- df_daily%>%
-  mutate(cal.cmp = exp(pre.mult$model$xreg[, 1:length(calendar_regressors)] %*% 
+  mutate(cal.cmp = exp(pre.mult$model$xreg[, 1:length(calendar_regressors)] %*%
                          pre.mult$model$b[1:length(calendar_regressors)]))
 
-#final dow, doy and sa  
-df_daily <- df_daily%>% 
-  mutate(amb.dow = exp(amb.dow$decomposition$s))%>% 
-  mutate(amb.doy = exp(amb.doy$decomposition$s))%>% 
-  mutate(amb.sa = births/(cal.cmp*amb.dow * amb.doy))
+#final dow, doy and sa
+df_daily <- df_daily%>%
+  mutate(amb.dow = exp(amb.dow$decomposition$s))%>%
+  mutate(amb.doy = exp(amb.doy$decomposition$s))%>%
+  mutate(amb.sa = births / (cal.cmp*amb.dow * amb.doy))
 
 head(df_daily)
 
-# Plot raw and SA series   
+# Plot raw and SA series
 ggplot(df_daily) +
   geom_line(aes(date, births), size = .000001) +
   geom_line(aes(date, amb.sa), size = .000001, col="red")+
@@ -187,9 +187,9 @@ ggplot(df_daily) +
 
 # Extract DOW pattern highest frequency first
 x11.dow <- rjd3x11plus::x11plus(
-  exp(pre.mult$model$linearized), 
+  exp(pre.mult$model$linearized),
   period = 7, # DOW pattern
-  mul = TRUE, 
+  mul = TRUE,
   trend.horizon = 9, # 1/2 Filter length : not too long vs p
   trend.degree = 3, # Polynomial degree
   trend.kernel = "Henderson", # Kernel function
@@ -199,49 +199,46 @@ x11.dow <- rjd3x11plus::x11plus(
 
 # Extract DOY pattern from DOW-adjusted data
 x11.doy <- rjd3x11plus::x11plus(
-  x11.dow$decomposition$sa, 
+  x11.dow$decomposition$sa,
   period = 365.2425, # DOY pattern
-  mul = TRUE, 
-  trend.horizon = 371, 
-  trend.degree = 3, 
-  trend.kernel = "Henderson", 
-  trend.asymmetric = "CutAndNormalize", 
-  seas.s0 = "S3X3", seas.s1 = "S3X3", 
+  mul = TRUE,
+  trend.horizon = 371,
+  trend.degree = 3,
+  trend.kernel = "Henderson",
+  trend.asymmetric = "CutAndNormalize",
+  seas.s0 = "S3X3", seas.s1 = "S3X3",
   extreme.lsig = 1.5, extreme.usig = 2.5)
 
 
-df_daily <- df_daily|> 
+df_daily <- df_daily|>
   mutate(
-    sa_p365 = x11.doy$decomposition$sa, 
-    s_p365 = x11.doy$decomposition$s, 
+    sa_p365 = x11.doy$decomposition$sa,
+    s_p365 = x11.doy$decomposition$s,
     sa_x11 = x11.doy$decomposition$sa)
 
-df_daily <- df_daily |> 
+df_daily <- df_daily |>
   mutate(t_p365 = x11.doy$decomposition$t)
 
 tail(df_daily)
 
-# Compute final components and SA series 
-#calendar component 
+# Compute final components and SA series
+#calendar component
 df_daily<- df_daily%>%
-  mutate(cal.cmp = exp(pre.mult$model$xreg[, 1:length(calendar_regressors)] %*% 
+  mutate(cal.cmp = exp(pre.mult$model$xreg[, 1:length(calendar_regressors)] %*%
                          pre.mult$model$b[1:length(calendar_regressors)]))
 
-#final dow, doy and sa  
-df_daily <- df_daily%>% 
-  mutate(x11.dow = x11.dow$decomposition$s)%>% 
-  mutate(x11.doy = x11.doy$decomposition$s)%>% 
-  mutate(x11.sa = births/(cal.cmp*x11.dow*x11.doy))
+#final dow, doy and sa
+df_daily <- df_daily%>%
+  mutate(x11.dow = x11.dow$decomposition$s)%>%
+  mutate(x11.doy = x11.doy$decomposition$s)%>%
+  mutate(x11.sa = births / (cal.cmp*x11.dow*x11.doy))
 
 head(df_daily)
 
-# Plot raw and SA series   
+# Plot raw and SA series
 ggplot(df_daily) +
   geom_line(aes(date, births), size = .000001) +
   geom_line(aes(date, x11.sa), size = .000001, col="red")+
   labs(x = "", y = "")+
   theme_classic()+
   theme(panel.grid.major.y = element_line(color = "black", size = 0.5))
-
-
-

@@ -155,7 +155,7 @@ colnames(regresseurs_JO) <- c("REG1_semaine",
 
 # Q pas d'exemple d'effet de paques dans TP
 
-# utilisation des regrsseurs via Rjdemetra
+# utilisation des regrsseurs via RJDemetra
 # Dans RJDemetra, pour utiliser nos régresseurs jours ouvrables personnalisés, il faut :
 # - creer sa propre spécification (fonctions x13_spec() ou  regarima_spec_x13())
 # - en utilisant l’option usrdef.varEnabled = TRUE, en spécifiant les regresseurs dans usrdef.var
@@ -282,5 +282,3 @@ myspec2_sa <- x13_spec(spec = "RSA5c",
 mysa2 <- x13(ipi_fr, myspec2_sa,
              userdefined = c("diagnostics.td-sa-last", "diagnostics.td-i-last"))
 summary(mysa2$regarima)
-
-

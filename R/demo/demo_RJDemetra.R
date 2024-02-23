@@ -1,6 +1,6 @@
 
 ################################################################################
-#######                Démonstration du package RJDemetra                ####### 
+#######                Démonstration du package RJDemetra                #######
 ################################################################################
 
 # Chargement des packages ------------------------------------------------------
@@ -60,14 +60,14 @@ compute(ws_in)
 
 # Ici on teste les fonctions :
 #   - get_all_objects()
-#   - get_object()  
-#   - get_name()    
-#   - get_ts()      
-#   - get_model()   
-#   - get_jmodel()  
-#   - get_dictionary() 
-#   - get_indicators() 
-#   - count()       
+#   - get_object()
+#   - get_name()
+#   - get_ts()
+#   - get_model()
+#   - get_jmodel()
+#   - get_dictionary()
+#   - get_indicators()
+#   - count()
 
 ws_in <- RJDemetra::load_workspace(file = "./WS/ws_input.xml")
 
@@ -117,11 +117,10 @@ sa_x13 <- RJDemetra::x13(ipi_c_eu[, "FR"])
 sa_ts <- RJDemetra::jtramoseats(ipi_c_eu[, "FR"])
 
 # Ajout d'un nouveau SA-item dans le 3ème MP
-add_sa_item(workspace = ws, multiprocessing = "SAProcessing-3", 
+add_sa_item(workspace = ws, multiprocessing = "SAProcessing-3",
             sa_obj = sa_ts, name = "IPI_EU_FR")
 # mp3 |> get_all_objects() |> length()
 
 RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
 
 bring_back(id)
-

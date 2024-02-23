@@ -1,6 +1,6 @@
 
 ################################################################################
-#######              Démonstration du package rjdworkspace               ####### 
+#######              Démonstration du package rjdworkspace               #######
 ################################################################################
 
 # Chargement des packages ------------------------------------------------------
@@ -67,8 +67,8 @@ old_jd3_ts <- rjdemetra3::get_ts(jsai)
 ## On a besoin du chemin formatté (par java) et on ne l'a pas
 
 # new_id <- spreadsheet_change_file(
-#     id = old_jd3_ts$metadata$`@id`, 
-#     nfile = path2_xlsx, 
+#     id = old_jd3_ts$metadata$`@id`,
+#     nfile = path2_xlsx,
 #     ofile = path1_xlsx
 # )
 
@@ -103,4 +103,3 @@ bring_all_back()
 # En plus ----------------------------------------------------------------------
 
 set_spreadsheet_paths(paths = path2_xlsx)
-

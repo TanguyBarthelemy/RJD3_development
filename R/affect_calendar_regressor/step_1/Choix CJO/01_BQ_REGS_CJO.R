@@ -5,7 +5,7 @@
 
 # Précaution
 
-# On s'apprète à faire tourner le cruncher donc il faut que nos WS soient bien 
+# On s'apprète à faire tourner le cruncher donc il faut que nos WS soient bien
 # connectés à nos données.
 
 # Chargement packages -----------------------------------------------------
@@ -36,7 +36,7 @@ WS_name <- list.dirs(path = "./Choix CJO/WS", full.names = FALSE, recursive = FA
 
 # Paramètres et options du cruncher --------------------------------------------
 
-# Si les fonctions suivantes ne renvoient rien ou que cela ne correspond pas 
+# Si les fonctions suivantes ne renvoient rien ou que cela ne correspond pas
 #   à un chemin valide ou au bon chemin, il faut compléter les options
 
 # Chemin du cruncher (dossier contenant le fichier .bat)
@@ -139,9 +139,9 @@ liste_BQ_WS <- list()
 
 # On passe en revue chaque WS
 for (i_ws in seq_along(WS_xml)) {
-    
+
     print(paste0("WS n°", i_ws, " : ", WS_name[i_ws]))
-    
+
     # Création de la matrice demetra_m et des séries dans un dossier Output
     cruncher_and_param(workspace = WS_xml[i_ws],
                        rename_multi_documents = TRUE, # Pour renommer les dossiers en sortie
@@ -150,21 +150,21 @@ for (i_ws in seq_along(WS_xml)) {
                        csv_layout = "list", # Format de sortie des tables
                        log_file = "./Choix CJO/log.txt"
     )
-    
+
     print("✔️️ Crunché !")
-    
+
     # Liste des SA processing = sous-répertoire du dossier Output
     SAP_dossier <- list.dirs(paste0(WS_dossier[i_ws], "/Output"), recursive = FALSE, full.names = TRUE)
     SAP_nom <- list.dirs(paste0(WS_dossier[i_ws], "/Output"), recursive = FALSE, full.names = FALSE)
-    
+
     # On initialise une liste qui contiendra les informations pour chaque SAP
     liste_BQ_sap <- list()
-    
+
     # Pour chaque SA processing
     for (i_sap in seq_along(SAP_dossier)) {
-        
+
         print(paste0("SAP n°", i_sap, " : ", SAP_nom[i_sap]))
-        
+
         # on recupere les diagnostics
         BQ <- extract_QR(paste0(SAP_dossier[i_sap], "/demetra_m.csv"))
         # on calcule le score
@@ -176,9 +176,9 @@ for (i_ws in seq_along(WS_xml)) {
                                                "residuals_normality"),
                                 conditions_modalities = c("Bad","Severe"))),
                             na.rm = TRUE)
-        
+
         liste_BQ_sap <- c(liste_BQ_sap, list(BQ))
-        
+
         print("✔️️ Bilan qualité exporté !")
     }
     names(liste_BQ_sap) <- SAP_nom
@@ -194,21 +194,21 @@ names(liste_BQ_WS) <- WS_name
 liste_coeff_WS <- list()
 
 for (i_ws in seq_along(WS_xml)) {
-    
+
     print(paste0("WS n°", i_ws, " : ", WS_name[i_ws]))
-    
+
     # récupération des noms de chaque SA processing ainsi que de leur chemin
     SAP_nom <- list.dirs(paste0(WS_dossier[i_ws], "/Output"), recursive = FALSE, full.names = FALSE)
     SAP_dossier <- list.dirs(paste0(WS_dossier[i_ws], "/Output"), recursive = FALSE, full.names = TRUE)
-    
+
     # On initialise une liste qui contiendra les informations pour chaque SAP
     liste_sap <- list()
-    
+
     # Pour chaque SA processing
     for (i_sap in seq_along(SAP_nom)) {
-        
+
         print(paste0("SAP n°", i_sap, " : ", SAP_nom[i_sap]))
-        
+
         # Lecture de la matrice demetra_m
         demetra_m <- read.csv(file = paste0(SAP_dossier[i_sap], "/demetra_m.csv"), sep = ";",
                               dec = ",", stringsAsFactors = FALSE, na.strings = c("NA","?"))
@@ -216,46 +216,46 @@ for (i_ws in seq_along(WS_xml)) {
         colnames(demetra_m)
         # Noms de série
         demetra_m$series <- gsub("(^ *)|(* $)", "", gsub("(^.* \\* )|(\\[frozen\\])","", demetra_m$X))
-        
+
         # On recupere les noms des series et l'aic corrige = aicc
         df_res_jeu_cjo <- demetra_m[, c("series", "aicc")]
-        
+
         # recuperation coefficients et p values des regs cjo
-        # regs cjo : on repere l'emplacement des noms de variables qui commencent par td et finissent par un chiffre 
+        # regs cjo : on repere l'emplacement des noms de variables qui commencent par td et finissent par un chiffre
         td_var_index <- grep(pattern = "^td\\.\\d\\.$", x = colnames(demetra_m))
         length(td_var_index) #nombre de variables
         td_var_index
         colnames(demetra_m)[td_var_index]
-        
-        # s'il y en a : 
+
+        # s'il y en a :
         if (length(td_var_index) > 0) {
-            
+
             # cf orga table : nom var / coeff reg / t stat / p value
             td_var_names <- colnames(demetra_m[1, td_var_index])
             # td_var_names <- gsub(pattern = "^.* ", replacement = "", x = demetra_m[1, td_var_index])
-            
-            # td var i va donner pour chaque var cjo stockée dan td_var, les numeros des colonnes à recuperer 
+
+            # td var i va donner pour chaque var cjo stockée dan td_var, les numeros des colonnes à recuperer
             # des colonnes à recuperer : il y en a 2 : coeff reg et p value
             index_p_value <- td_var_index + 1
             index_coeff <- td_var_index + 2
-            
+
             # Création d'une table avec coeff + p_value
             td_var_table <- demetra_m[, c(rbind(index_coeff, index_p_value))]
-            
-            colnames(td_var_table)[seq_len(length(td_var_index) * 2)] <- paste0(rep(td_var_names, each = 2), 
+
+            colnames(td_var_table)[seq_len(length(td_var_index) * 2)] <- paste0(rep(td_var_names, each = 2),
                                                                            rep(c("_(pvalue)","_(coeff)"), length(td_var_index)))
-            
+
             # si on a un seul regresseur JO
-            if (length(td_var_names) > 1) {      
+            if (length(td_var_names) > 1) {
                 # Ajout du ftest (= F joint)
                 td_var_table <- cbind(td_var_table, "F-test" = demetra_m$td.ftest)
             }
-            
-            # Nouveaux indicateurs ajoutés au BQ = aicc + vars cjo 
+
+            # Nouveaux indicateurs ajoutés au BQ = aicc + vars cjo
             df_res_jeu_cjo <- cbind(df_res_jeu_cjo, td_var_table)
             head(df_res_jeu_cjo)
         }
-        
+
         # Ajout test EJOR (effets jours ouvrables)
         # on repere leur position dans le nom des variables et on prend la valeur (pas la modalité : good..)
         res_td_var_index <- c(grep("f.test.on.sa..td.", colnames(demetra_m)),
@@ -263,49 +263,49 @@ for (i_ws in seq_along(WS_xml)) {
         res_td_var_names <- colnames(demetra_m)[res_td_var_index + 1]
         res_td_var_names
         head(demetra_m[, res_td_var_names])
-        
+
         # sélection
         ejor <- demetra_m[, res_td_var_names]
         colnames(ejor) <- c("Res_TD_sa", "Res_TD_i")
         head(ejor)
-        
+
         # Regroupement et ajout des EJOR
         df_res_jeu_cjo <- cbind(df_res_jeu_cjo,ejor)
         head(df_res_jeu_cjo)
-        
+
         # ajout du schema
         df_res_jeu_cjo$schema <- ifelse(demetra_m$log == 0, "Additif", "Multiplicatif")
         head(df_res_jeu_cjo)
-        
-        # ajout du modele arima 
+
+        # ajout du modele arima
         df_arima <- JDCruncheR:::extractARIMA(demetra_m)
-        head(df_arima) 
-        
+        head(df_arima)
+
         # table finale resultats
         df_res_jeu_cjo$`Modele ARIMA` <- df_arima[, 7]
         head(df_res_jeu_cjo)
-        
+
         # creation des notes
         note_td_res_on_sa <- (df_res_jeu_cjo$Res_TD_sa < .05) * 2
         note_td_res_on_i <- (df_res_jeu_cjo$Res_TD_i < .05) * 1
         note_td_res_on_sa[is.na(note_td_res_on_sa)] <- 0
         note_td_res_on_i[is.na(note_td_res_on_i)] <- 0
-        
+
         df_res_jeu_cjo$note <- note_td_res_on_sa + note_td_res_on_i
-        df_res_jeu_cjo$aicc <- trunc(df_res_jeu_cjo$aicc)                             
+        df_res_jeu_cjo$aicc <- trunc(df_res_jeu_cjo$aicc)
         head(df_res_jeu_cjo)
-        
+
         # Changement du nom avec ajout du jeu de régresseurs
         colnames(df_res_jeu_cjo)[-1] <- paste0(colnames(df_res_jeu_cjo)[-1], "_", SAP_nom[i_sap])
         head(df_res_jeu_cjo)
-        
+
         # Ajout à une liste de toutes les tables des SA processing du WS
         liste_sap <- c(liste_sap, list(df_res_jeu_cjo))
     }
-    
+
     names(liste_sap) <- SAP_nom
     liste_coeff_WS <- c(liste_coeff_WS, list(liste_sap))
-    
+
 }
 
 names(liste_coeff_WS) <- WS_name

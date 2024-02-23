@@ -1,8 +1,8 @@
 ##### List of scripts on refresh
 
 #### Focusing on spec writing (not yet on reestimation with refreshed spec)
-# Part 1 default spec,  no user def params 
-## start rsa5c : test policies which work 
+# Part 1 default spec,  no user def params
+## start rsa5c : test policies which work
 
 ## ISUES (cf Notes....txt as well)
 # rsa 4c et pas 4 normally
@@ -14,16 +14,16 @@ library("rjd3tramoseats")
 ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
-# creating a TS object from a data frame 
+# creating a TS object from a data frame
 y_raw <- ts(ipi[, "RF0811"], frequency = 12, start = c(1990, 1), end = c(2021, 12))
 y_new <- ts(ipi[, "RF0811"], frequency = 12, start = c(1990, 1), end = c(2022, 9))
 
 ## make refresh period long too see restimations
 
-################# LAYERS 
+################# LAYERS
 
 ## Layer 1: spec (1 default 2 customized 3 customized and userdef regressors)
-## 
+##
 # y_raw<-rjd3toolkit::ABS$X0.2.08.10.M
 # spec_tramoseats(name = c("rsafull", "rsa0", "rsa1", "rsa2", "rsa3", "rsa4", "rsa5"))
 spec_ts_d<-rjd3tramoseats::spec_tramoseats("rsa5") #### HERE PB !!! issue : rsa4 et pas rsa4c
@@ -32,7 +32,7 @@ spec_ts_d
 sa_ts_d<- rjd3tramoseats::tramoseats(y_raw, spec_ts_d)
 # V2 could be this : sa_ts_d<- rjd3tramoseats::tramoseats(y_raw, "rsa")
 sa_ts_d$estimation_spec
-## Layer 3: result spec 
+## Layer 3: result spec
 sa_ts_d$estimation_spec
 ## Layer 4: refreshed spec : policy: 1 policy per file ?
 current_result_spec <- sa_ts_d$result_spec
@@ -47,7 +47,7 @@ spec_tramoseats_ref <- tramoseats_refresh(current_result_spec, # point spec to b
 #                             policy = "FixedParameters")
 
 # policy = c("FreeParameters",
-#"Complete", "Outliers_StochasticComponent", 
+#"Complete", "Outliers_StochasticComponent",
 # "Outliers",
 #            "FixedParameters", "FixedAutoRegressiveParameters", "Fixed")
 ####
@@ -57,7 +57,7 @@ spec_tramoseats_ref <- tramoseats_refresh(current_result_spec, # point spec to b
 ## Layer 5: estimation with spec from refresh
 sa_ts_ref <- tramoseats(y_new, spec_tramoseats_ref)
 sa_ts_ref$estimation_spec
-## layer 6: result spec from 
+## layer 6: result spec from
 sa_ts_ref$result_spec
 
 ## basic (switch to TS)
@@ -181,7 +181,7 @@ spec_tramoseats_ref$tramo$outlier$va
 sa_ts_ref$estimation_spec$tramo$outlier$va
 sa_ts_ref$result_spec$tramo$outlier$va
 
-## check ml 
+## check ml
 spec_ts_d$tramo$outlier$ml
 sa_ts_d$estimation_spec$tramo$outlier$ml
 sa_ts_d$result_spec$tramo$outlier$ml
@@ -343,7 +343,7 @@ spec_tramoseats_ref$tramo$automodel$acceptdef
 sa_ts_ref$estimation_spec$tramo$automodel$acceptdef
 sa_ts_ref$result_spec$tramo$automodel$acceptdef
 
-# 
+#
 # ## regression
 spec_ts_d$tramo$regression$mean
 sa_ts_d$estimation_spec$tramo$regression$mean
@@ -369,7 +369,7 @@ sa_ts_d$result_spec$tramo$regression$td$td
 spec_tramoseats_ref$tramo$regression$td$td
 sa_ts_ref$estimation_spec$tramo$regression$td$td
 sa_ts_ref$result_spec$tramo$regression$td$td
-# 
+#
 spec_ts_d$tramo$regression$td$lp
 sa_ts_d$estimation_spec$tramo$regression$td$lp
 sa_ts_d$result_spec$tramo$regression$td$lp
@@ -383,7 +383,7 @@ sa_ts_d$result_spec$tramo$regression$td$holidays
 spec_tramoseats_ref$tramo$regression$td$holidays
 sa_ts_ref$estimation_spec$tramo$regression$td$holidays
 sa_ts_ref$result_spec$tramo$regression$td$holidays
-# 
+#
 spec_ts_d$tramo$regression$td$users
 sa_ts_d$estimation_spec$tramo$regression$td$users
 sa_ts_d$result_spec$tramo$regression$td$users
@@ -432,7 +432,7 @@ sa_ts_d$result_spec$tramo$regression$td$lpcoefficient
 spec_tramoseats_ref$tramo$regression$td$lpcoefficient
 sa_ts_ref$estimation_spec$tramo$regression$td$lpcoefficient
 sa_ts_ref$result_spec$tramo$regression$td$lpcoefficient
-# 
+#
 # ## regression$easter
 spec_ts_d$tramo$regression$easter$type
 sa_ts_d$estimation_spec$tramo$regression$easter$type
@@ -461,7 +461,7 @@ sa_ts_d$result_spec$tramo$regression$easter$coefficient
 spec_tramoseats_ref$tramo$regression$easter$coefficient
 sa_ts_ref$estimation_spec$tramo$regression$easter$coefficient
 sa_ts_ref$result_spec$tramo$regression$easter$coefficient
-# 
+#
 ## outliers / ramps / user def vars
 spec_ts_d$tramo$regression$outliers
 sa_ts_d$estimation_spec$tramo$regression$outliers
@@ -530,7 +530,7 @@ sa_ts_d$result_spec$tramo$estimate$tol
 spec_tramoseats_ref$tramo$estimate$tol
 sa_ts_ref$estimation_spec$tramo$estimate$tol
 sa_ts_ref$result_spec$tramo$estimate$tol
-# 
+#
 # ### decomp avec SEATS
 spec_ts_d$seats$xl
 sa_ts_d$estimation_spec$seats$xl
@@ -603,7 +603,7 @@ spec_tramoseats_ref$seats$bias
 sa_ts_ref$estimation_spec$seats$bias
 sa_ts_ref$result_spec$seats$bias
 
-# 
+#
 ### benchmarking
 
 spec_ts_d$benchmarking$enabled
@@ -640,5 +640,5 @@ sa_ts_d$result_spec$benchmarking$forecast
 spec_tramoseats_ref$benchmarking$forecast
 sa_ts_ref$estimation_spec$benchmarking$forecast
 sa_ts_ref$result_spec$benchmarking$forecast
-# 
+#
 

@@ -1,5 +1,5 @@
 options(stringasfactors = FALSE)
-### utilities 
+### utilities
 # library("cli")
 # library("devtools")
 # library("tools")
@@ -7,20 +7,20 @@ options(stringasfactors = FALSE)
 # library("mathjaxr")
 # library("rJava")
 # library("RProtoBuf")
-### core 
+### core
 library("RJDemetra")
 library("rjd3toolkit")
 library("rjd3tramoseats")
 library("rjd3x13")
 library("rjdemetra3")
 
-#### 2nd layer 
+#### 2nd layer
 library("rjd3sts")
 library("rjd3highfreq")
 library("rjd3stl")
 library("rjd3filters")
 library("rjd3x11plus")
-#### utilities 
+#### utilities
 # library("dplyr")
 # # library("tidyr")
 # # library("ggplot2")
@@ -32,5 +32,4 @@ library("rjd3x11plus")
 # library("kableExtra")
 # library("gridExtra")
 # library("timeSeries")
-# 
-
+#

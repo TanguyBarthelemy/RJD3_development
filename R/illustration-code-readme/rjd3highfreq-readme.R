@@ -22,21 +22,21 @@ col_s2 <- "#9169be"
 ## Import des données ----------------------------------------------------------
 
 # df_daily <- read.csv2("https://raw.githubusercontent.com/TanguyBarthelemy/Tsace_RJD_Webinar_Dec22/b5fcf6b14ae47393554950547ef4788a0068a0f6/Data/TS_daily_births_franceM_1968_2020.csv")
-df_daily <- read.csv2("./data/TS_daily_births_franceM_1968_2020.csv") |> 
+df_daily <- read.csv2("./data/TS_daily_births_franceM_1968_2020.csv") |>
     dplyr::mutate(
-        log_births = log(births), 
+        log_births = log(births),
         date = as.Date(date))
 
 zoom_1_month <- which(
-    df_daily$date >= "2019-01-01" 
+    df_daily$date >= "2019-01-01"
     & df_daily$date <= "2019-01-31")
 
 zoom_1_year <- which(
-    df_daily$date >= "2018-01-01" 
+    df_daily$date >= "2018-01-01"
     & df_daily$date <= "2018-12-31")
 
 zoom_3_years <- which(
-    df_daily$date >= "2018-01-01" 
+    df_daily$date >= "2018-01-01"
     & df_daily$date <= "2020-12-31")
 
 
@@ -44,13 +44,13 @@ zoom_3_years <- which(
 # Plot de la série initiale ----------------------------------------------------
 
 plot.new()
-rect(xleft = par("usr")[1], xright = par("usr")[2], 
+rect(xleft = par("usr")[1], xright = par("usr")[2],
      ytop = par("usr")[4], ybottom = par("usr")[3], col = col_bg)
 par(new = TRUE)
 
-plot(y = df_daily$births, 
-     x = df_daily$date, col = col_y, 
-     type = "l", xlab = "Time", ylab = "Nb of french births", 
+plot(y = df_daily$births,
+     x = df_daily$date, col = col_y,
+     type = "l", xlab = "Time", ylab = "Nb of french births",
      main = "Raw data")
 
 par(new = TRUE)
@@ -77,18 +77,18 @@ frenchCalendar <- rjd3toolkit::national_calendar(days = list(
 
 # Calendar regressor matrix
 cal_reg <- rjd3toolkit::holidays(
-    calendar = frenchCalendar, 
+    calendar = frenchCalendar,
     "1968-01-01", length = nrow(df_daily), type = "All", nonworking = 7L)
-colnames(cal_reg) <- c("14th_july", "8th_may", "1st_jan", "1st_may", 
-                 "east_mon", "asc", "pen_mon", 
+colnames(cal_reg) <- c("14th_july", "8th_may", "1st_jan", "1st_may",
+                 "east_mon", "asc", "pen_mon",
                  "15th_aug", "1st_nov", "11th_nov", "Xmas")
 
 
 ## Pré-ajustement --------------------------------------------------------------
 
 pre_pro <- fractionalAirlineEstimation(
-    y = df_daily$births, 
-    x = cal_reg, 
+    y = df_daily$births,
+    x = cal_reg,
     periods = 7, # weekly frequency
     outliers = c("ao", "wo"), log = TRUE, y_time = df_daily$date)
 
@@ -102,22 +102,22 @@ y_lin <- pre_pro$model$linearized
 # Adjusted with outliers and calendar regressors
 
 plot.new()
-rect(xleft = par("usr")[1], xright = par("usr")[2], 
+rect(xleft = par("usr")[1], xright = par("usr")[2],
      ytop = par("usr")[4], ybottom = par("usr")[3], col = col_bg)
 par(new = TRUE)
 
-plot(y = df_daily$births[zoom_1_year], 
-     x = df_daily$date[zoom_1_year], col = col_y, 
+plot(y = df_daily$births[zoom_1_year],
+     x = df_daily$date[zoom_1_year], col = col_y,
      type = "l", xlab = "Time", ylab = "Nb of french births")
-lines(y = exp(y_lin)[zoom_1_year], 
+lines(y = exp(y_lin)[zoom_1_year],
       x = df_daily$date[zoom_1_year], col = col_t)
 
 par(new = TRUE)
 grid(nx = NULL, ny = NULL, col = col_grid)
 box(col = col_grid)
 
-legend("bottomleft", legend = c("Raw data", "Linearised series"), 
-       pch = 16, col = c(col_y, col_t), horiz = TRUE, xpd = TRUE, 
+legend("bottomleft", legend = c("Raw data", "Linearised series"),
+       pch = 16, col = c(col_y, col_t), horiz = TRUE, xpd = TRUE,
        inset = c(0, 1), bty = "n")
 
 ## Code rjd3x11plus --> x11plus() ----------------------------------------------
@@ -132,14 +132,14 @@ legend("bottomleft", legend = c("Raw data", "Linearised series"),
 amb.dow <- rjd3highfreq::fractionalAirlineDecomposition(
     y = y_lin, # input time series
     period = 7, # weekly decomposition
-    log = TRUE, y_time = df_daily$date) 
+    log = TRUE, y_time = df_daily$date)
 
 # Extract DOY pattern from DOW-adjusted linearised data
 # step 2 en log
 amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
     y = amb.dow$decomposition$sa, # DOW-adjusted linearised data
     period = 365.2425, # day of year pattern
-    log = TRUE, y_time = df_daily$date) 
+    log = TRUE, y_time = df_daily$date)
 
 amb.s7 <- exp(amb.dow$decomposition$s)
 amb.s365 <- exp(amb.doy$decomposition$s)
@@ -152,12 +152,12 @@ amb.i <- exp(amb.doy$decomposition$i)
 ### Plot seasonal pattern ------------------------------------------------------
 
 plot.new()
-rect(xleft = par("usr")[1], xright = par("usr")[2], 
+rect(xleft = par("usr")[1], xright = par("usr")[2],
      ytop = par("usr")[4], ybottom = par("usr")[3], col = col_bg)
 par(new = TRUE)
 
-plot(x = df_daily$date, 
-     y = amb.s7, col = col_s1, 
+plot(x = df_daily$date,
+     y = amb.s7, col = col_s1,
      type = "l", xlab = "Time", ylab = "Seasonal component")
 lines(x = df_daily$date, y = amb.s365, col = col_s2)
 
@@ -165,53 +165,53 @@ par(new = TRUE)
 grid(nx = NULL, ny = NULL, col = col_grid)
 box(col = col_grid)
 
-legend("bottomleft", legend = c("p = 7", "p = 365"), 
-       pch = 16, col = c(col_s1, col_s2), horiz = TRUE, xpd = TRUE, 
+legend("bottomleft", legend = c("p = 7", "p = 365"),
+       pch = 16, col = c(col_s1, col_s2), horiz = TRUE, xpd = TRUE,
        inset = c(0, 1), bty = "n")
 
 ### Plot seasonal pattern (zoom) -----------------------------------------------
 
 plot.new()
-rect(xleft = par("usr")[1], xright = par("usr")[2], 
+rect(xleft = par("usr")[1], xright = par("usr")[2],
      ytop = par("usr")[4], ybottom = par("usr")[3], col = col_bg)
 par(new = TRUE)
 
-plot(x = df_daily$date[zoom_1_year], 
-     y = amb.s7[zoom_1_year], col = col_s1, 
+plot(x = df_daily$date[zoom_1_year],
+     y = amb.s7[zoom_1_year], col = col_s1,
      type = "l", xlab = "Time", ylab = "Seasonal component")
-lines(x = df_daily$date[zoom_1_year], 
+lines(x = df_daily$date[zoom_1_year],
       y = amb.s365[zoom_1_year], col = col_s2)
 
 par(new = TRUE)
 grid(nx = NULL, ny = NULL, col = col_grid)
 box(col = col_grid)
 
-legend("bottomleft", legend = c("p = 7", "p = 365"), 
-       pch = 16, col = c(col_s1, col_s2), horiz = TRUE, xpd = TRUE, 
+legend("bottomleft", legend = c("p = 7", "p = 365"),
+       pch = 16, col = c(col_s1, col_s2), horiz = TRUE, xpd = TRUE,
        inset = c(0, 1), bty = "n")
 
 
 ### Plot decomposition ---------------------------------------------------------
 
 plot.new()
-rect(xleft = par("usr")[1], xright = par("usr")[2], 
+rect(xleft = par("usr")[1], xright = par("usr")[2],
      ytop = par("usr")[4], ybottom = par("usr")[3], col = col_bg)
 par(new = TRUE)
 
-plot(x = df_daily$date, y = df_daily$births, col = col_y, 
-     type = "l", xlab = "Time", ylab = "Nb of french births", 
+plot(x = df_daily$date, y = df_daily$births, col = col_y,
+     type = "l", xlab = "Time", ylab = "Nb of french births",
      main = "Decomposition")
-lines(x = df_daily$date, y = amb.sa, 
+lines(x = df_daily$date, y = amb.sa,
       type = "l", col = col_sa)
-lines(x = df_daily$date, y = amb.t, 
+lines(x = df_daily$date, y = amb.t,
       type = "l", col = col_t)
 
 par(new = TRUE)
 grid(nx = NULL, ny = NULL, col = col_grid)
 box(col = col_grid)
 
-legend("bottomleft", legend = c("Raw data", "Seasonnal adjusted", "Trend"), 
-       pch = 16, col = c(col_y, col_sa, col_t), horiz = TRUE, xpd = TRUE, 
+legend("bottomleft", legend = c("Raw data", "Seasonnal adjusted", "Trend"),
+       pch = 16, col = c(col_y, col_sa, col_t), horiz = TRUE, xpd = TRUE,
        inset = c(0, 1), bty = "n")
 
 
@@ -233,49 +233,45 @@ amb.multi.i <- exp(amb.multi$decomposition$i)
 
 # P = 365
 plot.new()
-rect(xleft = par("usr")[1], xright = par("usr")[2], 
+rect(xleft = par("usr")[1], xright = par("usr")[2],
      ytop = par("usr")[4], ybottom = par("usr")[3], col = col_bg)
 par(new = TRUE)
 
-plot(x = df_daily$date[zoom_3_years], 
-     y = amb.multi.s365[zoom_3_years], 
-     type = "l", xlab = "Time", ylab = "Seasonal component p = 365", 
+plot(x = df_daily$date[zoom_3_years],
+     y = amb.multi.s365[zoom_3_years],
+     type = "l", xlab = "Time", ylab = "Seasonal component p = 365",
      col = col_s1, main = "Annual seasonality")
-lines(x = df_daily$date[zoom_3_years], 
-      y = amb.s365[zoom_3_years], 
+lines(x = df_daily$date[zoom_3_years],
+      y = amb.s365[zoom_3_years],
       type = "l", col = col_s2)
 
 par(new = TRUE)
 grid(nx = NULL, ny = NULL, col = col_grid)
 box(col = col_grid)
 
-legend("bottomleft", legend = c("Simple estimation", "Multi Airline"), 
-       pch = 16, col = c(col_s1, col_s2), horiz = TRUE, xpd = TRUE, 
+legend("bottomleft", legend = c("Simple estimation", "Multi Airline"),
+       pch = 16, col = c(col_s1, col_s2), horiz = TRUE, xpd = TRUE,
        inset = c(0, 1), bty = "n")
 
 #P = 7
 
 plot.new()
-rect(xleft = par("usr")[1], xright = par("usr")[2], 
+rect(xleft = par("usr")[1], xright = par("usr")[2],
      ytop = par("usr")[4], ybottom = par("usr")[3], col = col_bg)
 par(new = TRUE)
 
-plot(x = df_daily$date[zoom_1_month], 
-     y = amb.multi.s7[zoom_1_month], 
-     type = "l", xlab = "Time", ylab = "Seasonal component p = 7", 
+plot(x = df_daily$date[zoom_1_month],
+     y = amb.multi.s7[zoom_1_month],
+     type = "l", xlab = "Time", ylab = "Seasonal component p = 7",
      col = col_s1, main = "Weekly seasonality")
-lines(x = df_daily$date[zoom_1_month], 
-      y = amb.s7[zoom_1_month], 
+lines(x = df_daily$date[zoom_1_month],
+      y = amb.s7[zoom_1_month],
       type = "l", col = col_s2)
 
 par(new = TRUE)
 grid(nx = NULL, ny = NULL, col = col_grid)
 box(col = col_grid)
 
-legend("bottomleft", legend = c("Simple estimation", "Multi Airline"), 
-       pch = 16, col = c(col_s1, col_s2), horiz = TRUE, xpd = TRUE, 
+legend("bottomleft", legend = c("Simple estimation", "Multi Airline"),
+       pch = 16, col = c(col_s1, col_s2), horiz = TRUE, xpd = TRUE,
        inset = c(0, 1), bty = "n")
-
-
-
-
