@@ -50,7 +50,7 @@ View(a)
 #    - Fonction de modification 
 #       add_sa_item()         --> add_sa_item()
 # 
-#    - Foction combiné 
+#    - Fonction combiné 
 #       XXX                   --> load_workspace()
 
 # rjdworkspace -----------------------------------------------------------------

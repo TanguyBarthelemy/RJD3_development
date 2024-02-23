@@ -274,25 +274,25 @@ bring_all_back()
 id1 <- pull_out_fire("ws_output")
 id2 <- pull_out_fire("ws_input")
 
-ws <- RJDemetra::load_workspace("WS/ws_output.xml")
+ws_output <- RJDemetra::load_workspace("WS/ws_output.xml")
 ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
 
 RJDemetra::compute(ws_input)
 
-spec <- ws_input |> 
+spec_input <- ws_input |> 
     RJDemetra::get_object(3) |> 
     RJDemetra::get_object(5) |> 
     RJDemetra::get_jmodel(workspace = ws_input)
 
-sa_item <- ws |> 
+sa_item <- ws_output |> 
     RJDemetra::get_object(3) |> 
     RJDemetra::get_object(5)
 
-new_sa_item <- set_spec(sa_item = sa_item, spec = sa_item_input)
-replace_sa_item(mp = ws |> RJDemetra::get_object(3), 
+new_sa_item <- set_spec(sa_item = sa_item, spec = spec_input)
+replace_sa_item(mp = ws_output |> RJDemetra::get_object(3), 
                 pos = 5, sa_item = new_sa_item)
 
-RJDemetra::save_workspace(ws, "./WS/ws_output.xml")
+RJDemetra::save_workspace(ws_output, "./WS/ws_output.xml")
 
 bring_all_back()
 
