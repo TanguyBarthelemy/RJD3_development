@@ -32,7 +32,7 @@ iv1
 
 ### calendar regressors (to be added with `set_trading days`)
 # set of 6 regressors every day is different, contrast with Sunday, no national calendar
-regs_td<- rjd3toolkit::td(s=y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
+regs_td<- rjd3toolkit::td(s=y_raw, groups = c(1, 2, 0, 4, 5, 6, 3),
              contrasts = TRUE)
 
 
