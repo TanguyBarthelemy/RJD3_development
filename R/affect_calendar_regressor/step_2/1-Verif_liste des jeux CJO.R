@@ -40,7 +40,7 @@ RJDemetra::compute(ws)
 msa <- RJDemetra::get_object(ws, 1)
 #get_name(msa)
 
-# Nombre de series du multiprocessing 
+# Nombre de series du multiprocessing
 n <- RJDemetra::count(msa)
 n
 if (n != 230) stop("Il n'y a pas 230 séries dans le WS.")
@@ -59,52 +59,52 @@ modele <- 1:n
 
 #Pour chaque serie
 for (i in seq_len(n)) {
-    
+
     print(i)
-    
+
     # On recupere les specifs
     res <- RJDemetra::get_model(sa[[i]], ws)
-    
+
     # essai pour recuperer directement la pesence de LY : m1$regarima$specification$regression$trading.days$leapyear
     # -> ne marche pas parce que la var est userdefined -> la chercher dans le bloc correspondant
     jeux_cjo <- res$regarima$specification$regression$userdef$variables$description
     ly <- "LY" %in% rownames(jeux_cjo)
-    
+
     # Si rien n'est renseigne, il n'y a pas d'effet CJO ni LY
-    if (is.null(dim(jeux_cjo)) || all(is.na(jeux_cjo$coeff))) { 
-        
+    if (is.null(dim(jeux_cjo)) || all(is.na(jeux_cjo$coeff))) {
+
         variables_cjo[i] <- "Pas_CJO"
         modele[i] <-"Pas_CJO"
-        
+
     } else {
-        
+
         # sinon on enregistre la liste des regresseurs dans le vecteur "variable"...
         m <- nrow(jeux_cjo)
         if (m == 0) {
             print(paste("Variables de CJO bizarres pour la serie ", i))
-            
+
             # cas du "REG0.LY" à enregistrer en "LY" tout court
-        } else if (m == 1 & ly) { 
+        } else if (m == 1 && ly) {
             variables_cjo[i] <- paste(row.names(jeux_cjo), collapse = ",")
             modele[i] <- "LY"
-            
+
             # codage des autres cas "standards"
         } else if (ly) {
             variables_cjo[i] <- paste(row.names(jeux_cjo), collapse = ",")
             modele[i] <- paste("REG", m-1, "_LY", sep = "")
-        } else { 
+        } else {
             variables_cjo[i] <- paste(row.names(jeux_cjo),collapse = ",")
             modele[i] <- paste("REG", m, sep = "")
         }
-        
+
     }
 }
 
 # ignorer les 50+ warnings() -> dûs au test is.na.data.frame(jeux_cjo), notamment quand celui-ci est vide
-# le code fonctionne quand-meme 
+# le code fonctionne quand-meme
 
-# !!! Pb serie 126, RF2529 : variable_CJO = "PSO__072009__082009_,Semaine" 
-# -> c'est un SO ajoute à la main en entreant une user-defined variable qui vaut 1 en juillet et -1 en août, jusqu'en 2008... 
+# !!! Pb serie 126, RF2529 : variable_CJO = "PSO__072009__082009_,Semaine"
+# -> c'est un SO ajoute à la main en entreant une user-defined variable qui vaut 1 en juillet et -1 en août, jusqu'en 2008...
 # Le calendrier Insee n'etant pas celui de JD+ par defaut, il est userdefined au meme titre que le SO -> presence de la variable ok
 
 ## Flemme d'automatiser le recodage des SO/autres variables userdefined hors calendrier Insee :
@@ -113,7 +113,7 @@ for (i in seq_len(n)) {
 # -> puis verif:  result[126,]
 
 result <- data.frame("serie" = nom, "modele" = modele)
-head(result)  
+head(result)
 # write.csv2(result,"V:/Methodo-ICA/Campagne_annuelle_2022/IPI/Donnees/Choix_CJO_2020.csv")
 
 # result[result$serie =="RF2529",]$modele <- "REG1"
@@ -126,8 +126,8 @@ result[duplicated(result),]
 
 #### 2) Lecture des specifs retenues dans le fichier excel Choix_CJO et verif d'absence de doublons
 
-choix_cjo <- read.xlsx(file = "Choix_cjo_temp/Resultats_CJO_2022_export.xls", header=TRUE, sheetIndex = 1) 
-# choix_cjo <- read.csv2(file = "V:/Methodo-ICA/Campagne_annuelle_2022/IPI/Donnees/Choix_CJO_2020.csv") 
+choix_cjo <- read.xlsx(file = "Choix_cjo_temp/Resultats_CJO_2022_export.xls", header=TRUE, sheetIndex = 1)
+# choix_cjo <- read.csv2(file = "V:/Methodo-ICA/Campagne_annuelle_2022/IPI/Donnees/Choix_CJO_2020.csv")
 head(choix_cjo)
 choix_cjo<-choix_cjo[,-1]
 str(choix_cjo)
@@ -163,12 +163,12 @@ pbs
 # -> pbs doit etre vide
 
 
-### !!! attention, il faut absolument que chaque serie n'apparaisse qu'une seule fois dans chaque fichier/ws!! 
+### !!! attention, il faut absolument que chaque serie n'apparaisse qu'une seule fois dans chaque fichier/ws!!
 # Sinon ca cree des decalages.
 
 
 
-#### 4) Si besoin d'exporter 
+#### 4) Si besoin d'exporter
 
 write.csv2(pbs,"N:/L120/SECTION IIA/CVS/Analyse IPI/problemes_modeles.csv",row.names = FALSE)
 pbs

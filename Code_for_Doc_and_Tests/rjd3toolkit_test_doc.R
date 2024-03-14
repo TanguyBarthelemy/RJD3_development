@@ -1,7 +1,7 @@
 ### Testing rjd3toolkit
 library("rjd3toolkit")
 ######## Part 1
-# a calendar 
+# a calendar
 
 # question : when and what for add a calendar to a modelling context  ?
 # I change the current example in modelling context function and add calendar back
@@ -9,40 +9,40 @@ library("rjd3toolkit")
 ## default options available with any calendar in modelling context ?.
 
 # b outliers
-# c other aux variables 
-### stop here 
+# c other aux variables
+### stop here
 ####### Part 2
 library("rjd3toolkit")
 library(rjd3)
-### data in case, but better use built in data for examples 
+### data in case, but better use built in data for examples
 ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
-# creating a TS object from a data frame 
+# creating a TS object from a data frame
 y_raw <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 6))
 y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9))
 
 
 # ########### ISSUE 1 : posted : OK att type and NOT Type
-# # ### First 60 obs 
+# # ### First 60 obs
 spec_x13_d<-rjd3x13::spec_x13("rsa5c")
 spec_x13_d<-set_basic(spec_x13_d,type="First", n0 = 60,
                       preliminary.check = TRUE,
                       preprocessing= TRUE)
 
 
-###### ISSUE 2:  preprocessing= FALSE : IMPOSSIBLE: posted 
+###### ISSUE 2:  preprocessing= FALSE : IMPOSSIBLE: posted
 # spec_x13_d<-rjd3x13::spec_x13("rsa5c")
 # spec_x13_d<-set_basic(spec_x13_d, preprocessing= FALSE)
-# 
+#
 # sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
 
 
-#######  ISSUE 3: check out weighted calendars  too check 
-## cf tanguy, pb class 
+#######  ISSUE 3: check out weighted calendars  too check
+## cf tanguy, pb class
 
-######## Issue 3: pb default in set transform ? not an issue 
-# ##### set  transform 
+######## Issue 3: pb default in set transform ? not an issue
+# ##### set  transform
 spec_x13_d<-rjd3x13::spec_x13("rsa5c")
 
 spec_x13_d<- set_transform(spec_x13_d, fun = "Log")
@@ -81,7 +81,7 @@ so <- so_variable(12, c(2000,1), length = 12*4, date = "2002-02-01", zeroended=F
 so
 #' plot.ts(ts.union(ao, ls, tc, so), plot.type = "single",
 #'         col = c("black", "orange", "green", "gray"))
-#'  
+#'
 
 
 
@@ -128,7 +128,7 @@ q<-periodic.contrasts(4, c(2000,1), 60) # erreur to be checked ?
 q[1:9,]
 
 #' Trigonometric variables: check doc and test
-#' 
+#'
 
 #####################################################################
 #' Aggregation of time series
@@ -136,8 +136,8 @@ q[1:9,]
 
 #' Residual Trading Days Test
 #' file test_td.R
-#' 
-#' Adding regressors 
+#'
+#' Adding regressors
 # file spec_regarima.R
 
 
@@ -162,7 +162,7 @@ day
 day <- fixed_week_day(7, 2, 3) # second Wednesday of July
 day
 class(day)
-## pb here ? try out in a calendar 
+## pb here ? try out in a calendar
 
 
 day<-easter_day(offset=60,julian=TRUE, weight=0.5, validity = list(start="2000-01-01", end = "2020-12-01"))
@@ -177,17 +177,17 @@ day
 day<-special_day("CHRISTMAS", offset = 1, weight = 0.8, validity = list(start="2000-01-01", end = "2020-12-01"))
 
 ### Creating calendars
-## National calendar 
+## National calendar
 frenchCalendar <- national_calendar(days = list(
   fixed_day(7, 14), # Bastille Day
   fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
-  special_day('NEWYEAR'), 
-  special_day('CHRISTMAS'), 
+  special_day('NEWYEAR'),
+  special_day('CHRISTMAS'),
   special_day('MAYDAY'),
-  special_day('EASTERMONDAY'), 
+  special_day('EASTERMONDAY'),
   special_day('ASCENSION'), #
-  special_day('WHITMONDAY'), 
-  special_day('ASSUMPTION'), 
+  special_day('WHITMONDAY'),
+  special_day('ASSUMPTION'),
   special_day('ALLSAINTSDAY'),
   special_day('ARMISTICE'))
 )
@@ -203,7 +203,7 @@ MyCalendar <- national_calendar(list(
      easter_day(1), # Easter Monday
      easter_day(-2), # Good Friday
      fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
-     single_day("2001-09-11"), # appearing once 
+     single_day("2001-09-11"), # appearing once
      special_day('ASCENSION'),
      easter_day(offset=60,julian=FALSE, weight=0.5, validity = list(start="2000-01-01", end = "2020-12-01")),  # Corpus Christi
      special_day('WHITMONDAY'),
@@ -233,7 +233,7 @@ class(composite_calendar)
 chained_cal<-chained_calendar(France, Belgium, "2000-01-01")
 chained_cal
 
-## additional functions 
+## additional functions
 easter_dates(2022, 2023)
 e<-easter_dates(2000, 2023)
 e
@@ -251,7 +251,7 @@ regs_wd<- td(4,c(2020,1),60, groups = c(1, 1, 1, 1, 1, 0, 0),
 regs_wd
 class(regs_td)
 
-## taking holidays into account 
+## taking holidays into account
 BE <- national_calendar(list(
      fixed_day(7,21),
      special_day('NEWYEAR'),
@@ -285,28 +285,28 @@ lt<-long_term_mean(BE,12,
 
 lt
 class(lt)
-### For daily data 
+### For daily data
 ## dummies corresponding to holidays
 q<-holidays(BE, "2020-01-01",365.25, type="All")
 tail(q)
-# ISSUE : does it work with weighted and composite calendars 
+# ISSUE : does it work with weighted and composite calendars
 ## sens de 365.25///partie decimale ?
 
 #### pb "type" and non working days in daily data ?
-q <- rjd3toolkit::holidays(frenchCalendar, "1968-01-01", length = 365*4, type = "All", 
+q <- rjd3toolkit::holidays(frenchCalendar, "1968-01-01", length = 365*4, type = "All",
               nonworking = 7L)
 
 
 q<-holidays(BE, "2021-01-01", 365.25, type="All")
 plot(apply(q,1, max))
 
-## easter regressor 
+## easter regressor
 # in variable.R file
 
 # HOLE
 ## values of position ? endpos=-1
 
-## mean 
+## mean
 #correction=c("Simple", "PreComputed", "Theoretical", "None")
 
 
@@ -340,7 +340,7 @@ class(st)
 ########### VIGNETTE to fully update
 
 ##################################################################################################
-### SPECS, especially for calendar, outliers and external regressors 
+### SPECS, especially for calendar, outliers and external regressors
 ## FILE spec_regarima.R
 
 
@@ -388,10 +388,10 @@ new_spec<-set_outlier(init_spec, span.type= "From", d0 = "2012-01-01",
     tc.rate =0.85)
 
 
-# Set Automodel Specification : examples missing 
+# Set Automodel Specification : examples missing
 
 # PB def and roots thresholds
-# PB def mixed and fct 
+# PB def mixed and fct
 # default values might not be the same for tramo and x13.
 
 init_spec <- rjd3tramoseats::spec_tramoseats("rsafull")
@@ -403,7 +403,7 @@ new_spec<-set_automodel(init_spec,
 
 # Set ARIMA Specification: examples ?
 # missing parameter: automdl enabled
-# explain if has to be set first 
+# explain if has to be set first
 
 init_spec <- rjd3tramoseats::spec_tramoseats("rsafull")
 # ISSUe with tramo seats as init ?
@@ -431,19 +431,19 @@ new_spec<- set_benchmarking(init_spec,
     forecast = FALSE,
     bias = "None")
 
-### Transform 
+### Transform
 
-### Trading days 
+### Trading days
 # all the details in options : cf x12 and new GUI 3.0
 
 # - pb regresseurs auto : quels contrasts ?
 # pb leap year auto adjust
 
-#' @param autoadjust a logical indicating if the program corrects automatically the raw series for 
+#' @param autoadjust a logical indicating if the program corrects automatically the raw series for
 #' the leap year effect if the leap year regressor is significant. Only used when the data is log transformed.
 #'
 #' @param leapyear a \code{character} to specify whether or not to include the leap-year effect in the model:
-#' \code{"LeapYear"} = leap year effect; \code{"LengthOfPeriod"} = length of period (REGARIMA/X-13 specific), 
+#' \code{"LeapYear"} = leap year effect; \code{"LengthOfPeriod"} = length of period (REGARIMA/X-13 specific),
 #' \code{"None"} = no effect included. Default: a leap year effect regressor is included with any built-in set of trad
 
 library("rjd3x13")
@@ -501,8 +501,8 @@ set_easter(
 ## Set transform
 
 #' Set Log-level Transformation and Decomposition scheme in Pre-Processing Specification
-#' 
-#' 
+#'
+#'
 #'ISSUE : adjust !
 #'
 #'set_transform
@@ -520,7 +520,7 @@ sa$result$preprocessing$description$variables
 sa$result$preprocessing$estimation$parameters$description
 
 #' Add User-Defined Variable to Pre-Processing Specification.
-#' 
+#'
 #' add_usrdefvar(
 # x,
 # id,
@@ -543,20 +543,20 @@ intervention_variable(
 )
 
 
-############### Context 
+############### Context
 
 # create or import regressors
-## create a list of regressors with group names 
+## create a list of regressors with group names
 ### to be used in spec custo with add_usrdef
-### to be used when creating context to add to estimation parameters 
+### to be used when creating context to add to estimation parameters
 
- # creating one or several external regressors (TS objects), which will be gathered in one or several groups 
+ # creating one or several external regressors (TS objects), which will be gathered in one or several groups
  iv1<-intervention_variable(12, c(2000, 1), 60,
     starts = "2001-01-01", ends = "2001-12-01")
  iv2<- intervention_variable(12, c(2000, 1), 60,
     starts = "2001-01-01", ends = "2001-12-01", delta = 1)
  # regressors as a list of two groups reg1 and reg2
- vars<-list(reg1=list(x = iv1),reg2=list(x = iv2) ) 
+ vars<-list(reg1=list(x = iv1),reg2=list(x = iv2) )
  # creating the modelling context
  my_context<-modelling_context(variables=vars)
  # customize a default specification
@@ -564,14 +564,14 @@ intervention_variable(
  new_spec<- add_usrdefvar(init_spec,id = "reg1.iv1", regeffect="Trend") # att GROUP NAME
  # modelling context in needed for the estimation phase
  sa_x13<- rjd3x13::x13(ABS$X0.2.09.10.M, new_spec, context = my_context)
-sa_x13$result$preprocessing$description$preadjustment 
+sa_x13$result$preprocessing$description$preadjustment
 
 
-### using directly calendars in calendar correction 
+### using directly calendars in calendar correction
 ### TEST adding a calendar into holidays (just like in gui: no need to generate external regressors)
 # can we retrieve them
 
-# ISSUE: ("HOLIDAYS" Parameter: specifying User defined calendar for built in regressors  
+# ISSUE: ("HOLIDAYS" Parameter: specifying User defined calendar for built in regressors
 spec_x13_d<-rjd3x13::spec_x13("rsa5c")
 ### create a calendar
 BE <- national_calendar(list(
@@ -585,7 +585,7 @@ BE <- national_calendar(list(
     special_day('ASSUMPTION'),
     special_day('ALLSAINTSDAY'),
     special_day('ARMISTICE')))
-## put into a context 
+## put into a context
 my_context<-modelling_context(calendars = list(cal=BE))
 class(my_context)
 my_context$calendars$cal$days
@@ -611,7 +611,7 @@ BE <- national_calendar(list(
     special_day('ASSUMPTION'),
     special_day('ALLSAINTSDAY'),
     special_day('ARMISTICE')))
-## put into a context 
+## put into a context
 my_context<-modelling_context(calendars = list(cal=BE))
 ## create a specification
 # init_spec <- rjd3x13::spec_x13("RSA5c")
@@ -629,20 +629,20 @@ x13()
 
 spec_x13_d<-rjd3x13::spec_x13("rsa5c")
 spec_x13_d<- set_tradingdays(spec_x13_d,
-    option = "TRADINGDAYS", 
+    option = "TRADINGDAYS",
     test = "None")
 
-# QUESTION : where to see the created (not user def) regressors 
-# in spec rien 
+# QUESTION : where to see the created (not user def) regressors
+# in spec rien
 spec_x13_d$regarima$
-# in results 
+# in results
 sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d)
 sa_x13_d$result$preprocessing$description
 
 # $preadjustment ?
 # [1] "NONE
 
-### trying to add holidays 
+### trying to add holidays
 spec_x13_d$regarima$regression$td$holidays<-BE
 
 sa_x13_d<- rjd3x13::x13(y_raw, spec_x13_d, context = my_context)

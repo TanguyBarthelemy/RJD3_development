@@ -4,11 +4,11 @@
 
 # spec stock td ---------------------
 
-spec1 <- rjd3x13::spec_x13("rsa3") |> 
+spec1 <- rjd3x13::spec_x13("rsa3") |>
     set_tradingdays(stocktd = 28)
 
-spec2 <- rjd3x13::spec_x13("rsa3") |> 
-    set_tradingdays(stocktd = 28) |> 
+spec2 <- rjd3x13::spec_x13("rsa3") |>
+    set_tradingdays(stocktd = 28) |>
     set_tradingdays(option = "None")
 
 waldo::compare(spec1, spec2)
@@ -26,15 +26,15 @@ sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 stop("Specific TRAMO...")
 
 spec_x13_d1 <- rjd3tramoseats::spec_tramo("trfull")
-spec_x13_d1 <- set_easter(spec_x13_d1, 
+spec_x13_d1 <- set_easter(spec_x13_d1,
                           type = "Standard")
 
 spec_x13_d2 <- rjd3tramoseats::spec_tramo("trfull")
-spec_x13_d2 <- set_easter(spec_x13_d2, 
+spec_x13_d2 <- set_easter(spec_x13_d2,
                           type = "IncludeEaster")
 
 spec_x13_d3 <- rjd3tramoseats::spec_tramo("trfull")
-spec_x13_d3 <- set_easter(spec_x13_d3, 
+spec_x13_d3 <- set_easter(spec_x13_d3,
                           type = "IncludeEasterMonday")
 
 waldo::compare(spec_x13_d1, spec_x13_d2)
@@ -67,8 +67,7 @@ weighted_cal <- weighted_calendar(list(frenchCalendar, frenchCalendar), c(0.1, 0
 
 final_cal <- chained_calendar(frenchCalendar, weighted_cal, break_date = "2005-05-01")
 
-calendar_td(weighted_cal, 
+calendar_td(weighted_cal,
                       frequency = 12, start = c(1990, 12), length = 500)
-calendar_td(chained_calendar, 
+calendar_td(chained_calendar,
                       frequency = 12, start = c(1990, 12), length = 500)
-

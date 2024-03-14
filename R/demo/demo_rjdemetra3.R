@@ -1,6 +1,6 @@
 
 ################################################################################
-#######           Démonstration des packages en version 3                ####### 
+#######           Démonstration des packages en version 3                #######
 ################################################################################
 
 
@@ -23,17 +23,17 @@ if (!dir.exists("temp")) {
 
 # Fonction de création et de sauvegarde ----------------------------------------
 
-## Create / save WS and MP -----------------------------------------------------
+## Create / save WS and SAP ----------------------------------------------------
 
 # Ici on teste les fonctions :
 #   - .jws_new()
-#   - .jws_multiprocessing_new()
+#   - .jws_sap_new()
 #   - save_workspace()
 
-new_ws <- .jws_new()
-mp1 <- .jws_multiprocessing_new(jws = new_ws, name = "SAP-1")
+new_jws <- .jws_new()
+jsap1 <- .jws_sap_new(jws = new_jws, name = "SAP-1")
 
-save_workspace(new_ws, "./temp/new_ws.xml")
+save_workspace(new_jws, "./temp/new_ws.xml")
 
 empty_temp()
 
@@ -44,42 +44,42 @@ empty_temp()
 #   - .jws_open()
 #   - .jws_compute()
 
-ws_in <- .jws_open(file = "./WS/ws_input.xml")
-.jws_compute(ws_in)
+jws_from <- .jws_open(file = "./WS/ws_input.xml")
+.jws_compute(jws_from)
 
 
 # Fonction d'accès -------------------------------------------------------------
 
 # Ici on teste les fonctions :
-#   - .jws_multiprocessing()
-#   - .jmp_load()
-#   - .jmp_sa()
-#   - .jmp_name()
+#   - .jws_sap()
+#   - read_sap()
+#   - .jsap_sa()
+#   - .jsap_name()
 #   - .jsa_name()
 #   - .jsa_results()
 #   - .jsa_read()
-#   - .jws_multiprocessing_count()
-#   - .jmp_sa_count()
+#   - .jws_sap_count()
+#   - .jsap_sa_count()
 
-ws_in <- .jws_open(file = "./WS/ws_input.xml")
-.jws_multiprocessing_count(ws_in)
+jws_from <- .jws_open(file = "./WS/ws_input.xml")
+.jws_sap_count(jws_from)
 
-jmp1 <- .jws_multiprocessing(ws_in, idx = 1)
-name_mp1 <- .jmp_name(jmp1)
-.jmp_sa_count(jmp1)
+jsap1 <- .jws_sap(jws_from, idx = 1)
+name_sap1 <- .jsap_name(jsap1)
+.jsap_sa_count(jsap1)
 
-jsa1_mp1 <- .jmp_sa(jmp1, idx = 1)
-name_sa1_mp1 <- .jsa_name(jsa1_mp1)
+jsa1_sap1 <- .jsap_sa(jsap1, idx = 1)
+name_sa1_sap1 <- .jsa_name(jsa1_sap1)
 
-.jws_compute(ws_in)
+.jws_compute(jws_from)
 
-all_sa_mp1 <- .jmp_load(jmp1)
-sa1_mp1 <- .jsa_read(jsa1_mp1)
-res_sa1_mp1 <- .jsa_results(jsa1_mp1)
+all_sa_sap1 <- read_sap(jsap1)
+sa1_sap1 <- .jsa_read(jsa1_sap1)
+res_sa1_sap1 <- .jsa_results(jsa1_sap1)
 
-jestimation <- .jcall(jsa1_mp1, "Ljdplus/sa/base/api/SaEstimation;", "getEstimation")
+jestimation <- .jcall(jsa1_sap1, "Ljdplus/sa/base/api/SaEstimation;", "getEstimation")
 jrslt <- .jcall(jestimation, "Ljdplus/toolkit/base/api/information/Explorable;", "getResults")
-.proc_dictionary2(jrslt)
+rjd3toolkit::.proc_dictionary2(jrslt)
 
 
 # Fonction de modification d'un SA-ITEM ----------------------------------------
@@ -94,47 +94,47 @@ jrslt <- .jcall(jestimation, "Ljdplus/toolkit/base/api/information/Explorable;",
 id1 <- pull_out_fire("ws_output")
 id2 <- pull_out_fire("ws_input")
 
-ws <- .jws_open(file = "./WS/ws_output.xml")
-ws_in <- .jws_open(file = "./WS/ws_input.xml")
+jws_to <- .jws_open(file = "./WS/ws_output.xml")
+jws_from <- .jws_open(file = "./WS/ws_input.xml")
 
-jmp1 <- .jws_multiprocessing(ws, idx = 1)
-jmp2 <- .jws_multiprocessing(ws, idx = 2)
-jmp3 <- .jws_multiprocessing(ws, idx = 3)
+jsap1 <- .jws_sap(jws = jws_to, idx = 1)
+jsap2 <- .jws_sap(jws = jws_to, idx = 2)
+jsap3 <- .jws_sap(jws = jws_to, idx = 3)
 
-jmp2_in <- .jws_multiprocessing(ws_in, idx = 2)
-jmp3_in <- .jws_multiprocessing(ws_in, idx = 3)
+jsap2_in <- .jws_sap(jws_from, idx = 2)
+jsap3_in <- .jws_sap(jws_from, idx = 3)
 
 sa_x13 <- rjd3x13::x13(rjd3toolkit::ABS[, 1])
 sa_ts <- rjd3tramoseats::tramoseats(rjd3toolkit::ABS[, 2])
 
-spec1 <- rjd3x13::spec_x13(name = "RSA5c")
+spec1 <- rjd3x13::x13_spec(name = "RSA5c")
 
-jsa1_mp1 <- .jmp_sa(jmp1, idx = 1)
+jsa1_sap1 <- .jsap_sa(jsap1, idx = 1)
 
-# Ajout d'un nouveau SA-item dans le 1er MP
-add_sa_item(jmp = jmp1, name = "ABS_1", x = sa_x13)
-add_sa_item(jmp = jmp1, name = "ABS_2", x = sa_ts)
-add_sa_item(jmp = jmp1, name = "ABS_3", x = jsa1_mp1)
-add_sa_item(jmp = jmp1, name = "ABS_4", x = rjd3toolkit::ABS[, 1], spec = spec1)
+# Ajout d'un nouveau SA-item dans le 1er SAP
+add_sa_item(jsap = jsap1, name = "ABS_1", x = sa_x13)
+add_sa_item(jsap = jsap1, name = "ABS_2", x = sa_ts)
+add_sa_item(jsap = jsap1, name = "ABS_3", x = jsa1_sap1)
+add_sa_item(jsap = jsap1, name = "ABS_4", x = rjd3toolkit::ABS[, 1], spec = spec1)
 
-# Suppression d'un SA-item du 2ème MP
-remove_sa_item(jmp3, idx = 5)
-remove_sa_item(jmp3, idx = 6)
+# Suppression d'un SA-item du 2ème SAP
+remove_sa_item(jsap = jsap3, idx = 5)
+remove_sa_item(jsap = jsap3, idx = 6)
 
 # Supression du 2ème SAP
-remove_all_sa_item(jmp = jmp2)
+remove_all_sa_item(jsap = jsap2)
 
-# Replacement du 1er SA-item du 3ème MP (RF1012)
-jsa1_mp3 <- .jmp_sa(jmp3_in, idx = 1)
-replace_sa_item(jmp = jmp1, jsa = jsa1_mp3, idx = 1)
+# Replacement du 1er SA-item du 3ème SAP (RF1012)
+jsa1_sap3 <- .jsap_sa(jsap3_in, idx = 1)
+replace_sa_item(jsap = jsap1, jsa = jsa1_sap3, idx = 1)
 
-.jws_compute(ws_in)
+.jws_compute(jws_from)
 # Transfert de séries
-transfer_series(jmp_from = jmp2_in, 
-                jmp_to = jmp2, 
+transfer_series(jsap_from = jsap2_in,
+                jsap_to = jsap2,
                 selected_series = c("RF0899", "RF1039", "RF1041"))
 
-save_workspace(jws = ws, file = "./temp/new_ws.xml", replace = TRUE)
+save_workspace(jws = jws_to, file = "./temp/new_ws.xml", replace = TRUE)
 
 bring_all_back()
 empty_temp()
@@ -151,19 +151,19 @@ empty_temp()
 
 id <- pull_out_fire("ws_output")
 
-ws <- .jws_open(file = "./WS/ws_output.xml")
-jmp1 <- .jws_multiprocessing(ws, idx = 1)
+jws_to <- .jws_open(file = "./WS/ws_output.xml")
+jsap1 <- .jws_sap(ws, idx = 1)
 
-spec1 <- rjd3x13::spec_x13(name = "RSA3")
+spec1 <- rjd3x13::x13_spec(name = "RSA3")
 spec2 <- rjd3tramoseats::spec_tramoseats(name = "trfull")
 
-set_specification(jmp = jmp1, spec = spec1, idx = 1)
-set_specification(jmp = jmp1, spec = spec2, idx = 2)
+set_specification(jsap = jsap1, spec = spec1, idx = 1)
+set_specification(jsap = jsap1, spec = spec2, idx = 2)
 
-set_domain_specification(jmp = jmp1, spec = spec2, idx = 1)
-.jws_compute(ws)
+set_domain_specification(jsap = jsap1, spec = spec2, idx = 1)
+.jws_compute(jws_to)
 
-save_workspace(jws = ws, file = "./temp/new_ws.xml", replace = TRUE)
+save_workspace(jws = jws_to, file = "./temp/new_ws.xml", replace = TRUE)
 
 bring_all_back()
 empty_temp()
@@ -182,40 +182,40 @@ empty_temp()
 id1 <- pull_out_fire("ws_output")
 id2 <- pull_out_fire("ws_input")
 
-ws_to <- .jws_open("WS/ws_output.xml")
-ws_from <- .jws_open("WS/ws_input.xml")
+jws_to <- .jws_open("WS/ws_output.xml")
+jws_from <- .jws_open("WS/ws_input.xml")
 
-jmp1 <- .jws_multiprocessing(ws_to, idx = 1)
-jmp2 <- .jws_multiprocessing(ws_to, idx = 2)
-jmp3 <- .jws_multiprocessing(ws_to, idx = 3)
+jsap1 <- .jws_sap(jws_to, idx = 1)
+jsap2 <- .jws_sap(jws_to, idx = 2)
+jsap3 <- .jws_sap(jws_to, idx = 3)
 
-jsa1_mp1 <- .jmp_sa(jmp1, idx = 1)
-jsa1_mp3 <- .jmp_sa(jmp3, idx = 1)
+jsa1_sap1 <- .jsap_sa(jsap1, idx = 1)
+jsa1_sap3 <- .jsap_sa(jsap3, idx = 1)
 
-jmp3_in <- .jws_multiprocessing(ws_from, idx = 3)
-jsa1_mp3_in <- .jmp_sa(jmp3_in, idx = 1)
+jsap3_in <- .jws_sap(jws_from, idx = 3)
+jsa1_sap3_in <- .jsap_sa(jsap3_in, idx = 1)
 
-ts1 <- get_raw_data(jsa = jsa1_mp1)
+ts1 <- get_raw_data(jsa = jsa1_sap1)
 ts2 <- JohnsonJohnson
 ts3 <- ts(1:200, start = 2000, frequency = 12)
 ts4 <- nottem
 
 # Changer le contenu des raw data
-set_raw_data(jmp = jmp2, y = ts1, idx = 1)
-set_raw_data(jmp = jmp2, y = ts2, idx = 2)
-set_raw_data(jmp = jmp2, y = ts3, idx = 3)
-set_raw_data(jmp = jmp2, y = ts4, idx = 4)
+set_raw_data(jsap = jsap2, y = ts1, idx = 1)
+set_raw_data(jsap = jsap2, y = ts2, idx = 2)
+set_raw_data(jsap = jsap2, y = ts3, idx = 3)
+set_raw_data(jsap = jsap2, y = ts4, idx = 4)
 
 # Changer les metadata des raw data
-set_ts_metadata(jmp = jmp3, ref_jsa = jsa1_mp3_in, idx = 1)
+set_ts_metadata(jsap = jsap3, ref_jsa = jsa1_sap3_in, idx = 1)
 
-save_workspace(jws = ws_to, file = "./temp/new_ws.xml", replace = TRUE)
+save_workspace(jws = jws_to, file = "./temp/new_ws.xml", replace = TRUE)
 
 bring_all_back()
 empty_temp()
 
 
-## Set/get comment ----------------------------------------------------------------
+## Set/get comment -------------------------------------------------------------
 
 # Ici on teste la fonction :
 #   - set_comment()
@@ -225,14 +225,14 @@ empty_temp()
 
 id <- pull_out_fire("ws_output")
 
-ws <- .jws_open("WS/ws_output.xml")
-jmp3 <- .jws_multiprocessing(ws, idx = 3)
-jsa3_mp3 <- .jmp_sa(jmp3, idx = 3)
+jws_to <- .jws_open("WS/ws_output.xml")
+jsap3 <- .jws_sap(ws, idx = 3)
+jsa3_sap3 <- .jsap_sa(jsap3, idx = 3)
 
-get_comment(jsa3_mp3)
-set_comment(jmp3, idx = 1, comment = "Comment written in R")
+get_comment(jsa3_sap3)
+set_comment(jsap3, idx = 1, comment = "Comment written in R")
 
-save_workspace(jws = ws, file = "./temp/new_ws.xml", replace = TRUE)
+save_workspace(jws = jws_to, file = "./temp/new_ws.xml", replace = TRUE)
 
 bring_all_back()
 empty_temp()
@@ -247,13 +247,12 @@ empty_temp()
 
 id <- pull_out_fire("ws_output")
 
-ws <- .jws_open("WS/ws_output.xml")
-jmp1 <- .jws_multiprocessing(ws, idx = 1)
+jws_to <- .jws_open("WS/ws_output.xml")
+jsap1 <- .jws_sap(ws, idx = 1)
 
-set_name(jmp = jmp1, idx = 2, name = "Robert")
+set_name(jsap = jsap1, idx = 2, name = "Robert")
 
-save_workspace(jws = ws, file = "./temp/new_ws.xml", replace = TRUE)
+save_workspace(jws = jws_to, file = "./temp/new_ws.xml", replace = TRUE)
 
 bring_all_back()
 empty_temp()
-

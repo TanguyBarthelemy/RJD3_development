@@ -13,15 +13,11 @@ my_context <- modelling_context(variables=variables)
 .r2jd_modellingcontext(my_context)$getTsVariableDictionary()
 #> [1] "Java-Object{[var.Monday, var.Tuesday, var.Wednesday, var.Thursday, var.Friday,
 #> var.Saturday, v3.Monday, r.Tuesday, r.Thursday]}"
-#> 
+#>
 
-## erreur chez moi tant que pas acceptée 
+## erreur chez moi tant que pas acceptée
 
 
 # cas 1 : regs_td : mts nommé : va dans groupe r
 # cas 2 : un ts dans gpe 1
-# cas 3 : un nouveau groupe mais par malheur nommé r 
-
-
-
-
+# cas 3 : un nouveau groupe mais par malheur nommé r

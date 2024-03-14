@@ -50,7 +50,7 @@ ipi <- read.csv2("./Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 
-# creating a TS object from a data frame 
+# creating a TS object from a data frame
 y_raw <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2021, 12))
 y_new <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022, 9))
 
@@ -58,9 +58,9 @@ y_new <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022, 9
 # LAYERS -----------------------------------------------------------------------
 
 ## Layer 1: customized spec before estimation
-## Layer 2: post estimation : estimation spec 
-## Layer 3: post estimation : result spec 
-## Layer 4: post spec refresh : refreshed spec 
+## Layer 2: post estimation : estimation spec
+## Layer 3: post estimation : result spec
+## Layer 4: post spec refresh : refreshed spec
 ## Layer 5: post estimation with refreshed spec: refreshed estimation spec
 ## Layer 6: post estimation with refreshed spec: refreshed result spec
 
@@ -69,7 +69,7 @@ y_new <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022, 9
 spec_x13_d <- rjd3x13::spec_x13("rsa5c") #### HERE PB !!! issue : rsa4 et pas rsa4c
 print_JD3_X13_SPEC(spec_x13_d)
 
-### quick check if estimation works 
+### quick check if estimation works
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 print_JD3X11(sa_x13_d$result$decomposition) ## Montrer à Anna, abréviation ?
 sa_x13_d$result$preprocessing
@@ -81,9 +81,9 @@ sa_x13_d$result$preprocessing
 
 # Test FROM
 spec_x13_d <- set_basic(
-    spec_x13_d, type = "From", 
-    d0 = "2000-01-01", 
-    preliminary.check = TRUE, 
+    spec_x13_d, type = "From",
+    d0 = "2000-01-01",
+    preliminary.check = TRUE,
     preprocessing = TRUE)
 
 print_JD3_X13_SPEC(spec_x13_d)
@@ -91,9 +91,9 @@ print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
 # Test TO
 spec_x13_d <- set_basic(
-    spec_x13_d, type = "To", 
-    d1 = "2000-01-01", 
-    preliminary.check = TRUE, 
+    spec_x13_d, type = "To",
+    d1 = "2000-01-01",
+    preliminary.check = TRUE,
     preprocessing = TRUE)
 
 print_JD3_X13_SPEC(spec_x13_d)
@@ -101,9 +101,9 @@ print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
 # Last 90 obs
 spec_x13_d <- set_basic(
-    spec_x13_d, type = "Last", 
-    n1 = 90, 
-    preliminary.check = TRUE, 
+    spec_x13_d, type = "Last",
+    n1 = 90,
+    preliminary.check = TRUE,
     preprocessing = TRUE)
 
 print_JD3_X13_SPEC(spec_x13_d)
@@ -111,9 +111,9 @@ print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
 # Excluding : first 60 and Last 60 obs
 spec_x13_d <- set_basic(
-    spec_x13_d, type = "Excluding", 
-    n0 = 60, n1 = 60, 
-    preliminary.check = TRUE, 
+    spec_x13_d, type = "Excluding",
+    n0 = 60, n1 = 60,
+    preliminary.check = TRUE,
     preprocessing = TRUE)
 
 print_JD3_X13_SPEC(spec_x13_d)
@@ -129,13 +129,13 @@ spec_x13_d <- set_estimate(spec_x13_d, type = "From", d0 = "2010-01-01")
 print_JD3_X13_SPEC(spec_x13_d)
 print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
-# Last 60 obs 
+# Last 60 obs
 spec_x13_d <- rjd3x13::spec_x13("rsa5c")
 spec_x13_d <- set_estimate(spec_x13_d, type = "Last", n1 = 60)
 print_JD3_X13_SPEC(spec_x13_d)
 print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
-### quick check if estimation works 
+### quick check if estimation works
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 sa_x13_d$result$preprocessing
 sa_x13_d$result$final
@@ -147,9 +147,9 @@ spec_x13_d <- rjd3x13::spec_x13("rsa5c")
 
 # log et lengthofperiod
 spec_x13_d <- set_transform(
-    spec_x13_d, 
-    fun = "Log", 
-    adjust = "LengthOfPeriod", 
+    spec_x13_d,
+    fun = "Log",
+    adjust = "LengthOfPeriod",
     outliers = TRUE)
 
 print_JD3_X13_SPEC(spec_x13_d)
@@ -157,8 +157,8 @@ print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
 # Log
 spec_x13_d <- set_transform(
-    spec_x13_d, 
-    fun = "Log", 
+    spec_x13_d,
+    fun = "Log",
     outliers = TRUE)
 
 print_JD3_X13_SPEC(spec_x13_d)
@@ -170,10 +170,10 @@ print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 spec_x13_d <- rjd3x13::spec_x13("rsa5c")
 
 spec_x13_d <- set_outlier(
-    spec_x13_d, 
-    span.type = "From", d0 = "2012-01-01", 
-    outliers.type = c("LS", "TC"), 
-    # critical.value = 5, 
+    spec_x13_d,
+    span.type = "From", d0 = "2012-01-01",
+    outliers.type = c("LS", "TC"),
+    # critical.value = 5,
     # tc.rate = 0.85
 )
 
@@ -181,16 +181,16 @@ print_JD3_X13_SPEC(spec_x13_d)
 print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
 spec_x13_d <- set_outlier(
-    spec_x13_d, 
-    span.type = "Last", n1 = 60, 
-    outliers.type = c("LS", "TC"), 
-    critical.value = 5, 
+    spec_x13_d,
+    span.type = "Last", n1 = 60,
+    outliers.type = c("LS", "TC"),
+    critical.value = 5,
     tc.rate = 0.85)
 
 print_JD3_X13_SPEC(spec_x13_d)
 print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
-### quick check if estimation works 
+### quick check if estimation works
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 sa_x13_d$result$preprocessing
 sa_x13_d$result$final
@@ -198,28 +198,28 @@ sa_x13_d$result$final
 ### set automodel --------------------------------------------------------------
 
 spec_x13_d <- set_automodel(
-    spec_x13_d, 
-    enabled = FALSE, 
-    cancel = 0.06, 
-    ub1 = 1.05, 
-    ub2 = 1.15, 
-    reducecv = 0.15, 
-    ljungboxlimit = 0.96, 
-    tsig = 1.5, 
-    ubfinal = 1.06, 
-    checkmu = FALSE, 
+    spec_x13_d,
+    enabled = FALSE,
+    cancel = 0.06,
+    ub1 = 1.05,
+    ub2 = 1.15,
+    reducecv = 0.15,
+    ljungboxlimit = 0.96,
+    tsig = 1.5,
+    ubfinal = 1.06,
+    checkmu = FALSE,
     balanced = TRUE)
 
 print_JD3_X13_SPEC(spec_x13_d)
 print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
-### quick check if estimation works 
+### quick check if estimation works
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 sa_x13_d$result$preprocessing
 sa_x13_d$result$final
 
 # disabled
-spec_x13_d <- set_automodel(spec_x13_d, 
+spec_x13_d <- set_automodel(spec_x13_d,
                             enabled = FALSE)
 print_JD3_X13_SPEC(spec_x13_d)
 print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
@@ -228,8 +228,8 @@ print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
 spec_x13_d <- rjd3x13::spec_x13("rsa5c")
 
-spec_x13_d <- set_benchmarking(spec_x13_d, 
-                               enabled = TRUE, 
+spec_x13_d <- set_benchmarking(spec_x13_d,
+                               enabled = TRUE,
                                target = "Original",
                                rho = 0.8,
                                lambda = 0.5,
@@ -239,13 +239,13 @@ spec_x13_d <- set_benchmarking(spec_x13_d,
 
 print_JD3_X13_SPEC(spec_x13_d)
 
-### quick check if estimation works 
+### quick check if estimation works
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 sa_x13_d$result$preprocessing
 sa_x13_d$result$final
 print_JD3X11(sa_x13_d$result$decomposition)
 
-## ISSUE : where are benchmarking results     
+## ISSUE : where are benchmarking results
 
 ### PRINT HOLE
 #### sa_x13_d$result$final : pas bon : faire un table / main results (GUI)
@@ -258,7 +258,7 @@ spec_x13_d <- set_automodel(spec_x13_d, enabled = FALSE, acceptdefault = TRUE)
 
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 spec_x13_d <- set_arima(
-    spec_x13_d, 
+    spec_x13_d,
     mean = 0.2,
     mean.type = "Fixed",
     p = 1,
@@ -277,7 +277,7 @@ print(spec_x13_d$regarima$arima)
 
 # Estimation
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
-### ISSUE verifier resultats ici 
+### ISSUE verifier resultats ici
 sa_x13_d$result$preprocessing
 sa_x13_d$result$final
 
@@ -314,7 +314,7 @@ spec_x13_d <- set_tradingdays(spec_x13_d,
                               option = "None")
 # User defined + tard
 
-# Stock td 
+# Stock td
 spec_x13_d <- set_tradingdays(spec_x13_d, stocktd = 28)
 
 # Exemple avec TD4
@@ -340,8 +340,8 @@ stop("Stock TD ne peut pas s'affichzer correctement car :
 
 # Classic easter
 spec_x13_d <- rjd3x13::spec_x13("rsa5c")
-spec_x13_d <- set_easter(spec_x13_d, 
-                         enabled = TRUE, 
+spec_x13_d <- set_easter(spec_x13_d,
+                         enabled = TRUE,
                          duration = 12,
                          coef = 0.6,
                          coef.type = "Fixed",
@@ -373,18 +373,18 @@ sa_x13_d$result$final
 
 spec_x13_d <- rjd3x13::spec_x13("rsa5c")
 spec_x13_d <- rjd3toolkit::add_outlier(
-    spec_x13_d, 
-    type = "AO", 
-    date = "2020-03-01", 
-    coef = 12) |> 
+    spec_x13_d,
+    type = "AO",
+    date = "2020-03-01",
+    coef = 12) |>
     add_outlier(
-        type = "LS", 
+        type = "LS",
         date = "2020-04-01")
 
 print_JD3_X13_SPEC(spec_x13_d)
 print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
-## quick estimation check 
+## quick estimation check
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 sa_x13_d$result$preprocessing$description$variables
 
@@ -392,19 +392,19 @@ sa_x13_d$result$preprocessing$description$variables
 
 # ramp on year 2021
 spec_x13_d <- rjd3toolkit::add_ramp(
-    spec_x13_d, 
-    start = "2021-01-01", 
+    spec_x13_d,
+    start = "2021-01-01",
     end = "2021-12-01")
 spec_x13_d <- rjd3toolkit::add_ramp(
-    spec_x13_d, 
-    start = "2018-01-01", 
-    end = "2020-12-01", 
+    spec_x13_d,
+    start = "2018-01-01",
+    end = "2020-12-01",
     coef = 0.4)
 
 print_JD3_X13_SPEC(spec_x13_d)
 print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
-## quick check 
+## quick check
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 sa_x13_d$result$preprocessing
 
@@ -412,12 +412,12 @@ sa_x13_d$result$preprocessing
 # (to be added with add_usrdefvar)
 
 iv1 <- intervention_variable(
-    frequency = 12, start = c(2000, 1), length = 60, 
+    frequency = 12, start = c(2000, 1), length = 60,
     starts = "2001-01-01", ends = "2001-12-01")
 plot(iv1)
 
 iv2 <- intervention_variable(
-    frequency = 12, start = c(2000, 1), length = 60, 
+    frequency = 12, start = c(2000, 1), length = 60,
     starts = "2001-01-01", ends = "2001-12-01", delta = 2)
 plot(iv2)
 
@@ -429,7 +429,7 @@ plot(iv3)
 ### Calendar regressors --------------------------------------------------------
 # (to be added with set_trading days)
 
-regs_td <- td(s = y_raw, groups = c(1, 2, 3, 4, 5, 6, 0), 
+regs_td <- td(s = y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
               contrasts = TRUE)
 
 frenchCalendar <- national_calendar(days = list(
@@ -450,18 +450,18 @@ weighted_cal <- weighted_calendar(list(frenchCalendar, frenchCalendar), c(0.1, 0
 
 final_cal <- chained_calendar(frenchCalendar, weighted_cal, break_date = "2005-05-01")
 
-reg_fr <- calendar_td(frenchCalendar, 
+reg_fr <- calendar_td(frenchCalendar,
                       frequency = 12, start = c(1990, 12), length = 500)
 
 ### Creating context for all external regressors -------------------------------
 
 variables <- list(
-    Monday = regs_td[, 1], 
-    Tuesday = regs_td[, 2], 
-    Wednesday = regs_td[, 3], 
-    Thursday = regs_td[, 4], 
-    Friday = regs_td[, 5], 
-    Saturday = regs_td[, 6], 
+    Monday = regs_td[, 1],
+    Tuesday = regs_td[, 2],
+    Wednesday = regs_td[, 3],
+    Thursday = regs_td[, 4],
+    Friday = regs_td[, 5],
+    Saturday = regs_td[, 6],
     reg1 = iv1, reg2 = iv2)
 
 my_context <- modelling_context(variables = variables)
@@ -473,14 +473,14 @@ rjd3toolkit::.r2jd_modellingcontext(my_context)$getTsVariableDictionary()
 spec_x13_d <- rjd3x13::spec_x13("rsa5c")
 
 spec_x13_d <- set_tradingdays(
-    spec_x13_d, option = "UserDefined", 
+    spec_x13_d, option = "UserDefined",
     uservariable = c(
-        "r.Monday", 
-        "r.Tuesday", 
-        "r.Wednesday", 
-        "r.Thursday", 
-        "r.Friday", 
-        "r.Saturday"), # forcement en caracteres dans un vecteur 
+        "r.Monday",
+        "r.Tuesday",
+        "r.Wednesday",
+        "r.Thursday",
+        "r.Friday",
+        "r.Saturday"), # forcement en caracteres dans un vecteur
     test = "None")
 
 print_JD3_X13_SPEC(spec_x13_d)
@@ -493,22 +493,22 @@ sa_x13_d$result$final
 ### Adding other external regressors -------------------------------------------
 
 spec_x13_d <- add_usrdefvar(
-    spec_x13_d, 
-    id = "r.reg1", 
-    name = "iv1", 
+    spec_x13_d,
+    id = "r.reg1",
+    name = "iv1",
     regeffect = "Trend")
 
 spec_x13_d <- add_usrdefvar(
-    spec_x13_d, 
-    id = "r.reg2", 
-    regeffect = "Trend", 
+    spec_x13_d,
+    id = "r.reg2",
+    regeffect = "Trend",
     coef = 0.7)
 
 print_JD3_X13_SPEC(spec_x13_d)
 print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
 ## estimation with context and user def output : ISSUE posted : user def output doesn't work
-# sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d, context = my_context, 
+# sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d, context = my_context,
 #                         userdefined = c("ycal", "reg_t"))
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d, context = my_context)
 sa_x13_d$result$preprocessing
@@ -528,7 +528,7 @@ spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
 
 sa_x13_ref <- x13(y_new, spec_x13_ref, context = my_context)
 sa_x13_ref$result$preprocessing
-sa_x13_ref$result$preprocessing$description$variables 
+sa_x13_ref$result$preprocessing$description$variables
 
 
 # Structure des objets ---------------------------------------------------------
@@ -1146,4 +1146,3 @@ sa_x13_d$result_spec$benchmarking$forecast
 spec_x13_ref$benchmarking$forecast
 sa_x13_ref$estimation_spec$benchmarking$forecast
 sa_x13_ref$result_spec$benchmarking$forecast
-

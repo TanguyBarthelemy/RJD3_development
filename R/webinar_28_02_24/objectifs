@@ -1,0 +1,9 @@
+# Code en v3
+
+# Objectifs :
+#   - instant reading (load_workspace --> ça c'est fait)
+#   - creation + saving
+#   - modification vrai wrangling (add sa item, replace_sa_item...)
+#   - update_path
+#   - handling metadata (comments)
+#   - handling several workspaces (transfer series, ...)

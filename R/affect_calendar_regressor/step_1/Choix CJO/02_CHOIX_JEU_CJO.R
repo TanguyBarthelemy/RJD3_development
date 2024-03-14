@@ -29,49 +29,49 @@ WS_name <- list.dirs(path = "./Choix CJO/WS", full.names = FALSE, recursive = FA
 
 # Mise en forme -----------------------------------------------------------
 
-summary_tot_PN <- tot_PN |> 
+summary_tot_PN <- tot_PN |>
     # On récupère les variables note et aicc pour comparaison
-    dplyr::select(series, dplyr::starts_with(c("note", "aicc"))) |> 
-    tidyr::pivot_longer(-series, 
-                        names_to = c(".value", "choix_reg_cjo"), 
-                        names_pattern = "(aicc|note)_(\\w+)") |> 
+    dplyr::select(series, dplyr::starts_with(c("note", "aicc"))) |>
+    tidyr::pivot_longer(-series,
+                        names_to = c(".value", "choix_reg_cjo"),
+                        names_pattern = "(aicc|note)_(\\w+)") |>
     dplyr::mutate(
         note = dplyr::case_when(
-            choix_reg_cjo == "Pas_CJO" & is.na(note) ~ Inf, 
+            choix_reg_cjo == "Pas_CJO" & is.na(note) ~ Inf,
             TRUE ~ note
-        ), 
+        ),
         aicc = dplyr::case_when(
-            choix_reg_cjo == "Pas_CJO" & is.na(aicc) ~ Inf, 
+            choix_reg_cjo == "Pas_CJO" & is.na(aicc) ~ Inf,
             TRUE ~ aicc
-        )) |> 
-    dplyr::group_by(series) |> 
+        )) |>
+    dplyr::group_by(series) |>
     # On sélectionne les jeux de régresseur avec la note la plus basse
-    dplyr::filter(note == min(note, na.rm = TRUE)) |> 
+    dplyr::filter(note == min(note, na.rm = TRUE)) |>
     # Puis avec l'aicc le plus élevé
-    dplyr::filter(aicc == min(aicc, na.rm = TRUE)) |> 
+    dplyr::filter(aicc == min(aicc, na.rm = TRUE)) |>
     # Enfin, en cas d'égalité
     dplyr::filter(dplyr::row_number() == 1)
 
-summary_tot_GN <- tot_GN |> 
+summary_tot_GN <- tot_GN |>
     # On récupère les variables note et aicc pour comparaison
-    dplyr::select(series, dplyr::starts_with(c("note", "aicc"))) |> 
-    tidyr::pivot_longer(-series, 
-                        names_to = c(".value", "choix_reg_cjo"), 
-                        names_pattern = "(aicc|note)_(\\w+)") |> 
+    dplyr::select(series, dplyr::starts_with(c("note", "aicc"))) |>
+    tidyr::pivot_longer(-series,
+                        names_to = c(".value", "choix_reg_cjo"),
+                        names_pattern = "(aicc|note)_(\\w+)") |>
     dplyr::mutate(
         note = dplyr::case_when(
-            choix_reg_cjo == "Pas_CJO" & is.na(note) ~ Inf, 
+            choix_reg_cjo == "Pas_CJO" & is.na(note) ~ Inf,
             TRUE ~ note
-        ), 
+        ),
         aicc = dplyr::case_when(
-            choix_reg_cjo == "Pas_CJO" & is.na(aicc) ~ Inf, 
+            choix_reg_cjo == "Pas_CJO" & is.na(aicc) ~ Inf,
             TRUE ~ aicc
-        )) |> 
-    dplyr::group_by(series) |> 
+        )) |>
+    dplyr::group_by(series) |>
     # On sélectionne les jeux de régresseur avec la note la plus basse
-    dplyr::filter(note == min(note, na.rm = TRUE)) |> 
+    dplyr::filter(note == min(note, na.rm = TRUE)) |>
     # Puis avec l'aicc le plus élevé
-    dplyr::filter(aicc == min(aicc, na.rm = TRUE)) |> 
+    dplyr::filter(aicc == min(aicc, na.rm = TRUE)) |>
     # Enfin, en cas d'égalité
     dplyr::filter(dplyr::row_number() == 1)
 
@@ -84,7 +84,7 @@ if (nrow(summary_tot_GN) != 135) stop("Il y a un souci dans le nombre de série.
 write.table(x = summary_tot_GN, file = "./Choix CJO/choix_jo_GN.csv", quote = FALSE, sep = ";", row.names = FALSE)
 write.table(x = summary_tot_PN, file = "./Choix CJO/choix_jo_PN.csv", quote = FALSE, sep = ";", row.names = FALSE)
 
-save(liste_BQ_WS, liste_coeff_WS, 
-     tot_GN, tot_PN, 
-     summary_tot_GN, summary_tot_PN, 
+save(liste_BQ_WS, liste_coeff_WS,
+     tot_GN, tot_PN,
+     summary_tot_GN, summary_tot_PN,
      file = "./Choix CJO/output_data_jeu_cjo.RData")

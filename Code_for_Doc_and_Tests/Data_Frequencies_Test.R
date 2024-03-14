@@ -7,7 +7,7 @@
 ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
-# creating a TS object from a data frame 
+# creating a TS object from a data frame
 y_raw <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 6))
 y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9))
 
@@ -17,7 +17,7 @@ y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9
 y12<-ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(1996, 12))
 y12
 
-## comprendre le remplissage 
+## comprendre le remplissage
 y6<-ts(ipi[, "RF3030"], frequency = 6, start = c(1990, 1), end = c(1996, 12))
 y6
 
@@ -30,7 +30,7 @@ y3
 y2<-ts(ipi[, "RF3030"], frequency = 2, start = c(1990, 1), end = c(1996, 12))
 y2
 
-## mise en tableau ou qqch 
+## mise en tableau ou qqch
 
 
 # X13 v3
@@ -52,7 +52,6 @@ sa_TS_v2$final$series
 
 # 1 voir contraintes de longueur min de donnees
 
-# 2 voir qd un module auto n'est pas actif 
+# 2 voir qd un module auto n'est pas actif
 ## ex pas d'estimation de TD
 ## que du airline
-

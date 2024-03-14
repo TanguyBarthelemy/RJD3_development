@@ -1,23 +1,23 @@
 ##### List of scripts on refresh
 
 #### Focusing on spec writing (not yet on reestimation with refreshed spec)
-# Part 1 default spec,  no user def params 
-## start rsa5c : test policies which work 
+# Part 1 default spec,  no user def params
+## start rsa5c : test policies which work
 
 #####################
 library("rjd3toolkit")
 library("rjd3x13")
-# Data  
+# Data
 ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
-# creating a TS object from a data frame 
+# creating a TS object from a data frame
 y_raw <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 6))
 y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9))
-################# LAYERS 
+################# LAYERS
 
 ## Layer 1: spec (1 default 2 customized)
-## 
+##
 # y_raw<-rjd3toolkit::ABS$X0.2.08.10.M
 # spec_x13(name = c("rsa4", "rsa0", "rsa1", "rsa2c", "rsa3", "rsa5c"))
 spec_x13_d<-rjd3x13::spec_x13("rsa0")
@@ -25,7 +25,7 @@ spec_x13_d<-rjd3x13::spec_x13("rsa0")
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 # V2 could be this : sa_x13_d <- rjd3x13::x13(y_raw, "rsa")
 sa_x13_d$estimation_spec
-## Layer 3: result spec 
+## Layer 3: result spec
 sa_x13_d$estimation_spec
 ## Layer 4: refreshed spec : policy: 1 policy per file ?
 current_result_spec <- sa_x13_d$result_spec
@@ -39,7 +39,7 @@ spec_x13_ref <- x13_refresh(current_domain_spec, # point spec to be refreshed
                             current_result_spec, #domain spec (set of constraints)
                             policy = "FixedParameters")
 
-# policy = c("FreeParameters", "Complete", "Outliers_StochasticComponent", 
+# policy = c("FreeParameters", "Complete", "Outliers_StochasticComponent",
 # "Outliers",
 #            "FixedParameters", "FixedAutoRegressiveParameters", "Fixed")
 ####
@@ -49,7 +49,7 @@ spec_x13_ref <- x13_refresh(current_domain_spec, # point spec to be refreshed
 ## Layer 5: estimation with spec from refresh
 sa_x13_ref <- x13(y_new, spec_x13_ref)
 sa_x13_ref$estimation_spec
-## layer 6: result spec from 
+## layer 6: result spec from
 sa_x13_ref$result_spec
 ## Layer 1 ESTIMATION // RESULT // SPEC
 ### REGARIMA part (first part)
@@ -57,8 +57,8 @@ sa_x13_ref$result_spec
 ## comment 1 = what should be touched by which policy and what not
 ## comment 2: understanding of all param purpose (DETAIL HOLES ONLY)
 ##.... + how to change them here, in v2 and in GUI
-## basic 
-#### if refreshed: always untouched  
+## basic
+#### if refreshed: always untouched
 spec_x13_d$regarima$basic$span$type
 sa_x13_d$estimation_spec$regarima$basic$span$type
 sa_x13_d$result_spec$regarima$basic$span$type
@@ -362,9 +362,9 @@ sa_x13_ref$result_spec$regarima$automodel$balanced
 spec_x13_d$regarima$regression$mean
 sa_x13_d$estimation_spec$regarima$regression$mean
 sa_x13_d$result_spec$regarima$regression$mean
-spec_x13_ref$regarima$regression$mean # nothing in spec 
+spec_x13_ref$regarima$regression$mean # nothing in spec
 sa_x13_ref$estimation_spec$regarima$regression$mean
-sa_x13_ref$result_spec$regarima$regression$mean # estimated value only here 
+sa_x13_ref$result_spec$regarima$regression$mean # estimated value only here
 
 spec_x13_d$regarima$regression$check_mean
 sa_x13_d$estimation_spec$regarima$regression$check_mean
@@ -375,8 +375,8 @@ sa_x13_ref$result_spec$regarima$regression$check_mean
 
 
 ## regression$td
-### what is this 
-### how to chaage it 
+### what is this
+### how to chaage it
 spec_x13_d$regarima$regression$td$td
 sa_x13_d$estimation_spec$regarima$regression$td$td
 sa_x13_d$result_spec$regarima$regression$td$td
@@ -671,4 +671,3 @@ sa_x13_d$result_spec$benchmarking$forecast
 spec_x13_ref$benchmarking$forecast
 sa_x13_ref$estimation_spec$benchmarking$forecast
 sa_x13_ref$result_spec$benchmarking$forecast
-
