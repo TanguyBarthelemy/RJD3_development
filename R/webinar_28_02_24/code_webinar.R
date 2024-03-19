@@ -4,7 +4,7 @@
 
 # Objectifs :
 #   - instant reading (load_workspace --> ça c'est fait)
-#   - ✅ creation + saving
+#   - creation + saving
 #   - modification = vrai wrangling (add sa item, replace_sa_item...)
 #   - update_path
 #   - handling metadata (comments)
@@ -112,14 +112,20 @@ remove_all_sa_item(jsap = jsap_from)
 
 ## replace_sa_item() -----------------------------------------------------------
 
-replace_sa_item(jsap = new_jsap, jsa = jsai_from, idx = 1)
+replace_sa_item(
+    jsap = new_jsap,
+    jsa = jsai_from,
+    idx = 1L
+)
 
 
 ## transfer_series() -----------------------------------------------------------
 
-transfer_series(jsap_from = jsap_from,
-                jsap_to = new_jsap,
-                selected_series = c("RF0899", "RF1039", "RF1041"))
+transfer_series(
+    jsap_from = jsap_from,
+    jsap_to = new_jsap,
+    selected_series = c("RF0899", "RF1039", "RF1041")
+)
 
 
 # Initialising a project: update_path ------------------------------------------
