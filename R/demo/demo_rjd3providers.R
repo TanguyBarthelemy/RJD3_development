@@ -84,8 +84,16 @@ rjdemetra3::set_ts(jsap = jsap_xlsx, idx = 1L, y = new_jd3_ts)
 
 
 ## Update_massively the path
-spreadsheet_update_path(jws = jws_path, idx_sap = 2L, new_path = path2_xlsx)
-txt_update_path(jws = jws_path, idx_sap = 1L, new_path = path2_csv)
+txt_update_path(
+    jws = jws_object,
+    new_path = path_csv,
+    idx_sap = 1L
+)
+spreadsheet_update_path(
+    jws = jws_object,
+    new_path = path_xlsx,
+    idx_sap = 2L
+)
 
 
 # Enregistrement du WS

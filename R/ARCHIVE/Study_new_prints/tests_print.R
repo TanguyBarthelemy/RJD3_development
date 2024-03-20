@@ -41,15 +41,15 @@ df_daily <- read.csv2("./data/TS_daily_births_franceM_1968_2020.csv") |>
 frenchCalendar <- national_calendar(days = list(
     fixed_day(7, 14), # Fete nationale
     fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
-    special_day('NEWYEAR'), # Nouvelle année
-    special_day('CHRISTMAS'), # Noël
-    special_day('MAYDAY'), # 1er mai
-    special_day('EASTERMONDAY'), # Lundi de Pâques
-    special_day('ASCENSION'), # attention +39 et pas 40 jeudi ascension
-    special_day('WHITMONDAY'), # Lundi de Pentecôte (1/2 en 2005 a verif)
-    special_day('ASSUMPTION'), # Assomption
-    special_day('ALLSAINTSDAY'), # Toussaint
-    special_day('ARMISTICE'))
+    special_day("NEWYEAR"), # Nouvelle année
+    special_day("CHRISTMAS"), # Noël
+    special_day("MAYDAY"), # 1er mai
+    special_day("EASTERMONDAY"), # Lundi de Pâques
+    special_day("ASCENSION"), # attention +39 et pas 40 jeudi ascension
+    special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
+    special_day("ASSUMPTION"), # Assomption
+    special_day("ALLSAINTSDAY"), # Toussaint
+    special_day("ARMISTICE"))
 )
 
 q <- holidays(frenchCalendar, "1968-01-01", length = length(df_daily$births), type = "All",
@@ -279,15 +279,15 @@ sum_sar <- sarima1 |> summary()
 frenchCalendar <- national_calendar(days = list(
     fixed_day(7, 14), # Fete nationale
     fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
-    special_day('NEWYEAR'), # Nouvelle année
-    special_day('CHRISTMAS'), # Noël
-    special_day('MAYDAY'), # 1er mai
-    special_day('EASTERMONDAY'), # Lundi de Pâques
-    special_day('ASCENSION'), # attention +39 et pas 40 jeudi ascension
-    special_day('WHITMONDAY'), # Lundi de Pentecôte (1/2 en 2005 a verif)
-    special_day('ASSUMPTION'), # Assomption
-    special_day('ALLSAINTSDAY'), # Toussaint
-    special_day('ARMISTICE'))
+    special_day("NEWYEAR"), # Nouvelle année
+    special_day("CHRISTMAS"), # Noël
+    special_day("MAYDAY"), # 1er mai
+    special_day("EASTERMONDAY"), # Lundi de Pâques
+    special_day("ASCENSION"), # attention +39 et pas 40 jeudi ascension
+    special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
+    special_day("ASSUMPTION"), # Assomption
+    special_day("ALLSAINTSDAY"), # Toussaint
+    special_day("ARMISTICE"))
 )
 print(frenchCalendar)
 print_JD3_CALENDAR(frenchCalendar)

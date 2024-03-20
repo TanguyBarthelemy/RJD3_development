@@ -181,35 +181,35 @@ day<-special_day("CHRISTMAS", offset = 1, weight = 0.8, validity = list(start="2
 frenchCalendar <- national_calendar(days = list(
   fixed_day(7, 14), # Bastille Day
   fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
-  special_day('NEWYEAR'),
-  special_day('CHRISTMAS'),
-  special_day('MAYDAY'),
-  special_day('EASTERMONDAY'),
-  special_day('ASCENSION'), #
-  special_day('WHITMONDAY'),
-  special_day('ASSUMPTION'),
-  special_day('ALLSAINTSDAY'),
-  special_day('ARMISTICE'))
+  special_day("NEWYEAR"),
+  special_day("CHRISTMAS"),
+  special_day("MAYDAY"),
+  special_day("EASTERMONDAY"),
+  special_day("ASCENSION"), #
+  special_day("WHITMONDAY"),
+  special_day("ASSUMPTION"),
+  special_day("ALLSAINTSDAY"),
+  special_day("ARMISTICE"))
 )
 frenchCalendar
 class(frenchCalendar)
 
 MyCalendar <- national_calendar(list(
     fixed_day(7,21),
-     special_day('NEWYEAR'),
-     special_day('CHRISTMAS'),
+     special_day("NEWYEAR"),
+     special_day("CHRISTMAS"),
      fixed_week_day(7, 2, 3), # second Wednesday of July
-     special_day('MAYDAY'),
+     special_day("MAYDAY"),
      easter_day(1), # Easter Monday
      easter_day(-2), # Good Friday
      fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
      single_day("2001-09-11"), # appearing once
-     special_day('ASCENSION'),
+     special_day("ASCENSION"),
      easter_day(offset=60,julian=FALSE, weight=0.5, validity = list(start="2000-01-01", end = "2020-12-01")),  # Corpus Christi
-     special_day('WHITMONDAY'),
-     special_day('ASSUMPTION'),
-     special_day('ALLSAINTSDAY'),
-     special_day('ARMISTICE')))
+     special_day("WHITMONDAY"),
+     special_day("ASSUMPTION"),
+     special_day("ALLSAINTSDAY"),
+     special_day("ARMISTICE")))
 
 MyCalendar
 class(MyCalendar)
@@ -219,9 +219,9 @@ class(MyCalendar)
 
 ### Composite calendar
 ###### how are the weights defined !!
-Belgium <- national_calendar(list(special_day('NEWYEAR'),fixed_day(7,21)))
+Belgium <- national_calendar(list(special_day("NEWYEAR"),fixed_day(7,21)))
 Belgium
-France <- national_calendar(list(special_day('NEWYEAR'),fixed_day(7,14)))
+France <- national_calendar(list(special_day("NEWYEAR"),fixed_day(7,14)))
 France
 composite_calendar<- weighted_calendar(list(France,Belgium), weights = c(1,2))
 
@@ -254,30 +254,30 @@ class(regs_td)
 ## taking holidays into account
 BE <- national_calendar(list(
      fixed_day(7,21),
-     special_day('NEWYEAR'),
-     special_day('CHRISTMAS'),
-     special_day('MAYDAY'),
-     special_day('EASTERMONDAY'),
-     special_day('ASCENSION'),
-     special_day('WHITMONDAY'),
-     special_day('ASSUMPTION'),
-    special_day('ALLSAINTSDAY'),
-     special_day('ARMISTICE')))
+     special_day("NEWYEAR"),
+     special_day("CHRISTMAS"),
+     special_day("MAYDAY"),
+     special_day("EASTERMONDAY"),
+     special_day("ASCENSION"),
+     special_day("WHITMONDAY"),
+     special_day("ASSUMPTION"),
+    special_day("ALLSAINTSDAY"),
+     special_day("ARMISTICE")))
 calendar_td(BE, 12, c(1980,1), 240, holiday=7, groups=c(1,1,1,2,2,3,0), contrasts = FALSE)
 
 
 ### Long-term means of a calendar
 BE <- national_calendar(list(
     fixed_day(7,21),
-    special_day('NEWYEAR'),
-    special_day('CHRISTMAS'),
-    special_day('MAYDAY'),
-    special_day('EASTERMONDAY'),
-    special_day('ASCENSION'),
-    special_day('WHITMONDAY'),
-    special_day('ASSUMPTION'),
-    special_day('ALLSAINTSDAY'),
-    special_day('ARMISTICE')))
+    special_day("NEWYEAR"),
+    special_day("CHRISTMAS"),
+    special_day("MAYDAY"),
+    special_day("EASTERMONDAY"),
+    special_day("ASCENSION"),
+    special_day("WHITMONDAY"),
+    special_day("ASSUMPTION"),
+    special_day("ALLSAINTSDAY"),
+    special_day("ARMISTICE")))
 class(BE)
 lt<-long_term_mean(BE,12,
     groups = c(1,1,1,1,1,0,0),
@@ -576,15 +576,15 @@ spec_x13_d<-rjd3x13::spec_x13("rsa5c")
 ### create a calendar
 BE <- national_calendar(list(
     fixed_day(7,21),
-    special_day('NEWYEAR'),
-    special_day('CHRISTMAS'),
-    special_day('MAYDAY'),
-    special_day('EASTERMONDAY'),
-    special_day('ASCENSION'),
-    special_day('WHITMONDAY'),
-    special_day('ASSUMPTION'),
-    special_day('ALLSAINTSDAY'),
-    special_day('ARMISTICE')))
+    special_day("NEWYEAR"),
+    special_day("CHRISTMAS"),
+    special_day("MAYDAY"),
+    special_day("EASTERMONDAY"),
+    special_day("ASCENSION"),
+    special_day("WHITMONDAY"),
+    special_day("ASSUMPTION"),
+    special_day("ALLSAINTSDAY"),
+    special_day("ARMISTICE")))
 ## put into a context
 my_context<-modelling_context(calendars = list(cal=BE))
 class(my_context)
@@ -602,15 +602,15 @@ y_raw<-ABS$X0.2.09.10.M
 ### create a calendar
 BE <- national_calendar(list(
     fixed_day(7,21),
-    special_day('NEWYEAR'),
-    special_day('CHRISTMAS'),
-    special_day('MAYDAY'),
-    special_day('EASTERMONDAY'),
-    special_day('ASCENSION'),
-    special_day('WHITMONDAY'),
-    special_day('ASSUMPTION'),
-    special_day('ALLSAINTSDAY'),
-    special_day('ARMISTICE')))
+    special_day("NEWYEAR"),
+    special_day("CHRISTMAS"),
+    special_day("MAYDAY"),
+    special_day("EASTERMONDAY"),
+    special_day("ASCENSION"),
+    special_day("WHITMONDAY"),
+    special_day("ASSUMPTION"),
+    special_day("ALLSAINTSDAY"),
+    special_day("ARMISTICE")))
 ## put into a context
 my_context<-modelling_context(calendars = list(cal=BE))
 ## create a specification

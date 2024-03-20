@@ -333,15 +333,15 @@ sa_x13_v3_refresh <- x13(y_new, refreshed_spec)
 frenchCalendar <- national_calendar(days = list(
     fixed_day(7, 14), # Bastille Day
     fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
-    special_day('NEWYEAR'),
-    special_day('CHRISTMAS'),
-    special_day('MAYDAY'),
-    special_day('EASTERMONDAY'),
-    special_day('ASCENSION'), #
-    special_day('WHITMONDAY'),
-    special_day('ASSUMPTION'),
-    special_day('ALLSAINTSDAY'),
-    special_day('ARMISTICE'))
+    special_day("NEWYEAR"),
+    special_day("CHRISTMAS"),
+    special_day("MAYDAY"),
+    special_day("EASTERMONDAY"),
+    special_day("ASCENSION"), #
+    special_day("WHITMONDAY"),
+    special_day("ASSUMPTION"),
+    special_day("ALLSAINTSDAY"),
+    special_day("ARMISTICE"))
 )
 
 # frCal_2005 <- weighted_calendar(list(frenchCalendar), 0.5)

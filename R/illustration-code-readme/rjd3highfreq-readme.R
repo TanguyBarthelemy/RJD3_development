@@ -64,15 +64,15 @@ box(col = col_grid)
 frenchCalendar <- rjd3toolkit::national_calendar(days = list(
     rjd3toolkit::fixed_day(7, 14), # Bastille Day
     rjd3toolkit::fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
-    rjd3toolkit::special_day('NEWYEAR'), # Nouvelle année
-    rjd3toolkit::special_day('MAYDAY'), # 1st may
-    rjd3toolkit::special_day('EASTERMONDAY'), # Lundi de Pâques
-    rjd3toolkit::special_day('ASCENSION'), # Jeudi ascension
-    rjd3toolkit::special_day('WHITMONDAY'), # Lundi de Pentecôte
-    rjd3toolkit::special_day('ASSUMPTION'), # Assomption
-    rjd3toolkit::special_day('ALLSAINTSDAY'), # Toussaint
-    rjd3toolkit::special_day('ARMISTICE'), # End of 1st WW
-    rjd3toolkit::special_day('CHRISTMAS')) # Noël
+    rjd3toolkit::special_day("NEWYEAR"), # Nouvelle année
+    rjd3toolkit::special_day("MAYDAY"), # 1st may
+    rjd3toolkit::special_day("EASTERMONDAY"), # Lundi de Pâques
+    rjd3toolkit::special_day("ASCENSION"), # Jeudi ascension
+    rjd3toolkit::special_day("WHITMONDAY"), # Lundi de Pentecôte
+    rjd3toolkit::special_day("ASSUMPTION"), # Assomption
+    rjd3toolkit::special_day("ALLSAINTSDAY"), # Toussaint
+    rjd3toolkit::special_day("ARMISTICE"), # End of 1st WW
+    rjd3toolkit::special_day("CHRISTMAS")) # Noël
 )
 
 # Calendar regressor matrix
