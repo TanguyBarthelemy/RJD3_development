@@ -50,28 +50,28 @@ ipi <- ts(fichier[,-1], start = date_deb,
                frequency = 12)
 
 library("rjd3modelling")
-frenchCalendar <- calendar.new()
+french_calendar <- calendar.new()
 #  fonctions vs GUI
 # fixed day in gui idem (avantage = code)
-calendar.fixedday(frenchCalendar, month =  5, day = 8)
+calendar.fixedday(french_calendar, month =  5, day = 8)
 # ester related : idem GUI, ici 60 jours apres = pentecote
-calendar.easter(frenchCalendar,
+calendar.easter(french_calendar,
                 offset = 60)
 # holiday = special day in GUI
-calendar.holiday(frenchCalendar, "NEWYEAR")
+calendar.holiday(french_calendar, "NEWYEAR")
 
 # french calendar complet
-frenchCalendar <- calendar.new()
-calendar.holiday(frenchCalendar, "NEWYEAR")
-calendar.holiday(frenchCalendar, "EASTERMONDAY") # Lundi de Pâques
-calendar.holiday(frenchCalendar, "MAYDAY") # 1er mai
-calendar.fixedday(frenchCalendar, 5, 8)
-calendar.holiday(frenchCalendar, "WHITMONDAY") # Lundi de Pentecôte
-calendar.fixedday(frenchCalendar, 7, 14)
-calendar.holiday(frenchCalendar, "ASSUMPTION") # Assomption
-calendar.holiday(frenchCalendar, "ALLSAINTDAY") # Toussaint
-calendar.holiday(frenchCalendar, "ARMISTICE")
-str(frenchCalendar)
+french_calendar <- calendar.new()
+calendar.holiday(french_calendar, "NEWYEAR")
+calendar.holiday(french_calendar, "EASTERMONDAY") # Lundi de Pâques
+calendar.holiday(french_calendar, "MAYDAY") # 1er mai
+calendar.fixedday(french_calendar, 5, 8)
+calendar.holiday(french_calendar, "WHITMONDAY") # Lundi de Pentecôte
+calendar.fixedday(french_calendar, 7, 14)
+calendar.holiday(french_calendar, "ASSUMPTION") # Assomption
+calendar.holiday(french_calendar, "ALLSAINTDAY") # Toussaint
+calendar.holiday(french_calendar, "ARMISTICE")
+str(french_calendar)
 # Q comment voir contenu de french calendar
 # Les régresseurs J0 peuvent être créés à partir de 2 fonctions
 # htd() qui permet de les créer à partir d’un calendrier spécifique
@@ -81,7 +81,7 @@ groups <- c(1, 2, 3, 4, 5, 6, 0)
 frequency <- 12
 start <- c(2000,1)
 # fonction htd : a partir d'un calendrier specifique
-wkd <- htd(frenchCalendar, frequency = frequency, start = start, length = 12*35,
+wkd <- htd(french_calendar, frequency = frequency, start = start, length = 12*35,
            groups = groups)
 # transfo en time series
 wkd <- ts(wkd, start = start, frequency = frequency)
@@ -90,7 +90,7 @@ wkd <- ts(wkd, start = start, frequency = frequency)
 groups <- c(1, 1, 1, 1, 1, 0, 0)
 frequency <- 12
 start <- c(2000,1)
-wkd <- htd(frenchCalendar, frequency = frequency, start = start, length = 12*35,
+wkd <- htd(french_calendar, frequency = frequency, start = start, length = 12*35,
            groups = groups)
 wkd <- ts(wkd, start = start, frequency = frequency)
 # avec la fonction built in "td" fondee sur calendrier par defaut _def
@@ -123,20 +123,20 @@ leap_year(frequency = 12)
 # construction des differents jeux
 frequency <- 12
 start <- c(1990,1)
-end = c(2030, 1)
-length = (end[1] - start[1]) * 12 + end[2] - start[2]
+end <- c(2030, 1)
+length <- (end[1] - start[1]) * 12 + end[2] - start[2]
 
 ly <- leap_year(frequency = frequency, start = start,
                 end = end)
-reg6 <- htd(frenchCalendar, frequency = frequency, start = start, length = length,
+reg6 <- htd(french_calendar, frequency = frequency, start = start, length = length,
             groups = c(1, 2, 3, 4, 5, 6, 0))
-reg5 <- htd(frenchCalendar, frequency = frequency, start = start, length = length,
+reg5 <- htd(french_calendar, frequency = frequency, start = start, length = length,
             groups = c(1, 2, 3, 4, 5, 0, 0))
-reg3 <- htd(frenchCalendar, frequency = frequency, start = start, length = length,
+reg3 <- htd(french_calendar, frequency = frequency, start = start, length = length,
             groups = c(1, 2, 2, 2, 2, 0, 0))
-reg2 <- htd(frenchCalendar, frequency = frequency, start = start, length = length,
+reg2 <- htd(french_calendar, frequency = frequency, start = start, length = length,
             groups = c(1, 1, 1, 1, 1, 2, 0))
-reg1 <- htd(frenchCalendar, frequency = frequency, start = start, length = length,
+reg1 <- htd(french_calendar, frequency = frequency, start = start, length = length,
             groups = c(1, 1, 1, 1, 1, 0, 0))
 
 str(reg1)
@@ -242,9 +242,9 @@ extract_sa_cmp <- function(x, comp = "sa", forecast = FALSE){
   jres <- jmodel$result@internal$getResults()
   jres <- new(Class = "X13_java", internal = jres)
   if (forecast) {
-    s_forecast = "_f"
+    s_forecast <- "_f"
   } else {
-    s_forecast = ""
+    s_forecast <- ""
   }
   RJDemetra:::result(jres,
                      sprintf("decomposition.%s_cmp%s",

@@ -309,7 +309,7 @@ ggplot(df_daily.spec) +
 ################ setting calendar variables
 
 ## ordre (anyway) : fixedday 2 easter 3 holiday
-frenchCalendar <- national_calendar(days = list(
+french_calendar <- national_calendar(days = list(
     fixed_day(7, 14), # Fete nationale
     fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
     special_day("NEWYEAR"), # Nouvelle année
@@ -323,11 +323,11 @@ frenchCalendar <- national_calendar(days = list(
     special_day("ARMISTICE"))
 )
 
-frCal_2005 <- weighted_calendar(list(frenchCalendar), 0.5)
-final_cal <- chained_calendar(frenchCalendar, frCal_2005, break_date = "2005-05-01")
+frCal_2005 <- weighted_calendar(list(french_calendar), 0.5)
+final_cal <- chained_calendar(french_calendar, frCal_2005, break_date = "2005-05-01")
 
 #### pb "type" and non working days in daily data ?
-q <- holidays(frenchCalendar, "1968-01-01", length = length(df_daily$births), type = "All",
+q <- holidays(french_calendar, "1968-01-01", length = length(df_daily$births), type = "All",
                              nonworking = 7L)
 ## j"hesite entre "Skip" et "All"
 ## ici revoir R doc pour ordre

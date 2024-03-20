@@ -16,8 +16,12 @@ y2 <- JohnsonJohnson
 
 # Afficher toutes les méthodes existantes --------------------------------------
 
-rjdv2 <- cbind(pkg = "RJDemetra",
-               fct = getNamespace("RJDemetra") |> getNamespaceExports()) |>
+rjdv2 <- cbind(
+    pkg = "RJDemetra",
+    fct = "RJDemetra" |>
+        getNamespace() |>
+        getNamespaceExports()
+    ) |>
     as.data.frame() |>
     subset(substr(fct, 1, 1) != ".")
 rownames(rjdv2) <- NULL

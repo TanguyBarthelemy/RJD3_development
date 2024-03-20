@@ -66,7 +66,7 @@ ggplot(df_ch) +
 library(rjd3toolkit)
 
 # Define a national calendar
-frenchCalendar <- national_calendar(days = list(
+french_calendar <- national_calendar(days = list(
   fixed_day(7, 14), # Bastille Day
   fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victory Day
   special_day("NEWYEAR"),
@@ -80,8 +80,8 @@ frenchCalendar <- national_calendar(days = list(
   special_day("ARMISTICE"))
 )
 # Generrate calendar regressors
-q<-holidays(frenchCalendar, "1968-01-01", length = length(df_daily$births), type="All",
-            nonworking = as.integer(7))
+q<-holidays(french_calendar, "1968-01-01", length = length(df_daily$births), type="All",
+            nonworking = 7L)
 
 
 # -------------------------------------------------------------------------------------------------

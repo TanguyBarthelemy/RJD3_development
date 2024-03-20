@@ -330,7 +330,7 @@ sa_x13_v3_refresh <- x13(y_new, refreshed_spec)
 ################ setting calendar variables
 
 ## ordre (anyway) : fixedday 2 easter 3 holiday
-frenchCalendar <- national_calendar(days = list(
+french_calendar <- national_calendar(days = list(
     fixed_day(7, 14), # Bastille Day
     fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
     special_day("NEWYEAR"),
@@ -344,12 +344,12 @@ frenchCalendar <- national_calendar(days = list(
     special_day("ARMISTICE"))
 )
 
-# frCal_2005 <- weighted_calendar(list(frenchCalendar), 0.5)
-# final_cal <- chained_calendar(frenchCalendar, frCal_2005, break_date = "2005-05-01")
+# frCal_2005 <- weighted_calendar(list(french_calendar), 0.5)
+# final_cal <- chained_calendar(french_calendar, frCal_2005, break_date = "2005-05-01")
 
 ### For daily data
 #### pb "type" and non working days in daily data ?
-q <- rjd3toolkit::holidays(frenchCalendar, "1968-01-01", end="2023-12-01", type = "All",
+q <- rjd3toolkit::holidays(french_calendar, "1968-01-01", end="2023-12-01", type = "All",
                            nonworking = 7L)
 
 ### For monthly and quarterly data, aggregation by groups
@@ -358,7 +358,7 @@ q <- rjd3toolkit::holidays(frenchCalendar, "1968-01-01", end="2023-12-01", type 
 
 # In v3 flexible definition of groups and reference day
 ## holidays as treated as the reference day which doesn't have to be a Sunday
-td_regs<- calendar_td(frenchCalendar,12, start=c(2000,1), length = 100,
+td_regs<- calendar_td(french_calendar,12, start=c(2000,1), length = 100,
                       groups = c(1, 1, 2, 2, 0, 3, 4),
                       # 1: Mondays = Tuesdays, 2 :Wednesdays=Thursdays
                       # 0: Fridays= reference for contrasts
@@ -427,7 +427,7 @@ calendar.holiday(fr_cal, "ARMISTICE")
 calendar.holiday(fr_cal, "CHRISTMAS")
 
 
-holidays(fr_cal, "2020-12-24", 10,single = T)
+holidays(fr_cal, "2020-12-24", 10,single = TRUE)
 s <- ts(0, start = 2020, end = c(2020, 11), frequency = 12)
 # Trading-days regressors (each day has a different effect, sunday as contrasts)
 td_reg <- htd(fr_cal, s = s, groups = c(1, 2, 3, 4, 5, 6, 0))
@@ -469,7 +469,7 @@ print(system.time(
 #       user    system        elapsed (in seconds)
 #     158.74        0.23      160.49
 
-print(j$likelihood )
+print(j$likelihood)
 print(r)
 
 
