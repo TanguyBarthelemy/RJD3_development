@@ -43,7 +43,7 @@ Currently working on (details in TOPICS..)
 
 - Documenting new v3 features and Holes (Anna)
 
-- Chapter (appendix on output names and defintions)
+- Chapter (appendix on output names and definitions)
 
 
 ### R packages 

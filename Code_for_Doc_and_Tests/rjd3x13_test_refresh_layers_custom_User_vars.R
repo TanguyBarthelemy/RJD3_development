@@ -12,6 +12,34 @@
 #####################
 library("rjd3toolkit")
 library("rjd3x13")
+
+x13_refresh<-function(spec, refspec=NULL, policy=c("FreeParameters", "Complete", "Outliers_StochasticComponent", "Outliers", "FixedParameters", "FixedAutoRegressiveParameters", "Fixed", "Current"), period=0, start=NULL, end=NULL){
+    policy=match.arg(policy)
+    if (!inherits(spec, "JD3_X13_SPEC"))
+        stop("Invalid specification type")
+    jspec<-.r2jd_spec_x13(spec)
+    if (is.null(refspec)){
+        jrefspec<-.jcall("jdplus/x13/base/api/x13/X13Spec", "Ljdplus/x13/base/api/x13/X13Spec;", "fromString", "rsa4")
+
+    }else{
+        if (!inherits(refspec, "JD3_X13_SPEC"))
+            stop("Invalid specification type")
+        jrefspec<-.r2jd_spec_x13(refspec)
+    }
+    if (policy == 'Current'){
+        if (end[2] == period) end<-c(end[1]+1, 1) else end<-c(end[1], end[2]+1)
+        jdom<-rjd3toolkit::.jdomain(period, start, end)
+    }
+    else if (policy %in% c("Outliers","Outliers_StochasticComponent"))
+        jdom<-rjd3toolkit::.jdomain(period, NULL, start)
+    else
+        jdom<-jdom<-rjd3toolkit::.jdomain(0, NULL, NULL)
+    jnspec<-.jcall("jdplus/x13/base/r/X13", "Ljdplus/x13/base/api/x13/X13Spec;", "refreshSpec", jspec, jrefspec, jdom, policy)
+    return (.jd2r_spec_x13(jnspec))
+}
+
+
+
 # Data  :
 ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
@@ -38,14 +66,14 @@ sa_x13_d<-rjd3x13::x13(y_raw,x13_spec_d)
 sa_x13_d$estimation_spec # copy of the used spec = x13_spec_d
 
 ## building a refreshed spec (show results)
-### question on X11 part: everthing will be redone unless udefined params
+### question on X11 part: everything will be redone unless undefined params
 current_result_spec <- sa_x13_d$result_spec
 current_result_spec
 current_domain_spec <- sa_x13_d$estimation_spec
 sa_x13_d$estimation_spec
 
 # question : why declare period ? is start compulsory ?
-# issue: declaring period doen't work ?
+# issue: declaring period doesn't work ?
 start(y_new)
 # v1
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
@@ -75,14 +103,23 @@ x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
 # obj here : clear issues: solved for webinar
 
 ### 1 Outliers (period not needed): defining span were outliers won't be detected
+# x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+#                             current_domain_spec, #domain spec (set of constraints)
+#                             policy = "Outliers")
+#                             #period=12, # use of this ? not needed ?
+#                             start=c(2011,5)) # start is excluded
+#                             #end=c(2020,3)) # end is included
+
+
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
                             current_domain_spec, #domain spec (set of constraints)
-                            policy = "Outliers")
-                            #period=12, # use of this ? not needed ?
-                            #start=c(2011,5), # start is excluded
-                            #end=c(2020,3)) # end is included
-current_domain_spec
-current_result_spec
+                            policy = "Outliers",period=12, end=c(2022,1)) # start is excluded
+
+#end=c(2020,3)) # end is included
+
+
+# current_domain_spec
+# current_result_spec
 x13_spec_ref # outlier detection span shouldn't be all
 
 # estimation with spec from refresh
@@ -121,12 +158,11 @@ sa_x13_ref$result$preprocessing$description$variables ## ?
 #defining span were outliers won't be detected
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
                             current_domain_spec, #domain spec (set of constraints)
-                            policy = "Outliers_StochasticComponent",
+                            policy = "Outliers",
                             period=12, # use of this ? not needed ?
-                            start=c(1999,1),
-                            end=c(2019,12)) # juste pb print
-current_domain_spec
-current_result_spec
+                            start=c(2022,1)) # juste pb print
+# current_domain_spec
+# current_result_spec
 x13_spec_ref # outlier detection span shouldn't be all
 
 # mettre 1 veleur extreme avant le start pour voir si AO detecte
@@ -185,12 +221,15 @@ sa_x13<- x13(y_raw, spec_x13_1) # AO (200,6) and TD (2000,7)
 # refreshing the specification
 current_result_spec <- sa_x13$result_spec
 current_domain_spec <- sa_x13$estimation_spec
+
+### test current
 spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
                             current_domain_spec, #domain spec (set of constraints)
                             policy = "Current",
                             period = 12,
-                            start= c(198,4),
-                            end=c(2008,12)) # should put every new point in AO from there
+                            start= c(2022,1))
+
+                            # end=c(2022,1)) # should put every new point in AO from there
 spec_x13_ref # all parameters are fixed
 # 2nd estimation with refreshed specification
 sa_x13_ref <- x13(y_new, spec_x13_ref)
