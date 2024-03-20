@@ -6,6 +6,7 @@
 # Chargement des packages ------------------------------------------------------
 
 library("rjd3highfreq")
+library("ggplot2")
 
 
 # Chargement data --------------------------------------------------
@@ -14,7 +15,8 @@ df_daily <- read.csv("./data/TS_daily_births_franceM_1968_2020.csv", sep = ";") 
     dplyr::mutate(
         log_births = log(births),
         date = as.Date(date)
-    )
+    ) |>
+    head(8000)
 
 # This dataframe contains the following variables:
 # date       = from 01/01/1968 to 12/31/2000
@@ -64,22 +66,30 @@ ggplot(df_ch) +
 library("rjd3toolkit")
 library("rjd3highfreq")
 
+# Names for calendar regressors
+calendar_regressors <- c(
+    "Bastille_day", "Victory_day", "NEWYEAR", "CHRISTMAS", "MAYDAY",
+    "EASTERMONDAY", "ASCENSION", "WHITMONDAY", "ASSUMPTION", "ALLSAINTSDAY",
+    "ARMISTICE"
+)
+
 # Define a national calendar
 french_calendar <- national_calendar(
     days = list(
-        fixed_day(7, 14), # Bastille Day
-        fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victory Day
-        special_day("NEWYEAR"),
-        special_day("CHRISTMAS"),
-        special_day("MAYDAY"),
-        special_day("EASTERMONDAY"),
-        special_day("ASCENSION"),
-        special_day("WHITMONDAY"),
-        special_day("ASSUMPTION"),
-        special_day("ALLSAINTSDAY"),
-        special_day("ARMISTICE")
+        Bastille_day = fixed_day(7, 14), # Bastille Day
+        Victory_day = fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victory Day
+        NEWYEAR = special_day("NEWYEAR"),
+        CHRISTMAS = special_day("CHRISTMAS"),
+        MAYDAY = special_day("MAYDAY"),
+        EASTERMONDAY = special_day("EASTERMONDAY"),
+        ASCENSION = special_day("ASCENSION"),
+        WHITMONDAY = special_day("WHITMONDAY"),
+        ASSUMPTION = special_day("ASSUMPTION"),
+        ALLSAINTSDAY = special_day("ALLSAINTSDAY"),
+        ARMISTICE = special_day("ARMISTICE")
     )
 )
+
 # Generrate calendar regressors
 q <- holidays(
     calendar = french_calendar,
@@ -94,10 +104,13 @@ q <- holidays(
 # (4) Pre-adjustement with extended fractional Airline Model
 # -------------------------------------------------------------------------------------------------
 
+library("dplyr")
+
 # Reg-Arima estimation
 
-pre.mult <- rjd3highfreq::fractionalAirlineEstimation(
+pre.mult_bl <- fractionalAirlineEstimation(
     y = df_daily$log_births,
+    y_time = seq.Date(from = as.Date("1968-01-01"), length.out = length(df_daily$log_births), by = "days"),
     x = q, # q= calendar regressors matrix
     periods = c(7, 365.25),
     ndiff = 2,
@@ -108,6 +121,20 @@ pre.mult <- rjd3highfreq::fractionalAirlineEstimation(
     precision = 1e-9,
     approximateHessian = TRUE
 )
+pre.mult_log <- fractionalAirlineEstimation(
+    y = df_daily$births,
+    y_time = seq.Date(from = as.Date("1968-01-01"), length.out = length(df_daily$log_births), by = "days"),
+    x = q, # q= calendar regressors matrix
+    periods = c(7, 365.25),
+    ndiff = 2,
+    ar = FALSE,
+    mean = FALSE,
+    outliers = c("ao", "wo"), # type of outliers detected
+    criticalValue = 0, # automatically set
+    precision = 1e-9,
+    approximateHessian = TRUE,
+    log = TRUE
+)
 
 # Retrieving estimated outlier & calendar effects (coefs, se, student)
 
@@ -115,39 +142,17 @@ regs_mult <- data.frame(
     "Variable" = pre.mult$model$variables,
     "Coef"     = pre.mult$model$b,
     "Coef_SE"  = sqrt(diag(pre.mult$model$bcov))
-) %>% mutate(Tstat = round(Coef / Coef_SE, 2))
-
-# adding names for calendar regressors
-calendar_regressors <- c(
-    "Bastille_day", "Victory_day", "NEWYEAR", "CHRISTMAS", "MAYDAY",
-    "EASTERMONDAY", "ASCENSION", "WHITMONDAY", "ASSUMPTION", "ALLSAINTSDAY",
-    "ARMISTICE"
-)
-
-regs_mult$Variable[1:11] <- calendar_regressors
-
-
-
-# Formatting outliers dates
-nb_outliers <- nrow(regs_mult) - length(calendar_regressors)
-
-outliers <- regs_mult$Variable[(length(calendar_regressors) + 1):nrow(regs_mult)]
-outliers_names <- substr(outliers, 1, 2)
-outliers_position <- substr(outliers, 4, 9)
-outliers_dates <- as.character(df_daily$date[as.numeric(outliers_position)])
-outliers_renamed <- paste0(outliers_names, ".", outliers_dates)
-regs_mult$Variable[(length(calendar_regressors) + 1):nrow(regs_mult)] <- outliers_renamed
-regs_mult
+) |> mutate(Tstat = round(Coef / Coef_SE, 2))
 
 
 # Retrieving estimated MA parameters (coefs, se, student)
 
 MA_coeffs <- data.frame(
-    "MA parameter" = c("MA1", "DOW"),
+    "MA parameter" = c("Theta(1)", paste0("Theta(period = ", pre.mult$model$periods, ")")),
     "Coef" = pre.mult$estimation$parameters,
     "Coef_SE" = sqrt(diag(pre.mult$estimation$covariance)),
     check.names = FALSE
-) %>%
+) |>
     mutate(Tstat = Coef / Coef_SE)
 
 # -------------------------------------------------------------------------------------------------
@@ -166,7 +171,7 @@ amb.dow <- rjd3highfreq::fractionalAirlineDecomposition(
 
 # Extract DOY pattern from DOW-adjusted linearised data
 amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
-    amb.dow$decomposition$sa, # DOW-adjusted linearised data
+    y = amb.dow$decomposition$sa, # DOW-adjusted linearised data
     period = 365.2425, # DOY pattern
     sn = FALSE,
     stde = FALSE,
@@ -178,14 +183,14 @@ amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
 
 
 # calendar component
-df_daily <- df_daily %>%
+df_daily <- df_daily |>
     mutate(cal.cmp = exp(pre.mult$model$xreg[, 1:length(calendar_regressors)] %*%
                              pre.mult$model$b[1:length(calendar_regressors)]))
 
 # final dow, doy and sa
-df_daily <- df_daily %>%
-    mutate(amb.dow = exp(amb.dow$decomposition$s)) %>%
-    mutate(amb.doy = exp(amb.doy$decomposition$s)) %>%
+df_daily <- df_daily |>
+    mutate(amb.dow = exp(amb.dow$decomposition$s)) |>
+    mutate(amb.doy = exp(amb.doy$decomposition$s)) |>
     mutate(amb.sa = births / (cal.cmp * amb.dow * amb.doy))
 
 head(df_daily)
