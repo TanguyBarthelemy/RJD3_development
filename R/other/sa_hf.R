@@ -71,7 +71,7 @@ q <- holidays(
 
 
 f <- function(
-    # input time series
+        # input time series
     y,
     # Different periods
     periods,
