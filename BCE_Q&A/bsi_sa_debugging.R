@@ -80,13 +80,16 @@ m
 loanshhcc_factors <- m$result$final$d16
 loanshhcc_direct_sa<-m$result$final$d11final
 loanshhcc_sa_verif<-(loanshhcc/loanshhcc_factors)
-identical(loanshhcc_sa_verif,loanshhcc_direct_sa)
+all.equal(loanshhcc_sa_verif,loanshhcc_direct_sa, tolerance=10**-6)
+
 diff<-loanshhcc_sa_verif-loanshhcc_direct_sa #ok
 
 # final stocks series for consumer credit
 rjd_odhh = round(nsa_loanshhcc / loanshhcc_factors)
 
 ### check
+all.equal(nsa_loanshhcc,loanshhcc, tolerance=10**-4)
+
 diff_raw<-nsa_loanshhcc-loanshhcc
 
 # plotting all 3 series
