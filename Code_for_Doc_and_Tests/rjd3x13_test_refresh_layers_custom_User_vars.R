@@ -14,7 +14,7 @@ library("rjd3toolkit")
 library("rjd3x13")
 
 x13_refresh<-function(spec, refspec=NULL, policy=c("FreeParameters", "Complete", "Outliers_StochasticComponent", "Outliers", "FixedParameters", "FixedAutoRegressiveParameters", "Fixed", "Current"), period=0, start=NULL, end=NULL){
-    policy=match.arg(policy)
+    policy <- match.arg(policy)
     if (!inherits(spec, "JD3_X13_SPEC"))
         stop("Invalid specification type")
     jspec<-.r2jd_spec_x13(spec)
@@ -35,7 +35,7 @@ x13_refresh<-function(spec, refspec=NULL, policy=c("FreeParameters", "Complete",
     else
         jdom<-jdom<-rjd3toolkit::.jdomain(0, NULL, NULL)
     jnspec<-.jcall("jdplus/x13/base/r/X13", "Ljdplus/x13/base/api/x13/X13Spec;", "refreshSpec", jspec, jrefspec, jdom, policy)
-    return (.jd2r_spec_x13(jnspec))
+    return(.jd2r_spec_x13(jnspec))
 }
 
 

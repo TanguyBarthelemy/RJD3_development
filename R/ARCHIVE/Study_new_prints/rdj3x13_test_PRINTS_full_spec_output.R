@@ -432,7 +432,7 @@ plot(iv3)
 regs_td <- td(s = y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
               contrasts = TRUE)
 
-frenchCalendar <- national_calendar(days = list(
+french_calendar <- national_calendar(days = list(
     fixed_day(7, 14), # Fete nationale
     fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
     special_day("NEWYEAR"), # Nouvelle année
@@ -446,11 +446,11 @@ frenchCalendar <- national_calendar(days = list(
     special_day("ARMISTICE"))
 )
 
-weighted_cal <- weighted_calendar(list(frenchCalendar, frenchCalendar), c(0.1, 0.5))
+weighted_cal <- weighted_calendar(list(french_calendar, french_calendar), c(0.1, 0.5))
 
-final_cal <- chained_calendar(frenchCalendar, weighted_cal, break_date = "2005-05-01")
+final_cal <- chained_calendar(french_calendar, weighted_cal, break_date = "2005-05-01")
 
-reg_fr <- calendar_td(frenchCalendar,
+reg_fr <- calendar_td(french_calendar,
                       frequency = 12, start = c(1990, 12), length = 500)
 
 ### Creating context for all external regressors -------------------------------

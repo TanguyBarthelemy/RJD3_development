@@ -283,10 +283,10 @@ spec_tramoseats_ref <- tramoseats_refresh(current_result_spec, # point spec to b
 start(y_raw)
 end(y_raw)
 end(y_new)
-period=12
-start=c(2020,12)
-end=c(2022,9)
-n<-period*(end[1]-start[1])+end[2]-start[2]
+period <- 12
+start <- c(2020,12)
+end <- c(2022,9)
+n<-period * (end[1]-start[1])+end[2]-start[2]
 n
 
 # policy = c("FreeParameters",Complete", "Outliers_StochasticComponent", "Outliers",

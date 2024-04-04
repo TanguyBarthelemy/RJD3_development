@@ -61,7 +61,7 @@ box(col = col_grid)
 ## Préparation du calendrier ---------------------------------------------------
 
 # French calendar
-frenchCalendar <- rjd3toolkit::national_calendar(days = list(
+french_calendar <- rjd3toolkit::national_calendar(days = list(
     rjd3toolkit::fixed_day(7, 14), # Bastille Day
     rjd3toolkit::fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
     rjd3toolkit::special_day("NEWYEAR"), # Nouvelle année
@@ -77,7 +77,7 @@ frenchCalendar <- rjd3toolkit::national_calendar(days = list(
 
 # Calendar regressor matrix
 cal_reg <- rjd3toolkit::holidays(
-    calendar = frenchCalendar,
+    calendar = french_calendar,
     "1968-01-01", length = nrow(df_daily), type = "All", nonworking = 7L)
 colnames(cal_reg) <- c("14th_july", "8th_may", "1st_jan", "1st_may",
                  "east_mon", "asc", "pen_mon",

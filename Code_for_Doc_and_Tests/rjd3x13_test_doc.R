@@ -89,9 +89,9 @@ sa_x13_d$user_defined$y_b # NULL !!
 
 rjd3toolkit::ABS$X0.2.09.10.M
 regarima_outliers(rjd3toolkit::ABS$X0.2.09.10.M, order=c(1,1,1), seasonal=c(0,1,1),
-                  mean=F,
+                  mean=FALSE,
                   X=NULL, X.td=NULL,
-                  ao=T, ls=F, tc=T, so=T, cv=4)
+                  ao=TRUE, ls=FALSE, tc=TRUE, so=TRUE, cv=4)
 
 ## pb avec declaration modeles arima order=c(1,1,1)? declared as integer later
 ## order =
@@ -221,37 +221,37 @@ s2 #RSA2c ??
 ### issue faut il un nom de spec ou un spec object amibgu
 # nom ambigu des examples ente specs regarima et specs X13 (même si tout marche)
 ## spec object useful for mofis
-sp = x13_spec("rg5c")
-y = rjd3toolkit::ABS$X0.2.09.10.M
+sp <- x13_spec("rg5c")
+y <- rjd3toolkit::ABS$X0.2.09.10.M
 fast_x13(y, spec = "rsa5c") # works
 x13(y, spec = "rsa5c") # works ok but issue = no print ? or no automatic print ?
-sp = rjd3toolkit::add_outlier(sp,
+sp <- rjd3toolkit::add_outlier(sp,
                               type = c("AO"), c("2015-01-01", "2010-01-01"))
-sp =  rjd3toolkit::set_transform(
+sp <- rjd3toolkit::set_transform(
     rjd3toolkit::set_tradingdays(
         rjd3toolkit::set_easter(sp, enabled = FALSE),
         option = "workingdays"
     ),
     fun = "None"
 )
-sp = set_x11(sp,
+sp <- set_x11(sp,
              henderson.filter = 13)
 fast_x13(y, spec = sp)
 
 ### pb =  modif de la spec et notamment de la partie x11
 
 # In the estimation functions you can diectly use a specification name (string)
-y = rjd3toolkit::ABS$X0.2.09.10.M
+y <- rjd3toolkit::ABS$X0.2.09.10.M
 fast_x13(y,"rsa3")
 x13(y,"rsa5c") # issue: no print
 fast_regarima(y,"rg0") # print exists
 regarima(y,"rg3") # issue: no print
 #'
 #' If you want to customize a specification you have to create a specification object first
-sp = x13_spec("rsa5c")
-sp = rjd3toolkit::add_outlier(sp,
+sp <- x13_spec("rsa5c")
+sp <- rjd3toolkit::add_outlier(sp,
                   type = c("AO"), c("2015-01-01", "2010-01-01"))
-# sp =  rjd3toolkit::set_transform(
+# sp <-  rjd3toolkit::set_transform(
 #'    rjd3toolkit::set_tradingdays(
 #'      rjd3toolkit::set_easter(sp, enabled = FALSE),
 #'     option = "workingdays"
@@ -259,7 +259,7 @@ sp = rjd3toolkit::add_outlier(sp,
 #'   fun = "None"
 #' )
 x13(y,spec=sp)
-sp = set_x11(sp, henderson.filter = 13)
+sp <- set_x11(sp, henderson.filter = 13)
 fast_x13(y, spec = sp)
 
 ################ set X13 spec: how to create one

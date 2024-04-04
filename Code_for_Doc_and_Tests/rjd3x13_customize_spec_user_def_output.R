@@ -210,12 +210,8 @@ m<-rjd3x13::x13(y_raw,x13_spec_d)
 #### Add user def regressors (which are not pre defined in JD+ like outliers or ramps)
 
 ####### STEP 1: create (or import) the regressors
-<<<<<<< HEAD
-## here regressors = 1 intervention variable + 6 calendar regressors 
-=======
 
 ## here regressors = 1 intervention variable + 6 calendar regressors
->>>>>>> 370125fecc08c65a068765650fca007234942372
 
 # create intervention variables (see doc in rjd3toolkit)
 iv1<-intervention_variable(s=y_raw,
@@ -260,62 +256,51 @@ x13_spec_d<- rjd3toolkit::set_tradingdays(x13_spec_d,
                                             "r.Thursday","r.Friday","r.Saturday"),
                              test = "None")
 
-<<<<<<< HEAD
 ###### idem with user defined group names: here 3 groups (useful to mimic GUI)
 x13_spec_d<-rjd3x13::x13_spec("rsa3")
 x13_spec_d<- rjd3toolkit::set_tradingdays(x13_spec_d,
-                                          option = "UserDefined", 
+                                          option = "UserDefined",
                                           uservariable=c("regcal.Monday",
                                                           "regcal.Tuesday",
                                                          "regcal.Wednesday",
                                                          "r.Thursday","r.Friday",
-                                                         "regcal2.Saturday"),  
+                                                         "regcal2.Saturday"),
                                           test = "None")
 
-## to match this groups the context would have to be 
+## to match this groups the context would have to be
 my_regressors<-list(regcal=list(Monday=regs_td[,1],Tuesday=regs_td[,2], Wednesday=regs_td[,3]),
-                    Thursday=regs_td[,4],Friday= regs_td[,5], 
+                    Thursday=regs_td[,4],Friday= regs_td[,5],
                     regcal2=list(Saturday=regs_td[,6]),
                     reg1=iv1)
 ## if group not named : "r" by defautl
 
 my_context<-modelling_context(variables=my_regressors)
-# check your variables 
+# check your variables
 rjd3toolkit::.r2jd_modellingcontext(my_context)$getTsVariableDictionary()
 
-####### estimate WITH context (3 groups)  
+####### estimate WITH context (3 groups)
 
 sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d, context = my_context)
 sa_x13_d$result$preprocessing
 
 ## here iv not added : oK
 
-# print the spec and see changes 
+# print the spec and see changes
 x13_spec_d$regarima$regression$users
 
 ### Alain : is it possible to add directly an MTS of external regressors ?
-=======
-# print the spec and see changes
-print(x13_spec_d)
-
-### Alain : is it possible to add directly an MTS of external regressors
->>>>>>> 370125fecc08c65a068765650fca007234942372
 
 ### add intervention variables to spec, choosing the component to allocate the effects to TREND
 x13_spec_d<- add_usrdefvar(x13_spec_d,group = "r", name="reg1",label="iv1", regeffect="Trend")
 x13_spec_d$regarima$regression$users
 
-<<<<<<< HEAD
 ## in add_usrdefvar:3 params : group, name, label (what will be dispalyed)
 ## user defined group name (to mimic GUI)
 x13_spec_d<- add_usrdefvar(x13_spec_d,group = "r", name="reg1",label="iv1", regeffect="Trend")
 x13_spec_d$regarima$regression$users
 
 
-####### STEP 4: estimate WITH context  
-=======
 ####### STEP 4: estimate WITH context
->>>>>>> 370125fecc08c65a068765650fca007234942372
 
 sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d, context = my_context)
 sa_x13_d$result$preprocessing

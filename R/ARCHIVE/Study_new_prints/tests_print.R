@@ -38,7 +38,7 @@ df_daily <- read.csv2("./data/TS_daily_births_franceM_1968_2020.csv") |>
 
 ### PRE TREATMENT: fractional Airline model ------------------------------------
 
-frenchCalendar <- national_calendar(days = list(
+french_calendar <- national_calendar(days = list(
     fixed_day(7, 14), # Fete nationale
     fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
     special_day("NEWYEAR"), # Nouvelle année
@@ -52,7 +52,7 @@ frenchCalendar <- national_calendar(days = list(
     special_day("ARMISTICE"))
 )
 
-q <- holidays(frenchCalendar, "1968-01-01", length = length(df_daily$births), type = "All",
+q <- holidays(french_calendar, "1968-01-01", length = length(df_daily$births), type = "All",
               nonworking = 7L)
 
 pre.mult <- fractionalAirlineEstimation(
@@ -276,7 +276,7 @@ sum_sar <- sarima1 |> summary()
 
 # Classe JD3_CALENDARDEFINITION ??
 # Classe JD3_CALENDAR
-frenchCalendar <- national_calendar(days = list(
+french_calendar <- national_calendar(days = list(
     fixed_day(7, 14), # Fete nationale
     fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
     special_day("NEWYEAR"), # Nouvelle année
@@ -289,16 +289,16 @@ frenchCalendar <- national_calendar(days = list(
     special_day("ALLSAINTSDAY"), # Toussaint
     special_day("ARMISTICE"))
 )
-print(frenchCalendar)
-print_JD3_CALENDAR(frenchCalendar)
+print(french_calendar)
+print_JD3_CALENDAR(french_calendar)
 
 # Classe JD3_WEIGHTEDCALENDAR
-weighted_cal <- weighted_calendar(list(frenchCalendar, frenchCalendar), c(0.5, 0.5))
+weighted_cal <- weighted_calendar(list(french_calendar, french_calendar), c(0.5, 0.5))
 print(weighted_cal)
 print_JD3_WEIGHTEDCALENDAR(weighted_cal)
 
 # Classe JD3_CHAINEDCALENDAR
-final_cal <- chained_calendar(frenchCalendar, weighted_cal, break_date = "2005-05-01")
+final_cal <- chained_calendar(french_calendar, weighted_cal, break_date = "2005-05-01")
 print(final_cal)
 print_JD3_CHAINEDCALENDAR(final_cal)
 
