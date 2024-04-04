@@ -41,9 +41,11 @@ Currently working on (details in TOPICS..)
 
 - GUI chap on SA and modelling features (Tanguy)
 
+    -
+
 - Documenting new v3 features and Holes (Anna)
 
-- Chapter (appendix on output names and definitions)
+- Chapter (appendix on output names and definitions) (Anna and Tanguy)
 
 
 ### R packages 
