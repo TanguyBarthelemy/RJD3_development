@@ -49,7 +49,7 @@ To do
 
 
 
-### JD+ online Documentation 
+## JD+ online Documentation 
 
 - GUI chap on SA and modelling features (Tanguy)
 
@@ -58,7 +58,7 @@ To do
 - Chapter (appendix on output names and definitions) (Anna and Tanguy)
 
 
-### R packages 
+## R packages 
 
 - create a readme for rjdemetra page (Anna): nothing visible ?
 
@@ -78,29 +78,10 @@ HF SA wrapping functions
 - refresh 
 - seasonal filters and seasonal sigma 
 
-### GUI tests
 
-maj tests and issues on HF post reu stace 
-
-
-
-### STACE-TSAUG meeting in April 
-
-list of what we would like to bring 
-
-## TOPICS to work on 
-
-### JD+ online doc 
-
-### R packages V3
-
-#### MAP of the R ecosystem
-
-cf slides June, do smth better 
-
-#### Tests and doc (old features)
 
 #### New features (test and doc)
+
 MAIN 
 (Anna)
 -	Pré-identification des gros outliers avant la sélection log/level (impact limité)
@@ -111,13 +92,6 @@ MAIN
 -	Sélection automatique des variables de jours ouvrables (amélioration dans Tramo et nouveauté dans X13, solution identique dans les deux algorithmes)
 
 (tramo and or x13 ?)
-
-- Refresh in R 
-
-all ok 
-left:
-- current policy (AO)
-- time span definition 
 
 
 #### Habillage (Appearance)
