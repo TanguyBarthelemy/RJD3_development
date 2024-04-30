@@ -25,7 +25,9 @@ All JD+ related tools : GUI and R packages
 R packages 
 
 - dvlpt 
+
 - test 
+
 - doc (functions, readme)
 
 GUI 
@@ -36,6 +38,16 @@ GUI
 ## Now page
 
 Currently working on (details in TOPICS..)
+
+### Last Meeting BXLS 29 mai
+
+To do 
+
+- Bilan et perspectives 
+
+- Habillage / orga 
+
+
 
 ### JD+ online Documentation 
 
@@ -49,6 +61,7 @@ Currently working on (details in TOPICS..)
 ### R packages 
 
 - create a readme for rjdemetra page (Anna): nothing visible ?
+
 - readme and examples for each package (Both of us): almost ok 
 
 #### Dvlpt 
@@ -88,7 +101,7 @@ cf slides June, do smth better
 #### Tests and doc (old features)
 
 #### New features (test and doc)
-
+MAIN 
 (Anna)
 -	Pré-identification des gros outliers avant la sélection log/level (impact limité)
 (rjdx13 and tramo seats...)
@@ -173,15 +186,16 @@ see what is M stl
 
 #### rjd3revisions
 
-
 ### R packages V2
 
 #### RJDemetra 
 
-add : porint model span 
+add : print model span 
 
 
 #### rjdqa 
+
+REVIEW
 
 - resuscitate ? reparametrer ?
 alain : tableau supplementaitre
