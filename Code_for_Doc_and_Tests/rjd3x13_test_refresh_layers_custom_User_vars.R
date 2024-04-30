@@ -13,31 +13,31 @@
 library("rjd3toolkit")
 library("rjd3x13")
 
-x13_refresh<-function(spec, refspec=NULL, policy=c("FreeParameters", "Complete", "Outliers_StochasticComponent", "Outliers", "FixedParameters", "FixedAutoRegressiveParameters", "Fixed", "Current"), period=0, start=NULL, end=NULL){
-    policy <- match.arg(policy)
-    if (!inherits(spec, "JD3_X13_SPEC"))
-        stop("Invalid specification type")
-    jspec<-.r2jd_spec_x13(spec)
-    if (is.null(refspec)){
-        jrefspec<-.jcall("jdplus/x13/base/api/x13/X13Spec", "Ljdplus/x13/base/api/x13/X13Spec;", "fromString", "rsa4")
-
-    }else{
-        if (!inherits(refspec, "JD3_X13_SPEC"))
-            stop("Invalid specification type")
-        jrefspec<-.r2jd_spec_x13(refspec)
-    }
-    if (policy == 'Current'){
-        if (end[2] == period) end<-c(end[1]+1, 1) else end<-c(end[1], end[2]+1)
-        jdom<-rjd3toolkit::.jdomain(period, start, end)
-    }
-    else if (policy %in% c("Outliers","Outliers_StochasticComponent"))
-        jdom<-rjd3toolkit::.jdomain(period, NULL, start)
-    else
-        jdom<-jdom<-rjd3toolkit::.jdomain(0, NULL, NULL)
-    jnspec<-.jcall("jdplus/x13/base/r/X13", "Ljdplus/x13/base/api/x13/X13Spec;", "refreshSpec", jspec, jrefspec, jdom, policy)
-    return(.jd2r_spec_x13(jnspec))
-}
-
+# x13_refresh<-function(spec, refspec=NULL, policy=c("FreeParameters", "Complete", "Outliers_StochasticComponent", "Outliers", "FixedParameters", "FixedAutoRegressiveParameters", "Fixed", "Current"), period=0, start=NULL, end=NULL){
+#     policy <- match.arg(policy)
+#     if (!inherits(spec, "JD3_X13_SPEC"))
+#         stop("Invalid specification type")
+#     jspec<-.r2jd_spec_x13(spec)
+#     if (is.null(refspec)){
+#         jrefspec<-.jcall("jdplus/x13/base/api/x13/X13Spec", "Ljdplus/x13/base/api/x13/X13Spec;", "fromString", "rsa4")
+#
+#     }else{
+#         if (!inherits(refspec, "JD3_X13_SPEC"))
+#             stop("Invalid specification type")
+#         jrefspec<-.r2jd_spec_x13(refspec)
+#     }
+#     if (policy == 'Current'){
+#         if (end[2] == period) end<-c(end[1]+1, 1) else end<-c(end[1], end[2]+1)
+#         jdom<-rjd3toolkit::.jdomain(period, start, end)
+#     }
+#     else if (policy %in% c("Outliers","Outliers_StochasticComponent"))
+#         jdom<-rjd3toolkit::.jdomain(period, NULL, start)
+#     else
+#         jdom<-jdom<-rjd3toolkit::.jdomain(0, NULL, NULL)
+#     jnspec<-.jcall("jdplus/x13/base/r/X13", "Ljdplus/x13/base/api/x13/X13Spec;", "refreshSpec", jspec, jrefspec, jdom, policy)
+#     return(.jd2r_spec_x13(jnspec))
+# }
+#
 
 
 # Data  :
@@ -49,9 +49,9 @@ y_raw <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2021,12
 y_new <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022,9))
 
 # start(y_raw)
-# end(y_raw)
+end(y_raw)
 # start(y_new)
-# end(y_new)
+end(y_new)
 
 
 ## make refresh period long too see re-estimations
@@ -72,6 +72,8 @@ current_result_spec
 current_domain_spec <- sa_x13_d$estimation_spec
 sa_x13_d$estimation_spec
 
+
+############################ TESTING POLICIES
 # question : why declare period ? is start compulsory ?
 # issue: declaring period doesn't work ?
 start(y_new)
@@ -97,26 +99,31 @@ x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
                             current_domain_spec, #domain spec (set of constraints)
                             policy = "FreeParameters")
 
-############################## policies relying on span
+############################## policies relying on span !!!
 
 
-# obj here : clear issues: solved for webinar
-
-### 1 Outliers (period not needed): defining span were outliers won't be detected
-# x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-#                             current_domain_spec, #domain spec (set of constraints)
-#                             policy = "Outliers")
-#                             #period=12, # use of this ? not needed ?
-#                             start=c(2011,5)) # start is excluded
-#                             #end=c(2020,3)) # end is included
-
+### 1 Outliers
+# period : has to be specified
+# defining start from where outliers will be re detected (till the end of the series anyway)
 
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
                             current_domain_spec, #domain spec (set of constraints)
-                            policy = "Outliers",period=12, end=c(2022,1)) # start is excluded
+                            policy = "Outliers", start=c(2011,5),
+                            period=12)
 
-#end=c(2020,3)) # end is included
+### update 08/2/24 : start needed, period needed, end unused
 
+### 2  "Outliers_StochasticComponent"
+# period : has to be specified
+# defining start from where outliers will be re detected (till the end of the series anyway)
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                            current_domain_spec, #domain spec (set of constraints)
+                            policy = "Outliers_StochasticComponent", start=c(2011,5),
+                            period=12)
+
+x13_spec_ref$regarima$outlier$span
+
+### update 80/2/24 : start needed, period needed, end unused  : ok
 
 # current_domain_spec
 # current_result_spec
@@ -131,39 +138,6 @@ sa_x13_ref$result$preprocessing$description$variables ## ?
 # sa_x13_ref$result$preprocessing$description$variables
 # sa_x13_ref$result$preprocessing$estimation$res
 
-## obj 1 recreate the traditional last outliers:
-# do I need start and end  ?
-x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "Outliers",
-                            period=12, # use of this ? not needed ?
-                            start=c(2000,1), # start is excluded
-                            end=c(2019,12)) # end is included
-
-current_domain_spec
-current_result_spec
-x13_spec_ref # outlier detection span shouldn't be all
-
-# estimation with spec from refresh
-sa_x13_ref <- x13(y_new, x13_spec_ref)
-sa_x13_ref$estimation_spec
-sa_x13_ref$result_spec
-sa_x13_ref$result$preprocessing
-sa_x13_ref$result$preprocessing$description$variables ## ?
-# sa_x13_ref$result$preprocessing$description$variables
-# sa_x13_ref$result$preprocessing$estimation$res
-
-
-### 2 Outliers_StochasticComponent (period not needed):
-#defining span were outliers won't be detected
-x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "Outliers",
-                            period=12, # use of this ? not needed ?
-                            start=c(2022,1)) # juste pb print
-# current_domain_spec
-# current_result_spec
-x13_spec_ref # outlier detection span shouldn't be all
 
 # mettre 1 veleur extreme avant le start pour voir si AO detecte
 # need modif 1 valeur dans une s temp, extraire
@@ -183,17 +157,32 @@ sa_x13_ref$result$preprocessing$description$variables ## ?
 ####################################
 
 
-### 3 Current (period not needed):
-#defining span were outliers won't be detected
+### 3 Current
+#defining span were on which AO (as intervention variables) will be added
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
                             current_domain_spec, #domain spec (set of constraints)
                             policy = "Current",
-                            period=12, # use of this ? not needed ?
-                            start=c(1990,1),
-                            end=c(2022,01)) # juste pb print
-current_domain_spec
-current_result_spec
-x13_spec_ref # outlier detection span shouldn't be all
+                            period=12, # needed
+                            start=c(2012,1),
+                            end=c(2012,5))
+
+# update 08/04 : start AND end needed, AO can be introduced not only at the end
+## where are the AO as intervention variables in the spec
+x13_spec_ref$regarima$regression$interventions
+
+
+# can you identify current in the spec  ? see AO's ?
+
+
+# ## current should behave like "FreeParameters: NO in fact fixed to be checked !!
+x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+                                current_domain_spec, #domain spec (set of constraints)
+                                policy = "FreeParameters")
+
+x13_spec_ref
+# here outliers not enabled
+
+
 
 # estimation with spec from refresh
 sa_x13_ref <- x13(y_new, x13_spec_ref)
@@ -205,6 +194,10 @@ sa_x13_ref$result$preprocessing$description$variables
 sa_x13_ref$result$preprocessing$description$variables ## ?
 # sa_x13_ref$result$preprocessing$description$variables
 # sa_x13_ref$result$preprocessing$estimation$res
+
+
+
+
 
 #################################### end default test spec ####################
 # example for git issue : CURRENT

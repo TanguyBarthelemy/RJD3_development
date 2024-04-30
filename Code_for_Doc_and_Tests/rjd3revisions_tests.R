@@ -25,14 +25,16 @@ df<-data.frame(rev_date = c(rep("2022-07-31",4), rep("2022-08-31",4),
 library("rjd3revisions")
 
 vintages<-create_vintages(df, periodicity = 4)
+vintages$revisions$vertical_view
 revisions<-get_revisions(vintages, gap = 2)
-revisions$diagonal_view
+revisions$horizontal_view
+revisions$
 rslt<-revision_analysis(vintages, gap = 1, view = "diagonal", n.releases = 3)
 
 
 # Finally to create a report and get a summary of the results, you can use
 
-get_report(rslt)
+render_report(rslt, output_path = out"html_document")
 
 summary(rslt)
 print(rslt)
