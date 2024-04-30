@@ -1,0 +1,43 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+## SA for HF data: rjd3highfreq wrapping
+
+<!-- companion to code sa_HF.r -->
+
+function name suggestion : sa_hf_amb ?
+
+### Output structure 
+
+- not clear  ?
+```{r}
+out$preprocessing$estimation$parameters
+```
+
+- missing 
+
+component calendar ? (ok in final but no model)
+
+pb distinguish calender from other user defined regression effects
+
+- superfluous  
+
+what is component_mean ?
+
+- objects disposition: no obvious pb, I have to test it more 
+
+### Print 
+
+- series span
+- model span (makes no sense here)
+- transfo yes/ no
+- user def calendar / outliers / regressors (see how to do this)
+- outlier detection params 
+    - span (add a function/param so that the ser can customize this)
+    - type 
+    - critical value
+    - coeffs 
+    -

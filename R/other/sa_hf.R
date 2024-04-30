@@ -55,7 +55,7 @@ french_calendar <- national_calendar(
     )
 )
 
-# Generrate calendar regressors
+# Generate calendar regressors
 q <- holidays(
     calendar = french_calendar,
     start = "1968-01-01",
@@ -204,3 +204,6 @@ out <- f(
     log = TRUE,
     y_time = seq.Date(from = as.Date("1968-01-01"), length.out = length(df_daily$log_births), by = "days")
 )
+
+
+############# TESTS

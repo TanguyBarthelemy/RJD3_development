@@ -16,7 +16,7 @@ Beware to have
 
 - define products and steps unambiguously
 
-- highlight was has to be done for up coming presentations (Stace, Tsaug meetings...)
+- highlight what has to be done for up coming presentations (Stace, Tsaug meetings...)
 
 ### Scope 
 
@@ -43,15 +43,21 @@ Currently working on (details in TOPICS..)
 
 - Documenting new v3 features and Holes (Anna)
 
-- Chapter (appendix on output names and definitions)
+- Chapter (appendix on output names and definitions) (Anna and Tanguy)
 
 
 ### R packages 
 
-- create a readme for rjdemetra page (Anna): ok 
-- readme and examples for each package (Both of us)
-- generate github pages for all packages (together): 
-reste : 
+- create a readme for rjdemetra page (Anna): nothing visible ?
+- readme and examples for each package (Both of us): almost ok 
+
+#### Dvlpt 
+
+dans print "model" in rjd3x13 and tramoseats 
+add series span and model span
+(present only in print(spec))
+
+HF SA wrapping functions 
 
 #### Tests
 
@@ -63,18 +69,11 @@ reste :
 
 maj tests and issues on HF post reu stace 
 
-## Next Events 
 
-What do we expect ? what do we bring ?
-
-### NBB working session fev
-
-### Webinar 28 fev
-
-- be ready on all remaining ABS questions 
 
 ### STACE-TSAUG meeting in April 
 
+list of what we would like to bring 
 
 ## TOPICS to work on 
 
@@ -112,8 +111,6 @@ left:
 
 - pay attention to title, readme
 
-- github pages
-
 - bring v3 pages to RJDemetra level !!!
 
 - doc functions, examples 
@@ -122,7 +119,7 @@ left:
 
 #### Orga repos and naming issues 
 
-- orga github: regrouper tout le R v2 et v3
+- orga github: regrouper tout le R v2 et v3 ? non 
 
 - ajouter au readme
 
