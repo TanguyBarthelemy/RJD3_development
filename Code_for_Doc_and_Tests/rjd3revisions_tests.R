@@ -34,7 +34,7 @@ rslt<-revision_analysis(vintages, gap = 1, view = "diagonal", n.releases = 3)
 
 # Finally to create a report and get a summary of the results, you can use
 
-render_report(rslt, output_path = out"html_document")
+# render_report(rslt, output_format = "html_document")
 
 summary(rslt)
 print(rslt)

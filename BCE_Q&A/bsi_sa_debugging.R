@@ -3,7 +3,7 @@ library(rjd3x13)
 
 
 # table with metadata and aliases for BSI seasonally adjusted series
-sa_table = read.csv('DaTA/BCE/sa_table.csv', sep=';')
+sa_table <- read.csv('DaTA/BCE/sa_table.csv', sep=';')
 View(sa_table)
 sa_table$sa_ser_key <- gsub("\\.N\\.", "\\.Y\\.", gsub("\\.I\\.", "\\.1\\.", sa_table$ser_key))
 ## reminder
@@ -49,8 +49,8 @@ loanshhcc <- time_series_list[['LOANSHHCC']]
 ts.plot(loanshhcc)
 
 # remove rows with missing values
-nsa_loanshhcc = ts(nsa_stocks_df[['LOANSHHCC']][277:514], frequency = 12, start = c(2003, 1), end = c(2022,10))
-sa_loanshhcc = ts(sa_stocks_df[['LOANSHHCC']][277:514], frequency = 12, start = c(2003, 1), end = c(2022,10))
+nsa_loanshhcc <- ts(nsa_stocks_df[['LOANSHHCC']][277:514], frequency = 12, start = c(2003, 1), end = c(2022,10))
+sa_loanshhcc <- ts(sa_stocks_df[['LOANSHHCC']][277:514], frequency = 12, start = c(2003, 1), end = c(2022,10))
 
 # creating a spec from default
 x13_spec_d <- rjd3x13::x13_spec("rsa3")
@@ -79,13 +79,13 @@ m
 # read factors
 loanshhcc_factors <- m$result$final$d16
 loanshhcc_direct_sa<-m$result$final$d11final
-loanshhcc_sa_verif<-(loanshhcc/loanshhcc_factors)
+loanshhcc_sa_verif<-loanshhcc/loanshhcc_factors
 all.equal(loanshhcc_sa_verif,loanshhcc_direct_sa, tolerance=10**-6)
 
 diff<-loanshhcc_sa_verif-loanshhcc_direct_sa #ok
 
 # final stocks series for consumer credit
-rjd_odhh = round(nsa_loanshhcc / loanshhcc_factors)
+rjd_odhh <- round(nsa_loanshhcc / loanshhcc_factors)
 
 ### check
 all.equal(nsa_loanshhcc,loanshhcc, tolerance=10**-4)

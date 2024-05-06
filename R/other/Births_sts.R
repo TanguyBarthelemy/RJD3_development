@@ -18,7 +18,7 @@ library(ggplot2)
 library(dplyr)
 
 
-df_daily = readRDS("./data/Births.RDS")
+df_daily <- readRDS("./data/Births.RDS")
 
 # This dataframe contains the following variables:
 # date       = from 01/01/1968 to 12/31/2000
@@ -239,11 +239,11 @@ add_equation(eq_m,"wn")
 data<-as.numeric(pre.mult$model$linearized)
 
 ## collect computing times
-start = Sys.time()
+start <- Sys.time()
 
 rslt <- rjd3sts::estimate(bsm, data, marginal = FALSE,
                           concentrated = TRUE, initialization = "SqrtDiffuse")
-end = Sys.time()
+end <- Sys.time()
 
 computing-time <- round(as.numeric(difftime(end, start, units = "secs")), 2)
 

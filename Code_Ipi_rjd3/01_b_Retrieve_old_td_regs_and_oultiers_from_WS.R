@@ -28,7 +28,7 @@ regs_cjo_N_1 <- data.frame(series = get_all_names(sap), selected_N_1 = character
 
 
 for (k in seq_len(count(sap))) { #
-    k=1
+    k <- 1
     cat(paste0("Série ", k, "/", count(sap), "\n")) ##
 
     sai_mod <- sap |>
