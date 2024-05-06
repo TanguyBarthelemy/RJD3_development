@@ -25,7 +25,9 @@ All JD+ related tools : GUI and R packages
 R packages 
 
 - dvlpt 
+
 - test 
+
 - doc (functions, readme)
 
 GUI 
@@ -37,58 +39,68 @@ GUI
 
 Currently working on (details in TOPICS..)
 
-### JD+ online Documentation 
+### Last Meeting BXLS 29 mai
 
-- GUI chap on SA and modelling features (Tanguy)
+To do 
+
+- Bilan et perspectives 
+
+- Habillage / orga 
+    - rename: comm 
+    - stace shop + comm
+    - Logos 
+
+- CRAN assessment 
+    - rjdworkspace 
+    - RJDCruncher 
+
+## JD+ online Documentation 
+
+- GUI chap on SA and modelling features (Tanguy): refining...
 
 - Documenting new v3 features and Holes (Anna)
 
-- Chapter (appendix on output names and definitions) (Anna and Tanguy)
+- clean up 
+
+- Chapter (appendix on output names and definitions) (Anna and Tanguy): minimalist 
 
 
-### R packages 
+## R packages 
 
-- create a readme for rjdemetra page (Anna): nothing visible ?
+### Habillage général
+
+- maj readme avec lien install java
+
+- vignettes (1 ou 2)
+
+- Logos
+
+- CRAN assessment 
+
 - readme and examples for each package (Both of us): almost ok 
 
-#### Dvlpt 
+- bring v3 pages to RJDemetra level !!!
+
+- doc functions, examples 
+
+- vignettes by topic
+
+### Dvlpt 
 
 dans print "model" in rjd3x13 and tramoseats 
+
 add series span and model span
 (present only in print(spec))
 
-HF SA wrapping functions 
-
 #### Tests
 
-- mode
-- refresh 
-- seasonal filters and seasonal sigma 
+- mode (verifier formules)
 
-### GUI tests
-
-maj tests and issues on HF post reu stace 
-
-
-
-### STACE-TSAUG meeting in April 
-
-list of what we would like to bring 
-
-## TOPICS to work on 
-
-### JD+ online doc 
-
-### R packages V3
-
-#### MAP of the R ecosystem
-
-cf slides June, do smth better 
-
-#### Tests and doc (old features)
+- seasonal filters and seasonal sigma (anna: bilan)
 
 #### New features (test and doc)
 
+MAIN GUI + R
 (Anna)
 -	Pré-identification des gros outliers avant la sélection log/level (impact limité)
 (rjdx13 and tramo seats...)
@@ -99,45 +111,23 @@ cf slides June, do smth better
 
 (tramo and or x13 ?)
 
-- Refresh in R 
-
-all ok 
-left:
-- current policy (AO)
-- time span definition 
-
-
-#### Habillage (Appearance)
-
-- pay attention to title, readme
-
-- bring v3 pages to RJDemetra level !!!
-
-- doc functions, examples 
-
-- vignettes by topic
-
-#### Orga repos and naming issues 
-
-- orga github: regrouper tout le R v2 et v3 ? non 
-
-- ajouter au readme
-
-#### Prints
-
 - change "airline" display when printing a spec 
 
 #### rjd3x13
+
+- change "airline" display when printing a spec 
 
 bias correction : non existing ? see technical doc
 
 #### rjd3tramoseats 
 
+- change "airline" display when printing a spec 
+
 (look into Java: Tanguy)
 - bias correction ?
 
 
-#### rjdemetra3 
+#### rjdemetra3 => rjd3workspace
 
 everything up to date ? 
 readme
@@ -155,6 +145,10 @@ Alain started rjd3report
 
 #### rjd3toolkit 
 
+Issue:
+- rmove holiday param
+
+DOC
 - trigonometric regressors
 
 - sarima estimation
@@ -173,15 +167,16 @@ see what is M stl
 
 #### rjd3revisions
 
-
 ### R packages V2
 
 #### RJDemetra 
 
-add : porint model span 
+add : print model span 
 
 
 #### rjdqa 
+
+REVIEW
 
 - resuscitate ? reparametrer ?
 alain : tableau supplementaitre
