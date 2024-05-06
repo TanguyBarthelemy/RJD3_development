@@ -7,8 +7,6 @@
 
 # La PR n'a pas été accepté donc il faut installer mon package rjd3toolkit
 
-remotes::install_github("TanguyBarthelemy/rjd3toolkit")
-
 library("rjd3highfreq")
 library("ggplot2")
 library("rjd3toolkit")
@@ -23,7 +21,7 @@ df_daily <- read.csv("./data/TS_daily_births_franceM_1968_2020.csv", sep = ";") 
     )
 
 # This dataframe contains the following variables:
-# date       = from 01/01/1968 to 12/31/2000
+# date       = from 01/01/1968 to 12/31/2020
 # births     = daily number of French Births
 # log_births = daily number of French Births in log
 # day        = indicates the day of the week, D1=Monday...D7=Sunday
@@ -69,7 +67,6 @@ q <- holidays(
 
 # Muti AMB decomposition with extended fractional Airline Model ----------------
 
-
 f <- function(
         # input time series
     y,
@@ -94,8 +91,8 @@ f <- function(
     nfcasts = 0,
     # To perform a multiplicative model
     log = FALSE,
-    y_time = NULL
-) {
+    y_time = NULL) {
+
     if (is.null(y_time) && !is.null(x)) {
         y_time <- rownames(x)
     }
@@ -107,7 +104,7 @@ f <- function(
         periods = periods,
         ndiff = ndiff,
         ar = ar,
-        mean = mean,
+        # mean = mean,
         outliers = outliers,
         criticalValue = criticalValue,
         precision = precision,

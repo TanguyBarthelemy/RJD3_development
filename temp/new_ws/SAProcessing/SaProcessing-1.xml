@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<informationSet xmlns="ec/tss.core">
+    <item name="metadata">
+        <subset>
+            <item name="@timestamp">
+                <string>2024-03-29T18:23:38.3840339</string>
+            </item>
+        </subset>
+    </item>
+    <item name="domainspecs">
+        <subset/>
+    </item>
+</informationSet>
