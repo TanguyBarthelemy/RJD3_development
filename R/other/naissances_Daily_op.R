@@ -478,7 +478,7 @@ data.frame(
 regs_mult <- regs_mult |> mutate(across(where(is.numeric), ~ round(., 2)))
 
 regs_mult
-resultats_cal <- regs_mult[1:length(colnames(regs_cjo)), ]
+resultats_cal <- regs_mult[seq_along(colnames(regs_cjo)), ]
 resultats_cal
 resultats_out <- regs_mult[(length(colnames(regs_cjo)) + 1):nrow(regs_mult), ]
 resultats_out

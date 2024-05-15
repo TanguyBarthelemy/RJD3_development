@@ -158,8 +158,8 @@ amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
 
 #calendar component
 df_daily<- df_daily%>%
-  mutate(cal.cmp = exp(pre.mult$model$xreg[, 1:length(calendar_regressors)] %*%
-                         pre.mult$model$b[1:length(calendar_regressors)]))
+  mutate(cal.cmp = exp(pre.mult$model$xreg[, seq_along(calendar_regressors)] %*%
+                         pre.mult$model$b[seq_along(calendar_regressors)]))
 
 #final dow, doy and sa
 df_daily <- df_daily%>%

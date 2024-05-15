@@ -68,7 +68,7 @@ summary_ws <- data.frame(
     id = c("work", "auto"),
     name = c("Travail", "Automatique")
 ) |>
-    dplyr::mutate(num_ws = 1:dplyr::n())
+    dplyr::mutate(num_ws = seq_len(dplyr::n()))
 
 summary_ws
 

@@ -5,7 +5,7 @@ linters: linters_with_defaults(
         brace_linter = NULL,
         commas_linter = NULL,
         #seq_linter = NULL,
-        quotes_linter = NULL,
+        #quotes_linter = NULL,
         paren_body_linter = NULL,
         commented_code_linter = NULL,
         cyclocomp_linter = NULL,
