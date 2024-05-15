@@ -72,15 +72,15 @@ Preparation of the calendar with the package **rjd3toolkit**:
 frenchCalendar <- rjd3toolkit::national_calendar(days = list(
   rjd3toolkit::fixed_day(7, 14), # Bastille Day
   rjd3toolkit::fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
-  rjd3toolkit::special_day('NEWYEAR'),
-  rjd3toolkit::special_day('MAYDAY'), # 1st may
-  rjd3toolkit::special_day('EASTERMONDAY'),
-  rjd3toolkit::special_day('ASCENSION'),
-  rjd3toolkit::special_day('WHITMONDAY'),
-  rjd3toolkit::special_day('ASSUMPTION'),
-  rjd3toolkit::special_day('ALLSAINTSDAY'), # Toussaint
-  rjd3toolkit::special_day('ARMISTICE'), # End of 1st WW
-  rjd3toolkit::special_day('CHRISTMAS'))
+  rjd3toolkit::special_day("NEWYEAR"),
+  rjd3toolkit::special_day("MAYDAY"), # 1st may
+  rjd3toolkit::special_day("EASTERMONDAY"),
+  rjd3toolkit::special_day("ASCENSION"),
+  rjd3toolkit::special_day("WHITMONDAY"),
+  rjd3toolkit::special_day("ASSUMPTION"),
+  rjd3toolkit::special_day("ALLSAINTSDAY"), # Toussaint
+  rjd3toolkit::special_day("ARMISTICE"), # End of 1st WW
+  rjd3toolkit::special_day("CHRISTMAS"))
 )
 ```
 
