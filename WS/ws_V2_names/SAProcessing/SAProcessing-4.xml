@@ -2,8 +2,8 @@
 <informationSet xmlns="ec/tss.core">
     <item name="metadata">
         <subset>
-            <item name="@timestamp">
-                <string>2024-03-29T18:23:38.3840339</string>
+            <item name="timestamp">
+                <string>15 mai 2024 18:20:22</string>
             </item>
         </subset>
     </item>
