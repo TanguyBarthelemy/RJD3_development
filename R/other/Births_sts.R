@@ -4,7 +4,7 @@
 
 # Aim: illustration of model based seasonal adjustment with the {rjd3highfreq} package (version 1.0.1)
 
-# Packages repositories: https://github.com/rjdemetra/rjd3highfreq (version 1.0.1)
+# Packages repositories: https://github.com/rjdverse/rjd3highfreq (version 1.0.1)
 #
 # Dependencies: {RProtoBuf}, {rJava}, {checkmate}, {rjd3toolkit}, Java 17 (or higher)
 
@@ -18,7 +18,7 @@ library(ggplot2)
 library(dplyr)
 
 
-df_daily = readRDS("./data/Births.RDS")
+df_daily <- readRDS("./data/Births.RDS")
 
 # This dataframe contains the following variables:
 # date       = from 01/01/1968 to 12/31/2000
@@ -64,15 +64,15 @@ library(rjd3toolkit)
 frenchCalendar <- national_calendar(days = list(
   fixed_day(7, 14), # Bastille Day
   fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victory Day
-  special_day('NEWYEAR'),
-  special_day('CHRISTMAS'),
-  special_day('MAYDAY'),
-  special_day('EASTERMONDAY'),
-  special_day('ASCENSION'),
-  special_day('WHITMONDAY'),
-  special_day('ASSUMPTION'),
-  special_day('ALLSAINTSDAY'),
-  special_day('ARMISTICE'))
+  special_day("NEWYEAR"),
+  special_day("CHRISTMAS"),
+  special_day("MAYDAY"),
+  special_day("EASTERMONDAY"),
+  special_day("ASCENSION"),
+  special_day("WHITMONDAY"),
+  special_day("ASSUMPTION"),
+  special_day("ALLSAINTSDAY"),
+  special_day("ARMISTICE"))
 )
 # Generate calendar regressors
 q<-holidays(frenchCalendar, "1968-01-01", length = length(df_daily$births), type="All",
@@ -239,11 +239,11 @@ add_equation(eq_m,"wn")
 data<-as.numeric(pre.mult$model$linearized)
 
 ## collect computing times
-start = Sys.time()
+start <- Sys.time()
 
 rslt <- rjd3sts::estimate(bsm, data, marginal = FALSE,
                           concentrated = TRUE, initialization = "SqrtDiffuse")
-end = Sys.time()
+end <- Sys.time()
 
 computing-time <- round(as.numeric(difftime(end, start, units = "secs")), 2)
 

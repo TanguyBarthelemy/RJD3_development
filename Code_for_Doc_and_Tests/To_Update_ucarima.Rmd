@@ -35,7 +35,7 @@ print(ucm)
 res<-601
 st<-rjd3modelling::arima.properties(ucm$components[[1]], nspectrum = res)$spectrum
 wkt<-rjd3modelling::ucarima.wk(ucm, 1, nspectrum = res)
-plot(st, type='l', col='blue', ylim=c(0,0.5))
+plot(st, type="l", col="blue", ylim=c(0,0.5))
 grid()
 lines(wkt$spectrum)
 
@@ -46,7 +46,7 @@ lines(wkt$spectrum)
 res<-601
 si<-rjd3modelling::arima.properties(ucm$components[[3]], nspectrum = res)$spectrum
 wki<-rjd3modelling::ucarima.wk(ucm, 3, nspectrum = res)
-plot(si, type='l', col='blue', ylim=c(0,0.1))
+plot(si, type="l", col="blue", ylim=c(0,0.1))
 grid()
 lines(wki$spectrum)
 ```

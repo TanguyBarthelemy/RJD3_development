@@ -23,4 +23,3 @@ render_report(
     output_format = "pdf_document",
     open_report = TRUE
 )
-

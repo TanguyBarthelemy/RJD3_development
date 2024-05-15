@@ -4,7 +4,7 @@
 
 # Aim: illustration of model based seasonal adjustment with the {rjd3highfreq} package (version 1.0.1)
 
-# Packages repositories: https://github.com/rjdemetra/rjd3highfreq (version 1.0.1)
+# Packages repositories: https://github.com/rjdverse/rjd3highfreq (version 1.0.1)
 #
 # Dependencies: {RProtoBuf}, {rJava}, {checkmate}, {rjd3toolkit}, Java 17 (or higher)
 
@@ -65,15 +65,15 @@ library(rjd3highfreq)
 french_calendar <- national_calendar(days = list(
   fixed_day(7, 14), # Bastille Day
   fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victory Day
-  special_day('NEWYEAR'),
-  special_day('CHRISTMAS'),
-  special_day('MAYDAY'),
-  special_day('EASTERMONDAY'),
-  special_day('ASCENSION'),
-  special_day('WHITMONDAY'),
-  special_day('ASSUMPTION'),
-  special_day('ALLSAINTSDAY'),
-  special_day('ARMISTICE'))
+  special_day("NEWYEAR"),
+  special_day("CHRISTMAS"),
+  special_day("MAYDAY"),
+  special_day("EASTERMONDAY"),
+  special_day("ASCENSION"),
+  special_day("WHITMONDAY"),
+  special_day("ASSUMPTION"),
+  special_day("ALLSAINTSDAY"),
+  special_day("ARMISTICE"))
 )
 # Generrate calendar regressors
 q<-holidays(french_calendar, "1968-01-01", length = length(df_daily$births), type="All",
@@ -102,7 +102,7 @@ regs_mult<- data.frame(
   "Coef_SE"  = sqrt(diag(pre.mult$model$bcov))) %>%  mutate(Tstat= round(Coef/Coef_SE,2))
 
 # adding names for calendar regressors
-calendar_regressors<-c("Bastille_day","Victory_day","NEWYEAR",'CHRISTMAS',"MAYDAY",
+calendar_regressors<-c("Bastille_day","Victory_day","NEWYEAR","CHRISTMAS","MAYDAY",
                        "EASTERMONDAY","ASCENSION","WHITMONDAY","ASSUMPTION","ALLSAINTSDAY",
                        "ARMISTICE")
 
@@ -158,8 +158,8 @@ amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
 
 #calendar component
 df_daily<- df_daily%>%
-  mutate(cal.cmp = exp(pre.mult$model$xreg[, 1:length(calendar_regressors)] %*%
-                         pre.mult$model$b[1:length(calendar_regressors)]))
+  mutate(cal.cmp = exp(pre.mult$model$xreg[, seq_along(calendar_regressors)] %*%
+                         pre.mult$model$b[seq_along(calendar_regressors)]))
 
 #final dow, doy and sa
 df_daily <- df_daily%>%

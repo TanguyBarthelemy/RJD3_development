@@ -37,5 +37,3 @@ class(mod$result_spec$regarima$arima)
 # - des coefficients fixés par l'utilisateur,
 # - des coefficients fixés par l'algo,
 # - des coefficients laissé vides (ou absents de la liste) ?
-
-
