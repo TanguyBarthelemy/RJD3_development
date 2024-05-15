@@ -4,10 +4,10 @@
 
 # Aims:
 # 1) illustration of model based seasonal adjustment with the {rjd3highfreq} package (version 1.0.1)
-# Package repositories: https://github.com/rjdemetra/rjd3highfreq (version 1.0.1)
+# Package repositories: https://github.com/rjdverse/rjd3highfreq (version 1.0.1)
 #
 ## 2) illustration of model based seasonal adjustment with the {rjd3x11plus} package (version 1.0.1)
-# Package repositories: https://github.com/rjdemetra/rjd3x11plus (version 1.0.1)
+# Package repositories: https://github.com/rjdverse/rjd3x11plus (version 1.0.1)
 # Dependencies: {RProtoBuf}, {rJava}, {checkmate}, {rjd3toolkit}, Java 17 (or higher)
 
 # Data: French daily births (Metropolitan France only)

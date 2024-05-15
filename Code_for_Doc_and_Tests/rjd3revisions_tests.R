@@ -2,7 +2,7 @@
 
 # ## Installation
 # ``` r
-# remotes::install_github("rjdemetra/rjd3revisions")
+# remotes::install_github("rjdverse/rjd3revisions")
 # ```
 #
 

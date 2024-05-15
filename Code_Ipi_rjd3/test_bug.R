@@ -15,17 +15,17 @@ context_dictionary <- .jcall(workspace, "Lec/tstoolkit/algorithm/ProcessingConte
                              "getContext")
 
 
-userdefined = NULL
-context_dictionary = NULL
+userdefined <- NULL
+context_dictionary <- NULL
 
-extra_info = FALSE
-freq = NA
+extra_info <- FALSE
+freq <- NA
 
-jrslt = jresult
-spec = jspec
-context_dictionary = context_dictionary
-extra_info = TRUE
-freq = frequency(y_ts)
+jrslt <- jresult
+spec <- jspec
+context_dictionary <- context_dictionary
+extra_info <- TRUE
+freq <- frequency(y_ts)
 
 #x13JavaResults
 
@@ -37,7 +37,7 @@ if (is.null(jrobct@internal)) {
     return(NULL)
 }
 res <- jrslt$getResults()$getProcessingInformation()
-if (is.null(jrslt$getDiagnostics()) & !.jcall(res, "Z",
+if (is.null(jrslt$getDiagnostics()) && !.jcall(res, "Z",
                                               "isEmpty")) {
     proc_info <- jrslt$getResults()$getProcessingInformation()
     error_msg <- .jcall(proc_info, "Ljava/lang/Object;",
@@ -55,9 +55,9 @@ reg <- RJDemetra:::regarima_defX13(jrobj = jrobct_arima, spec = spec,
 
 
 #RJDemetra:::decomp_defX13
-jrobj = jrobct
-spec = spec
-freq = freq
+jrobj <- jrobct
+spec <- spec
+freq<- freq
 
 specification <- RJDemetra:::specX11_jd2r(spec = spec, freq = freq)
 rownames(specification) <- ""
@@ -74,7 +74,7 @@ rslt <- jrobj@internal
 name <- "mstats.M(1)"
 }
 
-if(is.null(RJDemetra:::rjdemetra_java$clobject)){
+if (is.null(RJDemetra:::rjdemetra_java$clobject)){
     RJDemetra:::rjdemetra_java$clobject <- .jcall("java/lang/Class", "Ljava/lang/Class;", "forName", "java.lang.Object")
 }
 s <- .jcall(rslt, "Ljava/lang/Object;", "getData", name, RJDemetra:::rjdemetra_java$clobject)
@@ -82,17 +82,17 @@ s <- .jcall(rslt, "Ljava/lang/Object;", "getData", name, RJDemetra:::rjdemetra_j
 
 if (is.null(s))
     res_mstat <- NULL
-if (.jinstanceof(s, "ec.tstoolkit.timeseries.simplets.TsData"))
+if (.jinstanceof(s, "ec.tstoolkit.timeseries.simplets.TsData")) {
     res_mstat <-ts_jd2r(.jcast(s,"ec.tstoolkit.timeseries.simplets.TsData"))
-else if (.jinstanceof(s, "ec.tstoolkit.maths.matrices.Matrix"))
+} else if (.jinstanceof(s, "ec.tstoolkit.maths.matrices.Matrix")) {
     res_mstat <-matrix_jd2r(.jcast(s,"ec.tstoolkit.maths.matrices.Matrix"))
-else if (.jinstanceof(s, "ec.tstoolkit.information.StatisticalTest"))
+} else if (.jinstanceof(s, "ec.tstoolkit.information.StatisticalTest")) {
     res_mstat <-test_jd2r(s)
-else if (.jinstanceof(s, "ec.tstoolkit.Parameter")){
+} else if (.jinstanceof(s, "ec.tstoolkit.Parameter")) {
     val<-.jcall(s, "D", "getValue")
     e<-.jcall(s, "D", "getStde")
     res_mstat <-c(val, e)
-} else if (.jinstanceof(s, "[Lec.tstoolkit.Parameter;")){
+} else if (.jinstanceof(s, "[Lec.tstoolkit.Parameter;")) {
     p<-.jcastToArray(s)
     len<-length(p)
     if (len==0)
@@ -103,14 +103,15 @@ else if (.jinstanceof(s, "ec.tstoolkit.Parameter")){
         all[i, 2]<-.jcall(p[[i]], "D", "getStde")
     }
     res_mstat <-all
-} else if (.jcall(.jcall(s, "Ljava/lang/Class;", "getClass"), "Z", "isArray"))
+} else if (.jcall(.jcall(s, "Ljava/lang/Class;", "getClass"), "Z", "isArray")) {
     res_mstat <-.jevalArray(s, silent=TRUE)
-else if (.jinstanceof(s, "java/lang/Number"))
+} else if (.jinstanceof(s, "java/lang/Number")) {
     res_mstat <-.jcall(s, "D", "doubleValue")
-else if (.jinstanceof(s, "ec/tstoolkit/information.RegressionItem"))
+} else if (.jinstanceof(s, "ec/tstoolkit/information.RegressionItem")) {
     res_mstat <-reg_item_jd2r(s)
-else
+} else {
     res_mstat <-.jcall(s, "S", "toString")
+}
 
 
 

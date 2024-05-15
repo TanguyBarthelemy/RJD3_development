@@ -4,7 +4,7 @@
 
 # Aim: illustration of model based seasonal adjustment with the {rjd3highfreq} package (version 1.0.1)
 
-# Packages repositories: https://github.com/rjdemetra/rjd3highfreq (version 1.0.1)
+# Packages repositories: https://github.com/rjdverse/rjd3highfreq (version 1.0.1)
 #
 # Dependencies: {RProtoBuf}, {rJava}, {checkmate}, {rjd3toolkit}, Java 17 (or higher)
 
