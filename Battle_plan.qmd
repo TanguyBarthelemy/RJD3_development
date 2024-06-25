@@ -39,20 +39,12 @@ GUI
 
 Currently working on (details in TOPICS..)
 
-### Last Meeting BXLS 29 mai
+### General enhan c
 
-To do 
+### Github enhancements
 
-- Bilan et perspectives 
+- stace shop user support 
 
-- Habillage / orga 
-    - rename: comm 
-    - stace shop + comm
-    - Logos 
-
-- CRAN assessment 
-    - rjdworkspace 
-    - RJDCruncher 
 
 ## JD+ online Documentation 
 
