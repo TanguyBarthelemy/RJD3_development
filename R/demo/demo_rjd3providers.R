@@ -17,6 +17,14 @@ sapply(X = function2import, FUN = source, encoding = "UTF-8") |> invisible()
 
 # Set paths --------------------------------------------------------------------
 
+## Permanent paths -------------------------------------------------------------
+
+path_csv <- normalizePath("./data_temp/data_ipi.csv")
+path_xlsx <- normalizePath("./data_temp/data_ipi.xlsx")
+
+
+## Temporary paths -------------------------------------------------------------
+
 # old and new paths
 path1_csv <- normalizePath("./data_temp/path_1/data_ipi.csv")
 path1_xlsx <- normalizePath("./data_temp/path_1/data_ipi.xlsx")
@@ -27,13 +35,13 @@ path2_xlsx <- normalizePath("./data_temp/path_2/data_ipi.xlsx")
 
 # Manipulate files -------------------------------------------------------------
 
-txt_content(file = path1_csv, delimiter = "SEMICOLON", fmt.date = "dd/MM/yyyy")
-txt_data(file = path1_csv, delimiter = "SEMICOLON", fmt.date = "dd/MM/yyyy")
-txt_series(file = path1_csv, series = 2L, delimiter = "SEMICOLON", fmt.date = "dd/MM/yyyy")
+txt_content(file = path_csv, delimiter = "SEMICOLON", fmt.date = "dd/MM/yyyy")
+txt_data(file = path_csv, delimiter = "SEMICOLON", fmt.date = "dd/MM/yyyy")
+txt_series(file = path_csv, series = 2L, delimiter = "SEMICOLON", fmt.date = "dd/MM/yyyy")
 
-spreadsheet_content(file = path1_xlsx)
-spreadsheet_data(file = path1_xlsx, sheet = 1L, cleanMissings = TRUE)
-spreadsheet_series(file = path1_xlsx, sheet = 1L, series = 3L)
+spreadsheet_content(file = path_xlsx)
+spreadsheet_data(file = path_xlsx, sheet = 1L, cleanMissings = TRUE)
+spreadsheet_series(file = path_xlsx, sheet = 1L, series = 3L)
 
 
 # Change path ------------------------------------------------------------------
@@ -66,11 +74,11 @@ old_jd3_ts <- rjdemetra3::get_ts(jsai)
 ## Utilisation de spreadsheet_change_file vraiment utile ??
 ## On a besoin du chemin formatté (par java) et on ne l'a pas
 
-# new_id <- spreadsheet_change_file(
-#     id = old_jd3_ts$metadata$`@id`,
-#     nfile = path2_xlsx,
-#     ofile = path1_xlsx
-# )
+new_id <- spreadsheet_change_file(
+    id = old_jd3_ts$metadata$`@id`,
+    nfile = path2_xlsx,
+    ofile = path1_xlsx
+)
 
 
 ## Utilisation et manipulation des properties

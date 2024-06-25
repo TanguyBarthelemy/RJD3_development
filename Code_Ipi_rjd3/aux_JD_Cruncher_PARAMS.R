@@ -79,23 +79,3 @@ getOption("default_matrix_item")
 getOption("default_tsmatrix_series")
 # adjust
 options(default_tsmatrix_series = c("y","sa","sa_f","s","s_f","ycal","cal","cal_f","d10","d10a"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

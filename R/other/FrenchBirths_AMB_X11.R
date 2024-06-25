@@ -4,10 +4,10 @@
 
 # Aims:
 # 1) illustration of model based seasonal adjustment with the {rjd3highfreq} package (version 1.0.1)
-# Package repositories: https://github.com/rjdemetra/rjd3highfreq (version 1.0.1)
+# Package repositories: https://github.com/rjdverse/rjd3highfreq (version 1.0.1)
 #
 ## 2) illustration of model based seasonal adjustment with the {rjd3x11plus} package (version 1.0.1)
-# Package repositories: https://github.com/rjdemetra/rjd3x11plus (version 1.0.1)
+# Package repositories: https://github.com/rjdverse/rjd3x11plus (version 1.0.1)
 # Dependencies: {RProtoBuf}, {rJava}, {checkmate}, {rjd3toolkit}, Java 17 (or higher)
 
 # Data: French daily births (Metropolitan France only)
@@ -158,8 +158,8 @@ amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
 # Compute final components and SA series
 #calendar component
 df_daily<- df_daily%>%
-  mutate(cal.cmp = exp(pre.mult$model$xreg[, 1:length(calendar_regressors)] %*%
-                         pre.mult$model$b[1:length(calendar_regressors)]))
+  mutate(cal.cmp = exp(pre.mult$model$xreg[, seq_along(calendar_regressors)] %*%
+                         pre.mult$model$b[seq_along(calendar_regressors)]))
 
 #final dow, doy and sa
 df_daily <- df_daily%>%
@@ -224,8 +224,8 @@ tail(df_daily)
 # Compute final components and SA series
 #calendar component
 df_daily<- df_daily%>%
-  mutate(cal.cmp = exp(pre.mult$model$xreg[, 1:length(calendar_regressors)] %*%
-                         pre.mult$model$b[1:length(calendar_regressors)]))
+  mutate(cal.cmp = exp(pre.mult$model$xreg[, seq_along(calendar_regressors)] %*%
+                         pre.mult$model$b[seq_along(calendar_regressors)]))
 
 #final dow, doy and sa
 df_daily <- df_daily%>%

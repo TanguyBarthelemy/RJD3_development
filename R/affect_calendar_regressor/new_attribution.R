@@ -5,7 +5,7 @@ r <- "RJDemetra" |>
     asNamespace() |>
     lsf.str(envir = _, all = TRUE) |>
     unclass()
-for (name in r) eval(parse(text=paste0(name, '<-RJDemetra:::', name)))
+for (name in r) eval(parse(text=paste0(name, "<-RJDemetra:::", name)))
 
 
 library("rJava")
