@@ -4,65 +4,131 @@ FROM ALAIN : two ways to see how to add a new parameter:
     Look at the proto files to see the type of the parameter: https://github.com/palatej/rjd3x13/blob/main/inst/proto/x13.proto#LL142C1-L142C23
     Here the holidays parameter is a string. In your case you have created a calendar called cal, you should do the following:....
 
-=== global notes (where to store them)
-
+====== OUTPUT pbs : see table 
 -- output objects : (?) ! allows to indicate length: cal_f(-2) : 2 yeas.;;
 
-=== Remaining tests 
+============= 
+
+
+- delegate to T ? 
+	- document x13 fulldictionnary fucntion
+		- if modifs : to do in java ?
+		- que devient la fonction user defined variables ?
+		- column names : cf file, details (at least readable type? ex  type series, number...)*
+		- categories series, params, diagnostics ?  possibilité de préfilter 
+		- formatting in R ?
+STEP 1 : prepare a good R output 
+idem for 
+	- tramo seats
+	- toolkit dico : fonction dictionnary: fromattage ?
+
+
+
+
+============ completing DOC 
+
+- missiong spots 
+- editing, examples (+ R comparisions) theme by theme (into online doc or slides) 
+- re-testing (keeping set of commentated tests fila by file ?)
+
+========================== MAIN MISSING SPOTS (vu BXLS
+Files:  
+
+
+1) calendar 
+-- pb holiday=7 ( quid ref 0 ou pas ? quid holiday, tjs 7): DOC MODIF  plii fixé à 7
+groupe 0 : pas forcement...
+aucun impact sur le resutats ....
+ne joue pas sur oeffs sur T stats : contraste pas pris, du coup 
+les T stats sot pas bons 
+donc regarder F test 
+jour 
+test gpe 0 : nimporte lequel donnera les memes coreffs (evident ?) papier Bell (proj)
++ pb 5/7 VS sur 14...
+
+2) calendarts: creates java calendars : ok 
+
+3) decomposition 
+
+pb @rdname
+
+4) differencing : diminuer 
+
+do_stationnary (pb name?) 
+
+differencing fast: test ?
+
+
+5) display = que des prints 
+tjs pb de (0 1 1)(0 1 1) par defaut 
+
+6) distributions 
+ok just comp results
+
+
+7) generics: que utilities 
+
+8a et 8b jd2r...java to R ok 
+============================================
+
+9) utils 
+
+pb likelihood function :.
+
+
+10) modelling context 
+- fonction: tsmoniker (sert dans providers, à garder sans .p)
+
+- edit descrptions 
+
+11) splines
+
+
+example 
+
+12) timeseries 
+- aggregation pb "divisor" : ok
+- clean_extremities : specifics ?
+- idem for interpolation ?
++ specifics of following functions
+
+
+13) test_regular (name ?) 
+lack of examples: should be ok on my own ?
+
+- median corrected : seul pb ?
+
+14) tests_td : questions to JP  (+ papier bell)
+- canova H
+- edit F test ?
+
+15) arima : questions ti JP 
+- decomp UC : irregulier que bruit avec var ? ne pourrait pas être un MA ?
+ecriture modele et resultats 
+- arima properties and spectrum computation
+
++ the rest of the file 
+
+=========================================================================================
+
+=== Remaining TESTS 
 - residuals 
 - export filtre saiso
-- seatting different seasonal filters by peridos 
+- setting different seasonal filters by peridos 
 - setting seasonal sigmas 
 
-=== Tools reprex
 
-=== Skils 
--  
-
-
-==================
-Ramping up of rjd3 tool kit doc 
-
-======= voir avec alain (JP ?)
-(questions generales) 
-- sens de (?) dans user defined output 
-- 
-
-Issues concrets 
+Issues concretes: 
 - add holidays (cf code)
-
-- add_usrdefvatr
-
-- warning dans refresh (avec T) "span will be ignored ..."
-"span
-
+- ref day for TD correc : tjs dim 
 - pre processing = TRUE, par default et inaccessible à l'utilisateur dans X13 via R
 
-
-See pending issues 
-- user def in tramo by José
-- seasonal filter export 
 
 ==== deep param issues 
 - adjust 
 - yc
 - missing value correction 
 
-
-=== objectif = vignette overview
-
-list tool kit parts 
-
-- calendar correction tools 
-
-- auxilary vars (excepted calendar) 
-
------ context :
-now variables = liste nommee, could be a function, qui renommerait ce qui ne l'est pas 
-
-- seasonality tests 
-
-- arima model estimation 
 
 
 
@@ -86,9 +152,6 @@ vs 3.0
 (application to HF data)
 
 ================================================================ ISSUES 
-
-Same pb with Last and Excluding  
-====
 
 ========== ISSUE 2: set_basic if pre-processing = FALSE no estimation (seems obvious)
 
@@ -233,20 +296,6 @@ spec_x13_d$regarima$transform$fn
 leap year stuff 
 get this param 
 + yc series ? equivalent in R ?
-
-===== Clarifier add_usrdefvar: -------------- HERE --------
-
-clairifier « id »  et « name »
-
-
-Vu avec Alain 
-- on va garder le groupe : pour offrir possibilités harmonization qd import ws 
-
-#' @param group,name the name of the regressor in the format (`"group.name"` and `"r.name"` by default, see examples)
-Cal.mardi 
-Mardi=> r.mardi 
-
-#' @param label the label of the variable to be displayed when printing specification or results. By default equals to `name`. 
 
 
 === ISSUE 6: add HOLIDAYS in ++++ Expand doc

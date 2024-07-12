@@ -26,7 +26,7 @@ R packages
 
 - dvlpt 
 
-- test 
+- tests
 
 - doc (functions, readme)
 
@@ -39,37 +39,43 @@ GUI
 
 Currently working on (details in TOPICS..)
 
-### General enhan c
+### Tanguy august
 
-### Github enhancements
+#### JD Cruncher 
+
+- adaptation to tramo (first in v2)= if tramo remove (!!) all the x11 specific tests
+
+- adaptation to v3
+
+#### rjd3toolkit 
+
+- functions time series to rjd3providers (see timeseries.R)
+
+- likelihood becomes .likelihood
+
+#### output et dicos 
+
+tests sur series finales
+gros tableau 
+
+### COMM
 
 - stace shop user support 
+
+- new v2 sous AUS 
 
 
 ## JD+ online Documentation 
 
-- GUI chap on SA and modelling features (Tanguy): refining...
+- Chapter (appendix on output names and definitions) (Anna and Tanguy): minimalist 
 
 - Documenting new v3 features and Holes (Anna)
 
 - clean up 
 
-- Chapter (appendix on output names and definitions) (Anna and Tanguy): minimalist 
-
-
 ## R packages 
 
 ### Habillage général
-
-- maj readme avec lien install java
-
-- vignettes (1 ou 2)
-
-- Logos
-
-- CRAN assessment 
-
-- readme and examples for each package (Both of us): almost ok 
 
 - bring v3 pages to RJDemetra level !!!
 
@@ -91,6 +97,7 @@ add series span and model span
 - seasonal filters and seasonal sigma (anna: bilan)
 
 #### New features (test and doc)
+
 
 MAIN GUI + R
 (Anna)
@@ -138,7 +145,7 @@ Alain started rjd3report
 #### rjd3toolkit 
 
 Issue:
-- rmove holiday param
+- rmove holiday param (leave and change doc)
 
 DOC
 - trigonometric regressors
@@ -171,13 +178,19 @@ add : print model span
 REVIEW
 
 - resuscitate ? reparametrer ?
+
 alain : tableau supplementaitre
 
 #### JD Cruncher 
 
+- adaptation to tramo (first in v2)= if tramo remove (!!) all the x11 specific tests
+
+- adaptation to v3
+
 - parametrage poids indicateurs: up date doc + example! done ??
 
 - ajouter valeurs coefficients et p-values (pour selection cjo) 
+
 aujourd'hui: ajout params dans options d'output, lecture ad hoc de demetra_m.csv
 but lire direct avec JDCruncher (to do 1h)
 
