@@ -358,7 +358,10 @@ q <- rjd3toolkit::holidays(french_calendar, "1968-01-01", end="2023-12-01", type
 
 # In v3 flexible definition of groups and reference day
 ## holidays as treated as the reference day which doesn't have to be a Sunday
-td_regs<- calendar_td(french_calendar,12, start=c(2000,1), length = 100,
+td_regs<- calendar_td(calendar = french_calendar,
+                      frequency = 12,
+                      start=c(2000,1),
+                      length = 100,
                       groups = c(1, 1, 2, 2, 0, 3, 4),
                       # 1: Mondays = Tuesdays, 2 :Wednesdays=Thursdays
                       # 0: Fridays= reference for contrasts

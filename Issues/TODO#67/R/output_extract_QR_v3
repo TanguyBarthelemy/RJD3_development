@@ -1,0 +1,113 @@
+
+demetra_m_cruncher_V2 <- read.csv(
+    file = "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#67/demetra_m/demetra_m_cruncher_V2.csv",
+    sep = ";",
+    dec = ",",
+    stringsAsFactors = FALSE,
+    na.strings = c("NA", "?"),
+    fileEncoding = "latin1",
+    quote = ""
+)
+demetra_m_cruncher_V3 <- read.csv(
+    file = "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#67/demetra_m/demetra_m_cruncher_V3.csv",
+    sep = ";",
+    dec = ",",
+    stringsAsFactors = FALSE,
+    na.strings = c("NA", "?"),
+    fileEncoding = "latin1",
+    quote = ""
+)
+demetra_m_GUI_V3 <- read.csv(
+    file = "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#67/demetra_m/demetra_m_GUI_V3.csv",
+    sep = ";",
+    dec = ",",
+    stringsAsFactors = FALSE,
+    na.strings = c("NA", "?"),
+    fileEncoding = "latin1",
+    quote = ""
+)
+demetra_m_GUI_V2 <- read.csv(
+    file = "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#67/demetra_m/demetra_m_GUI_V2.csv",
+    sep = ";",
+    dec = ",",
+    stringsAsFactors = FALSE,
+    na.strings = c("NA", "?"),
+    fileEncoding = "latin1",
+    quote = ""
+)
+
+## extractFrequency ------------------------------------------------------------
+
+v1 <- extractFrequency(demetra_m_cruncher_V2)
+v2 <- extractFrequency(demetra_m_cruncher_V3)
+v3 <- extractFrequency(demetra_m_GUI_V3)
+v4 <- extractFrequency(demetra_m_GUI_V2)
+waldo::compare(v1, v2)
+waldo::compare(v1, v3)
+waldo::compare(v1, v4)
+
+
+## extractARIMA ----------------------------------------------------------------
+
+v1 <- extractARIMA(demetra_m_cruncher_V2)
+v2 <- extractARIMA(demetra_m_cruncher_V3)
+v3 <- extractARIMA(demetra_m_GUI_V3)
+v4 <- extractARIMA(demetra_m_GUI_V2)
+waldo::compare(v1, v2)
+waldo::compare(v1, v3)
+waldo::compare(v1, v4)
+
+
+## extractStatQ ----------------------------------------------------------------
+
+v1 <- extractStatQ(demetra_m_cruncher_V2)
+v2 <- extractStatQ(demetra_m_cruncher_V3)
+v3 <- extractStatQ(demetra_m_GUI_V3)
+v4 <- extractStatQ(demetra_m_GUI_V2)
+waldo::compare(v1, v2)
+waldo::compare(v2, v3)
+waldo::compare(v1, v4)
+
+
+## extractOOS_test -------------------------------------------------------------
+
+v1 <- extractOOS_test(demetra_m_cruncher_V2)
+v2 <- extractOOS_test(demetra_m_cruncher_V3)
+v3 <- extractOOS_test(demetra_m_GUI_V3)
+v4 <- extractOOS_test(demetra_m_GUI_V2)
+waldo::compare(v1, v2)
+waldo::compare(v2, v3)
+waldo::compare(v1, v4)
+
+
+## extractNormalityTests -------------------------------------------------------
+
+v1 <- extractNormalityTests(demetra_m_cruncher_V2)
+v2 <- extractNormalityTests(demetra_m_cruncher_V3)
+v3 <- extractNormalityTests(demetra_m_GUI_V3) # ne marche pas
+v4 <- extractNormalityTests(demetra_m_GUI_V2) # ne marche pas
+waldo::compare(v1, v2)
+waldo::compare(v2, v3)
+waldo::compare(v1, v4)
+
+
+## extractOutliers -------------------------------------------------------------
+
+v1 <- extractOutliers(demetra_m_cruncher_V2)
+v2 <- extractOutliers(demetra_m_cruncher_V3)
+v3 <- extractOutliers(demetra_m_GUI_V3)
+v4 <- extractOutliers(demetra_m_GUI_V2)
+waldo::compare(v1, v2)
+waldo::compare(v2, v3)
+waldo::compare(v1, v4)
+
+
+## extract_QR ------------------------------------------------------------------
+
+v1 <- extract_QR(matrix_output_file = "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#67/demetra_m/demetra_m_cruncher_V2.csv")
+v2 <- extract_QR(matrix_output_file = "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#67/demetra_m/demetra_m_cruncher_V3.csv")
+v3 <- extract_QR(matrix_output_file = "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#67/demetra_m/demetra_m_GUI_V2.csv")
+v4 <- extract_QR(matrix_output_file = "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#67/demetra_m/demetra_m_GUI_V3.csv")
+waldo::compare(v1, v2)
+waldo::compare(v2, v3)
+waldo::compare(v1, v4)

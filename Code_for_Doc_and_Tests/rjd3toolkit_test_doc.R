@@ -26,7 +26,7 @@ starts = "2001-01-01", ends = "2001-12-01")
 iv2<- intervention_variable(12, c(2000, 1), 60,
 starts = "2001-01-01", ends = "2001-12-01", delta = 1)
 #' # regressors as a list of two groups reg1 and reg2
-vars<-list(reg1=list(x = iv1),reg2=list(x = iv2) )
+vars<-list(reg1=list(x = iv1),reg2=list(x = iv2))
 #' # creating the modelling context
 my_context<-modelling_context(variables=vars)
 #' # customize a default specification

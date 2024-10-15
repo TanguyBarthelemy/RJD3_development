@@ -152,13 +152,13 @@ empty_temp()
 id <- pull_out_fire("ws_output")
 
 jws_to <- .jws_open(file = "./WS/ws_output.xml")
-jsap1 <- .jws_sap(ws, idx = 1)
+jsap1 <- .jws_sap(jws_to, idx = 1)
 
 spec1 <- rjd3x13::x13_spec(name = "RSA3")
-spec2 <- rjd3tramoseats::spec_tramoseats(name = "trfull")
+spec2 <- rjd3tramoseats::tramoseats_spec(name = "trfull")
 
-set_specification(jsap = jsap1, spec = spec1, idx = 1)
-set_specification(jsap = jsap1, spec = spec2, idx = 2)
+set_specification(jsap = jsap1, spec = spec1, idx = 1L)
+set_specification(jsap = jsap1, spec = spec2, idx = 2L)
 
 set_domain_specification(jsap = jsap1, spec = spec2, idx = 1)
 .jws_compute(jws_to)
