@@ -1,6 +1,4 @@
-
 print_JD3_SEATS <- function(x, enable_print_style = getOption("enable_print_style")) {
-
     if (enable_print_style) {
         style_pre_code <- "\033[4m\033[1m"
         style_post_code <- "\033[22m\033[24m"
@@ -24,5 +22,4 @@ print_JD3_SEATS <- function(x, enable_print_style = getOption("enable_print_styl
     print(tail(.preformat.ts(tableau)))
 
     return(invisible(x))
-
 }

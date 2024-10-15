@@ -1,6 +1,4 @@
-
 print_JD3_TRAMO_SPEC <- function(x, enable_print_style = getOption("enable_print_style")) {
-
     if (enable_print_style) {
         style_pre_code <- "\033[4m\033[1m"
         style_post_code <- "\033[22m\033[24m"
@@ -80,7 +78,8 @@ print_JD3_TRAMO_SPEC <- function(x, enable_print_style = getOption("enable_print
         list_outliers <- c("ao", "ls", "tc", "so")
         detected_outliers <- c("ao", "ls", "tc", "so")[do.call(
             args = x$outlier[c("ao", "ls", "tc", "so")],
-            what = c)]
+            what = c
+        )]
 
         if (length(detected_outliers) > 0) {
             cat("Outliers type: ", paste(detected_outliers, collapse = ", "), "\n", sep = "")

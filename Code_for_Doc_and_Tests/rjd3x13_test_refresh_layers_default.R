@@ -26,7 +26,7 @@ y_new <- ts(ipi[, "RF0811"], frequency = 12, start = c(1990, 1), end = c(2022, 9
 ##
 # y_raw<-rjd3toolkit::ABS$X0.2.08.10.M
 # spec_x13(name = c("rsa4", "rsa0", "rsa1", "rsa2c", "rsa3", "rsa5c"))
-spec_x13_d<-rjd3x13::spec_x13("rsa5c") #### HERE PB !!! issue : rsa4 et pas rsa4c
+spec_x13_d <- rjd3x13::spec_x13("rsa5c") #### HERE PB !!! issue : rsa4 et pas rsa4c
 spec_x13_d
 ## Layer 2: estimation spec
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
@@ -38,12 +38,14 @@ sa_x13_d$estimation_spec
 current_result_spec <- sa_x13_d$result_spec
 current_domain_spec <- sa_x13_d$estimation_spec
 spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                              current_domain_spec, #domain spec (set of constraints)
-                              policy = "FixedParameters")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "FixedParameters"
+)
 
 spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "Current")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "Current"
+)
 
 
 # spec_x13_ref <- x13_refresh(current_domain_spec, # point spec to be refreshed
@@ -51,7 +53,7 @@ spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
 #                             policy = "FixedParameters")
 
 # policy = c("FreeParameters",
-#"Complete", "Outliers_StochasticComponent",
+# "Complete", "Outliers_StochasticComponent",
 # "Outliers",
 #            "FixedParameters", "FixedAutoRegressiveParameters", "Fixed")
 ####
@@ -68,7 +70,7 @@ sa_x13_ref <- x13(y_new, spec_x13_ref)
 ########## NOT useful for refresh (might have to check that stays the same ?)
 ## comment 1 = what should be touched by which policy and what not
 ## comment 2: understanding of all param purpose (DETAIL HOLES ONLY)
-##.... + how to change them here, in v2 and in GUI
+## .... + how to change them here, in v2 and in GUI
 ## basic
 #### if refreshed: always untouched
 # spec_x13_d$regarima$basic$span$type

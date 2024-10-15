@@ -1,26 +1,34 @@
 # Installation des packages (dev version) ---------------------------------
 
-remotes::install_github("rjdverse/rjd3toolkit")
-# remotes::install_github("palatej/rjd3modelling")
-# remotes::install_github("palatej/rjd3sa")
-# remotes::install_github("palatej/rjd3arima")
-remotes::install_github("rjdverse/rjd3tramoseats")
-remotes::install_github("rjdverse/rjd3x13")
-remotes::install_github("rjdverse/rjdemetra3")
-# remotes::install_github("AQLT/rjdemetra3")
+remotes::install_github("rjdemetra")
+remotes::install_github("rjd3toolkit")
 
-remotes::install_github("rjdverse/rjd3x11plus")
+remotes::install_github("rjd3x13")
+remotes::install_github("rjd3tramoseats")
+remotes::install_github("rjd3providers")
+remotes::install_github("rjd3workspace")
 
-remotes::install_github("rjdverse/rjd3filters")
-remotes::install_github("rjdverse/rjd3sts")
-remotes::install_github("rjdverse/rjd3highfreq")
-remotes::install_github("rjdverse/rjd3stl")
-remotes::install_github("rjdverse/rjd3bench")
+remotes::install_github("rjd3sts")
+remotes::install_github("rjd3highfreq")
+remotes::install_github("rjd3stl")
 
-remotes::install_github("rjdverse/rjd3revisions")
+remotes::install_github("rjd3filters")
+remotes::install_github("rjd3x11plus")
 
+remotes::install_github("rjd3bench")
+remotes::install_github("rjd3nowcasting")
+remotes::install_github("rjd3revisions")
+
+remotes::install_github("AQLT/ggdemetra")
 remotes::install_github("AQLT/ggdemetra3")
 remotes::install_github("AQLT/rjdmarkdown")
+remotes::install_github("AQLT/rjwsacruncher")
+remotes::install_github("AQLT/rjdqa")
+remotes::install_github("AQLT/rjd3report")
+
+remotes::install_github("InseeFrLab/rjdworkspace")
+remotes::install_github("InseeFr/JDCruncheR")
+
 
 # Chargement des packages -------------------------------------------------
 
@@ -30,9 +38,6 @@ remotes::install_github("AQLT/rjdmarkdown")
 # library("RProtoBuf")
 
 library("rjd3toolkit")
-# library("rjd3modelling")
-# library("rjd3arima")
-# library("rjd3sa")
 library("rjd3tramoseats")
 library("rjd3x13")
 library("rjdemetra3")

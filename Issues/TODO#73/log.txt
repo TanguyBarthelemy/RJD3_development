@@ -1,0 +1,17 @@
+Refreshing data
+Opening...
+France [frozen]
+ processed
+Spain [frozen]
+ processed
+Greece [frozen]
+ processed
+Flushing bundle...
+Generate Output
+csv
+generated
+Csv matrix
+generated
+Saving new processing...
+Processing time: 3s
+Total processing time: 4s

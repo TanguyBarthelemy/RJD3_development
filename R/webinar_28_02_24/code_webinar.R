@@ -130,8 +130,10 @@ transfer_series(
 
 # Initialising a project: update_path ------------------------------------------
 
-new_jd3_ts <- spreadsheet_series(file = xlsx_file, sheet = 1L,
-                                 series = 3)
+new_jd3_ts <- spreadsheet_series(
+    file = xlsx_file, sheet = 1L,
+    series = 3
+)
 
 # open an existing WS
 ws <- .jws_open(file = some_ws_path)
@@ -140,5 +142,7 @@ jsap <- .jws_sap(ws, idx = 1L)
 
 # Change the TS object with the new moniker
 set_ts(jsap = jsap, idx = 1, y = new_jd3_ts)
-save_workspace(jws = ws_path, file = "./WS/WS_path_V3.xml",
-               replace = TRUE)
+save_workspace(
+    jws = ws_path, file = "./WS/WS_path_V3.xml",
+    replace = TRUE
+)

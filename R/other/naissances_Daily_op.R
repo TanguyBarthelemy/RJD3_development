@@ -89,7 +89,7 @@ ggplot(df_daily2) +
     geom_line(aes(date, births), linewidth = .1) +
     geom_vline(xintercept = as.numeric(df_daily2$date[cut]), col = "red") +
     labs(x = "", y = "")
-#geom_vline(xintercept = as.numeric(mydata$datefield[120]), linetype = 4)
+# geom_vline(xintercept = as.numeric(mydata$datefield[120]), linetype = 4)
 
 ## zoom 2 mois
 df_daily3 <- df_daily[df_daily$date >= "2016-11-01", ]
@@ -113,7 +113,8 @@ df_daily <- df_daily |>
         "mer." = "D3",
         "jeu." = "D4",
         "ven." = "D5",
-        "sam." = "D6"))
+        "sam." = "D6"
+    ))
 
 
 table(df_daily$sem)
@@ -144,18 +145,20 @@ ggplot(df_daily) +
 
 df_daily <- df_daily |> mutate(
     mois = recode(id.moy,
-                  "janv" = "M01",
-                  "févr" = "M02",
-                  "mars" = "M03",
-                  "avr" = "M04",
-                  "mai" = "M05",
-                  "juin" = "M06",
-                  "juil" = "M07",
-                  "août" = "M08",
-                  "sept" = "M09",
-                  "oct" = "M10",
-                  "nov" = "M11",
-                  "déc" = "M12"))
+        "janv" = "M01",
+        "févr" = "M02",
+        "mars" = "M03",
+        "avr" = "M04",
+        "mai" = "M05",
+        "juin" = "M06",
+        "juil" = "M07",
+        "août" = "M08",
+        "sept" = "M09",
+        "oct" = "M10",
+        "nov" = "M11",
+        "déc" = "M12"
+    )
+)
 table(df_daily$id.moy)
 table(df_daily$mois)
 
@@ -177,7 +180,7 @@ ggplot(df_daily) +
 #### last day of month or end of month effect ?
 
 ### jours feriés vs autres jours : comparer en box plots
-##TP summary group by
+## TP summary group by
 
 ### extraction s patterns par dates
 h <- substr(as.character(df_daily$date), 6, 10)
@@ -198,14 +201,18 @@ ch.sp <- 2:367 # Seasonal periodicities
 df_ch <- data.frame(
     sp = ch.sp,
     ch.raw = rjd3toolkit::seasonality_canovahansen(df_daily$births,
-                                              p0 = min(ch.sp), p1 = max(ch.sp),
-                                              np = max(ch.sp) - min(ch.sp) + 1, original = TRUE),
+        p0 = min(ch.sp), p1 = max(ch.sp),
+        np = max(ch.sp) - min(ch.sp) + 1, original = TRUE
+    ),
     ch.log = rjd3toolkit::seasonality_canovahansen(df_daily$log_births,
-                                              p0 = min(ch.sp), p1 = max(ch.sp),
-                                              np = max(ch.sp) - min(ch.sp) + 1, original = TRUE),
+        p0 = min(ch.sp), p1 = max(ch.sp),
+        np = max(ch.sp) - min(ch.sp) + 1, original = TRUE
+    ),
     ch.dlg = rjd3toolkit::seasonality_canovahansen(diff(df_daily$log_births, lag = 1, differences = 1),
-                                              p0 = min(ch.sp), p1 = max(ch.sp),
-                                              np = max(ch.sp) - min(ch.sp) + 1, original = TRUE))
+        p0 = min(ch.sp), p1 = max(ch.sp),
+        np = max(ch.sp) - min(ch.sp) + 1, original = TRUE
+    )
+)
 
 # Significant periodicities (Harvey, 2001, Table I(b))
 
@@ -225,7 +232,7 @@ ggplot(df_ch) +
 ### voir si tools dans jd +
 # ts_raw <- ts(df_raw[, 2], start = c(2004, 1), frequency = 12) : pb as freq = 365.25
 ## avec start end ?
-#ts_raw <- ts(df_raw[, 2], start = c(2004, 1), frequency = 12)
+# ts_raw <- ts(df_raw[, 2], start = c(2004, 1), frequency = 12)
 
 # 178 obs, 1/178 = .05
 # 178/12 = 14.8 ans
@@ -238,15 +245,15 @@ p <- TSA::periodogram(y)
 p$bandwidth
 p$spec # valeur ordonnée
 p$freq[which.max(as.vector(p$spec))]
-#0.08333333 pas .0831 : mensuel (ipi)
+# 0.08333333 pas .0831 : mensuel (ipi)
 # ici .1428498 = 1/7
 
-#les 5 plus grosses frequences
+# les 5 plus grosses frequences
 ## positions (données par order)
 ab <- order(-p$spec)[1:5]
 ab
-#tableau des frequences et valeurs
-fr <- rbind(p$freq[ab], p$spec[ab], p$freq[ab]*length(y))
+# tableau des frequences et valeurs
+fr <- rbind(p$freq[ab], p$spec[ab], p$freq[ab] * length(y))
 # comprendre ce tableau
 rownames(fr) <- c("Frequence", "Spectre", "cycle")
 p$freq[ab]
@@ -255,25 +262,31 @@ print(fr)
 
 # Spectral density
 n.freq <- 10000 # roughly n obs/2 ?
-df_daily.spec <- data.frame(freq = .5 * seq(1 / n.freq, 1, length.out = n.freq),
-                            ar300 = spectrum(df_daily$births,
-                                             plot = FALSE, n.freq = n.freq,
-                                             method = "ar", order = 300)$spec,
-                            ar300d = spectrum(diff(df_daily$births, lag = 1, differences = 1),
-                                              plot = FALSE, n.freq = n.freq,
-                                              method = "ar", order = 300)$spec)
+df_daily.spec <- data.frame(
+    freq = .5 * seq(1 / n.freq, 1, length.out = n.freq),
+    ar300 = spectrum(df_daily$births,
+        plot = FALSE, n.freq = n.freq,
+        method = "ar", order = 300
+    )$spec,
+    ar300d = spectrum(diff(df_daily$births, lag = 1, differences = 1),
+        plot = FALSE, n.freq = n.freq,
+        method = "ar", order = 300
+    )$spec
+)
 # clarify this one
 # AR spectrum plot
 ### questions on harmonics (smth to show to JP)
 ggplot(df_daily.spec) +
     geom_vline(xintercept = 1:3 / 365.25, col = "red") + # DOY
     geom_vline(xintercept = 1:3 / 7, col = "blue") + # weekly : harmonics
-    geom_vline(xintercept = 1:3 / (365.25/12), col = "yellow") + # day of month 30.44
+    geom_vline(xintercept = 1:3 / (365.25 / 12), col = "yellow") + # day of month 30.44
     geom_line(aes(freq, ar300), linewidth = .1, linetype = 2) +
     geom_line(aes(freq, ar300d), linewidth = .1) +
     labs(x = "", y = "") +
-    scale_y_log10(breaks = c(.001, .01, .1, 1, 10, 100, 1000),
-                  labels = c("0.001", "0.01", "0.1", "1", "10", "100", "1000"))
+    scale_y_log10(
+        breaks = c(.001, .01, .1, 1, 10, 100, 1000),
+        labels = c("0.001", "0.01", "0.1", "1", "10", "100", "1000")
+    )
 
 # clarify this one
 # AR spectrum plot
@@ -285,8 +298,10 @@ ggplot(df_daily.spec) +
     geom_line(aes(freq, ar300), linewidth = .1, linetype = 2) +
     geom_line(aes(freq, ar300d), linewidth = .1) +
     labs(x = "", y = "") +
-    scale_y_log10(breaks = c(.001, .01, .1, 1, 10, 100, 1000),
-                  labels = c("0.001", "0.01", "0.1", "1", "10", "100", "1000"))
+    scale_y_log10(
+        breaks = c(.001, .01, .1, 1, 10, 100, 1000),
+        labels = c("0.001", "0.01", "0.1", "1", "10", "100", "1000")
+    )
 
 
 ### general periodicity questions
@@ -320,15 +335,17 @@ french_calendar <- national_calendar(days = list(
     special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
     special_day("ASSUMPTION"), # Assomption
     special_day("ALLSAINTSDAY"), # Toussaint
-    special_day("ARMISTICE"))
-)
+    special_day("ARMISTICE")
+))
 
 frCal_2005 <- weighted_calendar(list(french_calendar), 0.5)
 final_cal <- chained_calendar(french_calendar, frCal_2005, break_date = "2005-05-01")
 
 #### pb "type" and non working days in daily data ?
-q <- holidays(french_calendar, "1968-01-01", length = length(df_daily$births), type = "All",
-                             nonworking = 7L)
+q <- holidays(french_calendar, "1968-01-01",
+    length = length(df_daily$births), type = "All",
+    nonworking = 7L
+)
 ## j"hesite entre "Skip" et "All"
 ## ici revoir R doc pour ordre
 
@@ -340,10 +357,12 @@ str(regs_cjo)
 r <- regs_cjo |> dplyr::filter(V2 == 1)
 r
 ### names in english
-colnames(regs_cjo) <- c("14th_july", "8th_may", "1st_jan", "Xmas", "1st_may",
-                        "asc", "east_mon", "pen_mon",
-                        "15th_aug", "1st_nov",
-                        "11th_nov")
+colnames(regs_cjo) <- c(
+    "14th_july", "8th_may", "1st_jan", "Xmas", "1st_may",
+    "asc", "east_mon", "pen_mon",
+    "15th_aug", "1st_nov",
+    "11th_nov"
+)
 length(colnames(regs_cjo))
 
 
@@ -352,21 +371,23 @@ length(colnames(regs_cjo))
 
 # attention param ndiff a renseigner : une reguliere + une saisonniere = 2
 
-pre.mult <-  rjd3highfreq::fractionalAirlineEstimation(
+pre.mult <- rjd3highfreq::fractionalAirlineEstimation(
     y = df_daily$log_births,
     x = q, # q = regs de calendrier
     periods = 7,
     ndiff = 2, ar = FALSE, mean = FALSE,
     outliers = c("ao", "wo"), criticalValue = 0,
-    precision = 1e-9, approximateHessian = TRUE)
+    precision = 1e-9, approximateHessian = TRUE
+)
 
-pre.mult_cal <-  rjd3highfreq::fractionalAirlineEstimation(
+pre.mult_cal <- rjd3highfreq::fractionalAirlineEstimation(
     y = df_daily$log_births,
     x = q, # q = regs de calendrier
     periods = 7,
     ndiff = 2, ar = FALSE, mean = FALSE,
     # outliers = c("ao", "wo"), criticalValue = 0,
-    precision = 1e-9, approximateHessian = TRUE)
+    precision = 1e-9, approximateHessian = TRUE
+)
 
 # pas de LS, assez improbable, evols lentes de toute façon
 
@@ -384,34 +405,34 @@ pre.mult_cal <-  rjd3highfreq::fractionalAirlineEstimation(
 
 ####################### Explo OUTPUT pre-adjustment
 ##### will feed the doc
-#model summary de l"input, yc coeffs/se des vars en input + linearized = final result !
-pre.mult$model$y #raw series
-pre.mult$model$variables #regression vars yx outliers = vars utilisees
-pre.mult$model$X #regresssors yc outliers
+# model summary de l"input, yc coeffs/se des vars en input + linearized = final result !
+pre.mult$model$y # raw series
+pre.mult$model$variables # regression vars yx outliers = vars utilisees
+pre.mult$model$X # regresssors yc outliers
 pre.mult$model$b #
 pre.mult$model$bcov # matrice des se
-pre.mult$model$linearized #linearized series
+pre.mult$model$linearized # linearized series
 
 length(pre.mult$model$linearized)
 length(y)
-#likelihood
+# likelihood
 pre.mult$likelihood$ll
 pre.mult$likelihood$ssq
-pre.mult$likelihood$neffective #donne -1 : bizarre : anecdote
+pre.mult$likelihood$neffective # donne -1 : bizarre : anecdote
 pre.mult$likelihood$nparams
-pre.mult$likelihood$df #?
+pre.mult$likelihood$df # ?
 pre.mult$likelihood$aic
-pre.mult$likelihood$aicc #rappel teneur correction : look up
+pre.mult$likelihood$aicc # rappel teneur correction : look up
 
 # estimation
-pre.mult$estimation$parameters #coeffs du modele arima
+pre.mult$estimation$parameters # coeffs du modele arima
 pre.mult$estimation$score # ???
-pre.mult$estimation$covariance #" mat var covar des coeffs du modele ARIMA !! att
+pre.mult$estimation$covariance # " mat var covar des coeffs du modele ARIMA !! att
 ##############################################################
 ############## Decomposition #################################
 ##############################################################
 # calendar vs seasonal
-##si pas de jours feries : p = 7 traite entierement l"effet type de jours ? oui
+## si pas de jours feries : p = 7 traite entierement l"effet type de jours ? oui
 # on enleve tout pour ne pas pertubrber p = 7
 # pour p = 365 moins evident pour j fixer mais JP recommande de ne pas reinjecter
 # pour JP Xmas = calendar, even in 365
@@ -429,20 +450,22 @@ pre.mult$estimation$covariance #" mat var covar des coeffs du modele ARIMA !! at
 # Estimated outlier & calendar effects (coefs, se, student)
 ### variables are in "model" part as pre-set by the user : pre.mdl$model$variables
 ## que cal
-regs_mult_cal <-  data.frame(
+regs_mult_cal <- data.frame(
     "Variable" = pre.mult_cal$model$variables,
     "Coef" = pre.mult_cal$model$b,
-    "Coef_SE" = sqrt(diag(pre.mult_cal$model$bcov))) |>
+    "Coef_SE" = sqrt(diag(pre.mult_cal$model$bcov))
+) |>
     mutate(Tstat = round(Coef / Coef_SE, 2))
 regs_mult_cal
 regs_mult_cal$Variable[1:11] <- colnames(regs_cjo)
 regs_mult_cal
 
 ###
-regs_mult <-  data.frame(
+regs_mult <- data.frame(
     "Variable" = pre.mult$model$variables,
     "Coef" = pre.mult$model$b,
-    "Coef_SE" = sqrt(diag(pre.mult$model$bcov))) |>
+    "Coef_SE" = sqrt(diag(pre.mult$model$bcov))
+) |>
     mutate(Tstat = round(Coef / Coef_SE, 2))
 regs_mult
 regs_mult$Variable[1:11] <- colnames(regs_cjo)
@@ -471,7 +494,8 @@ data.frame(
     MA_parameter = c("MA1", "DOW"),
     Coef = pre.mult$estimation$parameters,
     Coef_SE = sqrt(diag(pre.mult$estimation$covariance)),
-    check.names = FALSE) |>
+    check.names = FALSE
+) |>
     mutate(Tstat = Coef / Coef_SE)
 
 
@@ -488,16 +512,22 @@ resultats_out2 <- resultats_out[26:nrow(resultats_out), ]
 resultats_out2
 
 kbl(resultats_cal) |>
-    kable_styling(bootstrap_options = "striped",
-                  full_width = FALSE)
+    kable_styling(
+        bootstrap_options = "striped",
+        full_width = FALSE
+    )
 
 kbl(resultats_out1) |>
-    kable_styling(bootstrap_options = "striped",
-                  full_width = FALSE)
+    kable_styling(
+        bootstrap_options = "striped",
+        full_width = FALSE
+    )
 
 kbl(resultats_out2) |>
-    kable_styling(bootstrap_options = "striped",
-                  full_width = FALSE)
+    kable_styling(
+        bootstrap_options = "striped",
+        full_width = FALSE
+    )
 
 
 
@@ -510,7 +540,8 @@ df_daily_r <- df_daily |>
     mutate(
         lin_log = pre.mult$model$linearized,
         lin = exp(pre.mult$model$linearized),
-        y_cal = exp(pre.mult_cal$model$linearized)) #approx
+        y_cal = exp(pre.mult_cal$model$linearized)
+    ) # approx
 head(df_daily_r)
 # avant decomp
 # TP : gerer l"approximation du Y cal
@@ -549,13 +580,15 @@ x11.dow <- rjd3highfreq::x11(
     trend.kernel = "Henderson", # Kernel function
     trend.asymmetric = "CutAndNormalize", # Truncation method
     seas.s0 = "S3X9", seas.s1 = "S3X9", # Seasonal filters
-    extreme.lsig = 1.5, extreme.usig = 2.5)   # Sigma-limits
+    extreme.lsig = 1.5, extreme.usig = 2.5
+) # Sigma-limits
 
 ########### recup sa p = 7 et s : notamment for box plots
 df_daily_r <- df_daily_r |>
     mutate(
         sa_p7 = x11.dow$decomposition$sa,
-        s_p7 = x11.dow$decomposition$s)
+        s_p7 = x11.dow$decomposition$s
+    )
 head(df_daily_r)
 # Extract DOY pattern from DOW-adjusted data : run on SA (pb here outliers and cal not reinjected)
 x11.doy <- rjd3highfreq::x11(
@@ -567,15 +600,17 @@ x11.doy <- rjd3highfreq::x11(
     trend.kernel = "Henderson",
     trend.asymmetric = "CutAndNormalize",
     seas.s0 = "S3X3", seas.s1 = "S3X3",
-    extreme.lsig = 1.5, extreme.usig = 2.5)
+    extreme.lsig = 1.5, extreme.usig = 2.5
+)
 
 
 df_daily_r <- df_daily_r |>
     mutate(
         sa_p365 = x11.doy$decomposition$sa,
-           s_p365 = x11.doy$decomposition$s,
-           sa_x11 = x11.doy$decomposition$sa,
-           sa_f = y_cal / (s_p365 * s_p7)) # sans outliers ?
+        s_p365 = x11.doy$decomposition$s,
+        sa_x11 = x11.doy$decomposition$sa,
+        sa_f = y_cal / (s_p365 * s_p7)
+    ) # sans outliers ?
 
 df_daily_r <- df_daily_r |>
     mutate(t_p365 = x11.doy$decomposition$t)
@@ -591,7 +626,7 @@ ggplot(df_daily_r) +
 
 
 
-#result = "model" list og lists as usual x
+# result = "model" list og lists as usual x
 ################## explo OUTPUT from X-11
 ## series from decomposition
 x11.dow$decomposition$y
@@ -614,8 +649,10 @@ x11.dow$parameters$extreme.usig
 # graphs pb
 plot(df_daily$date, x11.dow$decomposition$s, type = "l", xlab = "", ylab = "", axes = FALSE)
 par(new = TRUE)
-plot(df_daily$date, x11.doy$decomposition$s, type = "l", col = "red", xlab = "", ylab = "",
-     main = "Estimated DOW (black) and DOY (red) patterns")
+plot(df_daily$date, x11.doy$decomposition$s,
+    type = "l", col = "red", xlab = "", ylab = "",
+    main = "Estimated DOW (black) and DOY (red) patterns"
+)
 
 
 
@@ -629,8 +666,10 @@ zoom <- which(df_daily_r$date >= "2016-01-01")
 
 plot(df_daily_r$date[zoom], x11.dow$decomposition$s[zoom], type = "l", xlab = "", ylab = "", axes = FALSE)
 par(new = TRUE)
-plot(df_daily_r$date[zoom], x11.doy$decomposition$s[zoom], type = "l", col = "red", xlab = "", ylab = "",
-     main = "Estimated DOW (black) and DOY (red) patterns")
+plot(df_daily_r$date[zoom], x11.doy$decomposition$s[zoom],
+    type = "l", col = "red", xlab = "", ylab = "",
+    main = "Estimated DOW (black) and DOY (red) patterns"
+)
 
 # Zoom in on 1976
 
@@ -638,8 +677,10 @@ zoom <- which(df_daily_r$date >= "1976-01-01" & df_daily_r$date <= "1976-12-31")
 
 plot(df_daily_r$date[zoom], x11.dow$decomposition$s[zoom], type = "l", xlab = "", ylab = "", axes = FALSE)
 par(new = TRUE)
-plot(df_daily_r$date[zoom], x11.doy$decomposition$s[zoom], type = "l", col = "red", xlab = "", ylab = "",
-     main = "Estimated DOW (black) and DOY (red) patterns")
+plot(df_daily_r$date[zoom], x11.doy$decomposition$s[zoom],
+    type = "l", col = "red", xlab = "", ylab = "",
+    main = "Estimated DOW (black) and DOY (red) patterns"
+)
 
 
 ########### grosses differences de rythmes par periode
@@ -658,11 +699,12 @@ amb.dow <- rjd3highfreq::fractionalAirlineDecomposition(
     period = 7, # DOW pattern
     sn = FALSE, # Signal (SA)-noise decomposition
     stde = FALSE, # Calculate standard deviations
-    nbcasts = 0, nfcasts = 0)  # Numbers of back- and forecasts
+    nbcasts = 0, nfcasts = 0
+) # Numbers of back- and forecasts
 
 
 ##################### Explo OUTput for seats
-#explo model list of lists
+# explo model list of lists
 # amb.dow : one more step $ucarima$model (not model for params)
 amb.dow$estimation$score # max likelihood solution
 # ucarima$model = ?
@@ -676,7 +718,7 @@ amb.dow$ucarima$components
 amb.dow$ucarima$complements ##
 
 # decompostion series (pas de pb lin vs final ?)
-#amb.dow$decomposition
+# amb.dow$decomposition
 amb.dow$decomposition$y
 amb.dow$decomposition$t
 amb.dow$decomposition$s
@@ -686,10 +728,10 @@ amb.dow$decomposition$sa
 # amb.dow$likelihood$...les memes que dans linearization
 amb.dow$likelihood$neffective # -1 ? que"est
 
-#amb.dow$estimation
+# amb.dow$estimation
 amb.dow$estimation$parameters # coeffs arima (cf airline estimation = > les memes ??)
 amb.dow$estimation$score # ?
-amb.dow$estimation$covariance #matrice var covar parametres
+amb.dow$estimation$covariance # matrice var covar parametres
 
 
 # Extract DOY pattern from DOW-adjusted linearised data
@@ -699,7 +741,8 @@ amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
     period = 365.2425, # DOY pattern
     sn = FALSE,
     stde = FALSE,
-    nbcasts = 0, nfcasts = 0)
+    nbcasts = 0, nfcasts = 0
+)
 
 # Store seasonal components in dataframe
 # pay attention to logs
@@ -709,7 +752,8 @@ df_daily_r <- df_daily_r |>
     mutate(
         amb.dow = exp(amb.dow$decomposition$s),
         amb.doy = exp(amb.doy$decomposition$s),
-        amb.sa_f = y_cal / (amb.dow * amb.doy))
+        amb.sa_f = y_cal / (amb.dow * amb.doy)
+    )
 
 tail(df_daily_r)
 df_daily_r <- df_daily_r |>
@@ -721,7 +765,7 @@ plot(df_daily$date, exp(amb.dow$decomposition$s), type = "l", xlab = "", ylab = 
 par(new = TRUE)
 plot(df_daily$date, exp(amb.doy$decomposition$s), type = "l", col = "red", xlab = "", ylab = "")
 
-#main = "AMB estimated DOW (black) and DOY (red) patterns")
+# main = "AMB estimated DOW (black) and DOY (red) patterns")
 
 
 #### y, sa, t
@@ -748,13 +792,17 @@ zoom <- which(df_daily_r$date >= "2012-01-01" & df_daily_r$date <= "2016-12-31")
 # p = 7
 plot(df_daily$date[zoom], exp(amb.dow$decomposition$s)[zoom], type = "l", xlab = "", ylab = "", axes = FALSE)
 par(new = TRUE)
-plot(df_daily$date[zoom], x11.dow$decomposition$s[zoom], type = "l", col = "red", xlab = "", ylab = "",
-     main = "Estimated DOW patterns: AMB (black) and X-11 (red)")
+plot(df_daily$date[zoom], x11.dow$decomposition$s[zoom],
+    type = "l", col = "red", xlab = "", ylab = "",
+    main = "Estimated DOW patterns: AMB (black) and X-11 (red)"
+)
 # p = 365
 plot(df_daily$date, exp(amb.doy$decomposition$s), type = "l", xlab = "", ylab = "", axes = FALSE)
 par(new = TRUE)
-plot(df_daily$date, x11.doy$decomposition$s, type = "l", col = "red", xlab = "", ylab = "",
-     main = "Estimated DOW patterns: AMB (black) and X-11 (red)")
+plot(df_daily$date, x11.doy$decomposition$s,
+    type = "l", col = "red", xlab = "", ylab = "",
+    main = "Estimated DOW patterns: AMB (black) and X-11 (red)"
+)
 
 ### etude distrib coeffs ?
 
@@ -762,8 +810,10 @@ plot(df_daily$date, x11.doy$decomposition$s, type = "l", col = "red", xlab = "",
 # sa directe sur serie linearisee (pas mal car effet decomp pure)
 plot(df_daily$date[zoom], exp(amb.doy$decomposition$sa[zoom]), type = "l", xlab = "", ylab = "", axes = FALSE)
 par(new = TRUE)
-plot(df_daily$date[zoom], x11.doy$decomposition$sa[zoom], type = "l", col = "red", xlab = "", ylab = "",
-     main = "SA 2-step AMB (black) and X-11 (red)")
+plot(df_daily$date[zoom], x11.doy$decomposition$sa[zoom],
+    type = "l", col = "red", xlab = "", ylab = "",
+    main = "SA 2-step AMB (black) and X-11 (red)"
+)
 
 # stat sur sa ?
 # demander à K...
@@ -791,7 +841,8 @@ amb.multi <- rjd3highfreq::multiAirlineDecomposition(
     periods = c(7, 365.2425), # DOW pattern
     ar = FALSE,
     stde = FALSE, # Calculate standard deviations
-    nbcasts = 0, nfcasts = 0)  # Numbers of back- and forecasts
+    nbcasts = 0, nfcasts = 0
+) # Numbers of back- and forecasts
 
 # composantes
 amb.multi$likelihood
@@ -805,22 +856,26 @@ plot(df_daily$date, exp(amb.multi$decomposition[[1]]), type = "l", xlab = "", yl
 
 plot(df_daily$date, exp(amb.multi$decomposition$s), type = "l", xlab = "", ylab = "", axes = FALSE)
 par(new = TRUE)
-plot(df_daily$date, exp(amb.doy$decomposition$s), type = "l", col = "red", xlab = "", ylab = "",
-     main = "Estimated DOW (black) and DOY (red) patterns")
+plot(df_daily$date, exp(amb.doy$decomposition$s),
+    type = "l", col = "red", xlab = "", ylab = "",
+    main = "Estimated DOW (black) and DOY (red) patterns"
+)
 
 ### comp multi vs not multi
 
 
 
 ## Canova H for final sa
-#sa_f = finale x11
+# sa_f = finale x11
 ch.sp <- 2:367 # Seasonal periodicities
 
 df_ch <- data.frame(
     "sp" = ch.sp,
     "ch.sa_x11" = rjd3sa::seasonality.canovahansen(df_daily_r$sa_f,
-                                                   p0 = min(ch.sp), p1 = max(ch.sp),
-                                                   np = max(ch.sp) - min(ch.sp) + 1, original = TRUE))
+        p0 = min(ch.sp), p1 = max(ch.sp),
+        np = max(ch.sp) - min(ch.sp) + 1, original = TRUE
+    )
+)
 
 
 # Significant periodicities (Harvey, 2001, Table I(b))

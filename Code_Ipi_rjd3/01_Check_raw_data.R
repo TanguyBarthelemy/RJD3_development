@@ -6,7 +6,7 @@ getwd()
 # donnees ancienene base jusqu'en dec 2023
 ipi_2023 <- read.csv("Data/Ipi_rjd3/IPI_nace4_dec2023_old_base.csv", sep = ";")
 
-#donnees nouvelle base juqu'en oct 2023 pour es
+# donnees nouvelle base juqu'en oct 2023 pour es
 ipi_2024 <- read.csv("Data/Ipi_rjd3/IPI_nace4.csv", sep = ";")
 
 

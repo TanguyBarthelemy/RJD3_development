@@ -192,7 +192,7 @@ alain : tableau supplementaitre
 - ajouter valeurs coefficients et p-values (pour selection cjo) 
 
 aujourd'hui: ajout params dans options d'output, lecture ad hoc de demetra_m.csv
-but lire direct avec JDCruncher (to do 1h)
+but lire direct avec JDCruncheR (to do 1h)
 
 - test validité chemin avant de cruncher (to do 1h)
 

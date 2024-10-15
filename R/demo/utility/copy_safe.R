@@ -1,6 +1,4 @@
-
 pull_out_fire <- function(ws_name, id = NULL) {
-
     ws_path <- file.path("./WS", ws_name)
     xml_path <- file.path("./WS", paste0(ws_name, ".xml"))
 
@@ -12,7 +10,7 @@ pull_out_fire <- function(ws_name, id = NULL) {
         id <- new_name()
         cat("Your new id is : ", id, ".\n", sep = "")
     }
-    secured_path <- file.path("./WS/SECURED/", id)
+    secured_path <- file.path("./WS/SECURED", id)
 
 
     if (!dir.exists("./WS/SECURED/")) {
@@ -27,17 +25,26 @@ pull_out_fire <- function(ws_name, id = NULL) {
 }
 
 bring_back <- function(id) {
-
-    secured_path <- file.path("./WS/SECURED/", id)
+    secured_path <- file.path("./WS/SECURED", id)
     if (!dir.exists(secured_path)) {
         warning("Il n'y a pas de copie à cet id.")
         return(invisible(NULL))
     }
 
-    list.files(secured_path, full.names = TRUE) |>
-        sapply(X = _, FUN = file.copy, to = "./WS",
-               recursive = TRUE, overwrite = TRUE) |>
-        invisible()
+    objects_name <- list.files(secured_path, full.names = FALSE)
+    objects_secured_path <- list.files(secured_path, full.names = TRUE)
+    objects_current_path <- file.path("./WS", objects_name)
+
+    for (index_object in seq_along(objects_name)) {
+        unlink(objects_current_path[index_object], recursive = TRUE)
+        file.copy(
+            from = objects_secured_path[index_object],
+            to = "./WS",
+            overwrite = TRUE,
+            recursive = TRUE
+        ) |> invisible()
+        unlink(objects_secured_path[index_object], recursive = TRUE)
+    }
 
     unlink(secured_path, recursive = TRUE)
 
@@ -45,10 +52,11 @@ bring_back <- function(id) {
 }
 
 bring_all_back <- function() {
-
-    ids <- list.dirs(path = "./WS/SECURED/",
-                     recursive = FALSE,
-                     full.names = FALSE)
+    ids <- list.dirs(
+        path = "./WS/SECURED/",
+        recursive = FALSE,
+        full.names = FALSE
+    )
 
     for (id in ids) {
         print(bring_back(id))

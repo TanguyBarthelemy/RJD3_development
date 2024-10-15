@@ -26,7 +26,6 @@ regs_cjo_ts <- read.csv("./REGS_CJO/regs_mens_JD.csv",
     ts(start = 1990L, frequency = 12L)
 
 create_reg_cjo_sets <- function(regs_cjo) {
-
     REG1 <- regs_cjo[, "REG1_Semaine", drop = FALSE] # drop = false, arg
     attr(REG1, "class") <- c("mts", "ts", "matrix", "array") # si ts  de colonne, cas où un seul regresseur
 

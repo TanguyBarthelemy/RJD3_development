@@ -1,20 +1,21 @@
-
-fractionalAirlineEstimation_new <- function(
-        y, periods, x = NULL, ndiff = 2, ar = FALSE, mean = FALSE,
-        outliers = NULL, criticalValue = 6, precision = 1e-12, approximateHessian = FALSE)
-{
+fractionalAirlineEstimation_new <- function(y, periods, x = NULL, ndiff = 2, ar = FALSE, mean = FALSE,
+                                            outliers = NULL, criticalValue = 6, precision = 1e-12, approximateHessian = FALSE) {
     checkmate::assertNumeric(y, null.ok = FALSE)
     checkmate::assertNumeric(criticalValue, len = 1, null.ok = FALSE)
     checkmate::assertNumeric(precision, len = 1, null.ok = FALSE)
     checkmate::assertLogical(mean, len = 1, null.ok = FALSE)
-    if (is.null(outliers))
+    if (is.null(outliers)) {
         joutliers <- .jnull("[Ljava/lang/String;")
-    else joutliers <- .jarray(outliers, "java.lang.String")
-    jrslt <- .jcall("demetra/highfreq/r/FractionalAirlineProcessor",
-                    "Ljdplus/highfreq/ExtendedAirlineEstimation;", "estimate",
-                    as.numeric(y), rjd3toolkit::.r2jd_matrix(x), mean, .jarray(periods),
-                    as.integer(ndiff), ar, joutliers, criticalValue, precision,
-                    approximateHessian)
+    } else {
+        joutliers <- .jarray(outliers, "java.lang.String")
+    }
+    jrslt <- .jcall(
+        "demetra/highfreq/r/FractionalAirlineProcessor",
+        "Ljdplus/highfreq/ExtendedAirlineEstimation;", "estimate",
+        as.numeric(y), rjd3toolkit::.r2jd_matrix(x), mean, .jarray(periods),
+        as.integer(ndiff), ar, joutliers, criticalValue, precision,
+        approximateHessian
+    )
     model <- list(
         y = as.numeric(y),
         periods = periods,
@@ -28,29 +29,36 @@ fractionalAirlineEstimation_new <- function(
         component_ls = rjd3toolkit::.proc_vector(jrslt, "component_ls"),
         component_outliers = rjd3toolkit::.proc_vector(jrslt, "component_outliers"),
         component_userdef_reg_variables = rjd3toolkit::.proc_vector(jrslt, "component_userdef_reg_variables"),
-        component_mean = rjd3toolkit::.proc_vector(jrslt, "component_mean"))
+        component_mean = rjd3toolkit::.proc_vector(jrslt, "component_mean")
+    )
 
-    estimation <- list(parameters = rjd3toolkit::.proc_vector(jrslt, "parameters"),
-                       score = rjd3toolkit::.proc_vector(jrslt, "score"),
-                       covariance = rjd3toolkit::.proc_matrix(jrslt, "pcov"))
+    estimation <- list(
+        parameters = rjd3toolkit::.proc_vector(jrslt, "parameters"),
+        score = rjd3toolkit::.proc_vector(jrslt, "score"),
+        covariance = rjd3toolkit::.proc_matrix(jrslt, "pcov")
+    )
 
     likelihood <- rjd3toolkit::.proc_likelihood(jrslt, "likelihood.")
 
-    return(structure(list(model = model,
-                          estimation = estimation,
-                          likelihood = likelihood),
-                     class = "JDFractionalAirlineEstimation"))
+    return(structure(
+        list(
+            model = model,
+            estimation = estimation,
+            likelihood = likelihood
+        ),
+        class = "JDFractionalAirlineEstimation"
+    ))
 }
 
-print_JDFractionalAirlineEstimation <- function(
-        x, digits = max(3L, getOption("digits") - 3L)#, starting = as.Date("1968-01-01")
+print_JDFractionalAirlineEstimation <- function(x, digits = max(3L, getOption("digits") - 3L) # , starting = as.Date("1968-01-01")
 ) {
-
     print_vect <- function(.x) {
         s <- .x
         n_min <- nchar(s) |> min()
         n_max <- nchar(s) |> max() + 1
-        s <- s |> paste0(strrep(" ", n_max - n_min + 1)) |> substr(1, n_max)
+        s <- s |>
+            paste0(strrep(" ", n_max - n_min + 1)) |>
+            substr(1, n_max)
 
         dimension <- 5
         if (length(s) %% 3 == 0) dimension <- 3
@@ -59,7 +67,8 @@ print_JDFractionalAirlineEstimation <- function(
         if (n_max < 13 && length(s) %% 5 == 0) dimension <- 5
 
         out <- matrix(c(s, rep("", dimension - (((length(s) - 1) %% dimension) + 1))),
-                      ncol = dimension) |>
+            ncol = dimension
+        ) |>
             apply(MARGIN = 1, paste, collapse = "\t") |>
             paste(collapse = "\n")
 
@@ -69,14 +78,15 @@ print_JDFractionalAirlineEstimation <- function(
     }
 
     nb_outliers <- sum((x$model$variables |>
-                            substr(1L, 2L) |>
-                            toupper()) %in% c("AO", "WO", "LS"))
+        substr(1L, 2L) |>
+        toupper()) %in% c("AO", "WO", "LS"))
     nb_reg_cjo <- length(x$model$variables) - nb_outliers
 
-    summary_coeff <-  data.frame(
+    summary_coeff <- data.frame(
         "Variable" = x$model$variables,
         "Coef" = x$model$b,
-        "Coef_SE" = sqrt(diag(x$model$bcov)))
+        "Coef_SE" = sqrt(diag(x$model$bcov))
+    )
     summary_coeff$Tstat <- round(summary_coeff$Coef / summary_coeff$Coef_SE, digits)
     summary_coeff$Coef <- round(summary_coeff$Coef, digits)
     summary_coeff$Coef_SE <- round(summary_coeff$Coef_SE, digits)
@@ -86,7 +96,6 @@ print_JDFractionalAirlineEstimation <- function(
     #     "east_mon", "pen_mon", "15th_aug", "1st_nov", "11th_nov")
 
     if (nb_outliers > 0) {
-
         outliers_coeff <- summary_coeff[(nb_reg_cjo + 1L):nrow(summary_coeff), ]
 
         # date_vect <- seq.Date(from = starting,
@@ -97,7 +106,6 @@ print_JDFractionalAirlineEstimation <- function(
         #     date_vect[substr(outliers_coeff$Variable, 4L, 10L) |> as.numeric()]
         # )
         outliers <- outliers_coeff$Variable
-
     }
 
     if (nb_reg_cjo > 0) {
@@ -108,12 +116,17 @@ print_JDFractionalAirlineEstimation <- function(
     # Estimated MA parameters (coefs, se, student)
     nb_freq <- (x$estimation$parameters |> length()) - 1L
     est_ma_params <- data.frame(
-        MA_parameter = c("Theta(1)",
-                         paste0("Theta(", paste0("period = ",
-                                                 x$model$periods), ")")),
+        MA_parameter = c(
+            "Theta(1)",
+            paste0("Theta(", paste0(
+                "period = ",
+                x$model$periods
+            ), ")")
+        ),
         Coef = x$estimation$parameters,
         Coef_SE = sqrt(diag(x$estimation$covariance)),
-        check.names = FALSE)
+        check.names = FALSE
+    )
     est_ma_params$Tstat <- est_ma_params$Coef / est_ma_params$Coef_SE
 
     cat("\n")
@@ -162,18 +175,23 @@ print_JDFractionalAirlineEstimation <- function(
 
     cat("Sum of square residuals:", formatC(x$likelihood$ssq, digits = digits),
         "on", x$likelihood$df, "degrees of freedom",
-        sep = " ")
+        sep = " "
+    )
     cat("\n")
 
     cat("Log likelihood = ", formatC(x$likelihood$ll, digits = digits),
         ", \n\taic = ", formatC(x$likelihood$aic, digits = digits),
         ", \n\taicc = ", formatC(x$likelihood$aicc, digits = digits),
         ", \n\tbic(corrected for length) = ",
-        formatC(x$likelihood$bicc, digits = digits), sep = "")
+        formatC(x$likelihood$bicc, digits = digits),
+        sep = ""
+    )
     cat("\n")
 
     cat("Hannan–Quinn information criterion = ",
-        formatC(x$likelihood$hannanquinn, digits = digits), sep = "")
+        formatC(x$likelihood$hannanquinn, digits = digits),
+        sep = ""
+    )
 
     cat("\n\n")
     return(invisible(x))

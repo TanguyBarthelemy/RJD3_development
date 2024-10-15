@@ -1,4 +1,3 @@
-
 ################################################################################
 #######                   Test des prints en version 3                   #######
 ################################################################################
@@ -49,11 +48,13 @@ french_calendar <- national_calendar(days = list(
     special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
     special_day("ASSUMPTION"), # Assomption
     special_day("ALLSAINTSDAY"), # Toussaint
-    special_day("ARMISTICE"))
-)
+    special_day("ARMISTICE")
+))
 
-q <- holidays(french_calendar, "1968-01-01", length = length(df_daily$births), type = "All",
-              nonworking = 7L)
+q <- holidays(french_calendar, "1968-01-01",
+    length = length(df_daily$births), type = "All",
+    nonworking = 7L
+)
 
 pre.mult <- fractionalAirlineEstimation(
     y = df_daily$log_births,
@@ -61,7 +62,8 @@ pre.mult <- fractionalAirlineEstimation(
     periods = 7,
     ndiff = 2, ar = FALSE, mean = FALSE,
     outliers = c("ao", "wo"), criticalValue = 0,
-    precision = 1e-9, approximateHessian = TRUE)
+    precision = 1e-9, approximateHessian = TRUE
+)
 
 pre.mult_cal <- fractionalAirlineEstimation_new(
     y = df_daily$log_births,
@@ -69,7 +71,8 @@ pre.mult_cal <- fractionalAirlineEstimation_new(
     periods = c(7, 28),
     ndiff = 2, ar = FALSE, mean = FALSE,
     # outliers = c("ao", "wo"), criticalValue = 0,
-    precision = 1e-9, approximateHessian = TRUE)
+    precision = 1e-9, approximateHessian = TRUE
+)
 
 print(pre.mult)
 print(pre.mult_cal)
@@ -87,7 +90,8 @@ x11.dow <- rjd3highfreq::x11(
     trend.kernel = "Henderson", # Kernel function
     trend.asymmetric = "CutAndNormalize", # Truncation method
     seas.s0 = "S3X9", seas.s1 = "S3X9", # Seasonal filters
-    extreme.lsig = 1.5, extreme.usig = 2.5)
+    extreme.lsig = 1.5, extreme.usig = 2.5
+)
 
 x11.doy <- rjd3highfreq::x11(
     x11.dow$decomposition$sa,
@@ -98,7 +102,8 @@ x11.doy <- rjd3highfreq::x11(
     trend.kernel = "Henderson",
     trend.asymmetric = "CutAndNormalize",
     seas.s0 = "S3X3", seas.s1 = "S3X3",
-    extreme.lsig = 1.5, extreme.usig = 2.5)
+    extreme.lsig = 1.5, extreme.usig = 2.5
+)
 
 print(x11.dow)
 print(x11.doy)
@@ -109,24 +114,27 @@ print_JDX11(x11.doy)
 
 amb.dow <- fractionalAirlineDecomposition_new(
     df_daily$births, # input time series
-    period = 7,                # DOW pattern
-    sn = FALSE,                # Signal (SA)-noise decomposition
-    stde = FALSE,              # Calculate standard deviations
-    nbcasts = 0, nfcasts = 0)  # Numbers of back- and forecasts
+    period = 7, # DOW pattern
+    sn = FALSE, # Signal (SA)-noise decomposition
+    stde = FALSE, # Calculate standard deviations
+    nbcasts = 0, nfcasts = 0
+) # Numbers of back- and forecasts
 
 amb.doy <- fractionalAirlineDecomposition_new(
     amb.dow$decomposition$sa, # DOW-adjusted linearised data
     period = 365.2425, # DOY pattern
     sn = FALSE,
     stde = FALSE,
-    nbcasts = 0, nfcasts = 0)
+    nbcasts = 0, nfcasts = 0
+)
 
 amb.multi <- multiAirlineDecomposition_new(
     pre.mult$model$linearized, # input time series
     periods = c(7, 365.2425), # DOW pattern
     ar = FALSE,
     stde = FALSE, # Calculate standard deviations
-    nbcasts = 0, nfcasts = 0)
+    nbcasts = 0, nfcasts = 0
+)
 
 print(amb.dow)
 print(amb.doy)
@@ -163,7 +171,7 @@ ud <- ts(serie_ipi$RF3512, start = 1990, frequency = 12)
 
 # Classe JD3_REGARIMA_OUTPUT et JD3_REGARIMA_RSLTS
 reg_v3 <- rjd3x13::regarima(y_raw, spec = "RG5C")
-print(reg_v3) #JD3_REGARIMA_OUTPUT
+print(reg_v3) # JD3_REGARIMA_OUTPUT
 print(reg_v3$result) # JD3_REGARIMA_RSLTS
 
 # Classe JD3_REGARIMA_SPEC
@@ -171,7 +179,7 @@ sp <- spec_regarima("RG5C")
 
 sp <- rjd3toolkit::add_outlier(sp, type = c("AO", "LS"), date = c("2015-01-01", "2010-01-01"))
 
-sp <- set_outlier(sp, span.type = "BETWEEN", d0 = "2000-01-01", d1= "2015-01-01", n0 = 10, n1 = 20)
+sp <- set_outlier(sp, span.type = "BETWEEN", d0 = "2000-01-01", d1 = "2015-01-01", n0 = 10, n1 = 20)
 
 sp <- sp |>
     rjd3toolkit::set_easter(enabled = TRUE, duration = 450) |>
@@ -184,18 +192,19 @@ print_JD3_REGARIMA_SPEC(sp)
 # Classe JD3_X11_SPEC
 init_spec <- spec_x11()
 new_spec <- set_x11(init_spec,
-                    mode = "LogAdditive",
-                    seasonal.comp = 1,
-                    seasonal.filter = "S3X9",
-                    henderson.filter = 7,
-                    lsigma = 1.7,
-                    usigma = 2.7,
-                    fcasts = -1,
-                    bcasts = -1,
-                    calendar.sigma ="All",
-                    sigma.vector = NA,
-                    exclude.forecast = FALSE,
-                    bias = "LEGACY")
+    mode = "LogAdditive",
+    seasonal.comp = 1,
+    seasonal.filter = "S3X9",
+    henderson.filter = 7,
+    lsigma = 1.7,
+    usigma = 2.7,
+    fcasts = -1,
+    bcasts = -1,
+    calendar.sigma = "All",
+    sigma.vector = NA,
+    exclude.forecast = FALSE,
+    bias = "LEGACY"
+)
 print(init_spec)
 print_JD3_X11_SPEC(init_spec)
 print_JD3_X11_SPEC(new_spec)
@@ -287,8 +296,8 @@ french_calendar <- national_calendar(days = list(
     special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
     special_day("ASSUMPTION"), # Assomption
     special_day("ALLSAINTSDAY"), # Toussaint
-    special_day("ARMISTICE"))
-)
+    special_day("ARMISTICE")
+))
 print(french_calendar)
 print_JD3_CALENDAR(french_calendar)
 

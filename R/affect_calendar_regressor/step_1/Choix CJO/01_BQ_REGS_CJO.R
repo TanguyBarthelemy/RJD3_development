@@ -1,4 +1,3 @@
-
 ################################################################################
 ########               Création du premier bilan qualité                ########
 ################################################################################
@@ -139,16 +138,16 @@ liste_BQ_WS <- list()
 
 # On passe en revue chaque WS
 for (i_ws in seq_along(WS_xml)) {
-
     print(paste0("WS n°", i_ws, " : ", WS_name[i_ws]))
 
     # Création de la matrice demetra_m et des séries dans un dossier Output
-    cruncher_and_param(workspace = WS_xml[i_ws],
-                       rename_multi_documents = TRUE, # Pour renommer les dossiers en sortie
-                       delete_existing_file = TRUE, # Pour remplacer les sorties existantes
-                       policy = "complete", # Politique de rafraichissement
-                       csv_layout = "list", # Format de sortie des tables
-                       log_file = "./Choix CJO/log.txt"
+    cruncher_and_param(
+        workspace = WS_xml[i_ws],
+        rename_multi_documents = TRUE, # Pour renommer les dossiers en sortie
+        delete_existing_file = TRUE, # Pour remplacer les sorties existantes
+        policy = "complete", # Politique de rafraichissement
+        csv_layout = "list", # Format de sortie des tables
+        log_file = "./Choix CJO/log.txt"
     )
 
     print("✔️️ Crunché !")
@@ -162,20 +161,24 @@ for (i_ws in seq_along(WS_xml)) {
 
     # Pour chaque SA processing
     for (i_sap in seq_along(SAP_dossier)) {
-
         print(paste0("SAP n°", i_sap, " : ", SAP_nom[i_sap]))
 
         # on recupere les diagnostics
         BQ <- extract_QR(paste0(SAP_dossier[i_sap], "/demetra_m.csv"))
         # on calcule le score
-        BQ <- compute_score(BQ, n_contrib_score = 5,
-                            conditional_indicator = list(list(
-                                indicator = "oos_mse",
-                                conditions = c("residuals_independency",
-                                               "residuals_homoskedasticity",
-                                               "residuals_normality"),
-                                conditions_modalities = c("Bad","Severe"))),
-                            na.rm = TRUE)
+        BQ <- compute_score(BQ,
+            n_contrib_score = 5,
+            conditional_indicator = list(list(
+                indicator = "oos_mse",
+                conditions = c(
+                    "residuals_independency",
+                    "residuals_homoskedasticity",
+                    "residuals_normality"
+                ),
+                conditions_modalities = c("Bad", "Severe")
+            )),
+            na.rm = TRUE
+        )
 
         liste_BQ_sap <- c(liste_BQ_sap, list(BQ))
 
@@ -194,7 +197,6 @@ names(liste_BQ_WS) <- WS_name
 liste_coeff_WS <- list()
 
 for (i_ws in seq_along(WS_xml)) {
-
     print(paste0("WS n°", i_ws, " : ", WS_name[i_ws]))
 
     # récupération des noms de chaque SA processing ainsi que de leur chemin
@@ -206,16 +208,17 @@ for (i_ws in seq_along(WS_xml)) {
 
     # Pour chaque SA processing
     for (i_sap in seq_along(SAP_nom)) {
-
         print(paste0("SAP n°", i_sap, " : ", SAP_nom[i_sap]))
 
         # Lecture de la matrice demetra_m
-        demetra_m <- read.csv(file = paste0(SAP_dossier[i_sap], "/demetra_m.csv"), sep = ";",
-                              dec = ",", stringsAsFactors = FALSE, na.strings = c("NA","?"))
+        demetra_m <- read.csv(
+            file = paste0(SAP_dossier[i_sap], "/demetra_m.csv"), sep = ";",
+            dec = ",", stringsAsFactors = FALSE, na.strings = c("NA", "?")
+        )
         head(demetra_m)
         colnames(demetra_m)
         # Noms de série
-        demetra_m$series <- gsub("(^ *)|(* $)", "", gsub("(^.* \\* )|(\\[frozen\\])","", demetra_m$X))
+        demetra_m$series <- gsub("(^ *)|(* $)", "", gsub("(^.* \\* )|(\\[frozen\\])", "", demetra_m$X))
 
         # On recupere les noms des series et l'aic corrige = aicc
         df_res_jeu_cjo <- demetra_m[, c("series", "aicc")]
@@ -223,13 +226,12 @@ for (i_ws in seq_along(WS_xml)) {
         # recuperation coefficients et p values des regs cjo
         # regs cjo : on repere l'emplacement des noms de variables qui commencent par td et finissent par un chiffre
         td_var_index <- grep(pattern = "^td\\.\\d\\.$", x = colnames(demetra_m))
-        length(td_var_index) #nombre de variables
+        length(td_var_index) # nombre de variables
         td_var_index
         colnames(demetra_m)[td_var_index]
 
         # s'il y en a :
         if (length(td_var_index) > 0) {
-
             # cf orga table : nom var / coeff reg / t stat / p value
             td_var_names <- colnames(demetra_m[1, td_var_index])
             # td_var_names <- gsub(pattern = "^.* ", replacement = "", x = demetra_m[1, td_var_index])
@@ -242,8 +244,10 @@ for (i_ws in seq_along(WS_xml)) {
             # Création d'une table avec coeff + p_value
             td_var_table <- demetra_m[, c(rbind(index_coeff, index_p_value))]
 
-            colnames(td_var_table)[seq_len(length(td_var_index) * 2)] <- paste0(rep(td_var_names, each = 2),
-                                                                           rep(c("_(pvalue)","_(coeff)"), length(td_var_index)))
+            colnames(td_var_table)[seq_len(length(td_var_index) * 2)] <- paste0(
+                rep(td_var_names, each = 2),
+                rep(c("_(pvalue)", "_(coeff)"), length(td_var_index))
+            )
 
             # si on a un seul regresseur JO
             if (length(td_var_names) > 1) {
@@ -258,8 +262,10 @@ for (i_ws in seq_along(WS_xml)) {
 
         # Ajout test EJOR (effets jours ouvrables)
         # on repere leur position dans le nom des variables et on prend la valeur (pas la modalité : good..)
-        res_td_var_index <- c(grep("f.test.on.sa..td.", colnames(demetra_m)),
-                              grep("f.test.on.i..td.", colnames(demetra_m)))
+        res_td_var_index <- c(
+            grep("f.test.on.sa..td.", colnames(demetra_m)),
+            grep("f.test.on.i..td.", colnames(demetra_m))
+        )
         res_td_var_names <- colnames(demetra_m)[res_td_var_index + 1]
         res_td_var_names
         head(demetra_m[, res_td_var_names])
@@ -270,7 +276,7 @@ for (i_ws in seq_along(WS_xml)) {
         head(ejor)
 
         # Regroupement et ajout des EJOR
-        df_res_jeu_cjo <- cbind(df_res_jeu_cjo,ejor)
+        df_res_jeu_cjo <- cbind(df_res_jeu_cjo, ejor)
         head(df_res_jeu_cjo)
 
         # ajout du schema
@@ -305,7 +311,6 @@ for (i_ws in seq_along(WS_xml)) {
 
     names(liste_sap) <- SAP_nom
     liste_coeff_WS <- c(liste_coeff_WS, list(liste_sap))
-
 }
 
 names(liste_coeff_WS) <- WS_name

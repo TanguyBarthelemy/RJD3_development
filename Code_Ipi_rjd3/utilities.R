@@ -15,7 +15,7 @@ printt <- function(obj) {
     return(invisible(NULL)) # forcer un retour
 }
 
-v<-1:10
+v <- 1:10
 v
 printt(v)
 

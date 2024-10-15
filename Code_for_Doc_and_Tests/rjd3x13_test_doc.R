@@ -55,8 +55,8 @@ userdefined_variables_x13()
 ### series span model span
 
 ### issue 0 (voir ds rjd3toolkit): stuck on airline ? misleading presentation
-x13_spec_d<-rjd3x13::x13_spec("rsa3")
-sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d, userdefined = "decomposition.10")
+x13_spec_d <- rjd3x13::x13_spec("rsa3")
+sa_x13_d <- rjd3x13::x13(y_raw, x13_spec_d, userdefined = "decomposition.10")
 sa_x13_d$user_defined$decomposition.10
 
 
@@ -67,19 +67,20 @@ sa_x13_d$user_defined$decomposition.10
 ### issue 2: v sigmas yc rjdemetra
 
 ### ISSUE benchmarking enabled : ok works
-x13_spec_d<-rjd3x13::x13_spec("rsa5c")
-x13_spec_d<-rjd3toolkit::set_benchmarking(x13_spec_d,
-                             enabled = TRUE,
-                             target = "original",
-                             rho = 0.8,
-                             lambda = 0.5,
-                             forecast = FALSE,
-                             bias = "None")
+x13_spec_d <- rjd3x13::x13_spec("rsa5c")
+x13_spec_d <- rjd3toolkit::set_benchmarking(x13_spec_d,
+    enabled = TRUE,
+    target = "original",
+    rho = 0.8,
+    lambda = 0.5,
+    forecast = FALSE,
+    bias = "None"
+)
 ## user defined output list
 rjd3x13::userdefined_variables_x13()
 ## benchmarking output
-y<-rjd3toolkit::ABS$X0.2.09.10.M
-sa_x13_d<- rjd3x13::x13(y, x13_spec_d,userdefined =c("y_b"))
+y <- rjd3toolkit::ABS$X0.2.09.10.M
+sa_x13_d <- rjd3x13::x13(y, x13_spec_d, userdefined = c("y_b"))
 sa_x13_d$user_defined$y_b # NULL !!
 
 ################ outlier detection
@@ -88,10 +89,12 @@ sa_x13_d$user_defined$y_b # NULL !!
 # modif doc
 
 rjd3toolkit::ABS$X0.2.09.10.M
-regarima_outliers(rjd3toolkit::ABS$X0.2.09.10.M, order=c(1,1,1), seasonal=c(0,1,1),
-                  mean=FALSE,
-                  X=NULL, X.td=NULL,
-                  ao=TRUE, ls=FALSE, tc=TRUE, so=TRUE, cv=4)
+regarima_outliers(rjd3toolkit::ABS$X0.2.09.10.M,
+    order = c(1, 1, 1), seasonal = c(0, 1, 1),
+    mean = FALSE,
+    X = NULL, X.td = NULL,
+    ao = TRUE, ls = FALSE, tc = TRUE, so = TRUE, cv = 4
+)
 
 ## pb avec declaration modeles arima order=c(1,1,1)? declared as integer later
 ## order =
@@ -102,7 +105,7 @@ regarima_outliers(rjd3toolkit::ABS$X0.2.09.10.M, order=c(1,1,1), seasonal=c(0,1,
 #' regarima_outliers(rjd3toolkit::ABS$X0.2.09.10.M, order=c(0,1,1), seasonal=c(0,1,1),
 #' mean=F,
 #' X=NULL, X.td=NULL,
-#'ao=T, ls=F, tc=T, so=T, cv=4)
+#' ao=T, ls=F, tc=T, so=T, cv=4)
 #'
 #'
 
@@ -155,22 +158,23 @@ regarima_outliers(rjd3toolkit::ABS$X0.2.09.10.M, order=c(1,1,1), seasonal=c(0,1,
 init_spec <- spec_x11()
 # issue
 new_spec <- set_x11(init_spec,
-                    mode = "LogAdditive",
-                    seasonal.comp = 1,
-                    seasonal.filter = "S3X9",
+    mode = "LogAdditive",
+    seasonal.comp = 1,
+    seasonal.filter = "S3X9",
 
-                        # c("S3X3","S3X3","S3X3","S3X3","S3X3","S3X3",
-                        #                 "S3X3","S3X3","S3X3","S3X3","S3X5","S3X9"),
-                    #issue si vecteur length 4 or 12
-                    henderson.filter = 0,
-                    lsigma = 1.7,
-                    usigma = 2.7,
-                    fcasts = -1,
-                    bcasts = -1,
-                    calendar.sigma ="Select",
-                    sigma.vector = c(1,2,2,1),
-                    exclude.forecast = FALSE,
-                    bias = "LEGACY")
+    # c("S3X3","S3X3","S3X3","S3X3","S3X3","S3X3",
+    #                 "S3X3","S3X3","S3X3","S3X3","S3X5","S3X9"),
+    # issue si vecteur length 4 or 12
+    henderson.filter = 0,
+    lsigma = 1.7,
+    usigma = 2.7,
+    fcasts = -1,
+    bcasts = -1,
+    calendar.sigma = "Select",
+    sigma.vector = c(1, 2, 2, 1),
+    exclude.forecast = FALSE,
+    bias = "LEGACY"
+)
 new_spec
 
 # TEST need 2 : customize the x11 part of an X13 spec: MET ?
@@ -183,22 +187,23 @@ init_spec <- x13_spec()
 init_spec
 # issue : seasonal filter and sigma vector
 new_spec <- set_x11(init_spec,
-                    mode = "LogAdditive",
-                    seasonal.comp = 1,
-                    seasonal.filter = "S3X9",
+    mode = "LogAdditive",
+    seasonal.comp = 1,
+    seasonal.filter = "S3X9",
 
-                    # c("S3X3","S3X3","S3X3","S3X3","S3X3","S3X3",
-                    #                 "S3X3","S3X3","S3X3","S3X3","S3X5","S3X9"),
-                    #issue si vecteur length 4 or 12
-                    henderson.filter = 7,
-                    lsigma = 1.7,
-                    usigma = 2.7,
-                    fcasts = -1,
-                    bcasts = -1,
-                    calendar.sigma ="All",
-                    sigma.vector = NA,
-                    exclude.forecast = FALSE,
-                    bias = "LEGACY")
+    # c("S3X3","S3X3","S3X3","S3X3","S3X3","S3X3",
+    #                 "S3X3","S3X3","S3X3","S3X3","S3X5","S3X9"),
+    # issue si vecteur length 4 or 12
+    henderson.filter = 7,
+    lsigma = 1.7,
+    usigma = 2.7,
+    fcasts = -1,
+    bcasts = -1,
+    calendar.sigma = "All",
+    sigma.vector = NA,
+    exclude.forecast = FALSE,
+    bias = "LEGACY"
+)
 new_spec
 
 # modif X11 params dans une spec X13 (ds rjd3toolkit) ?
@@ -210,13 +215,13 @@ new_spec
 #'
 #' quels sont les specs par defaut
 
-s<-spec_x11()
+s <- spec_x11()
 s
-s1<-spec_regarima()
-s1 #RG2c ??
+s1 <- spec_regarima()
+s1 # RG2c ??
 
-s2<-x13_spec()
-s2 #RSA2c ??
+s2 <- x13_spec()
+s2 # RSA2c ??
 
 ### issue faut il un nom de spec ou un spec object amibgu
 # nom ambigu des examples ente specs regarima et specs X13 (même si tout marche)
@@ -226,7 +231,8 @@ y <- rjd3toolkit::ABS$X0.2.09.10.M
 fast_x13(y, spec = "rsa5c") # works
 x13(y, spec = "rsa5c") # works ok but issue = no print ? or no automatic print ?
 sp <- rjd3toolkit::add_outlier(sp,
-                              type = c("AO"), c("2015-01-01", "2010-01-01"))
+    type = c("AO"), c("2015-01-01", "2010-01-01")
+)
 sp <- rjd3toolkit::set_transform(
     rjd3toolkit::set_tradingdays(
         rjd3toolkit::set_easter(sp, enabled = FALSE),
@@ -235,22 +241,24 @@ sp <- rjd3toolkit::set_transform(
     fun = "None"
 )
 sp <- set_x11(sp,
-             henderson.filter = 13)
+    henderson.filter = 13
+)
 fast_x13(y, spec = sp)
 
 ### pb =  modif de la spec et notamment de la partie x11
 
 # In the estimation functions you can diectly use a specification name (string)
 y <- rjd3toolkit::ABS$X0.2.09.10.M
-fast_x13(y,"rsa3")
-x13(y,"rsa5c") # issue: no print
-fast_regarima(y,"rg0") # print exists
-regarima(y,"rg3") # issue: no print
+fast_x13(y, "rsa3")
+x13(y, "rsa5c") # issue: no print
+fast_regarima(y, "rg0") # print exists
+regarima(y, "rg3") # issue: no print
 #'
 #' If you want to customize a specification you have to create a specification object first
 sp <- x13_spec("rsa5c")
 sp <- rjd3toolkit::add_outlier(sp,
-                  type = c("AO"), c("2015-01-01", "2010-01-01"))
+    type = c("AO"), c("2015-01-01", "2010-01-01")
+)
 # sp <-  rjd3toolkit::set_transform(
 #'    rjd3toolkit::set_tradingdays(
 #'      rjd3toolkit::set_easter(sp, enabled = FALSE),
@@ -258,7 +266,7 @@ sp <- rjd3toolkit::add_outlier(sp,
 #'   ),
 #'   fun = "None"
 #' )
-x13(y,spec=sp)
+x13(y, spec = sp)
 sp <- set_x11(sp, henderson.filter = 13)
 fast_x13(y, spec = sp)
 
@@ -272,7 +280,7 @@ userdefined_variables_x13("x13")
 #' userdefined_variables_x13("x11")
 ################ ISSUE ?
 y <- rjd3toolkit::ABS$X0.2.09.10.M
-m <- x13(y,"rsa5c", userdefined=c("decomposition.b20","ycal"))
+m <- x13(y, "rsa5c", userdefined = c("decomposition.b20", "ycal"))
 m$user_defined$decomposition.b20
 # Error in .jcall(jx, out_class, "getResult") :
 #     method getResult with signature ()Ljdplus/x13/X13Results; not found
@@ -282,7 +290,7 @@ m$user_defined$cal
 m$user_defined$residuals.kurtosis
 
 
-m<- x13(y, "rsa3", userdefined= c("b20"))
+m <- x13(y, "rsa3", userdefined = c("b20"))
 m
 m$user_defined$b20
 

@@ -1,6 +1,4 @@
-
 move_data <- function() {
-
     if (list.files("./data_temp/path_1") |> length() == 0) {
         path_from <- "./data_temp/path_2"
         path_to <- "./data_temp/path_1"

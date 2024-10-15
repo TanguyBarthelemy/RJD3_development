@@ -1,6 +1,4 @@
-
 check_information <- function(jws, idx_sap = NULL, idx_sai = NULL) {
-
     if (!is.null(idx_sap) && max(idx_sap) > rjdemetra3::.jws_sap_count(jws)) {
         stop("The SAP n°", max(idx_sap), "doesn't exist")
     } else if (is.null(idx_sap)) {
@@ -19,7 +17,6 @@ check_information <- function(jws, idx_sap = NULL, idx_sai = NULL) {
 }
 
 spreadsheet_update_path <- function(jws, new_path, idx_sap = NULL, idx_sai = NULL) {
-
     check_information(jws = jws, idx_sap, idx_sai)
 
     idx_sap <- unique(idx_sap)
@@ -57,7 +54,6 @@ spreadsheet_update_path <- function(jws, new_path, idx_sap = NULL, idx_sai = NUL
 }
 
 txt_update_path <- function(jws, new_path, idx_sap = NULL, idx_sai = NULL) {
-
     check_information(jws = jws, idx_sap, idx_sai)
 
     idx_sap <- unique(idx_sap)

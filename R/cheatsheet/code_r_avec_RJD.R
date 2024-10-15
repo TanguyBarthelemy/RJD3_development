@@ -1,4 +1,3 @@
-
 ################################################################################
 ###                                CVS avec R                                ###
 ################################################################################
@@ -53,7 +52,8 @@ print(paste("Premier point (non prevu) du jeu de données :", first_obs))
 print(paste("Dernier point (non prevu) du jeu de données :", last_obs))
 
 # Affichage de graphiques
-ggplot(ipi_df, aes(date, RF3030)) + geom_line()
+ggplot(ipi_df, aes(date, RF3030)) +
+    geom_line()
 
 # Série à expertiser
 serie_a_exp <- "RF3030"
@@ -68,19 +68,30 @@ serie_brute <- ipi_3030_ts
 regs_cjo <- read.csv("./data/regs_cjo.csv", sep = ";", dec = ".")
 reg1 <- ts(subset(regs_cjo, select = REG1_AC1), start = 1990, frequency = 12)
 reg2 <- ts(subset(regs_cjo, select = c(REG2_AC1, REG2_AC2)),
-           start = 1990, frequency = 12)
+    start = 1990, frequency = 12
+)
 reg3 <- ts(subset(regs_cjo, select = c(REG3_AC1, REG3_AC2, REG3_AC3)),
-           start = 1990, frequency = 12)
-reg5 <- ts(subset(regs_cjo, select = c(REG5_AC1, REG5_AC2, REG5_AC3,
-                                       REG5_AC4, REG5_AC5)),
-           start = 1990, frequency = 12)
-reg6 <- ts(subset(regs_cjo, select = c(REG6_AC1, REG6_AC2, REG6_AC3,
-                                       REG6_AC4, REG6_AC5, REG6_AC6)),
-           start = 1990, frequency = 12)
+    start = 1990, frequency = 12
+)
+reg5 <- ts(
+    subset(regs_cjo, select = c(
+        REG5_AC1, REG5_AC2, REG5_AC3,
+        REG5_AC4, REG5_AC5
+    )),
+    start = 1990, frequency = 12
+)
+reg6 <- ts(
+    subset(regs_cjo, select = c(
+        REG6_AC1, REG6_AC2, REG6_AC3,
+        REG6_AC4, REG6_AC5, REG6_AC6
+    )),
+    start = 1990, frequency = 12
+)
 
 # Variable d'intervention = régresseur externe
 reg_externe_df <- read.csv("./data/regresseur_externe.csv",
-                           sep = ";", dec = ".")
+    sep = ";", dec = "."
+)
 reg_externe_ts <- ts(reg_externe_df[, -1], start = c(1990, 1), frequency = 12)
 
 
@@ -203,12 +214,14 @@ spec_1 <- x13_spec(spec = model_sa_x13)
 #   - des périodes temporelles d'estimation
 #   - ajout d'outliers personnalisés
 #   - Imposer un modèle additif
-spec_2 <- x13_spec(spec = spec_1,
-                   estimate.from = "2004-01-01",
-                   usrdef.outliersEnabled = TRUE,
-                   usrdef.outliersType = c("LS", "AO"),
-                   usrdef.outliersDate = c("2008-10-01", "2018-01-01"),
-                   transform.function = "None") # additive model
+spec_2 <- x13_spec(
+    spec = spec_1,
+    estimate.from = "2004-01-01",
+    usrdef.outliersEnabled = TRUE,
+    usrdef.outliersType = c("LS", "AO"),
+    usrdef.outliersDate = c("2008-10-01", "2018-01-01"),
+    transform.function = "None"
+) # additive model
 # le modèle REG-ARIMA sera ré-estimé à partir du  "2004-01-01"
 # La décomposition sera faite sur toute la période néanmoins
 
@@ -231,12 +244,14 @@ model_sa_x13_2 <- x13(serie_brute, spec = spec_2)
 # L'ordre saisonnier = 0
 # Le coefficient de la moyenne mobile saisonnière ma(1) ("arima.bq = 1) n'est
 # pas fixé par l'utilisateur ("Undefined")
-spec_3 <- x13_spec(spec = spec_1, automdl.enabled = FALSE,
-                   arima.p = 1, arima.q = 1,
-                   arima.bp = 0, arima.bq = 1,
-                   arima.coefEnabled = TRUE,
-                   arima.coef = c(-.8, -.6, 0), # 0 stands for not fixed
-                   arima.coefType = c(rep("Fixed", 2), "Undefined"))
+spec_3 <- x13_spec(
+    spec = spec_1, automdl.enabled = FALSE,
+    arima.p = 1, arima.q = 1,
+    arima.bp = 0, arima.bq = 1,
+    arima.coefEnabled = TRUE,
+    arima.coef = c(-.8, -.6, 0), # 0 stands for not fixed
+    arima.coefType = c(rep("Fixed", 2), "Undefined")
+)
 
 
 #### SA processing -------------------------------------------------------------
@@ -262,12 +277,14 @@ model_sa_x13_3$regarima$arima.coefficient
 
 # On définit les régresseurs de calendrier
 # les régresseurs externes doivent être des ts
-spec_4 <- x13_spec(spec = spec_1,
-                   tradingdays.option = "UserDefined",
-                   tradingdays.test = "None",
-                   usrdef.varEnabled = TRUE,
-                   usrdef.varType = "Calendar",
-                   usrdef.var = reg3)
+spec_4 <- x13_spec(
+    spec = spec_1,
+    tradingdays.option = "UserDefined",
+    tradingdays.test = "None",
+    usrdef.varEnabled = TRUE,
+    usrdef.varType = "Calendar",
+    usrdef.var = reg3
+)
 
 #### SA processing -------------------------------------------------------------
 
@@ -284,12 +301,14 @@ model_sa_x13_4$regarima$regression.coefficients
 #### Specs ---------------------------------------------------------------------
 
 # on ajoute le régresseur externe relatif au covid
-spec_5 <- x13_spec(spec = spec_1,
-                   usrdef.varEnabled = TRUE,
-                   # On choisit d'attribuer l'outlier à la composante tendance
-                   usrdef.varType = "Trend",
-                   # Les régresseurs doivent être au format ts
-                   usrdef.var = reg_externe_ts)
+spec_5 <- x13_spec(
+    spec = spec_1,
+    usrdef.varEnabled = TRUE,
+    # On choisit d'attribuer l'outlier à la composante tendance
+    usrdef.varType = "Trend",
+    # Les régresseurs doivent être au format ts
+    usrdef.var = reg_externe_ts
+)
 
 #### SA processing -------------------------------------------------------------
 
@@ -325,8 +344,10 @@ s_x11(model_sa_x13_6)
 # On peut enregistrer puis recharger un spec en .Rdata
 
 # Enregistrement
-save_spec(object = spec_3,
-          file = file.path("./output/", "spec_3_user_def_arima.RData"))
+save_spec(
+    object = spec_3,
+    file = file.path("./output/", "spec_3_user_def_arima.RData")
+)
 
 # Chargement
 new_spec <- load_spec(file = "./output/spec_3_user_def_arima.RData")
@@ -349,12 +370,15 @@ user_defined_variables("TRAMO-SEATS")
 # Ajout de variable user-defined
 # indice des variables
 added_user_variables <- user_defined_variables("X13-ARIMA")[
-    c(28, 174, 258, 259, 260)]
+    c(28, 174, 258, 259, 260)
+]
 print(added_user_variables)
 
 # Model avec des user-defined
-model_sa_x13_UD <- x13(serie_brute, spec = "RSA5c",
-                        userdefined = added_user_variables)
+model_sa_x13_UD <- x13(serie_brute,
+    spec = "RSA5c",
+    userdefined = added_user_variables
+)
 
 # Comparaison user-defined
 names(model_sa_x13$user_defined)
@@ -371,8 +395,10 @@ window(do.call(cbind, user_defined_output_example), start = 2021)
 
 # On reprend les données de l'IPI
 ipi_2010_ts <- window(ipi_ts, start = c(2010, 1))
-ipi_2010_df <- cbind(time(ipi_2010_ts) |> as.numeric(),
-                     ipi_2010_ts |> as.data.frame())
+ipi_2010_df <- cbind(
+    time(ipi_2010_ts) |> as.numeric(),
+    ipi_2010_ts |> as.data.frame()
+)
 colnames(ipi_2010_df) <- colnames(ipi_df)
 head(ipi_2010_df[, 1:6])
 
@@ -380,11 +406,15 @@ head(ipi_2010_df[, 1:6])
 #   issu du "TS"
 
 # Graphique classique avec ggplot2
-ipi_RF2740_plot <- ggplot(data = ipi_2010_df,
-                          mapping = aes(x = date, y = RF2740)) +
+ipi_RF2740_plot <- ggplot(
+    data = ipi_2010_df,
+    mapping = aes(x = date, y = RF2740)
+) +
     geom_line() +
-    labs(title = "Industrial Production Index (IPI)",
-         x = "date", y = "RF2740")
+    labs(
+        title = "Industrial Production Index (IPI)",
+        x = "date", y = "RF2740"
+    )
 ipi_RF2740_plot
 
 # Création de la spec
@@ -393,33 +423,45 @@ spec_RSA3_WD <- RJDemetra::x13_spec("RSA3", tradingdays.option = "WorkingDays")
 # Création du graphique
 enhanced_plot <- ipi_RF2740_plot +
     # fonction "geom_sa" : ajouts de SA composants
-    geom_sa(component = "y_f", linetype = 2,
-            spec = spec_RSA3_WD) +
+    geom_sa(
+        component = "y_f", linetype = 2,
+        spec = spec_RSA3_WD
+    ) +
     geom_sa(component = "sa", color = "red") +
     geom_sa(component = "sa_f", color = "red", linetype = 2) +
     # Ajout d'outliers
-    geom_outlier(geom = "label_repel",
-                 vjust = 4,
-                 ylim = c(NA, 65), force = 10,
-                 arrow = arrow(length = unit(.03, "npc"),
-                               type = "closed", ends = "last")) +
+    geom_outlier(
+        geom = "label_repel",
+        vjust = 4,
+        ylim = c(NA, 65), force = 10,
+        arrow = arrow(
+            length = unit(.03, "npc"),
+            type = "closed", ends = "last"
+        )
+    ) +
     # Ajout du modèle Arima
-    geom_arima(geom = "label",
-               x_arima = -Inf, y_arima = -Inf,
-               vjust = -1, hjust = -.1,
-               message = FALSE)
+    geom_arima(
+        geom = "label",
+        x_arima = -Inf, y_arima = -Inf,
+        vjust = -1, hjust = -.1,
+        message = FALSE
+    )
 
 enhanced_plot
 
 # Ajout des diagnostiques
-diagnostics <- c(`Seasonality (combined)` = "diagnostics.combined.all.summary",
-                 `Residual qs-test (p-value)` = "diagnostics.qs",
-                 `Residual f-test (p-value)` = "diagnostics.ftest")
+diagnostics <- c(
+    `Seasonality (combined)` = "diagnostics.combined.all.summary",
+    `Residual qs-test (p-value)` = "diagnostics.qs",
+    `Residual f-test (p-value)` = "diagnostics.ftest"
+)
 
 enhanced_plot +
-    geom_diagnostics(diagnostics = diagnostics,
-                     ymin = 130, ymax = 200, xmin = 2019,
-                     table_theme = gridExtra::ttheme_default(base_size = 6))
+    geom_diagnostics(
+        diagnostics = diagnostics,
+        ymin = 130, ymax = 200, xmin = 2019,
+        table_theme = gridExtra::ttheme_default(base_size = 6)
+    )
 
 
 # rjdmarkdown ------------------------------------------------------------------
@@ -441,10 +483,14 @@ print_diagnostics(model_sa_x13)
 # Creation fichier markdown directement
 jsa_x13 <- RJDemetra::jx13(serie_brute)
 
-create_rmd(jsa_x13, output_file = "./output/rapport_ipi_3030.Rmd",
-           output_format = "pdf_document")
-create_rmd(jsa_x13, output_file = "./output/rapport_ipi_3030.Rmd",
-           output_format = "html_document")
+create_rmd(jsa_x13,
+    output_file = "./output/rapport_ipi_3030.Rmd",
+    output_format = "pdf_document"
+)
+create_rmd(jsa_x13,
+    output_file = "./output/rapport_ipi_3030.Rmd",
+    output_format = "html_document"
+)
 
 # Pour ouvrir directement le fichier depuis R (on peut aussi le faire à la main)
 browseURL("./output/rapport_ipi_3030.pdf")

@@ -21,7 +21,7 @@ rjdv2 <- cbind(
     fct = "RJDemetra" |>
         getNamespace() |>
         getNamespaceExports()
-    ) |>
+) |>
     as.data.frame() |>
     subset(substr(fct, 1, 1) != ".")
 rownames(rjdv2) <- NULL
@@ -63,13 +63,15 @@ View(rjdv2)
 #       add_sa_item()
 #
 
-ws_fct <- c("new_workspace", "new_multiprocessing",
-        "load_workspace", "save_workspace",
-        "compute",
-        "load_spec", "save_spec",
-        "get_all_objects", "get_object", "get_name", "get_ts",
-        "get_model", "get_jmodel", "get_indicators", "count",
-        "add_sa_item")
+ws_fct <- c(
+    "new_workspace", "new_multiprocessing",
+    "load_workspace", "save_workspace",
+    "compute",
+    "load_spec", "save_spec",
+    "get_all_objects", "get_object", "get_name", "get_ts",
+    "get_model", "get_jmodel", "get_indicators", "count",
+    "add_sa_item"
+)
 
 rjdv2_without_ws <- rjdv2 |> subset(!fct %in% ws_fct)
 rownames(rjdv2_without_ws) <- NULL
@@ -116,10 +118,12 @@ res_tramoseats <- tramoseats(series = y1, spec = spec_tramoseats)
 
 # All functions beginning with s_
 
-ws_fct2 <- c("regarima_x13", "regarima_tramoseats", "regarima",
-             "x13", "tramoseats",
-             "regarima_spec_x13", "regarima_spec_tramoseats", "regarima_spec",
-             "x13_spec", "tramoseats_spec")
+ws_fct2 <- c(
+    "regarima_x13", "regarima_tramoseats", "regarima",
+    "x13", "tramoseats",
+    "regarima_spec_x13", "regarima_spec_tramoseats", "regarima_spec",
+    "x13_spec", "tramoseats_spec"
+)
 
 remaining <- rjdv2_without_ws |>
     subset(substr(fct, 1, 2) != "s_") |>

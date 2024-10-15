@@ -1,4 +1,3 @@
-
 # pre_pro <- fractionalAirlineEstimation(
 #     y = df_daily$births,
 #     x = cal_reg,
@@ -20,48 +19,56 @@
 #                         length.out = 19359, by = "sec"),
 #     log = TRUE)
 
-plot_jd <- function(x, y, col, legend_txt = NULL, ...){
-
+plot_jd <- function(x, y, col, legend_txt = NULL, ...) {
     col_bg <- "#f5f4e7"
-    col_grid <-"#dadad3"
+    col_grid <- "#dadad3"
     y_range <- range(do.call(c, y))
 
     plot.new()
-    rect(xleft = par("usr")[1], xright = par("usr")[2],
-         ytop = par("usr")[4], ybottom = par("usr")[3], col = col_bg)
+    rect(
+        xleft = par("usr")[1], xright = par("usr")[2],
+        ytop = par("usr")[4], ybottom = par("usr")[3], col = col_bg
+    )
     par(new = TRUE)
-    plot(y = y[[1]], x = x,
-         col = col[1], type = "l", xlab = "", ylab = "", ylim = y_range,
-         main = "", xaxt = "n", yaxt = "n")
+    plot(
+        y = y[[1]], x = x,
+        col = col[1], type = "l", xlab = "", ylab = "", ylim = y_range,
+        main = "", xaxt = "n", yaxt = "n"
+    )
     x_breaks <- Axis(x, side = 1)
     par(xaxp = c(x_breaks[1], x_breaks[length(x_breaks)], length(x_breaks) - 1))
     grid(nx = NULL, ny = NULL, col = col_grid)
     par(new = TRUE)
 
-    plot(y = y[[1]],
-         x = x,
-         col = col[1], type = "l", xlab = "Time", ylim = y_range,
-         xaxt = "n", ...)
+    plot(
+        y = y[[1]],
+        x = x,
+        col = col[1], type = "l", xlab = "Time", ylim = y_range,
+        xaxt = "n", ...
+    )
 
     for (k in (seq_along(y[-1]) + 1)) {
-        lines(y = y[[k]],
-              x = x,
-              col = col[k], ...)
+        lines(
+            y = y[[k]],
+            x = x,
+            col = col[k], ...
+        )
     }
 
     box(col = col_grid)
 
     if (!is.null(legend_txt)) {
-        legend("bottomleft", legend = legend_txt,
-               pch = 16, col = col, horiz = TRUE, xpd = TRUE,
-               inset = c(0, 1), bty = "n")
+        legend("bottomleft",
+            legend = legend_txt,
+            pch = 16, col = col, horiz = TRUE, xpd = TRUE,
+            inset = c(0, 1), bty = "n"
+        )
     }
 
     return(invisible(NULL))
 }
 
 plot.JDFractionalAirlineEstimation <- function(x, from, to, ...) {
-
     col_y <- "#f1ba1d"
     col_t <- "#1e6c0b"
     col_sa <- "#00488c"
@@ -89,19 +96,18 @@ plot.JDFractionalAirlineEstimation <- function(x, from, to, ...) {
         y_lin <- y_lin[which(x$model$y_time %in% vect_x)]
     }
 
-    plot_jd(x = vect_x, y = list(y, y_lin), col = c(col_y, col_t),
-            main = "Raw data and linearised series",
-            legend_txt = c("Raw data", "Linearised series"),
-            ylab = "", ...)
+    plot_jd(
+        x = vect_x, y = list(y, y_lin), col = c(col_y, col_t),
+        main = "Raw data and linearised series",
+        legend_txt = c("Raw data", "Linearised series"),
+        ylab = "", ...
+    )
 
     return(invisible(NULL))
 }
 
-plot.JDFractionalAirlineDecomposition <- function(
-        x, from, to, type_chart = c("y-sa-trend", "cal-seas-irr"), ...) {
-
+plot.JDFractionalAirlineDecomposition <- function(x, from, to, type_chart = c("y-sa-trend", "cal-seas-irr"), ...) {
     if ("y-sa-trend" %in% type_chart) {
-
         col_y <- "#f1ba1d"
         col_t <- "#1e6c0b"
         col_sa <- "#00488c"
@@ -131,14 +137,15 @@ plot.JDFractionalAirlineDecomposition <- function(
             tc <- tc[time_lim]
         }
 
-        plot_jd(x = vect_x, y = list(y, sa, tc), col = c(col_y, col_sa, col_t),
-                main = "Decomposition AMB",
-                legend_txt = c("Raw data", "Seasonnal adjusted", "Trend"),
-                ylab = "", ...)
+        plot_jd(
+            x = vect_x, y = list(y, sa, tc), col = c(col_y, col_sa, col_t),
+            main = "Decomposition AMB",
+            legend_txt = c("Raw data", "Seasonnal adjusted", "Trend"),
+            ylab = "", ...
+        )
     }
 
     if ("cal-seas-irr" %in% type_chart) {
-
         col_s <- c("#ffab78", "#9169be", "#4d8076", "#c34a36", "#00c9a7")
         s_variables <- names(x$decomposition)
         s_variables <- s_variables[grepl("^s(?!a)", s_variables, perl = TRUE)]
@@ -166,11 +173,13 @@ plot.JDFractionalAirlineDecomposition <- function(
             ic <- ic[time_lim]
         }
 
-        plot_jd(x = vect_x, y = c(s, list(ic)),
-                col = col_s[seq_len(length(s) + 1)],
-                main = "Irregular and Seasonal components",
-                legend_txt = c(s_variables, "Irregular"),
-                ylab = "", ...)
+        plot_jd(
+            x = vect_x, y = c(s, list(ic)),
+            col = col_s[seq_len(length(s) + 1)],
+            main = "Irregular and Seasonal components",
+            legend_txt = c(s_variables, "Irregular"),
+            ylab = "", ...
+        )
     }
 
     return(invisible(NULL))
@@ -182,41 +191,53 @@ plot(pre_pro2)
 plot(pre_pro3)
 
 plot(pre_pro,
-     from = as.Date("2000-01-01"),
-     to = as.Date("2001-01-01"))
+    from = as.Date("2000-01-01"),
+    to = as.Date("2001-01-01")
+)
 plot(pre_pro3,
-     from = as.POSIXct("2000-01-01 01:30:00"),
-     to = as.POSIXct("2000-01-01 02:30:00"))
+    from = as.POSIXct("2000-01-01 01:30:00"),
+    to = as.POSIXct("2000-01-01 02:30:00")
+)
 
 plot(amb.dow)
 plot(amb.dow, type_chart = "y-sa-trend")
 plot(amb.dow, type_chart = "cal-seas-irr")
-plot(amb.dow, type_chart = "cal-seas-irr",
-     from = as.Date("2000-01-01"),
-     to = as.Date("2000-02-01"))
+plot(amb.dow,
+    type_chart = "cal-seas-irr",
+    from = as.Date("2000-01-01"),
+    to = as.Date("2000-02-01")
+)
 
 plot(amb.dow,
-     from = as.Date("2000-01-01"),
-     to = as.Date("2001-01-01"))
+    from = as.Date("2000-01-01"),
+    to = as.Date("2001-01-01")
+)
 plot(amb.dow,
-     from = as.Date("2000-01-01"),
-     to = as.Date("2000-02-01"), lwd = 2)
+    from = as.Date("2000-01-01"),
+    to = as.Date("2000-02-01"), lwd = 2
+)
 
 plot(amb.doy)
 plot(amb.doy,
-     from = as.Date("2000-01-01"),
-     to = as.Date("2001-01-01"))
+    from = as.Date("2000-01-01"),
+    to = as.Date("2001-01-01")
+)
 plot(amb.doy,
-     from = as.Date("2000-01-01"),
-     to = as.Date("2001-01-01"), lwd = 2)
+    from = as.Date("2000-01-01"),
+    to = as.Date("2001-01-01"), lwd = 2
+)
 
 plot(amb.multi)
 plot(amb.multi,
-     from = as.Date("2000-01-01"),
-     to = as.Date("2001-01-01"), lwd = 2)
+    from = as.Date("2000-01-01"),
+    to = as.Date("2001-01-01"), lwd = 2
+)
 plot(amb.multi,
-     from = as.Date("2000-01-01"),
-     to = as.Date("2000-02-01"), lwd = 2)
-plot(amb.multi, type_chart = "cal-seas-irr",
-     from = as.Date("2000-01-01"),
-     to = as.Date("2000-02-01"), lwd = 2)
+    from = as.Date("2000-01-01"),
+    to = as.Date("2000-02-01"), lwd = 2
+)
+plot(amb.multi,
+    type_chart = "cal-seas-irr",
+    from = as.Date("2000-01-01"),
+    to = as.Date("2000-02-01"), lwd = 2
+)

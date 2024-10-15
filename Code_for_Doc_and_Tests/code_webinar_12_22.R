@@ -1,5 +1,3 @@
-
-
 # Code du webinar ---------------------------------------------------------
 
 # P2 : Seasonal adjustment in R with JD+ ----------------------------------
@@ -17,11 +15,11 @@ sa_x13_v2 <- RJDemetra::x13(y_raw, spec = "RSA5c")
 sa_x13_v2 # Tout est implémenté (jusqu'à un certain niveau)
 
 # see help pages for default spec names, identical in v2 and v3
-#Tramo-Seats
+# Tramo-Seats
 sa_ts_v2 <- RJDemetra::tramoseats(y_raw, spec = "RSAfull")
 sa_ts_v2 # Tout est implémenté (jusqu'à un certain niveau)
 
-#X13 v3
+# X13 v3
 sa_x13_v3 <- rjd3x13::x13(y_raw, spec = "RSA5")
 sa_x13_v3 # print à compléter ?
 
@@ -256,20 +254,23 @@ sa_x13_v3 # print à compléter ?
 #
 #### CALENDAR
 # define a user defined trading days regressor
-td_reg1 <- rjd3toolkit::td(12, start = start(y_raw), length = length(y_raw),
-                           groups = c(1, 1, 1, 1, 1, 0, 0))
+td_reg1 <- rjd3toolkit::td(12,
+    start = start(y_raw), length = length(y_raw),
+    groups = c(1, 1, 1, 1, 1, 0, 0)
+)
 
 # add a user defined trading day regressor
 # build new specification
-spec<-rjd3x13::spec_x13("RSA3")
+spec <- rjd3x13::spec_x13("RSA3")
 # set a new specification from a default specification
-spec_ud_TD<- set_tradingdays(spec,
-                             option ="UserDefined",
-                             uservariable = "regs.td_reg1")
+spec_ud_TD <- set_tradingdays(spec,
+    option = "UserDefined",
+    uservariable = "regs.td_reg1"
+)
 
 # define a context
-vars<-list(regs=list(td_reg1 = td_reg1))
-my_context <- rjd3toolkit::modelling_context(variables=vars)
+vars <- list(regs = list(td_reg1 = td_reg1))
+my_context <- rjd3toolkit::modelling_context(variables = vars)
 
 # New X13 estimation with user defined spec and corresponding context
 sa_x13_v3_td <- rjd3x13::x13(y_raw, spec_ud_TD, context = my_context)
@@ -280,20 +281,21 @@ sa_x13_v3_td$result$decomposition
 ###### REGRESSOR TO TREND
 
 # step 1: define a regressor, for example
-x<-rjd3toolkit::intervention_variable(12, start(y_raw), length(y_raw),
-                                      starts = "2001-01-01", ends = "2001-12-01")
+x <- rjd3toolkit::intervention_variable(12, start(y_raw), length(y_raw),
+    starts = "2001-01-01", ends = "2001-12-01"
+)
 # step 2: build new specification to customize or take an existing one
-spec<-rjd3x13::spec_x13("RSA3")
+spec <- rjd3x13::spec_x13("RSA3")
 # step 3: customize default specification
-spec_T<- add_usrdefvar(spec,id = "regs.x", regeffect="Trend")
+spec_T <- add_usrdefvar(spec, id = "regs.x", regeffect = "Trend")
 
 # "regs.x": "group_name.variable_name: has to be the same as in context below
 
 # NEW in V3: define a context (to add regressors)
-vars<-list(regs=list(x = x))
+vars <- list(regs = list(x = x))
 vars$regs_cal$variables
 ## step 2: create context
-my_context_2 <- rjd3toolkit::modelling_context(variables=vars)
+my_context_2 <- rjd3toolkit::modelling_context(variables = vars)
 
 # New X13 estimation with user defined spec and corresponding context
 sa_x13_v3_t <- rjd3x13::x13(y_raw, spec_T, context = my_context_2)
@@ -316,11 +318,12 @@ current_domain_spec <- sa_x13_v3$estimation_spec
 
 # generate NEW spec for refresh
 refreshed_spec <- x13.refresh(current_result_spec, # point spec to be refreshed
-                              current_domain_spec, #domain spec (set of constraints)
-                              policy = "Outliers",
-                              period = 12, # monthly series
-                              start = "2017-01-01",
-                              end = NULL)
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "Outliers",
+    period = 12, # monthly series
+    start = "2017-01-01",
+    end = NULL
+)
 
 # apply the new spec on new data : y_new= y_raw + 1 month
 
@@ -341,16 +344,18 @@ french_calendar <- national_calendar(days = list(
     special_day("WHITMONDAY"),
     special_day("ASSUMPTION"),
     special_day("ALLSAINTSDAY"),
-    special_day("ARMISTICE"))
-)
+    special_day("ARMISTICE")
+))
 
 # frCal_2005 <- weighted_calendar(list(french_calendar), 0.5)
 # final_cal <- chained_calendar(french_calendar, frCal_2005, break_date = "2005-05-01")
 
 ### For daily data
 #### pb "type" and non working days in daily data ?
-q <- rjd3toolkit::holidays(french_calendar, "1968-01-01", end="2023-12-01", type = "All",
-                           nonworking = 7L)
+q <- rjd3toolkit::holidays(french_calendar, "1968-01-01",
+    end = "2023-12-01", type = "All",
+    nonworking = 7L
+)
 
 ### For monthly and quarterly data, aggregation by groups
 # param s : relevant ? not if 3 params
@@ -358,14 +363,18 @@ q <- rjd3toolkit::holidays(french_calendar, "1968-01-01", end="2023-12-01", type
 
 # In v3 flexible definition of groups and reference day
 ## holidays as treated as the reference day which doesn't have to be a Sunday
-td_regs<- calendar_td(french_calendar,12, start=c(2000,1), length = 100,
-                      groups = c(1, 1, 2, 2, 0, 3, 4),
-                      # 1: Mondays = Tuesdays, 2 :Wednesdays=Thursdays
-                      # 0: Fridays= reference for contrasts
-                      # 3: Saturdays, 4: Sundays
-                      holiday = 5, #day for aggregating holidays with (here Fridays)
-                      contrasts = TRUE,
-                      meanCorrection = contrasts
+td_regs <- calendar_td(
+    calendar = french_calendar,
+    frequency = 12,
+    start = c(2000, 1),
+    length = 100,
+    groups = c(1, 1, 2, 2, 0, 3, 4),
+    # 1: Mondays = Tuesdays, 2 :Wednesdays=Thursdays
+    # 0: Fridays= reference for contrasts
+    # 3: Saturdays, 4: Sundays
+    holiday = 5, # day for aggregating holidays with (here Fridays)
+    contrasts = TRUE,
+    meanCorrection = contrasts
 )
 
 td_regs
@@ -376,37 +385,41 @@ rjd3highfreq::fractionalAirlineEstimation(
     x = q, # q= calendar
     periods = 7, # approx  c(7,365.25)
     ndiff = 2, ar = FALSE, mean = FALSE,
-    outliers = c("ao","wo","LS"),
+    outliers = c("ao", "wo", "LS"),
     # WO compensation
     criticalValue = 0, # computed in the algorithm
-    precision = 1e-9, approximateHessian = TRUE)
+    precision = 1e-9, approximateHessian = TRUE
+)
 
 # calendar regressors can be defined with the rjd3toolkit package
 
-#step 1: p=7
+# step 1: p=7
 x11.dow <- rjd3highfreq::x11(exp(pre.mult$model$linearized),
-                             period = 7,                 # DOW pattern
-                             mul = TRUE,
-                             trend.horizon = 9,  # 1/2 Filter length : not too long vs p
-                             trend.degree = 3,                         # Polynomial degree
-                             trend.kernel = "Henderson",               # Kernel function
-                             trend.asymmetric = "CutAndNormalize",     # Truncation method
-                             seas.s0 = "S3X9", seas.s1 = "S3X9",       # Seasonal filters
-                             extreme.lsig = 1.5, extreme.usig = 2.5)   # Sigma-limits
-#step 2: p=365.25
-x11.doy <- rjd3highfreq::x11(x11.dow$decomposition$sa,  # previous sa
-                             period = 365.2425,         # DOY pattern
-                             mul = TRUE) #other parameters skipped here
+    period = 7, # DOW pattern
+    mul = TRUE,
+    trend.horizon = 9, # 1/2 Filter length : not too long vs p
+    trend.degree = 3, # Polynomial degree
+    trend.kernel = "Henderson", # Kernel function
+    trend.asymmetric = "CutAndNormalize", # Truncation method
+    seas.s0 = "S3X9", seas.s1 = "S3X9", # Seasonal filters
+    extreme.lsig = 1.5, extreme.usig = 2.5
+) # Sigma-limits
+# step 2: p=365.25
+x11.doy <- rjd3highfreq::x11(x11.dow$decomposition$sa, # previous sa
+    period = 365.2425, # DOY pattern
+    mul = TRUE
+) # other parameters skipped here
 
 
-#step 1: p=7
-#step 2: p=365.25
+# step 1: p=7
+# step 2: p=365.25
 amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
-    amb.dow$decomposition$sa,  # DOW-adjusted linearised data
-    period = 365.2425,         # DOY pattern
-    sn = FALSE,                # Signal (SA)-noise decomposition
-    stde = FALSE,              # Compute standard deviations
-    nbcasts = 0, nfcasts = 0)  # Numbers of back- and forecasts
+    amb.dow$decomposition$sa, # DOW-adjusted linearised data
+    period = 365.2425, # DOY pattern
+    sn = FALSE, # Signal (SA)-noise decomposition
+    stde = FALSE, # Compute standard deviations
+    nbcasts = 0, nfcasts = 0
+) # Numbers of back- and forecasts
 
 library("rjd3toolkit")
 # French
@@ -414,8 +427,10 @@ fr_cal <- calendar.new()
 calendar.holiday(fr_cal, "NEWYEAR")
 calendar.holiday(fr_cal, "EASTERMONDAY")
 calendar.holiday(fr_cal, "MAYDAY")
-calendar.fixedday(fr_cal, month = 5, day = 8,
-                  start = "1982-01-01")
+calendar.fixedday(fr_cal,
+    month = 5, day = 8,
+    start = "1982-01-01"
+)
 # calendar.holiday(fr_cal, "WHITMONDAY") # Equivalent to:
 calendar.easter(fr_cal, offset = 61)
 
@@ -427,7 +442,7 @@ calendar.holiday(fr_cal, "ARMISTICE")
 calendar.holiday(fr_cal, "CHRISTMAS")
 
 
-holidays(fr_cal, "2020-12-24", 10,single = TRUE)
+holidays(fr_cal, "2020-12-24", 10, single = TRUE)
 s <- ts(0, start = 2020, end = c(2020, 11), frequency = 12)
 # Trading-days regressors (each day has a different effect, sunday as contrasts)
 td_reg <- htd(fr_cal, s = s, groups = c(1, 2, 3, 4, 5, 6, 0))
@@ -445,27 +460,33 @@ ao <- ao.variable(s = s, date = "2001-03-01")
 ls <- ls.variable(s = s, date = "2001-01-01")
 tc <- tc.variable(s = s, date = "2001-01-01", rate = 0.7) # Customizable rate
 so <- so.variable(s = s, date = "2003-05-01")
-ramp <- ramp.variable(s = s, range = c("2001-01-01","2001-12-01"))
-plot(ts.union(ao, ls, tc, so, ramp), plot.type = "single",
-     col = c("red","lightgreen","orange","blue","black"))
+ramp <- ramp.variable(s = s, range = c("2001-01-01", "2001-12-01"))
+plot(ts.union(ao, ls, tc, so, ramp),
+    plot.type = "single",
+    col = c("red", "lightgreen", "orange", "blue", "black")
+)
 
 # JD+
 print(system.time(
     for (i in 1:1000) {
         j <- rjd3toolkit::sarima.estimate(
             data = log(rjd3toolkit::ABS$X0.2.09.10.M),
-            order = c(2, 1, 1), seasonal = list(order = c(0, 1, 1), period = 12))
-    }))
+            order = c(2, 1, 1), seasonal = list(order = c(0, 1, 1), period = 12)
+        )
+    }
+))
 #       user    system        elapsed (in seconds)
 #      4.98        0.37        4.63
 
-#R-native
+# R-native
 print(system.time(
     for (i in 1:1000) {
         r <- arima(
             x = log(rjd3toolkit::ABS$X0.2.09.10.M),
-            order = c(2, 1, 1), seasonal = list(order = c(0, 1, 1), period = 12))
-    }))
+            order = c(2, 1, 1), seasonal = list(order = c(0, 1, 1), period = 12)
+        )
+    }
+))
 #       user    system        elapsed (in seconds)
 #     158.74        0.23      160.49
 
@@ -499,8 +520,10 @@ raw_data <- read.csv2("./data/raw_data.csv", dec = ".") |>
 
 # Create WS
 ws <- RJDemetra::new_workspace()
-mp_1 <- RJDemetra::new_multiprocessing(workspace = ws,
-                                       name = "SAProcessing-1")
+mp_1 <- RJDemetra::new_multiprocessing(
+    workspace = ws,
+    name = "SAProcessing-1"
+)
 spec_x13 <- RJDemetra::x13_spec(spec = "RSA3")
 model_sa_1 <- RJDemetra::x13(raw_data, spec = spec_x13)
 
@@ -523,12 +546,18 @@ export_xlsx(QR, file_name = "U:/quality_report.xls")
 
 # oos_mse weight reduced to 1 when the other
 # indicators are "Bad" ou "Severe"
-condition1 <- list(indicator = "oos_mse",
-                   conditions = c("residuals_independency",
-                                  "residuals_homoskedasticity",
-                                  "residuals_normality"),
-                   conditions_modalities = c("Bad","Severe"))
+condition1 <- list(
+    indicator = "oos_mse",
+    conditions = c(
+        "residuals_independency",
+        "residuals_homoskedasticity",
+        "residuals_normality"
+    ),
+    conditions_modalities = c("Bad", "Severe")
+)
 
-BQ <- compute_score(BQ, n_contrib_score = 5,
-                    conditional_indicator = list(condition1),
-                    na.rm = TRUE)
+BQ <- compute_score(BQ,
+    n_contrib_score = 5,
+    conditional_indicator = list(condition1),
+    na.rm = TRUE
+)

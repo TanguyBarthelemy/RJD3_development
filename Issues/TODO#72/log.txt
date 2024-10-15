@@ -1,0 +1,50 @@
+Refreshing data
+Opening...
+Europe
+France [frozen]
+ processed
+Asia
+Japon [frozen]
+ processed
+Asia
+India [frozen]
+ processed
+Europe
+Greece [frozen]
+ processed
+Asia
+China [frozen]
+ processed
+Europe
+Spain [frozen]
+ processed
+North America
+Canada [frozen]
+ processed
+Africa
+Ethiopie [frozen]
+ processed
+North America
+USA [frozen]
+ processed
+Africa
+Namibie [frozen]
+ processed
+Africa
+Cameroun [frozen]
+ processed
+Africa
+Gabon [frozen]
+ processed
+Africa
+Guinée equatoriale [frozen]
+ processed
+Flushing bundle...
+Generate Output
+csv
+generated
+Csv matrix
+generated
+Saving new processing...
+Processing time: 44s
+Total processing time: 44s

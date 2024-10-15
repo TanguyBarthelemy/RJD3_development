@@ -1,0 +1,67 @@
+Refreshing data
+Opening...
+RF1020 [frozen]
+ processed
+RF1031 [frozen]
+ processed
+RF1013 [frozen]
+ processed
+RF1032 [frozen]
+ processed
+RF1012 [frozen]
+ processed
+RF1011 [frozen]
+ processed
+Flushing bundle...
+Generate Output
+csv
+generated
+Csv matrix
+generated
+Saving new processing...
+Processing time: 3s
+Refreshing data
+Opening...
+RF1032 [frozen]
+ processed
+RF1031 [frozen]
+ processed
+RF1041 [frozen]
+ processed
+RF1042 [frozen]
+ processed
+RF1039 [frozen]
+ processed
+RF1020 [frozen]
+ processed
+Flushing bundle...
+Generate Output
+csv
+generated
+Csv matrix
+generated
+Saving new processing...
+Processing time: 1s
+Refreshing data
+Opening...
+RF1042 [frozen]
+ processed
+RF1041 [frozen]
+ processed
+RF1039 [frozen]
+ processed
+RF1051 [frozen]
+ processed
+RF1061 [frozen]
+ processed
+RF1052 [frozen]
+ processed
+Flushing bundle...
+Generate Output
+csv
+generated
+Csv matrix
+generated
+Saving new processing...
+Processing time: 4s
+Total processing time: 10s
