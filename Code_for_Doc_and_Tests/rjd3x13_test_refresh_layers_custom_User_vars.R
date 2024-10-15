@@ -45,8 +45,8 @@ ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_developme
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 # creating a TS object from a data frame
-y_raw <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2021,12))
-y_new <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022,9))
+y_raw <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2021, 12))
+y_new <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022, 9))
 
 # start(y_raw)
 end(y_raw)
@@ -59,10 +59,10 @@ end(y_new)
 #### Part 1: refresh a default spec with all policies
 ## STEP 1a refresh default spec
 # spec
-x13_spec_d<-rjd3x13::x13_spec("rsa5c")
+x13_spec_d <- rjd3x13::x13_spec("rsa5c")
 x13_spec_d # 3 parts, no concept of estimation or result
 # estimation : model and spec inside the model
-sa_x13_d<-rjd3x13::x13(y_raw,x13_spec_d)
+sa_x13_d <- rjd3x13::x13(y_raw, x13_spec_d)
 sa_x13_d$estimation_spec # copy of the used spec = x13_spec_d
 
 ## building a refreshed spec (show results)
@@ -79,25 +79,29 @@ sa_x13_d$estimation_spec
 start(y_new)
 # v1
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "Fixed")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "Fixed"
+)
 
 x13_spec_ref
 
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "FixedParameters")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "FixedParameters"
+)
 
 x13_spec_ref
 
 
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "FixedAutoRegressiveParameters")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "FixedAutoRegressiveParameters"
+)
 
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "FreeParameters")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "FreeParameters"
+)
 
 ############################## policies relying on span !!!
 
@@ -107,9 +111,10 @@ x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
 # defining start from where outliers will be re detected (till the end of the series anyway)
 
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "Outliers", start=c(2011,5),
-                            period=12)
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "Outliers", start = c(2011, 5),
+    period = 12
+)
 
 ### update 08/2/24 : start needed, period needed, end unused
 
@@ -117,9 +122,10 @@ x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
 # period : has to be specified
 # defining start from where outliers will be re detected (till the end of the series anyway)
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "Outliers_StochasticComponent", start=c(2011,5),
-                            period=12)
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "Outliers_StochasticComponent", start = c(2011, 5),
+    period = 12
+)
 
 x13_spec_ref$regarima$outlier$span
 
@@ -141,7 +147,7 @@ sa_x13_ref$result$preprocessing$description$variables ## ?
 
 # mettre 1 veleur extreme avant le start pour voir si AO detecte
 # need modif 1 valeur dans une s temp, extraire
-y_new[15]<-200
+y_new[15] <- 200
 y_new
 
 # estimation with spec from refresh
@@ -158,13 +164,14 @@ sa_x13_ref$result$preprocessing$description$variables ## ?
 
 
 ### 3 Current
-#defining span were on which AO (as intervention variables) will be added
+# defining span were on which AO (as intervention variables) will be added
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "Current",
-                            period=12, # needed
-                            start=c(2012,1),
-                            end=c(2012,5))
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "Current",
+    period = 12, # needed
+    start = c(2012, 1),
+    end = c(2012, 5)
+)
 
 # update 08/04 : start AND end needed, AO can be introduced not only at the end
 ## where are the AO as intervention variables in the spec
@@ -176,8 +183,9 @@ x13_spec_ref$regarima$regression$interventions
 
 # ## current should behave like "FreeParameters: NO in fact fixed to be checked !!
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                                current_domain_spec, #domain spec (set of constraints)
-                                policy = "FreeParameters")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "FreeParameters"
+)
 
 x13_spec_ref
 # here outliers not enabled
@@ -202,27 +210,28 @@ sa_x13_ref$result$preprocessing$description$variables ## ?
 #################################### end default test spec ####################
 # example for git issue : CURRENT
 
-y<- rjd3toolkit::ABS$X0.2.08.10.M
+y <- rjd3toolkit::ABS$X0.2.08.10.M
 # raw series for first estimation
-y_raw <-window(y,end = 2009)
+y_raw <- window(y, end = 2009)
 # raw series for second (refreshed) estimation
-y_new <-window(y,end = 2010)
+y_new <- window(y, end = 2010)
 # specification for first estimation
-spec_x13_1<-x13_spec("rsa5c")
+spec_x13_1 <- x13_spec("rsa5c")
 # first estimation
-sa_x13<- x13(y_raw, spec_x13_1) # AO (200,6) and TD (2000,7)
+sa_x13 <- x13(y_raw, spec_x13_1) # AO (200,6) and TD (2000,7)
 # refreshing the specification
 current_result_spec <- sa_x13$result_spec
 current_domain_spec <- sa_x13$estimation_spec
 
 ### test current
 spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "Current",
-                            period = 12,
-                            start= c(2022,1))
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "Current",
+    period = 12,
+    start = c(2022, 1)
+)
 
-                            # end=c(2022,1)) # should put every new point in AO from there
+# end=c(2022,1)) # should put every new point in AO from there
 spec_x13_ref # all parameters are fixed
 # 2nd estimation with refreshed specification
 sa_x13_ref <- x13(y_new, spec_x13_ref)
@@ -230,14 +239,15 @@ sa_x13_ref <- x13(y_new, spec_x13_ref)
 sa_x13_ref$result$preprocessing # no new AOs
 sa_x13_ref$result$preprocessing$description$variables # no new AOs
 
-window(sa_x13_ref$result$final$d11final,start=2009, end=2010)
+window(sa_x13_ref$result$final$d11final, start = 2009, end = 2010)
 
 ### refresh with "Fixed"
 spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "Fixed")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "Fixed"
+)
 sa_x13_ref <- x13(y_new, spec_x13_ref)
-window(sa_x13_ref$result$final$d11final,start =2009, end=2010) # same result as current
+window(sa_x13_ref$result$final$d11final, start = 2009, end = 2010) # same result as current
 
 
 
@@ -245,25 +255,26 @@ window(sa_x13_ref$result$final$d11final,start =2009, end=2010) # same result as 
 #################################### end default test spec ####################
 # example for git issue : outliers
 
-y<- rjd3toolkit::ABS$X0.2.08.10.M
+y <- rjd3toolkit::ABS$X0.2.08.10.M
 # raw series for first estimation
-y_raw <-window(y,end = 2009)
+y_raw <- window(y, end = 2009)
 # raw series for second (refreshed) estimation
-y_new <-window(y,end = 2010)
+y_new <- window(y, end = 2010)
 # specification for first estimation
-spec_x13_1<-x13_spec("rsa5c")
+spec_x13_1 <- x13_spec("rsa5c")
 # first estimation
-sa_x13<- x13(y_raw, spec_x13_1) # AO (200,6) and TD (2000,7)
+sa_x13 <- x13(y_raw, spec_x13_1) # AO (200,6) and TD (2000,7)
 
 # refreshing the specification
 current_result_spec <- sa_x13$result_spec
 current_domain_spec <- sa_x13$estimation_spec
 spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "Outliers",
-                            period = 12,
-                            start= c(2001,1), # outliers should be  identified before 2001
-                            end=c(2008,12)) # outliers should be identified from 2009
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "Outliers",
+    period = 12,
+    start = c(2001, 1), # outliers should be  identified before 2001
+    end = c(2008, 12)
+) # outliers should be identified from 2009
 spec_x13_ref # outliers will be identified from 2009
 # 2nd estimation with refreshed specification
 sa_x13_ref <- x13(y_new, spec_x13_ref)
@@ -275,10 +286,11 @@ sa_x13_ref$result$preprocessing$description$variables
 
 ### refresh with "Fixed"
 spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "Fixed")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "Fixed"
+)
 sa_x13_ref <- x13(y_new, spec_x13_ref)
-window(sa_x13_ref$result$final$d11final,start =2009, end=2010) # same result as current
+window(sa_x13_ref$result$final$d11final, start = 2009, end = 2010) # same result as current
 
 
 
@@ -313,15 +325,16 @@ window(sa_x13_ref$result$final$d11final,start =2009, end=2010) # same result as 
 current_result_spec <- sa_x13_d$result_spec
 current_domain_spec <- sa_x13_d$estimation_spec
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "Current")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "Current"
+)
 # period=12, # nb of annual observations
 # start=c(2012,1), # why this
 # end=c(2021,1))
-s_ref<-x13(y_new,x13_spec_ref)
+s_ref <- x13(y_new, x13_spec_ref)
 
 # policy = c("FreeParameters",
-#"Complete", "Outliers_StochasticComponent",
+# "Complete", "Outliers_StochasticComponent",
 # "Outliers",
 #            "FixedParameters", "FixedAutoRegressiveParameters", "Fixed")
 ####
@@ -329,7 +342,7 @@ s_ref<-x13(y_new,x13_spec_ref)
 
 ########################################
 ## Layer 5: estimation with spec from refresh
-sa_x13_ref <- x13(y_new, x13_spec_ref, context=my_context)
+sa_x13_ref <- x13(y_new, x13_spec_ref, context = my_context)
 sa_x13_ref$result$preprocessing
 sa_x13_ref$result$preprocessing$description$variables ## ?
 # sa_x13_ref$result$preprocessing$description$variables
@@ -376,11 +389,13 @@ sa_x13_ref$result$preprocessing$description$variables
 # #                       preprocessing= TRUE)
 
 # # ### Excluding : fist 60 and Last 60 obs
-x13_spec_d<-set_basic(x13_spec_d,type="Excluding", n0= 60, n1 = 60,
-                      preliminary.check = TRUE,
-                      preprocessing= TRUE)
+x13_spec_d <- set_basic(x13_spec_d,
+    type = "Excluding", n0 = 60, n1 = 60,
+    preliminary.check = TRUE,
+    preprocessing = TRUE
+)
 
-sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d)
+sa_x13_d <- rjd3x13::x13(y_raw, x13_spec_d)
 sa_x13_d$result$preprocessing
 #
 # ### operations on TS objects
@@ -392,10 +407,10 @@ sa_x13_d$result$preprocessing
 # ## pre processing in estimate ? same tests with n0, n1
 #
 # # # ### Last 60 obs SAME issue
-x13_spec_d<-rjd3x13::x13_spec("rsa5c")
-x13_spec_d<-set_estimate(x13_spec_d,type="Last", n1 = 60)
+x13_spec_d <- rjd3x13::x13_spec("rsa5c")
+x13_spec_d <- set_estimate(x13_spec_d, type = "Last", n1 = 60)
 
-sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d)
+sa_x13_d <- rjd3x13::x13(y_raw, x13_spec_d)
 sa_x13_d$result$preprocessing
 
 # ##### set  transform
@@ -436,15 +451,16 @@ sa_x13_d$result$preprocessing
 #                         balanced= TRUE)
 #
 # ### set benchmarking (ok)
-x13_spec_d<-rjd3x13::x13_spec("rsa5c")
-x13_spec_d<-set_benchmarking(x13_spec_d,
-                            enabled = TRUE,
-                            target = "ORIGINAL",
-                            rho = 0.8,
-                            lambda = 0.5,
-                            forecast = FALSE,
-                            bias = "None")
-sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d,userdefined = "adjust")
+x13_spec_d <- rjd3x13::x13_spec("rsa5c")
+x13_spec_d <- set_benchmarking(x13_spec_d,
+    enabled = TRUE,
+    target = "ORIGINAL",
+    rho = 0.8,
+    lambda = 0.5,
+    forecast = FALSE,
+    bias = "None"
+)
+sa_x13_d <- rjd3x13::x13(y_raw, x13_spec_d, userdefined = "adjust")
 userdefined_variables_x13() ## should understand every item
 sa_x13_d$user_defined$adjust
 # # x13_spec_d<-rjd3x13::x13_spec("rsa5c")
@@ -472,30 +488,30 @@ sa_x13_d$user_defined$adjust
 #                       bq = 0)
 
 # ### set_tradingdays
-x13_spec_d<-rjd3x13::x13_spec("rsa5c")
+x13_spec_d <- rjd3x13::x13_spec("rsa5c")
 
-x13_spec_d<-rjd3x13::x13_spec("rsa3")
-x13_spec_d<- set_tradingdays(x13_spec_d,
+x13_spec_d <- rjd3x13::x13_spec("rsa3")
+x13_spec_d <- set_tradingdays(x13_spec_d,
     option = "TD4", test = "None",
-    coef=c(0.7,NA,0.5),
-    coef.type=c("Fixed","Estimated","Fixed"),
-    leapyear="LengthOfPeriod",
-    leapyear.coef=0.6
-    )
+    coef = c(0.7, NA, 0.5),
+    coef.type = c("Fixed", "Estimated", "Fixed"),
+    leapyear = "LengthOfPeriod",
+    leapyear.coef = 0.6
+)
 x13_spec_d$regarima$regression$td
 # #
-y_raw<-rjd3toolkit::ABS$X0.2.08.10.M
+y_raw <- rjd3toolkit::ABS$X0.2.08.10.M
 # ISSUE pb estimation with stocktdif rsa3 (not if rsa5c)
-x13_spec_d<-rjd3x13::x13_spec("rsa3")
-x13_spec_d<- set_tradingdays(x13_spec_d,stocktd=28)
+x13_spec_d <- rjd3x13::x13_spec("rsa3")
+x13_spec_d <- set_tradingdays(x13_spec_d, stocktd = 28)
 x13_spec_d$regarima$regression$td
-sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d)
+sa_x13_d <- rjd3x13::x13(y_raw, x13_spec_d)
 #
-x13_spec_d<-rjd3x13::x13_spec("rsa1")
+x13_spec_d <- rjd3x13::x13_spec("rsa1")
 x13_spec_d$regarima$regression$td
-x13_spec_d<- set_tradingdays(x13_spec_d,stocktd=28)
+x13_spec_d <- set_tradingdays(x13_spec_d, stocktd = 28)
 x13_spec_d$regarima$regression$td
-sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d)
+sa_x13_d <- rjd3x13::x13(y_raw, x13_spec_d)
 
 
 
@@ -527,39 +543,50 @@ sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d)
 #### add user def regressors
 # ## add interv variables
 # y_raw<-rjd3toolkit::ABS$X0.2.08.10.M
-iv1<-intervention_variable(12, c(2000, 1), 60,
-                           starts = "2000-01-01", ends = "2001-12-01")
-iv2<- intervention_variable(12, c(2000, 1), 60,
-                            starts = "2010-01-01", ends = "2010-12-01", delta = 1)
+iv1 <- intervention_variable(12, c(2000, 1), 60,
+    starts = "2000-01-01", ends = "2001-12-01"
+)
+iv2 <- intervention_variable(12, c(2000, 1), 60,
+    starts = "2010-01-01", ends = "2010-12-01", delta = 1
+)
 ### calendar regressors (to be added with set_trading days)
-regs_td<- td(s=y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
-             contrasts = TRUE)
+regs_td <- td(
+    s = y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
+    contrasts = TRUE
+)
 
 #### Creating context for all external regressors
-variables<-list(Monday=regs_td[,1],Tuesday=regs_td[,2], Wednesday=regs_td[,3],
-                Thursday=regs_td[,4],Friday= regs_td[,5], Saturday=regs_td[,6],
-                arf=list(reg1=iv1))
-my_context<-modelling_context(variables=variables)
+variables <- list(
+    Monday = regs_td[, 1], Tuesday = regs_td[, 2], Wednesday = regs_td[, 3],
+    Thursday = regs_td[, 4], Friday = regs_td[, 5], Saturday = regs_td[, 6],
+    arf = list(reg1 = iv1)
+)
+my_context <- modelling_context(variables = variables)
 rjd3toolkit::.r2jd_modellingcontext(my_context)$getTsVariableDictionary()
 
 ### add calendar regressors to spec
-x13_spec_d<-rjd3x13::x13_spec("rsa5c")
-x13_spec_d<- set_tradingdays(x13_spec_d,
-                             option = "UserDefined",
-                             uservariable=c("r.Monday","r.Tuesday","r.Wednesday",
-                                            "r.Thursday","r.Friday","r.Saturday"),
-                             test = "None")
+x13_spec_d <- rjd3x13::x13_spec("rsa5c")
+x13_spec_d <- set_tradingdays(x13_spec_d,
+    option = "UserDefined",
+    uservariable = c(
+        "r.Monday", "r.Tuesday", "r.Wednesday",
+        "r.Thursday", "r.Friday", "r.Saturday"
+    ),
+    test = "None"
+)
 
-x13_spec_d<- add_usrdefvar(x13_spec_d,group = "arf", name="reg1",label="iv1", regeffect="Trend")
+x13_spec_d <- add_usrdefvar(x13_spec_d, group = "arf", name = "reg1", label = "iv1", regeffect = "Trend")
 x13_spec_d$regarima$regression$users
-sa_x13_d<- rjd3x13::x13(y_raw, x13_spec_d, context = my_context)
+sa_x13_d <- rjd3x13::x13(y_raw, x13_spec_d, context = my_context)
 sa_x13_d$result$preprocessing
 
 ## ISSUE
 y <- rjd3toolkit::ABS$X0.2.09.10.M
-m <- x13(y,"rsa5c", userdefined=c("ycal"))
-m <- x13(y,"rsa5c", userdefined=c("variancedecomposition.total",
-             "y", "y_b(?)", "y_eb(?)", "y_ef(?)","y_f(?)"))
+m <- x13(y, "rsa5c", userdefined = c("ycal"))
+m <- x13(y, "rsa5c", userdefined = c(
+    "variancedecomposition.total",
+    "y", "y_b(?)", "y_eb(?)", "y_ef(?)", "y_f(?)"
+))
 
 m$user_defined$variancedecomposition.total
 ## adding other external regressors
@@ -577,13 +604,14 @@ m$user_defined$variancedecomposition.total
 
 #########################################################################
 ## Layer 4: refreshed spec
-spec<-x13_spec("rsa3")
-sa_x13_d<-x13(y_raw,spec)
+spec <- x13_spec("rsa3")
+sa_x13_d <- x13(y_raw, spec)
 current_result_spec <- sa_x13_d$result_spec
 current_domain_spec <- sa_x13_d$estimation_spec
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                            current_domain_spec, #domain spec (set of constraints)
-                            policy = "FreeParameters")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "FreeParameters"
+)
 
 
 
@@ -594,15 +622,16 @@ x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
 current_result_spec <- sa_x13_d$result_spec
 current_domain_spec <- sa_x13_d$estimation_spec
 x13_spec_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
-                              current_domain_spec, #domain spec (set of constraints)
-                              policy = "Current")
-                              # period=12, # nb of annual observations
-                              # start=c(2012,1), # why this
-                              # end=c(2021,1))
-s_ref<-x13(y_new,x13_spec_ref)
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "Current"
+)
+# period=12, # nb of annual observations
+# start=c(2012,1), # why this
+# end=c(2021,1))
+s_ref <- x13(y_new, x13_spec_ref)
 
 # policy = c("FreeParameters",
-#"Complete", "Outliers_StochasticComponent",
+# "Complete", "Outliers_StochasticComponent",
 # "Outliers",
 #            "FixedParameters", "FixedAutoRegressiveParameters", "Fixed")
 ####
@@ -610,7 +639,7 @@ s_ref<-x13(y_new,x13_spec_ref)
 
 
 ## Layer 5: estimation with spec from refresh
-sa_x13_ref <- x13(y_new, x13_spec_ref, context=my_context)
+sa_x13_ref <- x13(y_new, x13_spec_ref, context = my_context)
 sa_x13_ref$result$preprocessing
 sa_x13_ref$result$preprocessing$description$variables ## ?
 # sa_x13_ref$result$preprocessing$description$variables
@@ -630,11 +659,11 @@ sa_x13_ref$result$preprocessing$description$variables
 ########## NOT useful for refresh (might have to check that stays the same ?)
 ## comment 1 = what should be touched by which policy and what not
 ## comment 2: understanding of all param purpose (DETAIL HOLES ONLY)
-##.... + how to change them here, in v2 and in GUI
+## .... + how to change them here, in v2 and in GUI
 
 ############# STEP 3:  REFRESHED SPEC : check changes
 ### Basic
-#if refreshed: always untouched  / simple copy
+# if refreshed: always untouched  / simple copy
 # x13_spec_d$regarima$basic$span$type
 # sa_x13_d$estimation_spec$regarima$basic$span$type
 # sa_x13_d$result_spec$regarima$basic$span$type

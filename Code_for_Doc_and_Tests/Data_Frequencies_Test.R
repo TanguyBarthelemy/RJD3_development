@@ -1,5 +1,3 @@
-
-
 # Code du webinar ---------------------------------------------------------
 
 # P2 : Seasonal adjustment in R with JD+ ----------------------------------
@@ -14,31 +12,31 @@ y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9
 # 3 year length ?
 
 ### att pbs de declaration (cf GUI possibilites avec periodes)
-y12<-ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(1996, 12))
+y12 <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(1996, 12))
 y12
 
 ## comprendre le remplissage
-y6<-ts(ipi[, "RF3030"], frequency = 6, start = c(1990, 1), end = c(1996, 12))
+y6 <- ts(ipi[, "RF3030"], frequency = 6, start = c(1990, 1), end = c(1996, 12))
 y6
 
-y4<-ts(ipi[, "RF3030"], frequency = 4, start = c(1990, 1), end = c(1996, 12))
+y4 <- ts(ipi[, "RF3030"], frequency = 4, start = c(1990, 1), end = c(1996, 12))
 y4
 
-y3<-ts(ipi[, "RF3030"], frequency = 3, start = c(1990, 1), end = c(1996, 12))
+y3 <- ts(ipi[, "RF3030"], frequency = 3, start = c(1990, 1), end = c(1996, 12))
 y3
 
-y2<-ts(ipi[, "RF3030"], frequency = 2, start = c(1990, 1), end = c(1996, 12))
+y2 <- ts(ipi[, "RF3030"], frequency = 2, start = c(1990, 1), end = c(1996, 12))
 y2
 
 ## mise en tableau ou qqch
 
 
 # X13 v3
-sa_x13_v3<- rjd3x13::x13(y6, spec = "rsa5c")
+sa_x13_v3 <- rjd3x13::x13(y6, spec = "rsa5c")
 sa_x13_v3$result$final$d11final
 
 # TS v3
-sa_ts_v3<- rjd3tramoseats::tramoseats(y2, spec = "rsafull")
+sa_ts_v3 <- rjd3tramoseats::tramoseats(y2, spec = "rsafull")
 sa_ts_v3$result$final$sa
 
 # X13 v2

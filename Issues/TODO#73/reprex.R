@@ -1,4 +1,3 @@
-
 ################################################################################
 #######               Démonstration du package JDCruncheR                #######
 ################################################################################
@@ -28,7 +27,7 @@ QR_auto <- JDCruncheR::extract_QR(matrix_output_file = paste0(path_ws, "/Output/
 
 ### Etude de JDCruncheR::extract_QR --------------------------------------------
 
-matrix_output_file = paste0(path_ws, "/Output/SAProcessing-1/demetra_m.csv")
+matrix_output_file <- paste0(path_ws, "/Output/SAProcessing-1/demetra_m.csv")
 demetra_m <- read.csv(
     file = matrix_output_file,
     sep = ";",
@@ -138,16 +137,18 @@ scores <- JDCruncheR::extract_score(QR_auto_score)
 # Changement de formule pour tramo
 QR_auto |>
     JDCruncheR::compute_score(
-        score_pond = c(qs_residual_sa_on_sa = 30,
-                       f_residual_sa_on_sa = 30,
-                       qs_residual_sa_on_i = 20,
-                       f_residual_sa_on_i = 20,
-                       f_residual_td_on_sa = 30,
-                       f_residual_td_on_i = 20,
-                       oos_mean = 15,
-                       oos_mse = 10,
-                       residuals_independency = 15,
-                       residuals_homoskedasticity = 5,
-                       residuals_skewness = 5)
+        score_pond = c(
+            qs_residual_sa_on_sa = 30,
+            f_residual_sa_on_sa = 30,
+            qs_residual_sa_on_i = 20,
+            f_residual_sa_on_i = 20,
+            f_residual_td_on_sa = 30,
+            f_residual_td_on_i = 20,
+            oos_mean = 15,
+            oos_mse = 10,
+            residuals_independency = 15,
+            residuals_homoskedasticity = 5,
+            residuals_skewness = 5
+        )
     ) |>
     JDCruncheR::extract_score()

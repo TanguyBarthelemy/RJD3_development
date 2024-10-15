@@ -1,4 +1,3 @@
-
 # Affecter les régresseurs via le WS_template_cjo
 
 library("rjdworkspace")
@@ -20,12 +19,12 @@ ws_cjo <- load_workspace(file = "./WS/ws_cjo.xml")
 compute(ws_cjo)
 
 for (i in seq_len(ncol(raw_data))) {
-
     name_serie <- colnames(raw_data)[i]
     regs_cjo <- choix_cjo$reg[choix_cjo$series == name_serie]
     transfer_series(ws_cjo, ws_auto,
-                    selected_series = name_serie,
-                    pos_sap_to = 1, name_sap_from = regs_cjo)
+        selected_series = name_serie,
+        pos_sap_to = 1, name_sap_from = regs_cjo
+    )
 }
 
 save_workspace(ws_auto, file = "./WS/ws_auto.xml")

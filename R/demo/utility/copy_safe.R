@@ -1,6 +1,4 @@
-
 pull_out_fire <- function(ws_name, id = NULL) {
-
     ws_path <- file.path("./WS", ws_name)
     xml_path <- file.path("./WS", paste0(ws_name, ".xml"))
 
@@ -27,7 +25,6 @@ pull_out_fire <- function(ws_name, id = NULL) {
 }
 
 bring_back <- function(id) {
-
     secured_path <- file.path("./WS/SECURED", id)
     if (!dir.exists(secured_path)) {
         warning("Il n'y a pas de copie à cet id.")
@@ -55,10 +52,11 @@ bring_back <- function(id) {
 }
 
 bring_all_back <- function() {
-
-    ids <- list.dirs(path = "./WS/SECURED/",
-                     recursive = FALSE,
-                     full.names = FALSE)
+    ids <- list.dirs(
+        path = "./WS/SECURED/",
+        recursive = FALSE,
+        full.names = FALSE
+    )
 
     for (id in ids) {
         print(bring_back(id))

@@ -23,8 +23,9 @@ y_new <- ts(ipi[, "RF0811"], frequency = 12, start = c(1990, 1), end = c(2021, 4
 # decomposition.sa_cmp_e (cf ONS dialogue in tech doc)
 user_defined_variables("TRAMO-SEATS")
 
-m <- RJDemetra::tramoseats(y_raw,"RSAfull",
-                userdefined=c("decomposition.sa_cmp_e","decomposition.sa_cmp_e_f"))
+m <- RJDemetra::tramoseats(y_raw, "RSAfull",
+    userdefined = c("decomposition.sa_cmp_e", "decomposition.sa_cmp_e_f")
+)
 
 m$user_defined$decomposition.sa_cmp_e
 
@@ -32,12 +33,12 @@ m$user_defined$decomposition.sa_cmp_e
 
 ## span pb
 ### series span vs model span (pb vu en prod cf series span, model span)
-m1<-RJDemetra::x13(y_raw,"RSA5c")
+m1 <- RJDemetra::x13(y_raw, "RSA5c")
 
 myspec1 <- RJDemetra::x13_spec(spec = "RSA5c", estimate.from = "2000-01-01")
 
 
-m2<-RJDemetra::x13(y_raw,myspec1) # modele span pas affiché
+m2 <- RJDemetra::x13(y_raw, myspec1) # modele span pas affiché
 
 m2$regarima$specification$estimate$span
 
@@ -51,7 +52,7 @@ user_defined_variables("X13-ARIMA")
 myseries <- y_raw
 myspec1 <- x13_spec(spec = "RSA5c")
 myspec1
-myspec2 <- x13_spec(spec = "X11", x11.mode="LogAdditive",estimate.from = "2000-01-01")
+myspec2 <- x13_spec(spec = "X11", x11.mode = "LogAdditive", estimate.from = "2000-01-01")
 myspec2
 # estimate = model span, works just in pre processing
 
@@ -59,7 +60,7 @@ myspec2
 ## mode will always follow pre-adj, unless
 ### 1 x11 only: everthing should work
 
-m<- x13(y_raw,myspec2,userdefined =c("decomposition.b1","decomposition.b20","decomposition.d1","decomposition.d12"))
+m <- x13(y_raw, myspec2, userdefined = c("decomposition.b1", "decomposition.b20", "decomposition.d1", "decomposition.d12"))
 m$decomposition$specification
 m$final$series
 m$regarima$model$spec_rslt
@@ -72,31 +73,39 @@ m$user_defined$decomposition.d1
 myseries <- y_raw
 myspec1 <- RJDemetra::x13_spec(spec = "RSA5c")
 # one filter for all periods
-spec_seaso<-RJDemetra::x13_spec(myspec1,x11.seasonalma=c("S3X9"))
-ms<-RJDemetra::x13(y_raw,spec_seaso)
+spec_seaso <- RJDemetra::x13_spec(myspec1, x11.seasonalma = c("S3X9"))
+ms <- RJDemetra::x13(y_raw, spec_seaso)
 ms
-spec_seaso<-RJDemetra::x13_spec(myspec1,x11.seasonalma=c("Msr"))
-ms<-RJDemetra::x13(y_raw,spec_seaso)
+spec_seaso <- RJDemetra::x13_spec(myspec1, x11.seasonalma = c("Msr"))
+ms <- RJDemetra::x13(y_raw, spec_seaso)
 ms
 ## one factor per period
-spec_seaso<-RJDemetra::x13_spec(myspec1,x11.seasonalma=
-                                    c("S3X3","Msr","S3X3","Msr","S3X3","Msr","S3X3","Msr",
-                                      "S3X3","Msr","S3X3","Msr"))
+spec_seaso <- RJDemetra::x13_spec(myspec1,
+    x11.seasonalma =
+        c(
+            "S3X3", "Msr", "S3X3", "Msr", "S3X3", "Msr", "S3X3", "Msr",
+            "S3X3", "Msr", "S3X3", "Msr"
+        )
+)
 
-ms<-RJDemetra::x13(y_raw,spec_seaso)
+ms <- RJDemetra::x13(y_raw, spec_seaso)
 ms
 
 
 #### tests on sigma vector
 myseries <- y_raw
 myspec1 <- RJDemetra::x13_spec(spec = "RSA5c")
-spec_sigma<-RJDemetra::x13_spec(myspec1, x11.calendarSigma = "Select",
-                     x11.sigmaVector = c("Group1","Group1","Group1","Group1",
-                                         "Group2","Group2","Group1","Group1",
-                                         "Group1","Group1","Group1","Group1"))
+spec_sigma <- RJDemetra::x13_spec(myspec1,
+    x11.calendarSigma = "Select",
+    x11.sigmaVector = c(
+        "Group1", "Group1", "Group1", "Group1",
+        "Group2", "Group2", "Group1", "Group1",
+        "Group1", "Group1", "Group1", "Group1"
+    )
+)
 spec_sigma
 
-ms<-RJDemetra::x13(y_raw,spec_sigma)
+ms <- RJDemetra::x13(y_raw, spec_sigma)
 ms
 
 # x11.mode = c(NA, "Undefined", "Additive", "Multiplicative", "LogAdditive", "PseudoAdditive"),

@@ -1,4 +1,3 @@
-
 library("JDCruncheR")
 library("rjwsacruncher")
 
@@ -19,17 +18,17 @@ BQ_auto <- extract_QR("Issues/TODO#69/ws_ipi/Output/SAProcessing-1/demetra_m.csv
 str(BQ_auto)
 
 BQ_auto_score1 <- compute_score(BQ_auto,
-                                n_contrib_score = 3,
-                                conditional_indicator = list(list(
-                                    indicator = "oos_mse",
-                                    conditions = c(
-                                        "residuals_independency",
-                                        "residuals_homoskedasticity",
-                                        "residuals_normality"
-                                    ),
-                                    conditions_modalities = c("Bad", "Severe")
-                                )),
-                                na.rm = TRUE
+    n_contrib_score = 3,
+    conditional_indicator = list(list(
+        indicator = "oos_mse",
+        conditions = c(
+            "residuals_independency",
+            "residuals_homoskedasticity",
+            "residuals_normality"
+        ),
+        conditions_modalities = c("Bad", "Severe")
+    )),
+    na.rm = TRUE
 )
 BQ_auto_score2 <- compute_score(BQ_auto, n_contrib_score = 2)
 

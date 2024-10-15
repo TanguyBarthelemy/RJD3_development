@@ -1,4 +1,3 @@
-
 ################################################################################
 #######           Démonstration des packages en version 3                #######
 ################################################################################
@@ -130,9 +129,11 @@ replace_sa_item(jsap = jsap1, jsa = jsa1_sap3, idx = 1)
 
 .jws_compute(jws_from)
 # Transfert de séries
-transfer_series(jsap_from = jsap2_in,
-                jsap_to = jsap2,
-                selected_series = c("RF0899", "RF1039", "RF1041"))
+transfer_series(
+    jsap_from = jsap2_in,
+    jsap_to = jsap2,
+    selected_series = c("RF0899", "RF1039", "RF1041")
+)
 
 save_workspace(jws = jws_to, file = "./temp/new_ws.xml", replace = TRUE)
 

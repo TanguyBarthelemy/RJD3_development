@@ -1,4 +1,3 @@
-
 path_folder <- "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#377"
 
 # WS tramo V3 ------------------------------------------------------------------
@@ -20,7 +19,9 @@ rjwsacruncher::cruncher_and_param(
 )
 
 QR_auto <- JDCruncheR::extract_QR(file.path(path_ws, "Output/SAProcessing-1/demetra_m.csv"))
-QR_auto |> compute_score(na.rm = TRUE) |> extract_score()
+QR_auto |>
+    compute_score(na.rm = TRUE) |>
+    extract_score()
 
 # WS tramo X-13 V3 ------------------------------------------------------------------
 
@@ -41,7 +42,9 @@ rjwsacruncher::cruncher_and_param(
 )
 
 QR_auto <- JDCruncheR::extract_QR(file.path(path_ws, "Output/SAProcessing-1/demetra_m.csv"))
-QR_auto |> compute_score(na.rm = TRUE) |> extract_score()
+QR_auto |>
+    compute_score(na.rm = TRUE) |>
+    extract_score()
 
 
 # WS tramo V2 ------------------------------------------------------------------
@@ -63,7 +66,9 @@ rjwsacruncher::cruncher_and_param(
 )
 
 QR_auto <- JDCruncheR::extract_QR(file.path(path_ws, "Output/SAProcessing-1/demetra_m.csv"))
-QR_auto |> compute_score(na.rm = TRUE) |> extract_score()
+QR_auto |>
+    compute_score(na.rm = TRUE) |>
+    extract_score()
 
 
 # WS tramo X-13 V2 ------------------------------------------------------------------
@@ -85,4 +90,6 @@ rjwsacruncher::cruncher_and_param(
 )
 
 QR_auto <- JDCruncheR::extract_QR(file.path(path_ws, "Output/SAProcessing-1/demetra_m.csv"))
-QR_auto |> compute_score(na.rm = TRUE) |> extract_score()
+QR_auto |>
+    compute_score(na.rm = TRUE) |>
+    extract_score()

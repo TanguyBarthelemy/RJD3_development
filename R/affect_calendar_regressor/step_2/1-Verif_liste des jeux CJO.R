@@ -38,7 +38,7 @@ RJDemetra::compute(ws)
 
 # Extraction du multiprocessing 1
 msa <- RJDemetra::get_object(ws, 1)
-#get_name(msa)
+# get_name(msa)
 
 # Nombre de series du multiprocessing
 n <- RJDemetra::count(msa)
@@ -57,9 +57,8 @@ variables_cjo <- 1:n
 modele <- 1:n
 
 
-#Pour chaque serie
+# Pour chaque serie
 for (i in seq_len(n)) {
-
     print(i)
 
     # On recupere les specifs
@@ -72,12 +71,9 @@ for (i in seq_len(n)) {
 
     # Si rien n'est renseigne, il n'y a pas d'effet CJO ni LY
     if (is.null(dim(jeux_cjo)) || all(is.na(jeux_cjo$coeff))) {
-
         variables_cjo[i] <- "Pas_CJO"
-        modele[i] <-"Pas_CJO"
-
+        modele[i] <- "Pas_CJO"
     } else {
-
         # sinon on enregistre la liste des regresseurs dans le vecteur "variable"...
         m <- nrow(jeux_cjo)
         if (m == 0) {
@@ -91,12 +87,11 @@ for (i in seq_len(n)) {
             # codage des autres cas "standards"
         } else if (ly) {
             variables_cjo[i] <- paste(row.names(jeux_cjo), collapse = ",")
-            modele[i] <- paste("REG", m-1, "_LY", sep = "")
+            modele[i] <- paste("REG", m - 1, "_LY", sep = "")
         } else {
-            variables_cjo[i] <- paste(row.names(jeux_cjo),collapse = ",")
+            variables_cjo[i] <- paste(row.names(jeux_cjo), collapse = ",")
             modele[i] <- paste("REG", m, sep = "")
         }
-
     }
 }
 
@@ -119,34 +114,34 @@ head(result)
 # result[result$serie =="RF2529",]$modele <- "REG1"
 
 # On verifie qu'il n'y a pas de doublon = serie specifiee plus d'une fois dans le xml
-result[duplicated(result),]
+result[duplicated(result), ]
 # result[result$serie=="RF3212",]
 
 
 
 #### 2) Lecture des specifs retenues dans le fichier excel Choix_CJO et verif d'absence de doublons
 
-choix_cjo <- read.xlsx(file = "Choix_cjo_temp/Resultats_CJO_2022_export.xls", header=TRUE, sheetIndex = 1)
+choix_cjo <- read.xlsx(file = "Choix_cjo_temp/Resultats_CJO_2022_export.xls", header = TRUE, sheetIndex = 1)
 # choix_cjo <- read.csv2(file = "V:/Methodo-ICA/Campagne_annuelle_2022/IPI/Donnees/Choix_CJO_2020.csv")
 head(choix_cjo)
-choix_cjo<-choix_cjo[,-1]
+choix_cjo <- choix_cjo[, -1]
 str(choix_cjo)
-colnames(choix_cjo)[1]<-"serie" #pour homogeneiser
+colnames(choix_cjo)[1] <- "serie" # pour homogeneiser
 
 # Attention, s'assurer que les series sans effet JO ont bien pour modalite "Pas_CJO" (et non "null", par exemple)
 # Si une colonne de NA est importee en fin du fichier, faire tourner la commande suivante: choix_cjo <- choix_cjo[,c(1,2)]
 
 # verif des doublons
-choix_cjo[duplicated(choix_cjo),]
+choix_cjo[duplicated(choix_cjo), ]
 # Si besoin, pour regarder les diff specifs associees à une meme serie: choix_cjo[choix_cjo$serie=="",]
 
 
 
 #### 3) Comparaison des series presentes et modeles associes à chaque serie
 
-#on trie les deux data frames
-result[order(result$serie),]
-choix_cjo[order(choix_cjo$serie),]
+# on trie les deux data frames
+result[order(result$serie), ]
+choix_cjo[order(choix_cjo$serie), ]
 
 # On verifie que les modeles possibles sont les memes dans les deux sets de donnees
 head(choix_cjo)
@@ -157,8 +152,8 @@ comparaison <- merge(result, choix_cjo, by = "serie")
 str(comparaison)
 comparaison$divergence <- comparaison$modele != comparaison$choix_jo
 
-#On isole les series pour lesquelles les modeles specifies dans le xml et le fichier Choix_CJO.csv sont differents
-pbs <- comparaison[comparaison$divergence,]
+# On isole les series pour lesquelles les modeles specifies dans le xml et le fichier Choix_CJO.csv sont differents
+pbs <- comparaison[comparaison$divergence, ]
 pbs
 # -> pbs doit etre vide
 
@@ -170,5 +165,5 @@ pbs
 
 #### 4) Si besoin d'exporter
 
-write.csv2(pbs,"N:/L120/SECTION IIA/CVS/Analyse IPI/problemes_modeles.csv",row.names = FALSE)
+write.csv2(pbs, "N:/L120/SECTION IIA/CVS/Analyse IPI/problemes_modeles.csv", row.names = FALSE)
 pbs

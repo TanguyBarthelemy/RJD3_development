@@ -1,6 +1,4 @@
-
 print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_print_style")) {
-
     if (enable_print_style) {
         style_pre_code <- "\033[4m\033[1m"
         style_post_code <- "\033[22m\033[24m"
@@ -55,7 +53,9 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
             message("Trading days regressor unknown.")
         }
         cat("with Leap Year: ",
-            ifelse(x$regression$td$lp == "LEAPYEAR", "Yes", "No"), "\n", sep = "")
+            ifelse(x$regression$td$lp == "LEAPYEAR", "Yes", "No"), "\n",
+            sep = ""
+        )
         cat("AutoAdjust: ", x$regression$td$autoadjust, "\n", sep = "")
         cat("Test: ", x$regression$td$test, "\n", sep = "")
     }
@@ -72,8 +72,10 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
 
         if (!is.null(x$regression$easter$coef)) {
             cat("Coef:\n")
-            cat("\t- Type:", x$regression$easter$coefficient$type,
-                ifelse(x$regression$easter$coefficient$type == "FIXED", "(Auto)", ""), "\n")
+            cat(
+                "\t- Type:", x$regression$easter$coefficient$type,
+                ifelse(x$regression$easter$coefficient$type == "FIXED", "(Auto)", ""), "\n"
+            )
             cat("\t- Value:", x$regression$easter$coefficient$value, "\n")
         }
     }
@@ -85,7 +87,9 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
         for (out in x$regression$outliers) {
             cat("\t- ", out$name,
                 ifelse(is.null(out$coef), "", paste0(", coefficient: ", out$coef$value, " (", out$coef$type, ")")),
-                "\n", sep = "")
+                "\n",
+                sep = ""
+            )
         }
     }
     cat("Ramps: ")
@@ -93,7 +97,9 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
         cat("\n")
         for (ramp in x$regression$ramps) {
             cat("\t- start: ", ramp$start, ", end : ", ramp$end,
-                ifelse(is.null(ramp$coef), "", paste0(", coefficient: ", ramp$coef, " (", ramp$coef$type, ")")), sep = "")
+                ifelse(is.null(ramp$coef), "", paste0(", coefficient: ", ramp$coef, " (", ramp$coef$type, ")")),
+                sep = ""
+            )
             cat("\n")
         }
     } else {
@@ -105,7 +111,9 @@ print_JD3_REGARIMA_SPEC <- function(x, enable_print_style = getOption("enable_pr
         for (uv in x$regression$users) {
             cat("\t-", uv$name,
                 ifelse(is.null(uv$coef), "", paste0(", coefficient: ", uv$coef)),
-                ", component: ", uv$regeffect, "\n", sep = "")
+                ", component: ", uv$regeffect, "\n",
+                sep = ""
+            )
         }
     }
 

@@ -27,15 +27,18 @@ stop("Specific TRAMO...")
 
 spec_x13_d1 <- rjd3tramoseats::spec_tramo("trfull")
 spec_x13_d1 <- set_easter(spec_x13_d1,
-                          type = "Standard")
+    type = "Standard"
+)
 
 spec_x13_d2 <- rjd3tramoseats::spec_tramo("trfull")
 spec_x13_d2 <- set_easter(spec_x13_d2,
-                          type = "IncludeEaster")
+    type = "IncludeEaster"
+)
 
 spec_x13_d3 <- rjd3tramoseats::spec_tramo("trfull")
 spec_x13_d3 <- set_easter(spec_x13_d3,
-                          type = "IncludeEasterMonday")
+    type = "IncludeEasterMonday"
+)
 
 waldo::compare(spec_x13_d1, spec_x13_d2)
 waldo::compare(spec_x13_d2, spec_x13_d3)
@@ -60,14 +63,16 @@ french_calendar <- national_calendar(days = list(
     special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
     special_day("ASSUMPTION"), # Assomption
     special_day("ALLSAINTSDAY"), # Toussaint
-    special_day("ARMISTICE"))
-)
+    special_day("ARMISTICE")
+))
 
 weighted_cal <- weighted_calendar(list(french_calendar, french_calendar), c(0.1, 0.5))
 
 final_cal <- chained_calendar(french_calendar, weighted_cal, break_date = "2005-05-01")
 
 calendar_td(weighted_cal,
-                      frequency = 12, start = c(1990, 12), length = 500)
+    frequency = 12, start = c(1990, 12), length = 500
+)
 calendar_td(chained_calendar,
-                      frequency = 12, start = c(1990, 12), length = 500)
+    frequency = 12, start = c(1990, 12), length = 500
+)

@@ -1,4 +1,3 @@
-
 library("JDCruncheR")
 library("readxl")
 library("xlsx")
@@ -51,17 +50,17 @@ str(BQ_auto)
 # -> compute_score : fonction native du cruncher
 # Calcul du score (personnalise) et ajout au bilan qualite:
 BQ_auto <- compute_score(BQ_auto,
-                         n_contrib_score = 3,
-                         conditional_indicator = list(list(
-                             indicator = "oos_mse",
-                             conditions = c(
-                                 "residuals_independency",
-                                 "residuals_homoskedasticity",
-                                 "residuals_normality"
-                             ),
-                             conditions_modalities = c("Bad", "Severe")
-                         )),
-                         na.rm = TRUE
+    n_contrib_score = 3,
+    conditional_indicator = list(list(
+        indicator = "oos_mse",
+        conditions = c(
+            "residuals_independency",
+            "residuals_homoskedasticity",
+            "residuals_normality"
+        ),
+        conditions_modalities = c("Bad", "Severe")
+    )),
+    na.rm = TRUE
 )
 
 # Extraction du score (pour visualisation)
@@ -82,9 +81,9 @@ BQ_auto$score_formula
 # (on ne garde que les valeurs pour les series presentes dans values : all.x = TRUE, all.y = FALSE
 # -> on agit sur le data frame BQ_auto$values, un des 3 elements de la liste BQ_auto)
 BQ_auto$values <- merge(BQ_auto$values,
-                        decisions_passees,
-                        by = "series",
-                        all.x = TRUE, all.y = FALSE
+    decisions_passees,
+    by = "series",
+    all.x = TRUE, all.y = FALSE
 )
 head(BQ_auto$values)
 

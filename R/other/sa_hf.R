@@ -68,7 +68,7 @@ q <- holidays(
 # Muti AMB decomposition with extended fractional Airline Model ----------------
 
 f <- function(
-        # input time series
+    # input time series
     y,
     # Different periods
     periods,
@@ -92,7 +92,6 @@ f <- function(
     # To perform a multiplicative model
     log = FALSE,
     y_time = NULL) {
-
     if (is.null(y_time) && !is.null(x)) {
         y_time <- rownames(x)
     }
@@ -151,17 +150,17 @@ f <- function(
     }
 
     # Compute final components and SA series
-    #calendar component
+    # calendar component
     cal.cmp <- rep(0, length(y))
     if (!is.null(x)) {
         cal.cmp <- pre_adj$model$xreg[, seq_len(ncol(x))] %*% pre_adj$model$b[seq_len(ncol(x))]
     }
 
-    #final s components
+    # final s components
     amb_s <- lapply(all_amb, \(.amb) .amb$decomposition$s)
     amb_s <- as.data.frame(setNames(amb_s, paste0("s_", sort(periods))))
 
-    #final sa
+    # final sa
     y_trans <- y
     if (log) y_trans <- log(y)
     amb.sa <- y_trans - (cal.cmp + rowSums(amb_s))

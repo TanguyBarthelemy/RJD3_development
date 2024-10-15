@@ -1,4 +1,3 @@
-
 ##### RJD3x13 : creating Enriched spec and output for testing
 ### 1 PRINTS
 
@@ -27,9 +26,11 @@ spec_ts_d <- rjd3tramoseats::spec_tramoseats("rsa5")
 
 ############# CUSTOMIZATION by parts
 # ##### set basic
-spec_ts_d <- set_basic(spec_ts_d, type = "From", d0 = "2000-01-01",
-                     preliminary.check = TRUE,
-                     preprocessing= TRUE)
+spec_ts_d <- set_basic(spec_ts_d,
+    type = "From", d0 = "2000-01-01",
+    preliminary.check = TRUE,
+    preprocessing = TRUE
+)
 ### PRINT HOLE in  preprocessing
 # series span
 # model span
@@ -76,9 +77,10 @@ sa_ts_d$result$preprocessing
 # spec_ts_d <- rjd3x13::spec_x13("rsa5c")
 
 spec_ts_d <- set_transform(spec_ts_d,
-                          fun = "Log",
-                          adjust="LengthOfPeriod",
-                          outliers = TRUE)
+    fun = "Log",
+    adjust = "LengthOfPeriod",
+    outliers = TRUE
+)
 
 # spec_ts_d <- set_transform(spec_ts_d,
 #                            fun = "Log",
@@ -92,10 +94,11 @@ spec_ts_d <- set_transform(spec_ts_d,
 # #                       tc.rate =0.85)
 
 spec_ts_d <- set_outlier(spec_ts_d,
-                       span.type= "Last", n1 = 60,
-                       outliers.type = c("LS", "TC"),
-                       # critical.value = 5,
-                       tc.rate =0.85)
+    span.type = "Last", n1 = 60,
+    outliers.type = c("LS", "TC"),
+    # critical.value = 5,
+    tc.rate = 0.85
+)
 ### quick check if estimation works
 sa_ts_d <- tramoseats(y_raw, spec_ts_d)
 sa_ts_d$result$preprocessing
@@ -116,12 +119,13 @@ sa_ts_d$result$preprocessing
 # ### set benchmarking
 spec_ts_d <- spec_tramoseats("rsa5")
 spec_ts_d <- set_benchmarking(spec_ts_d,
-                            enabled = TRUE,
-                            target = "CALENDARADJUSTED",
-                            rho = 0.8,
-                            lambda = 0.5,
-                            forecast = FALSE,
-                            bias = "None")
+    enabled = TRUE,
+    target = "CALENDARADJUSTED",
+    rho = 0.8,
+    lambda = 0.5,
+    forecast = FALSE,
+    bias = "None"
+)
 
 
 ### quick check if estimation works
@@ -136,17 +140,20 @@ sa_ts_d$result # no bencch marking results, define output in user defined
 
 #####  set arima
 spec_ts_d <- set_automodel(spec_ts_d,
-                         enabled = FALSE)
-spec_ts_d <- set_arima(spec_ts_d, mean = 0.2,
-                     mean.type = "Fixed",
-                     p = 1,
-                     d = 2,
-                     q = 0,
-                     bp = 1,
-                     bd = 1,
-                     bq = 0,
-                     coef = c(0.6, 0.7),
-                     coef.type = c("Initial", "Fixed"))
+    enabled = FALSE
+)
+spec_ts_d <- set_arima(spec_ts_d,
+    mean = 0.2,
+    mean.type = "Fixed",
+    p = 1,
+    d = 2,
+    q = 0,
+    bp = 1,
+    bd = 1,
+    bq = 0,
+    coef = c(0.6, 0.7),
+    coef.type = c("Initial", "Fixed")
+)
 ###
 sa_ts_d <- tramoseats(y_raw, spec_ts_d)
 sa_ts_d$result$preprocessing
@@ -164,11 +171,11 @@ sa_ts_d$result$preprocessing
 # ### set_tradingdays (NOT USER DEF, for user def see below)
 spec_ts_d <- spec_tramoseats("rsa5")
 spec_ts_d <- set_tradingdays(spec_ts_d,
-                            option = "TD4", test = "None",
-                            coef=c(0.7, NA, 0.5),
-                            coef.type=c("Fixed", "Estimated", "Fixed"),
-                            leapyear="LengthOfPeriod",
-                            leapyear.coef=0.6
+    option = "TD4", test = "None",
+    coef = c(0.7, NA, 0.5),
+    coef.type = c("Fixed", "Estimated", "Fixed"),
+    leapyear = "LengthOfPeriod",
+    leapyear.coef = 0.6
 )
 
 sa_ts_d <- tramoseats(y_raw, spec_ts_d)
@@ -183,11 +190,12 @@ sa_ts_d$result$preprocessing
 # ### set_easter
 # spec_ts_d <- rjd3x13::spec_x13("rsa5c")
 spec_ts_d <- set_easter(spec_ts_d,
-                      enabled = TRUE,
-                      duration = 12,
-                      coef=0.6,
-                      coef.type="Fixed",
-                      test="None")
+    enabled = TRUE,
+    duration = 12,
+    coef = 0.6,
+    coef.type = "Fixed",
+    test = "None"
+)
 # # type = "Unused" : TRAMO specific
 # # "Unused", "Standard", "IncludeEaster", "IncludeEasterMonday"
 # spec_ts_d
@@ -201,8 +209,8 @@ sa_ts_d$result$preprocessing
 ### Adding user defined variables
 ### add outliers
 # spec_ts_d <- rjd3x13::spec_x13("rsa5c")
-spec_ts_d <- rjd3toolkit::add_outlier(spec_ts_d, type="AO", date="2020-03-01", coef=12)
-spec_ts_d <- rjd3toolkit::add_outlier(spec_ts_d, type="LS", date="2020-04-01")
+spec_ts_d <- rjd3toolkit::add_outlier(spec_ts_d, type = "AO", date = "2020-03-01", coef = 12)
+spec_ts_d <- rjd3toolkit::add_outlier(spec_ts_d, type = "LS", date = "2020-04-01")
 spec_ts_d
 
 ## quick estimation check
@@ -211,7 +219,7 @@ sa_ts_d$result$preprocessing
 
 ### add ramp
 # ramp on year 2021
-spec_ts_d <- rjd3toolkit::add_ramp(spec_ts_d, start="2021-01-01", end="2021-12-01")
+spec_ts_d <- rjd3toolkit::add_ramp(spec_ts_d, start = "2021-01-01", end = "2021-12-01")
 ## quick check
 sa_ts_d <- tramoseats(y_raw, spec_ts_d)
 sa_ts_d$result$preprocessing
@@ -224,27 +232,34 @@ sa_ts_d$result$preprocessing
 # ## add intervention variables (with add_usrdefvar)
 # y_raw <- rjd3toolkit::ABS$X0.2.08.10.M
 iv1 <- intervention_variable(12, c(2000, 1), 60,
-                           starts = "2000-01-01", ends = "2001-12-01")
+    starts = "2000-01-01", ends = "2001-12-01"
+)
 iv2 <- intervention_variable(12, c(2000, 1), 60,
-                            starts = "2010-01-01", ends = "2010-12-01", delta = 1)
+    starts = "2010-01-01", ends = "2010-12-01", delta = 1
+)
 
 ### calendar regressors (to be added with set_trading days)
-regs_td <- td(s=y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
-             contrasts = TRUE)
+regs_td <- td(
+    s = y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
+    contrasts = TRUE
+)
 
 #### Creating context for all external regressors
-variables <- list(Monday=regs_td[, 1], Tuesday=regs_td[, 2], Wednesday=regs_td[, 3],
-                Thursday=regs_td[, 4], Friday= regs_td[, 5], Saturday=regs_td[, 6],
-                reg1=iv1, reg2=iv2)
-my_context <- modelling_context(variables=variables)
+variables <- list(
+    Monday = regs_td[, 1], Tuesday = regs_td[, 2], Wednesday = regs_td[, 3],
+    Thursday = regs_td[, 4], Friday = regs_td[, 5], Saturday = regs_td[, 6],
+    reg1 = iv1, reg2 = iv2
+)
+my_context <- modelling_context(variables = variables)
 rjd3toolkit::.r2jd_modellingcontext(my_context)$getTsVariableDictionary()
 
 ### add calendar regressors to spec
 # spec_ts_d <- rjd3x13::spec_x13("rsa5c")
 spec_ts_d <- set_tradingdays(spec_ts_d,
-                            option = "UserDefined",
-                            uservariable=c("r.Monday", "r.Tuesday", "r.Wednesday", "r.Thursday", "r.Friday", "r.Saturday"), # forcement en caracteres dans un vecteur
-                            test = "None")
+    option = "UserDefined",
+    uservariable = c("r.Monday", "r.Tuesday", "r.Wednesday", "r.Thursday", "r.Friday", "r.Saturday"), # forcement en caracteres dans un vecteur
+    test = "None"
+)
 ### ISSUE ?
 spec_ts_d # indicates TD_NONE...
 spec_ts_d$regarima$regression$td$users
@@ -256,7 +271,7 @@ spec_ts_d$regarima$regression$td$users
 
 ## estimation with context and user def output
 userdefined_variables_tramoseats()
-sa_ts_d <- tramoseats(y_raw, spec_ts_d, context=my_context, userdefined= c("ycal", "reg_t"))
+sa_ts_d <- tramoseats(y_raw, spec_ts_d, context = my_context, userdefined = c("ycal", "reg_t"))
 sa_ts_d$result$preprocessing
 sa_ts_d$user_defined$ycal
 
@@ -264,10 +279,11 @@ sa_ts_d$user_defined$ycal
 current_result_spec <- sa_ts_d$result_spec
 current_domain_spec <- sa_ts_d$estimation_spec
 spec_tramoseats_ref <- tramoseats_refresh(current_result_spec, # point spec to be refreshed
-                                          current_domain_spec, #domain spec (set of constraints)
-                                          policy = "FixedParameters")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "FixedParameters"
+)
 
-sa_ts_ref <- tramoseats(y_new, spec_tramoseats_ref, context=my_context, userdefined= c("ycal", "reg_t"))
+sa_ts_ref <- tramoseats(y_new, spec_tramoseats_ref, context = my_context, userdefined = c("ycal", "reg_t"))
 
 ############## specification details  ###
 ## basic
@@ -492,7 +508,7 @@ spec_tramoseats_ref$tramo$automodel$enabled
 sa_ts_ref$estimation_spec$tramo$automodel$enabled
 sa_ts_ref$result_spec$tramo$automodel$enabled
 
-#pcr to check
+# pcr to check
 spec_ts_d$tramo$automodel$pcr
 sa_ts_d$estimation_spec$tramo$automodel$pcr
 sa_ts_d$result_spec$tramo$automodel$pcr

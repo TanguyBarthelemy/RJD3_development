@@ -1,4 +1,3 @@
-
 library("dplyr")
 devtools::load_all()
 
@@ -34,26 +33,19 @@ extractStatQ(demetra_m = demetra_m_v3)
 
 
 options(jdc_thresholds = list(
-
     qs_residual_sa_on_sa = c(Severe = 0.001, Bad = 0.01, Uncertain = 0.05, Good = Inf),
     qs_residual_sa_on_i = c(Severe = 0.001, Bad = 0.01, Uncertain = 0.05, Good = Inf),
-
     f_residual_sa_on_sa = c(Severe = 0.001, Bad = 0.01, Uncertain = 0.05, Good = Inf),
     f_residual_sa_on_i = c(Severe = 0.001, Bad = 0.01, Uncertain = 0.05, Good = Inf),
-
     f_residual_td_on_sa = c(Severe = 0.001, Bad = 0.01, Uncertain = 0.05, Good = Inf),
     f_residual_td_on_i = c(Severe = 0.001, Bad = 0.01, Uncertain = 0.05, Good = Inf),
-
     residuals_independency = c(Bad = 0.01, Uncertain = 0.1, Good = Inf),
     residuals_homoskedasticity = c(Bad = 0.01, Uncertain = 0.1, Good = Inf),
-
     residuals_skewness = c(Bad = 0.01, Uncertain = 0.1, Good = Inf),
     residuals_kurtosis = c(Bad = 0.01, Uncertain = 0.1, Good = Inf),
     residuals_normality = c(Bad = 0.01, Uncertain = 0.1, Good = Inf),
-
     oos_mean = c(Bad = 0.01, Uncertain = 0.1, Good = Inf),
     oos_mse = c(Bad = 0.01, Uncertain = 0.1, Good = Inf),
-
     m7 = c(Good = 1, Bad = 2, Severe = Inf),
     q = c(Good = 1, Bad = Inf),
     q_m2 = c(Good = 1, Bad = Inf),
@@ -65,8 +57,10 @@ colnames(QR_v2$modalities)
 
 variable <- "pct_outliers"
 
-v <- data.frame(mod = QR_v2$modalities[, variable],
-                val = QR_v2$values[, variable]) |>
+v <- data.frame(
+    mod = QR_v2$modalities[, variable],
+    val = QR_v2$values[, variable]
+) |>
     mutate(
         mod2 = cut(
             x = val,
@@ -87,4 +81,4 @@ print(v |> filter(mod == "Uncertain") |> select(val) |> min())
 print(v |> filter(mod == "Uncertain") |> select(val) |> max())
 print(v |> filter(mod == "Good") |> select(val) |> min())
 
-v[!v$diff & !is.na(v$diff),]
+v[!v$diff & !is.na(v$diff), ]

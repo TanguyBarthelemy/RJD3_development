@@ -1,4 +1,3 @@
-
 library("rjd3toolkit")
 library("rjd3workspace")
 library("rjd3tramoseats")
@@ -17,7 +16,7 @@ add_sa_item(jsap, "sa", x = ts, spec = rsafull)
 # Change specification
 newspec <- tramoseats_spec("rsa0")
 
-set_specification(jsap = jsap, idx = 1L, spec = newspec)    # ERROR!
+set_specification(jsap = jsap, idx = 1L, spec = newspec) # ERROR!
 
 
 

@@ -1,4 +1,3 @@
-
 comparaison_GUI <- readxl::read_excel("~/../Desktop/testing_output/Difference_output_GUI_v2_v3.xlsx")
 
 ## En V2 (d'abord) -------------------------------------------------------------
@@ -14,7 +13,6 @@ path_ws <- "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse
 
 cat("\nIn V2...\n")
 for (input in input_cruncher_v2) {
-
     print(input)
 
     options(
@@ -70,7 +68,6 @@ path_ws <- "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse
 
 cat("\nIn V3...\n")
 for (input in input_cruncher_v3) {
-
     print(input)
 
     options(
@@ -120,12 +117,12 @@ colnames(df3) <- c("input V3", "output V3")
 new_comp <- merge(comparaison_GUI, df2, by.x = "cruncher V2", by.y = "input V2", all = TRUE)
 new_comp <- merge(new_comp, df3, by.x = "cruncher V3", by.y = "input V3", all = TRUE)
 new_comp <- new_comp |>
-    rename("cruncher V3 input" = "cruncher V3",
-           "cruncher V2 input" = "cruncher V2",
-           "cruncher V3 output" = "output V3",
-           "cruncher V2 output" = "output V2",
+    rename(
+        "cruncher V3 input" = "cruncher V3",
+        "cruncher V2 input" = "cruncher V2",
+        "cruncher V3 output" = "output V3",
+        "cruncher V2 output" = "output V2",
     ) |>
     select("Type", "cruncher V2 input", "cruncher V2 output", "cruncher V3 input", "cruncher V3 output", "GUI output V2", "GUI output V3", "RJDemetra")
 
-write.table(new_comp, file = "~/../Desktop/test.csv", row.names = F, quote = F, sep = ";", na = "")
-
+write.table(new_comp, file = "~/../Desktop/test.csv", row.names = FALSE, quote = FALSE, sep = ";", na = "")

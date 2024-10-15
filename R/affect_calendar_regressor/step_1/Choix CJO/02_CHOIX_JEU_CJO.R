@@ -1,4 +1,3 @@
-
 ################################################################################
 ########              Sélection du jeu de régresseur CJO                ########
 ################################################################################
@@ -33,8 +32,9 @@ summary_tot_PN <- tot_PN |>
     # On récupère les variables note et aicc pour comparaison
     dplyr::select(series, dplyr::starts_with(c("note", "aicc"))) |>
     tidyr::pivot_longer(-series,
-                        names_to = c(".value", "choix_reg_cjo"),
-                        names_pattern = "(aicc|note)_(\\w+)") |>
+        names_to = c(".value", "choix_reg_cjo"),
+        names_pattern = "(aicc|note)_(\\w+)"
+    ) |>
     dplyr::mutate(
         note = dplyr::case_when(
             choix_reg_cjo == "Pas_CJO" & is.na(note) ~ Inf,
@@ -43,7 +43,8 @@ summary_tot_PN <- tot_PN |>
         aicc = dplyr::case_when(
             choix_reg_cjo == "Pas_CJO" & is.na(aicc) ~ Inf,
             TRUE ~ aicc
-        )) |>
+        )
+    ) |>
     dplyr::group_by(series) |>
     # On sélectionne les jeux de régresseur avec la note la plus basse
     dplyr::filter(note == min(note, na.rm = TRUE)) |>
@@ -56,8 +57,9 @@ summary_tot_GN <- tot_GN |>
     # On récupère les variables note et aicc pour comparaison
     dplyr::select(series, dplyr::starts_with(c("note", "aicc"))) |>
     tidyr::pivot_longer(-series,
-                        names_to = c(".value", "choix_reg_cjo"),
-                        names_pattern = "(aicc|note)_(\\w+)") |>
+        names_to = c(".value", "choix_reg_cjo"),
+        names_pattern = "(aicc|note)_(\\w+)"
+    ) |>
     dplyr::mutate(
         note = dplyr::case_when(
             choix_reg_cjo == "Pas_CJO" & is.na(note) ~ Inf,
@@ -66,7 +68,8 @@ summary_tot_GN <- tot_GN |>
         aicc = dplyr::case_when(
             choix_reg_cjo == "Pas_CJO" & is.na(aicc) ~ Inf,
             TRUE ~ aicc
-        )) |>
+        )
+    ) |>
     dplyr::group_by(series) |>
     # On sélectionne les jeux de régresseur avec la note la plus basse
     dplyr::filter(note == min(note, na.rm = TRUE)) |>
@@ -85,6 +88,7 @@ write.table(x = summary_tot_GN, file = "./Choix CJO/choix_jo_GN.csv", quote = FA
 write.table(x = summary_tot_PN, file = "./Choix CJO/choix_jo_PN.csv", quote = FALSE, sep = ";", row.names = FALSE)
 
 save(liste_BQ_WS, liste_coeff_WS,
-     tot_GN, tot_PN,
-     summary_tot_GN, summary_tot_PN,
-     file = "./Choix CJO/output_data_jeu_cjo.RData")
+    tot_GN, tot_PN,
+    summary_tot_GN, summary_tot_PN,
+    file = "./Choix CJO/output_data_jeu_cjo.RData"
+)

@@ -1,7 +1,6 @@
 print_JD3_CHAINEDCALENDAR <- function(x,
-                                            enable_print_style = getOption("enable_print_style"),
-                                            ...)
-{
+                                      enable_print_style = getOption("enable_print_style"),
+                                      ...) {
     if (enable_print_style) {
         style_pre_code <- "\033[4m\033[1m"
         style_post_code <- "\033[22m\033[24m"

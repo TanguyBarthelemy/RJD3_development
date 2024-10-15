@@ -1,4 +1,3 @@
-
 # Préparation des données --------------------------------------------
 
 x <- TractorTsbox:::ts2df(AirPassengers)
@@ -59,12 +58,14 @@ ud_var <- comparaison_GUI |>
     do.call(what = c) |>
     unique() |>
     sort()
-mod <- RJDemetra::tramoseats(AirPassengers, spec = "RSAfull",
-                      userdefined = user_defined_variables("TRAMO-SEATS"))
+mod <- RJDemetra::tramoseats(AirPassengers,
+    spec = "RSAfull",
+    userdefined = user_defined_variables("TRAMO-SEATS")
+)
 
 # Extraction des noms non-ts = diagnostiques
-name_to_place <- setdiff(user_defined_variables("TRAMO-SEATS"),  names_in_file)
-#setdiff(names(mod$user_defined), names_in_file)
+name_to_place <- setdiff(user_defined_variables("TRAMO-SEATS"), names_in_file)
+# setdiff(names(mod$user_defined), names_in_file)
 
 
 # name_to_place <- name_to_place[substr(name_to_place, 1, 13) != "decomposition"]
@@ -100,4 +101,3 @@ decomposition.model.ar
 decomposition.tmodel.ar
 X.39
 X.40
-

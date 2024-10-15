@@ -26,10 +26,10 @@ y_new <- ts(ipi[, "RF0811"], frequency = 12, start = c(1990, 1), end = c(2022, 9
 ##
 # y_raw<-rjd3toolkit::ABS$X0.2.08.10.M
 # spec_tramoseats(name = c("rsafull", "rsa0", "rsa1", "rsa2", "rsa3", "rsa4", "rsa5"))
-spec_ts_d<-rjd3tramoseats::spec_tramoseats("rsa5") #### HERE PB !!! issue : rsa4 et pas rsa4c
+spec_ts_d <- rjd3tramoseats::spec_tramoseats("rsa5") #### HERE PB !!! issue : rsa4 et pas rsa4c
 spec_ts_d
 ## Layer 2: estimation spec
-sa_ts_d<- rjd3tramoseats::tramoseats(y_raw, spec_ts_d)
+sa_ts_d <- rjd3tramoseats::tramoseats(y_raw, spec_ts_d)
 # V2 could be this : sa_ts_d<- rjd3tramoseats::tramoseats(y_raw, "rsa")
 sa_ts_d$estimation_spec
 ## Layer 3: result spec
@@ -38,8 +38,9 @@ sa_ts_d$estimation_spec
 current_result_spec <- sa_ts_d$result_spec
 current_domain_spec <- sa_ts_d$estimation_spec
 spec_tramoseats_ref <- tramoseats_refresh(current_result_spec, # point spec to be refreshed
-                              current_domain_spec, #domain spec (set of constraints)
-                              policy = "FixedParameters")
+    current_domain_spec, # domain spec (set of constraints)
+    policy = "FixedParameters"
+)
 
 ### comprendre ce que ça fait
 # spec_tramoseats_ref <- x13_refresh(current_domain_spec, # point spec to be refreshed
@@ -47,7 +48,7 @@ spec_tramoseats_ref <- tramoseats_refresh(current_result_spec, # point spec to b
 #                             policy = "FixedParameters")
 
 # policy = c("FreeParameters",
-#"Complete", "Outliers_StochasticComponent",
+# "Complete", "Outliers_StochasticComponent",
 # "Outliers",
 #            "FixedParameters", "FixedAutoRegressiveParameters", "Fixed")
 ####
@@ -283,7 +284,7 @@ spec_tramoseats_ref$tramo$automodel$enabled
 sa_ts_ref$estimation_spec$tramo$automodel$enabled
 sa_ts_ref$result_spec$tramo$automodel$enabled
 
-#pcr to check
+# pcr to check
 spec_ts_d$tramo$automodel$pcr
 sa_ts_d$estimation_spec$tramo$automodel$pcr
 sa_ts_d$result_spec$tramo$automodel$pcr
