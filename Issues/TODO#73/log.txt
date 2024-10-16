@@ -2,9 +2,9 @@ Refreshing data
 Opening...
 France [frozen]
  processed
-Spain [frozen]
- processed
 Greece [frozen]
+ processed
+Spain [frozen]
  processed
 Flushing bundle...
 Generate Output
@@ -13,5 +13,5 @@ generated
 Csv matrix
 generated
 Saving new processing...
-Processing time: 3s
-Total processing time: 4s
+Processing time: 2s
+Total processing time: 3s

@@ -190,8 +190,7 @@ pre.mult <- rjd3highfreq::fractionalAirlineEstimation(df_daily$log_births,
 # Copyright: Brian Monsell, BLS (code version of 29 July 2020)
 
 set_critical_value <- function(dnobs, # Effective number of observations
-                               Cvalfa = 0.01) # Level of significance
-{
+                               Cvalfa = 0.01) { # Level of significance
     pmod <- 2.0 - sqrt(1.0 + Cvalfa)
     acv <- sqrt(2.0 * log(dnobs))
     bcv <- acv - (log(log(dnobs)) + log(2.0 * 2.0 * pi)) / (2.0 * acv)

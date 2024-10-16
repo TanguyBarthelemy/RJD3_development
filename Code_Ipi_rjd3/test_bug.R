@@ -1,94 +1,94 @@
 library("rJava")
 k <- 121
-{
-    # get_model
-    x <- ws_n_1 |>
-        get_object(1L) |>
-        get_object(k)
-    workspace <- ws_n_1
-    jsa_result <- RJDemetra:::get_jmodel.sa_item(x, workspace)
-    if (is.null(jsa_result)) {
-        return(NULL)
-    }
-    jspec <- jsa_result[["spec"]]
-    jresult <- jsa_result[["result"]]@internal
-    y_ts <- get_ts(x)
-    context_dictionary <- .jcall(
-        workspace, "Lec/tstoolkit/algorithm/ProcessingContext;",
-        "getContext"
-    )
 
-
-    userdefined <- NULL
-    context_dictionary <- NULL
-
-    extra_info <- FALSE
-    freq <- NA
-
-    jrslt <- jresult
-    spec <- jspec
-    context_dictionary <- context_dictionary
-    extra_info <- TRUE
-    freq <- frequency(y_ts)
-
-    # x13JavaResults
-
-    jrarima <- .jcall(
-        jrslt, "Lec/tstoolkit/jdr/regarima/Processor$Results;",
-        "regarima"
-    )
-    jrobct_arima <- new(Class = "RegArima_java", internal = jrarima)
-    jrobct <- new(Class = "X13_java", internal = jrslt)
-    if (is.null(jrobct@internal)) {
-        return(NULL)
-    }
-    res <- jrslt$getResults()$getProcessingInformation()
-    if (is.null(jrslt$getDiagnostics()) && !.jcall(
-        res, "Z",
-        "isEmpty"
-    )) {
-        proc_info <- jrslt$getResults()$getProcessingInformation()
-        error_msg <- .jcall(
-            proc_info, "Ljava/lang/Object;",
-            "get", 0L
-        )$getErrorMessages(proc_info)
-        warning_msg <- .jcall(
-            proc_info, "Ljava/lang/Object;",
-            "get", 0L
-        )$getWarningMessages(proc_info)
-        if (!.jcall(error_msg, "Z", "isEmpty")) {
-            stop(error_msg$toString())
-        }
-        if (!.jcall(warning_msg, "Z", "isEmpty")) {
-            warning(warning_msg$toString())
-        }
-    }
-    reg <- RJDemetra:::regarima_defX13(
-        jrobj = jrobct_arima, spec = spec,
-        context_dictionary = context_dictionary, extra_info = extra_info,
-        freq = freq
-    )
-
-
-    # RJDemetra:::decomp_defX13
-    jrobj <- jrobct
-    spec <- spec
-    freq <- freq
-
-    specification <- RJDemetra:::specX11_jd2r(spec = spec, freq = freq)
-    rownames(specification) <- ""
-
-    # RJDemetra:::decomp_rsltsX13
-    mode <- RJDemetra:::result(jrobj, "mode")
-    mstats_rownames <- c(sprintf("M(%s)", 1:11), "Q", "Q-M2")
-    mstats_names <- sprintf("mstats.%s", mstats_rownames)
-
-    RJDemetra:::result(jrobj, "mstats.M(1)")
-    # RJDemetra:::proc_data(jrobj@internal, "mstats.M(1)")
-
-    rslt <- jrobj@internal
-    name <- "mstats.M(1)"
+# get_model
+x <- ws_n_1 |>
+    get_object(1L) |>
+    get_object(k)
+workspace <- ws_n_1
+jsa_result <- RJDemetra:::get_jmodel.sa_item(x, workspace)
+if (is.null(jsa_result)) {
+    return(NULL)
 }
+jspec <- jsa_result[["spec"]]
+jresult <- jsa_result[["result"]]@internal
+y_ts <- get_ts(x)
+context_dictionary <- .jcall(
+    workspace, "Lec/tstoolkit/algorithm/ProcessingContext;",
+    "getContext"
+)
+
+
+userdefined <- NULL
+context_dictionary <- NULL
+
+extra_info <- FALSE
+freq <- NA
+
+jrslt <- jresult
+spec <- jspec
+context_dictionary <- context_dictionary
+extra_info <- TRUE
+freq <- frequency(y_ts)
+
+# x13JavaResults
+
+jrarima <- .jcall(
+    jrslt, "Lec/tstoolkit/jdr/regarima/Processor$Results;",
+    "regarima"
+)
+jrobct_arima <- new(Class = "RegArima_java", internal = jrarima)
+jrobct <- new(Class = "X13_java", internal = jrslt)
+if (is.null(jrobct@internal)) {
+    return(NULL)
+}
+res <- jrslt$getResults()$getProcessingInformation()
+if (is.null(jrslt$getDiagnostics()) && !.jcall(
+    res, "Z",
+    "isEmpty"
+)) {
+    proc_info <- jrslt$getResults()$getProcessingInformation()
+    error_msg <- .jcall(
+        proc_info, "Ljava/lang/Object;",
+        "get", 0L
+    )$getErrorMessages(proc_info)
+    warning_msg <- .jcall(
+        proc_info, "Ljava/lang/Object;",
+        "get", 0L
+    )$getWarningMessages(proc_info)
+    if (!.jcall(error_msg, "Z", "isEmpty")) {
+        stop(error_msg$toString())
+    }
+    if (!.jcall(warning_msg, "Z", "isEmpty")) {
+        warning(warning_msg$toString())
+    }
+}
+reg <- RJDemetra:::regarima_defX13(
+    jrobj = jrobct_arima, spec = spec,
+    context_dictionary = context_dictionary, extra_info = extra_info,
+    freq = freq
+)
+
+
+# RJDemetra:::decomp_defX13
+jrobj <- jrobct
+spec <- spec
+freq <- freq
+
+specification <- RJDemetra:::specX11_jd2r(spec = spec, freq = freq)
+rownames(specification) <- ""
+
+# RJDemetra:::decomp_rsltsX13
+mode <- RJDemetra:::result(jrobj, "mode")
+mstats_rownames <- c(sprintf("M(%s)", 1:11), "Q", "Q-M2")
+mstats_names <- sprintf("mstats.%s", mstats_rownames)
+
+RJDemetra:::result(jrobj, "mstats.M(1)")
+# RJDemetra:::proc_data(jrobj@internal, "mstats.M(1)")
+
+rslt <- jrobj@internal
+name <- "mstats.M(1)"
+
 
 if (is.null(RJDemetra:::rjdemetra_java$clobject)) {
     RJDemetra:::rjdemetra_java$clobject <- .jcall("java/lang/Class", "Ljava/lang/Class;", "forName", "java.lang.Object")
