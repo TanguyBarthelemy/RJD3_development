@@ -723,3 +723,33 @@ sa_x13_d$result$preprocessing
 
 a <- rjd3x13::x13(y_raw, spec_x13_d, userdefined = "bla")
 a$user_defined$bla
+
+## what toolkit is masking mad and aggregate from stats
+
+## example with character variables and NAs
+testDF <- data.frame(v1 = c(1,3,5,7,8,3,5,NA,4,5,7,9),
+                     v2 = c(11,33,55,77,88,33,55,NA,44,55,77,99) )
+by1 <- c("red", "blue", 1, 2, NA, "big", 1, 2, "red", 1, NA, 12)
+by2 <- c("wet", "dry", 99, 95, NA, "damp", 95, 99, "red", 99, NA, NA)
+stats::aggregate(x = testDF, by = list(by1, by2), FUN = "mean")
+nrow(testDF)
+length(by1)
+
+# stats median deviation
+
+mad(c(1:9))
+print(mad(c(1:9),     constant = 1)) ==
+    mad(c(1:8, 100), constant = 1)       # = 2 ; TRUE
+x <- c(1,2,3,5,7,8)
+sort(abs(x - median(x)))
+c(mad(x, constant = 1),
+  mad(x, constant = 1, low = TRUE),
+  mad(x, constant = 1, high = TRUE))
+
+
+# tollkit robsut median deviation
+
+y <- rnorm(1000)
+m <- rjd3toolkit::mad(y, centile = 70)
+m
+# centil part howx exactly

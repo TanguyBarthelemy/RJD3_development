@@ -39,7 +39,20 @@ GUI
 
 Currently working on (details in TOPICS..)
 
-### Tanguy august
+### Tanguy 
+
+#### Functions to transfer to rjd3providers 
+
+data_to_ts()
+    Promote a R time series to a "full" ts of JDemetra+
+
+	
+to_ts()
+    Creates a time series object
+
+to_tscollection()
+    Creates a collection of time series
+
 
 #### JD Cruncher 
 
