@@ -1,3 +1,44 @@
+review with JP 
+
+
+=================
+Last holes 
+
+✖ utils.R:92: @examples requires a value.
+✖ arima.R:413: @return requires a value.
+✖ arima.R:475: @return requires a value.
+✖ modellingcontext.R:14: @return requires a value.
+✖ modellingcontext.R:17: @examples requires a value.
+✖ splines.R:11: @examples requires a value.
+✖ timeseries.R:235: @examples requires a value.
+✖ timeseries.R:249: @return requires a value.
+✖ timeseries.R:319: @examples requires a value.
+
+to review ABS
+
+
+================= Test r packages and verif = > TP JDemetra+ and doc spill over
+
+config in..rjd3 dvlpt 
+
+- recheck pb seasonal filters, siglma vec 
+
+-	Undefined: the decomposition will be chosen by the algorithm. Used in specs only.
+-	Additive: Y = T + S + I, SA = Y - S = T + I
+-	Multiplicative: Y = T * S * I, SA = Y / S = T * I
+-	LogAdditive: Log(Y) = T + S + I, SA = exp( T + I) = Y / exp(S)
+-	PseudoAdditive: Y = T * (S + I - 1), SA = T * I
+
+TP : understand 
+4) regressors 
+- easter 
+- stock 
+- leap year preadj 
+
+
+
+
+==========
 FROM ALAIN : two ways to see how to add a new parameter:
 
     Create a workspace in JDemetra+, import the model and see how the spec object is modified
