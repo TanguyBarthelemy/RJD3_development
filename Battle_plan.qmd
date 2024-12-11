@@ -78,8 +78,29 @@ gros tableau
 
 ### COMM
 
+## DT on SA production 
+
+### Format et Structure Repos
+
+objectif : DT = book, 2 books : 1 in english, 2 en français
+
+Step 1: produire le DT in English (roughly)
+
+1 Repo de travail (privé): Production chain description 
+
+contient 
+1 le book = DT in english (with R code..)
+
+2 additionnal resources, useful to write the book
+
+3 R development (rjd3 production)= > use rjd3development + repo for package
+
+Step 1b: repo public pour DT anglais 
 
 
+Step 2: repo à créer pour DT en français (public)
+
+DT = book pdf + page de garde
 
 ## JD+ online Documentation 
 
