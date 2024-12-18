@@ -41,6 +41,46 @@ Currently working on (details in TOPICS..)
 
 ### Tanguy 
 
+#### Prod Ipi et ICA 2025
+
+Ipi prep et orga / 
+
+- reu de calendrier à organiser direct à la rentrée 
+
+- obj comp WS ref auto 
+
+- prep prod en v3 GUI et R
+
+
+Ica prep et orga 
+
+- reu de calendrier à organiser mi janvier (Florian Lecrivain)
+
+- attendre d'avoir fini l'ipi pour commencer 
+
+#### CRAN
+
+relance dialogue sur version java 
+
+#### JD+ et packages 
+
+Issues / Dvlpter meeting 
+
+#### Nettoyage N
+
+"N:/L120/SECTION MTS/JD_Installation_configuration"
+
+simple fichier de texte avec des liens ?
+
+"N:/L120/SECTION MTS/Admin_Section"
+
+mettre à jour calendrier concours 
+
+deplacer fichiier envt de travail dans 
+"N:/L120/SECTION MTS/JD_Installation_configuration" (?)
+
+
+
 #### Functions to transfer to rjd3providers 
 
 data_to_ts()
