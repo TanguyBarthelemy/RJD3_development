@@ -167,20 +167,29 @@ userdefined_variables_x13() # list of items
 sa_x13_d <- rjd3x13::x13(y_raw, x13_spec_d, userdefined = "benchmarking.result")
 sa_x13_d$user_defined$benchmarking.result
 
+# creating a spec from default
+x13_spec_d <- rjd3x13::x13_spec("rsa3")
+
+
 
 ### set_tradingdays
 # JD+ built in regressors, no national calendar unless defined)
 x13_spec_d <- rjd3toolkit::set_tradingdays(x13_spec_d,
-    option = "TD4", test = "None",
-    coef = c(0.7, NA, 0.5),
-    coef.type = c("Fixed", "Estimated", "Fixed"),
-    leapyear = "LengthOfPeriod",
-    leapyear.coef = 0.6
+    option = "WorkingDays", test = "None",
+    coef = 0,
+    # coef.type = c("Fixed", "Estimated", "Fixed"),
+    leapyear = "LeapYear"
 )
 # print the spec and see changes
 print(x13_spec_d)
 # check results
 m <- rjd3x13::x13(y_raw, x13_spec_d)
+
+summary(m)
+
+m$result$preprocessing$description$preadjustment
+
+m$result$preprocessing$estimation$parameters$description
 
 # ### set_easter
 x13_spec_d <- rjd3x13::x13_spec("rsa3") # re init

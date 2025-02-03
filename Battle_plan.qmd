@@ -41,6 +41,46 @@ Currently working on (details in TOPICS..)
 
 ### Tanguy 
 
+#### Prod Ipi et ICA 2025
+
+Ipi prep et orga / 
+
+- reu de calendrier à organiser direct à la rentrée 
+
+- obj comp WS ref auto 
+
+- prep prod en v3 GUI et R
+
+
+Ica prep et orga 
+
+- reu de calendrier à organiser mi janvier (Florian Lecrivain)
+
+- attendre d'avoir fini l'ipi pour commencer 
+
+#### CRAN
+
+relance dialogue sur version java 
+
+#### JD+ et packages 
+
+Issues / Dvlpter meeting 
+
+#### Nettoyage N
+
+"N:/L120/SECTION MTS/JD_Installation_configuration"
+
+simple fichier de texte avec des liens ?
+
+"N:/L120/SECTION MTS/Admin_Section"
+
+mettre à jour calendrier concours 
+
+deplacer fichiier envt de travail dans 
+"N:/L120/SECTION MTS/JD_Installation_configuration" (?)
+
+
+
 #### Functions to transfer to rjd3providers 
 
 data_to_ts()
@@ -55,6 +95,8 @@ to_tscollection()
 
 
 #### JD Cruncher 
+
+Done
 
 - adaptation to tramo (first in v2)= if tramo remove (!!) all the x11 specific tests
 
@@ -71,12 +113,34 @@ to_tscollection()
 tests sur series finales
 gros tableau 
 
+- remove user_defined variables functions
+- enchance java dictionnaries 
+
 ### COMM
 
-- stace shop user support 
+## DT on SA production 
 
-- new v2 sous AUS 
+### Format et Structure Repos
 
+objectif : DT = book, 2 books : 1 in english, 2 en français
+
+Step 1: produire le DT in English (roughly)
+
+1 Repo de travail (privé): Production chain description 
+
+contient 
+1 le book = DT in english (with R code..)
+
+2 additionnal resources, useful to write the book
+
+3 R development (rjd3 production)= > use rjd3development + repo for package
+
+Step 1b: repo public pour DT anglais 
+
+
+Step 2: repo à créer pour DT en français (public)
+
+DT = book pdf + page de garde
 
 ## JD+ online Documentation 
 
@@ -94,13 +158,13 @@ gros tableau
 
 - doc functions, examples 
 
-- vignettes by topic
+- vignettes by topic (will be used as testes)
 
 ### Dvlpt 
 
 dans print "model" in rjd3x13 and tramoseats 
 
-add series span and model span
+- add series span and model span: underway
 (present only in print(spec))
 
 #### Tests
@@ -139,28 +203,23 @@ bias correction : non existing ? see technical doc
 - bias correction ?
 
 
-#### rjdemetra3 => rjd3workspace
+#### rjd3workspace
 
-everything up to date ? 
-readme
-doc 
- 
-#### JD Cruncher in V3
+cf issues fonctions à point et nommages
 
-- does it work with cruncher v3 ? (same demetra_m)
-
-- qd champagnes ipi ica: test prod in GUI v3 and fully in R (exp for DT²)
 
 #### rjdqa en V3 ?
 
-Alain started rjd3report
+Alain started rjd3report 
 
 #### rjd3toolkit 
 
 Issue:
-- rmove holiday param (leave and change doc)
+
+- remove holiday param (leave and change doc)
 
 DOC
+
 - trigonometric regressors
 
 - sarima estimation
@@ -171,7 +230,6 @@ DOC
 
 #### rjd3stl 
 
-see what is M stl
 
 #### rjd3bench
 
@@ -221,7 +279,7 @@ No:
 - pb set spec (domain vs estimation)
 - pb non transport des variables externes 
 
-à verif en v3 d
+
 
 
 
