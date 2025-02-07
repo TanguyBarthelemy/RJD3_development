@@ -1,0 +1,25 @@
+== Questions 
+@rdname
+
+- search in all files 
+
+- compute vs read 
+
+- names SA-item / SA-Processing or SAProcessing
+
+- series vs SA-items : confusion cf Transfer Series 
+
+- get the Java names vs names
+
+- get saet raw data vs series 
+
+- models vs sa-items
+
+
+See github pages 
+- slides T with defs 
+
+Variables = aux vars / regressors 
+
+read write spec files 
+
