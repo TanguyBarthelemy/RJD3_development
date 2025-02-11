@@ -3,7 +3,7 @@
 
 - search in all files 
 
-- compute vs read 
+- compute vs read : pb .jwscompute 
 
 - names SA-item / SA-Processing or SAProcessing
 
