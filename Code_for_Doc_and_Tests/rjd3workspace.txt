@@ -1,25 +1,213 @@
-== Questions 
-@rdname
+=== Artefacts (just in rjd3workspace)
 
-- search in all files 
+STEPS
+== Modif readme (concepts)
+== Start vignette 
+with key brics and explanations for TRAININGS
+- modif spec 
+- update path 
+== 
 
-- compute vs read : pb .jwscompute 
-
-- names SA-item / SA-Processing or SAProcessing
-
-- series vs SA-items : confusion cf Transfer Series 
-
-- get the Java names vs names
-
-- get saet raw data vs series 
-
-- models vs sa-items
+==  Comparaison vs GUI to do 
+champ des elems lus en R 
+compare whar is displayed in GUI and read in R
 
 
-See github pages 
-- slides T with defs 
+====================================== voir avec T 
+=== CHECK du package
+- aux.R est un pb error meme si gitignore voir T 
 
-Variables = aux vars / regressors 
+- teste bien les exemples ds le check mais pas ds install
 
-read write spec files 
+- mise en forme des githpages 
+- le ":" à la place des ...
+- le titre au dessus
+
+
+==================== useful txt
+
+C:\Users\YWYD5I\AppData\Local\Temp\RtmpMDX2Zy
+#'
+#' @return \code{NULL} returned invisibly
+
+======= text to update for DOC and vignette 
+
+===== details SA-item: UPDATE ts part 
+#' @details A SA-item contains more information than just the results of an estimation.
+#' Full information is extracted with the `read_sai()` function that
+#' returns a list of 5 objects:
+#' - `ts`: the raw time series. NO = MORE HERE => REDO
+#' - `domainSpec`: initial specification. Reference when refreshig and relaxing constraints.
+#' - `estimationSpec`: specification used for the current estimation.
+#' - `pointSpec`: specification corresponding to the results of the current
+#' estimation (fully identified model).
+#' - `results`: the results of the estimation.
+
+============ questions //T on rjd3workspace 
+
+- issues on rjd3workspace
+
+- chemin temp dir : determiné pour une session // purger 
+
+- caracteres ds messages, pb encodage cf capture d'ecran : remplacer par unicode cf fichier doc (key= find warning)
+
+=== meta data and TS metadata
+
+====== ISSUES (+ see GitHub)
+
+== read sai new ISSUE
+- ne lit pas commentaire / priority
+
+== set TS deletes prio and comment (nexw issue)
+
+== pb message For a more detailed output, use the 'summary()' function. : cf code 
+summary(sa-item) n'affiche pas d'output
+
+== read write : calendars regressors ..specs: xml files : full review (cf mail JP)
+
+== Test: chgt path: si struct fichier differente et comment arranger : ex csv mais sep differente
+- update path en passant de csv à xls 
+------ > acid test = recrunch
+
+======== Questions 
+ 
+
+.jsai_results(sai1): items est obligatoire, bizarre vu que par defaut: arg items= NULL 
++ bug
+
+============== special specs 
+set_specification or Raw data ? why raw data: remove
+
+pas de get specification : normal
+---------------------
+get ts vs get raw data 
+- pb with set raw data (cf aux))
+
+======== meta data : def (as a list)
+
+TS_metadata vs Meta_data
+- correspond à la balise du xml ?
+
+                    <metaData>
+                        <property name="@timestamp" value="2025-03-03"/>
+                        <property name="@source" value="Txt"/>
+                        <property name="@id" value="demetra://tsprovider/Txt/20111201/SERIES?datePattern=dd%2FMM%2Fyyyy&amp;delimiter=SEMICOLON&amp;file=C%3A%5CUsers%5CYWYD5I%5CDocuments%5C00_RJD3_Developpement%5C00_Quick_Data_Tests%5CData%5CIPI_nace4+-+juin2024.csv#seriesIndex=0"/>
+                    </metaData>
+					
+TS metadata = balise TS moins metadata
+
+sinon meta data = que commentaire : bloc à part apres domain spec 
+priority = autre bloc comme meta data 
+quality = bloc auquel on accede pas en en R new ISSUE
+
+comment: ok 
+
+set_name : assicoated to a comment ?
+
+priority: how to set in GUI ?
+
+=== verifs ordre de reecriture des SAP 
+
+
+
+== what is meta data 
+- add sai and meta data
+-- if add sai : GUI readable, but not crunchable 
+
+                                                                               
+
+=====================================struct for any package doc 
+- pproj = 
+- code = 
+- test files ..or 
+- txt file 
+config to 
+- direct doc + vignette 
+- user doc or tech doc 
+- ISSUES
+
+==== Workspaces test 
+/inst should contain
+requirements 
+-
+
+- ws 
+	- x13 : ok 
+	- tramo : ok 
+	- regressors in utilities 
+	- user def calendar
+	- customized specs 
+spec with 
+- iser def elements 
+
+
+=== STEPS 
+(more global in battle plan)
+
+=========== voir avec T ===========================
+
+
+
+-- installations packages concurrentes entre sessions (de mon fork vs de github)
+
+-- harmonize "results" (lui) 
+
+-- transfo jsap et jsai en R ?
+
+==== pb noms qd xls : ISSUE
+-- pb des noms des sap dans ws test, qd $...$...: cf retour à la ligne ds xml, si comme ça pour les xlsx => qqch à faire à en R pour affichage
+comparer avec v2
+
+-- sortie des noms 
+ex
+> sai_name(jsai_9)
+[1] "Exports\nLuxembourg"
+
+
+==== Structure Doc (TARGET)
+
+(by order of appearance in 
+
+Title 
+@title
+
+Descrption
+@descrption
+
+See also 
+@seelaso 
+
+USAGE
+@export = the function (nothing to do)
+
+Arguments
+@param
+
+Value 
+@return
+
+Reference 
+@reference 
+
+Example
+@example
+
+=========== Generating doc 
+- retest / install / update doc ..: Tools > project Options > doc avec roxgen
+
+@rdname: plusieurs fonctions sur la meme page 
+
+- examples have to be ...
+	- pour passer le check : exemples commentés ok, pas pour le CRAN
+
+- les fonctions à . : idem car exportés 	
+
+
+======= ISSUES (Potential) ?
+- si copie d'un sap à l'indtique ds un ws 
+il est bien referencé 2 fois dans le fichier maitre, mais a un seul xml 
+pb index ?
+si on fait une modif 
+
+
 
