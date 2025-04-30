@@ -8,7 +8,7 @@ library("rjd3providers")
 
 # Paramètre --------------------------------------------------------------------
 
-data_dir <- "C:\\Users\\UTZK0M\\Desktop\\testing_output\\data"
+data_dir <- "C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_forked_suite/rjd3workspace/inst/data/"
 
 
 # Initialisation d'un workspace ------------------------------------------------
@@ -20,15 +20,18 @@ add_sa_item(jsap, name = "sai1", x = AirPassengers, spec = x13_spec())
 add_sa_item(jsap, name = "sai2", x = mdeaths, spec = x13_spec())
 add_sa_item(jsap, name = "sai3", x = fdeaths, spec = x13_spec())
 
+# write ws, visible, pas de meta data: pas de refresh...
+
+# PROVIDERS
 ts_object1 <- txt_series(
-    file = normalizePath(file.path(data_dir, "world.csv")),
+    file = normalizePath(file.path(data_dir, "IPI_nace4.csv")),
     series = 1L,
     delimiter = "SEMICOLON",
     fmt.date = "dd/MM/yyyy"
 )
 
 ts_object2 <- spreadsheet_series(
-    file = normalizePath(file.path(data_dir, "world.xlsx")),
+    file = normalizePath(file.path(data_dir, "Ipi_nace4.xlsx")),
     sheet = 1L,
     series = 2L,
     period = 12L,
@@ -36,21 +39,29 @@ ts_object2 <- spreadsheet_series(
     cleanMissings = TRUE
 )
 
+
 ts_object3 <- txt_series(
-    file = normalizePath(file.path(data_dir, "world.csv")),
+    file = normalizePath(file.path(data_dir, "IPI_nace4.csv")),
     series = 3L,
     delimiter = "SEMICOLON",
     fmt.date = "dd/MM/yyyy"
 )
-
+# pour set ts les meta data du ts doivent etre complets
 set_ts(jsap = jsap, idx = 1L, ts_object1)
-set_ts(jsap = jsap, idx = 2L, ts_object2)
+set_ts(jsap = jsap, idx = 2L, ts_object2) # attention: meta data supplementires excel ...pas grave ?
 set_ts(jsap = jsap, idx = 3L, ts_object3)
+
+# get_ts
+
+# put_ts: on peut changer 1 seul champ à la fois
+
+
 
 set_priority(jsap, idx = 1, priority = 1L)
 set_priority(jsap, idx = 2, priority = 20L)
 set_priority(jsap, idx = 3, priority = 7L)
 
+# add to rjd3workspace: changement ou ajout d'une meta data pour le sai item (hors TS)
 put_metadata <- function (jsap, idx, key, value) {
     jsai <- jsap_sai(jsap, idx = idx)
 
@@ -77,18 +88,20 @@ put_metadata <- function (jsap, idx, key, value) {
 
     replace_sa_item(jsap, jsai = jsai, idx = idx)
 }
+library(rJava)
+
 put_metadata(jsap = jsap, idx = 1L, key = "color", value = "blue")
 
 set_comment(jsap, 1L, comment = "Good series")
 set_comment(jsap, 2L, comment = "Bad series")
 set_comment(jsap, 3L, comment = "Weird series")
 
-save_workspace(jws, "ws.xml", replace = TRUE)
+save_workspace(jws, "ws_meta_data.xml", replace = TRUE)
 
 
 # Manipulation Workspace -------------------------------------------------------
 
-jws_r <- jws_open(normalizePath("ws.xml"))
+jws_r <- jws_open(normalizePath("ws_meta_data.xml"))
 jsap_r <- jws_sap(jws_r, 1L)
 jsai_r <- jsap_sai(jsap_r, 1L)
 
@@ -96,31 +109,35 @@ get_priority(jsai_r)
 
 get_comment(jsai_r)
 .jsai_metadata(jsai_r, "comment")
-.jsai_metadata(jsai_r, "color")
-.jsai_metadata(jsai_r, "ocean")
+.jsai_metadata(jsai_r, "color") # ajouté avec put_metadata, pas de fonction de retrieve
+# renommer en sai et pas jsai (laisser en . tant que que comment en meta data)
 
 get_ts(jsai_r)
 
-.jsai_ts_metadata(jsai_r, "@id")
+# pour le ts
+.jsai_ts_metadata(jsai_r, "@id") # modifiable avec providers
 .jsai_ts_metadata(jsai_r, "@source")
 .jsai_ts_metadata(jsai_r, "@timestamp")
-
+# renommer en get ts meta data
 get_raw_data(jsai_r)
 
 
 # Mise à jour du chemin --------------------------------------------------------
 
+# from csv to csv (cf sai1): meme structure (sinon changer formats, séparateurs): faire un exemple
+getwd()
 txt_update_path(
     jws_r, idx_sap = 1L, idx_sai = 1L,
-    new_path = normalizePath(file.path(data_dir, "world2.csv"))
+    new_path = normalizePath(file.path("Data/IPI_nace4.csv"))
 )
+# xls même noms
 spreadsheet_update_path(
     jws_r, idx_sap = 1L, idx_sai = 2L,
-    new_path = normalizePath(file.path(data_dir, "world2.xlsx"))
+    new_path = normalizePath(file.path("Data/ipi_nace4_ind.xlsx"))
 )
 
 
-# Changement de providers ------------------------------------------------------
+# Changement de providers : de csv à xls (et reverse) -------------------------------------------
 
 new_ts_object3 <- spreadsheet_series(
     file = normalizePath(file.path(data_dir, "world.xlsx")),
@@ -131,7 +148,8 @@ new_ts_object3 <- spreadsheet_series(
     cleanMissings = TRUE
 )
 
-set_ts(jsap_r, 3L, new_ts_object3)
+set_ts(jsap_r, 3L, new_ts_object3) # on remplace le ts object dans le sai item 3
+# remplace aussi les raw data : garder les mêmes ....
 
 save_workspace(jws_r, "ws2.xml", replace = TRUE)
 
