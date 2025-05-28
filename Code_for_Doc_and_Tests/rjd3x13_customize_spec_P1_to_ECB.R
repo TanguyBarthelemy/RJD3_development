@@ -15,6 +15,8 @@ y_raw <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2021, 1
 y_new <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022, 9))
 
 
+
+
 # creating a spec from default
 x13_spec_d <- rjd3x13::x13_spec("rsa3")
 

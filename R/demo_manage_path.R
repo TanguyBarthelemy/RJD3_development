@@ -20,14 +20,15 @@ add_sa_item(jsap, name = "sai1", x = AirPassengers, spec = x13_spec())
 add_sa_item(jsap, name = "sai2", x = mdeaths, spec = x13_spec())
 add_sa_item(jsap, name = "sai3", x = fdeaths, spec = x13_spec())
 
-# write ws, visible, pas de meta data: pas de refresh...
+# write ws, visible in GUI, pas de meta data: pas de refresh...
 
-# PROVIDERS
+### Create TS meta data
+# functions in rjd3providers
 ts_object1 <- txt_series(
     file = normalizePath(file.path(data_dir, "IPI_nace4.csv")),
     series = 1L,
     delimiter = "SEMICOLON",
-    fmt.date = "dd/MM/yyyy"
+    fmt.date = "dd/MM/yyyy", # pkoi pas de clean missing
 )
 
 ts_object2 <- spreadsheet_series(
@@ -46,17 +47,17 @@ ts_object3 <- txt_series(
     delimiter = "SEMICOLON",
     fmt.date = "dd/MM/yyyy"
 )
-# pour set ts les meta data du ts doivent etre complets
+############# SET TS metatadata
+# pour set TS les meta data du ts doivent etre complets
 set_ts(jsap = jsap, idx = 1L, ts_object1)
-set_ts(jsap = jsap, idx = 2L, ts_object2) # attention: meta data supplementires excel ...pas grave ?
+set_ts(jsap = jsap, idx = 2L, ts_object2) # attention: meta data supplementaires excel ...pas grave ?
 set_ts(jsap = jsap, idx = 3L, ts_object3)
 
-# get_ts
+# get_ts: tout à la fois
 
 # put_ts: on peut changer 1 seul champ à la fois
 
-
-
+### priority: pas un meta data : un simple champ du SAI
 set_priority(jsap, idx = 1, priority = 1L)
 set_priority(jsap, idx = 2, priority = 20L)
 set_priority(jsap, idx = 3, priority = 7L)
@@ -109,7 +110,7 @@ get_priority(jsai_r)
 
 get_comment(jsai_r)
 .jsai_metadata(jsai_r, "comment")
-.jsai_metadata(jsai_r, "color") # ajouté avec put_metadata, pas de fonction de retrieve
+.jsai_metadata(jsai_r, "color") # ajouté avec put_metadata, pas de fonction retrieve
 # renommer en sai et pas jsai (laisser en . tant que que comment en meta data)
 
 get_ts(jsai_r)
