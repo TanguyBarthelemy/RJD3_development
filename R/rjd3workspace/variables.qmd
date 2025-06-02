@@ -1,0 +1,326 @@
+---
+title: "Wrangle variables"
+author: "Tanguy"
+format: 
+  html:
+    css: style.css
+editor: source
+---
+
+#### Chargement des packages
+
+```{r}
+#| eval: true
+#| echo: true
+#| label: "chargement packages"
+#| warning: false
+#| message: false
+
+library("rjd3toolkit")
+library("rjd3workspace")
+library("rjd3providers")
+```
+
+#### Création d'un WS avec R
+
+```{r}
+#| eval: true
+#| echo: true
+#| label: "init-ws"
+
+tmp_path <- tempdir()
+
+data_path <- system.file("data", "IPI_nace4.csv", package = "rjd3workspace")
+ts_object <- txt_series(
+    file = data_path,
+    series = 1L,
+    delimiter = "SEMICOLON",
+    fmt.date = "dd/MM/yyyy"
+)
+
+vars <- list(reg1 = list(x1 = AirPassengers))
+my_context <- modelling_context(variables = vars)
+
+my_ws <- jws_new(modelling_context = my_context)
+save_workspace(my_ws, file.path(tmp_path, "tmp.xml"), replace = TRUE)
+```
+
+## `add_variables()`{.r}
+
+### Présentation
+
+La fonction `add_variables()`{.r} permet d'ajouter de nouvelles variables à un Workspace. Elle prend en argument :
+
+- `y` : un `ts` object (au sens de R)
+- jws : un WS (pointeur Java, objet JD+)
+- `group` : le groupe de régresseur auquel est ajouter la variable
+- `name` : le nom donné à cette variable
+
+### Exemple
+
+On peut combiner cette fonction avec un `modelling_context` :
+
+```{r}
+#| eval: true
+#| echo: true
+#| label: "add-variable-modellling-context"
+
+vars <- list(reg1 = list(x1 = AirPassengers))
+my_context <- modelling_context(variables = vars)
+my_ws <- jws_new(modelling_context = my_context)
+
+add_variables(
+    jws = my_ws, 
+    group = "reg1", 
+    y = mdeaths, 
+    name = "DeathMale"
+)
+
+save_workspace(my_ws, file.path(tmp_path, "tmp2.xml"), replace = TRUE)
+```
+
+### Limitation
+
+Cette fonction a néanmoins 3 limitations:
+
+
+
+
+#### Plutôt `add_variable()`{.r} ?
+
+Il n'est pas possible d'exporter plusieurs variables à la fois:
+
+```{r}
+#| eval: true
+#| echo: true
+#| error: true
+#| label: "add_variable-list"
+
+my_ws <- jws_new()
+
+add_variables(
+    jws = my_ws, 
+    group = "reg1", 
+    y = list(a = mdeaths, b = ldeaths),
+    name = "DeathMale"
+)
+```
+
+
+```{r}
+#| eval: true
+#| echo: true
+#| error: true
+#| label: "add_variable-cbind-2-names"
+
+my_ws <- jws_new()
+
+add_variables(
+    jws = my_ws, 
+    group = "reg1", 
+    y = cbind(mdeaths, ldeaths), 
+    name = c("DeathMale", "other_deaths")
+)
+```
+
+
+```{r}
+#| eval: true
+#| echo: true
+#| label: "add_variable-cbind"
+
+my_ws <- jws_new()
+
+# Avec cbind, les différentes séries sont mises bout à bout
+add_variables(
+    jws = my_ws, 
+    group = "reg1", 
+    y = cbind(fdeaths, mdeaths, ldeaths), 
+    name = "DeathMale"
+)
+save_workspace(my_ws, file.path(tmp_path, "tmp3.xml"), replace = TRUE)
+var_output <- read_variables(normalizePath(file.path(tmp_path, "tmp3/Variables/Vars-1.xml")))
+waldo::compare(as.numeric(var_output$DeathMale), c(fdeaths, mdeaths, ldeaths))
+```
+
+#### No new group with `group`
+
+L'argument `group` est utilisé pour vérifier si un groupe portant le même nom existe déjà.
+
+- Si oui, la variable sera ajouté à ce groupe là:
+
+```{r}
+#| eval: true
+#| echo: true
+#| label: "no-new-group"
+
+vars <- list(reg1 = list(x1 = AirPassengers))
+my_context <- modelling_context(variables = vars)
+my_ws <- jws_new(modelling_context = my_context)
+
+add_variables(
+    jws = my_ws, 
+    group = "reg1", 
+    y = mdeaths, 
+    name = "DeathMale"
+)
+
+save_workspace(my_ws, file.path(tmp_path, "tmp4.xml"), replace = TRUE)
+```
+
+- Si non, alors un nouveau groupe est créé mais avec le nom `name` (et non groupe) :
+
+```{r}
+#| eval: true
+#| echo: true
+#| label: "new-group-name-name"
+
+my_ws <- jws_new()
+
+add_variables(
+    jws = my_ws, 
+    group = "reg1", 
+    y = mdeaths, 
+    name = "DeathMale"
+)
+add_variables(
+    jws = my_ws, 
+    group = "reg1", 
+    y = fdeaths, 
+    name = "DeathFemale"
+)
+add_variables(
+    jws = my_ws, 
+    group = "DeathMale", 
+    y = ldeaths, 
+    name = "TotDeath"
+)
+
+save_workspace(my_ws, file.path(tmp_path, "tmp5.xml"), replace = TRUE)
+
+readLines(file.path(tmp_path, "tmp2.xml")) |> cat(sep ="\n")
+
+read_variables(normalizePath(file.path(tmp_path, "tmp5/Variables/Vars-1.xml"))) |> str()
+read_variables(normalizePath(file.path(tmp_path, "tmp5/Variables/Vars-2.xml"))) |> str()
+```
+
+
+#### Pas de ts_metadata
+
+Il n'est pas possible de créer des variables dynamique (avec des ts metadata). On ne peut créer que des objets statiques.
+
+```{r}
+#| eval: true
+#| echo: true
+#| error: true
+#| label: "no-ts-metadata"
+
+my_ws <- jws_new()
+
+add_variables(
+    jws = my_ws, 
+    group = "reg1", 
+    y = ts_object,
+    name = "DeathMale"
+)
+```
+
+
+## `read_variables()`{.r} et `write_variables()`{.r}
+
+Les fonctions `read_variables()`{.r} et `write_variables()`{.r} permettent d'exporter et importer des variables au format `.xml` (dans le dossier du WS).
+
+La fonction `read_variables()`{.r} travaille à partir d'un fichier d'un WS ou d'un fichier exporté via `write_variables()`{.r}.
+Le résultat de cet appel peut reservir pour créer un `modelling_context` :
+
+```{r}
+#| eval: true
+#| echo: true
+#| label: "read-modelling-context"
+
+vars1 <- read_variables(normalizePath(file.path(tmp_path, "tmp/Variables/Vars-1.xml")))
+
+# regressors as a list of two groups reg1 and reg2
+vars <- list(
+    reg1 = list(
+        x1 = mdeaths
+    ), 
+    reg2 = vars1
+)
+# creating the modelling context
+my_context <- modelling_context(variables = vars)
+
+my_ws <- jws_new(modelling_context = my_context)
+
+save_workspace(my_ws, file.path(tmp_path, "tmp6.xml"), replace = TRUE)
+```
+
+et pour `add_variables()`{.r} :
+
+```{r}
+#| eval: true
+#| echo: true
+#| label: "read-add_variables"
+
+vars1 <- read_variables(normalizePath(file.path(tmp_path, "tmp/Variables/Vars-1.xml")))
+
+my_ws <- jws_new()
+
+add_variables(
+    jws = my_ws, 
+    group = "new_group", 
+    y = vars1$x1, 
+    name = "Air"
+)
+
+save_workspace(my_ws, file.path(tmp_path, "tmp7.xml"), replace = TRUE)
+```
+
+mais avec les limitations citées plus haut.
+
+## Autres issues
+
+#### Quelle plu-value à `add_variables()`{.r} ?
+
+Quel est l'intérêt de `add_variables()`{.r} par rapport à  `modelling_context()`{.r} qui fait à peu près la même chose mais peut créer des groupes de plusieurs variables ?
+
+#### `JD3_TS` et `modelling_context()`{.r}
+
+`modelling_context()`{.r} accepte les ts dynamique (contenant des ts metadata) mais sous la forme de `JD3_DYNAMICTS`.
+
+```{r}
+#| eval: true
+#| echo: true
+#| error: true
+#| label: "modelling-context-jd3_ts"
+
+vars <- list(
+    reg1 = list(
+        x1 = AirPassengers, 
+        x2 = ts_object
+    )
+)
+
+my_context <- modelling_context(variables = vars)
+my_ws <- jws_new(modelling_context = my_context)
+```
+
+```{r}
+#| eval: true
+#| echo: true
+#| error: true
+#| label: "modelling-context-jd3-dynamicts"
+
+vars <- list(
+    reg1 = list(
+        x1 = AirPassengers, 
+        x2 = rjd3toolkit:::dynamic_ts(ts_object$moniker, data = ts_object$data)
+    )
+)
+
+my_context <- modelling_context(variables = vars)
+my_ws <- jws_new(modelling_context = my_context)
+```
+
+Seulement il y a besoin d'appeler une fonction interne(`rjd3toolkit:::dynamic_ts()`{.r}). Y a t-il un autre moyen de faire ?
+Sinon, il faudrait peut-être inclure un appel à cette fonction à l'intérieur de `modelling_context()`{.r}.
