@@ -3,6 +3,7 @@ title: "Wrangle variables"
 author: "Tanguy"
 format: 
   html:
+    toc: true
     css: style.css
 editor: source
 ---
@@ -207,7 +208,7 @@ read_variables(normalizePath(file.path(tmp_path, "tmp5/Variables/Vars-2.xml"))) 
 
 #### Pas de ts_metadata
 
-Il n'est pas possible de créer des variables dynamique (avec des ts metadata). On ne peut créer que des objets statiques.
+Il n'est pas possible de créer des variables dynamiques (avec des ts metadata). On ne peut créer que des objets statiques.
 
 ```{r}
 #| eval: true
@@ -280,7 +281,7 @@ mais avec les limitations citées plus haut.
 
 ## Autres issues
 
-#### Quelle plu-value à `add_variables()`{.r} ?
+#### Quelle plus-value à `add_variables()`{.r} ?
 
 Quel est l'intérêt de `add_variables()`{.r} par rapport à  `modelling_context()`{.r} qui fait à peu près la même chose mais peut créer des groupes de plusieurs variables ?
 
