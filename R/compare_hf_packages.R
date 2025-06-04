@@ -205,6 +205,8 @@ df_s7 <- data.frame(
     pivot_longer(cols = -date) |>
     mutate(type = "s7")
 
+View(df_s7)
+
 # Création d'un data.frame
 df_s365 <- data.frame(
     date = df$ds,
@@ -232,7 +234,7 @@ df_t <- data.frame(
     mutate(type = "t")
 
 df_final <- rbind(df_t, df_s7, df_s365)
-# df_final <- df_final |> filter(date > as.Date("2020-01-01"))
+df_final <- df_final |> filter(date > as.Date("2020-01-01"))
 
 p <- df_final %>%
     ggplot(aes(x = date, y = value, color = name)) +
