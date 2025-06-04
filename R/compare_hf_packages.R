@@ -83,7 +83,17 @@ i_rjdverse <- amb.multi$decomposition$i
 
 library("prophet")
 
-m <- prophet(df, weekly.seasonality = TRUE, yearly.seasonality = TRUE, fit = TRUE)
+df_holidays <- data.frame(
+    holiday=rownames(cal_reg)[apply(cal_reg, MARGIN = 1, \(x) sum(x) > 0) |> which()]
+)
+
+m <- prophet(
+    df,
+    weekly.seasonality = TRUE,
+    yearly.seasonality = TRUE,
+    fit = TRUE,
+    holidays =
+)
 
 future <- make_future_dataframe(m, periods = 365)
 head(future)
@@ -96,7 +106,7 @@ s365_prophet <- forecast$yearly
 t_prophet <- forecast$trend
 
 
-# forecast ----------------------------------------------------------------
+# forecast : tbats ------------------------------------------------------------
 
 library("forecast")
 
@@ -116,7 +126,7 @@ t_tbats <- components_tbats$level
 i_tbats <- components_tbats$slope
 
 
-# forecast : mstl ----------------------------------------------------
+# forecast : mstl ----------------------------------------------------------
 
 library("forecast")
 

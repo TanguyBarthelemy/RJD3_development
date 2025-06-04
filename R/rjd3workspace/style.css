@@ -1,0 +1,27 @@
+
+code, pre, tt, kbd, samp {
+  font-family: "Fira Code", monospace;
+  font-variant-ligatures: contextual;
+  text-rendering: optimizeLegibility;
+}
+
+/* Style les messages (via message()) */
+.cell-output-stderr {
+  color: #b58900;
+  background-color: #fff8e1;
+  font-style: italic;
+  padding: 0.5em;
+  border-left: 3px solid #e0a800;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+/* Style les erreurs (via stop()) */
+.cell-output-error {
+  color: red;
+  background-color: #ffeeee;
+  border-left: 3px solid #cc0000;
+  padding: 0.5em;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
