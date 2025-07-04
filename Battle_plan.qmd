@@ -4,11 +4,6 @@ format: pdf
 format: html 
 ---
 
-Beware to have 
-
-- a state of affairs / state of the art overview
-
-- goals set in perimeters (according to events)
 
 ## This file 
 
@@ -39,7 +34,32 @@ GUI
 
 Currently working on (details in TOPICS..)
 
+### Git issues
+
+
+### Doc packages 
+
+- JP rjd3providers over the summer 
+
+- Tanguy over CRAN requirements (holes)
+
+- Anna Holes and vignettes (5main)
+    - rjd3workspace 
+    - ...
+
+### Output doc 
+
+- verif rjd3x13 output names, java dico 
+link to java dico ?
+pb = mise en forme (check first)
+
+- idem tramoseats
+- str d'un modele complet print and document 
+
 ### Tanguy 
+
+
+
 
 #### Prod Ipi et ICA 2025
 
@@ -269,15 +289,7 @@ but lire direct avec JDCruncheR (to do 1h)
 
 - habillage output sans excel 
 
-#### rjdworkspace 
-
-everything up to date ?
-
-No: 
-- test and doc on fuctions post prod IPI/ICA
-
-- pb set spec (domain vs estimation)
-- pb non transport des variables externes 
+                                                                                                                                 
 
 
 
