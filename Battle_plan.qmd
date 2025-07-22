@@ -13,6 +13,8 @@ format: html
 
 - highlight what has to be done for up coming presentations (Stace, Tsaug meetings...)
 
+see it again..
+
 ### Scope 
 
 All JD+ related tools : GUI and R packages 
