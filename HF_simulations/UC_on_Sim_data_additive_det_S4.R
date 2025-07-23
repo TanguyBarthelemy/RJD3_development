@@ -37,7 +37,6 @@ sig2 <- 0.5 # function needed input (param/20)
 
 # Storing Sim Data  ---------------------------------------------------------
 
-nb_series<- 3
 list_raw <- as.list(rep(NA,nb_series))
 list_raw
 list_true_sa <- as.list(rep(NA,nb_series))

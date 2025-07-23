@@ -34,7 +34,6 @@ si <- 0.2*150 # function needed input (param/150)
 
 # Storing Sim Data  ---------------------------------------------------------
 
-nb_series<- 3
 list_raw <- as.list(rep(NA,nb_series))
 list_raw
 list_true_sa <- as.list(rep(NA,nb_series))
@@ -360,7 +359,7 @@ for(j in 1:nb_series){
   list_RMSE_Mamb_t[[j]]<-sqrt(mean((list_Mamb_t[[j]]-list_true_t[[j]])^2))
   
   #store i
-  list_Mamb_i[[j]]<- amb.multi$decomposition$i
+  list_Mamb_i[[j]]<- amb.multi$decomposition$y-amb.multi$decomposition$t-amb.multi$decomposition$s_365.2425-amb.multi$decomposition$s_7
   # RMSE for amb (vs True) T
   list_RMSE_Mamb_i[[j]]<-sqrt(mean((list_Mamb_i[[j]]-list_true_i[[j]])^2))
   
