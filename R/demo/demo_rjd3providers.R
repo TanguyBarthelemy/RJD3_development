@@ -36,7 +36,12 @@ path2_xlsx <- normalizePath("./data_temp/path_2/data_ipi.xlsx")
 
 txt_content(file = path_csv, delimiter = "SEMICOLON", fmt.date = "dd/MM/yyyy")
 txt_data(file = path_csv, delimiter = "SEMICOLON", fmt.date = "dd/MM/yyyy")
-txt_series(file = path_csv, series = 2L, delimiter = "SEMICOLON", fmt.date = "dd/MM/yyyy")
+txt_series(
+    file = path_csv,
+    series = 2L,
+    delimiter = "SEMICOLON",
+    fmt.date = "dd/MM/yyyy"
+)
 
 spreadsheet_content(file = path_xlsx)
 spreadsheet_data(file = path_xlsx, sheet = 1L, cleanMissings = TRUE)
@@ -81,7 +86,9 @@ new_id <- spreadsheet_change_file(
 
 
 ## Utilisation et manipulation des properties
-properties <- rjd3providers::spreadsheet_id_properties(old_jd3_ts$metadata$`@id`)
+properties <- rjd3providers::spreadsheet_id_properties(
+    old_jd3_ts$metadata$`@id`
+)
 properties$file <- path2_xlsx
 new_id <- spreadsheet_to_id(properties)
 
@@ -105,14 +112,15 @@ spreadsheet_update_path(
 
 # Enregistrement du WS
 
-rjdemetra3::save_workspace(jws = jws_path, file = "./temp/ws_path_v3.xml", replace = TRUE)
+rjdemetra3::save_workspace(
+    jws = jws_path,
+    file = "./temp/ws_path_v3.xml",
+    replace = TRUE
+)
 
 move_data()
 empty_temp()
 bring_all_back()
-
-
-
 
 
 # En plus ----------------------------------------------------------------------

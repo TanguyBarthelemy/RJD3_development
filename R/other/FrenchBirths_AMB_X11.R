@@ -31,22 +31,30 @@ df_daily <- readRDS("Births.RDS")
 # (1b) Point-wise Canova-Hansen statistics
 # -------------------------------------------------------------------------------------------------
 
-
 ch.sp <- 2:367 # Seasonal periodicities to be tested for
 
 df_ch <- data.frame(
     "sp" = ch.sp,
-    "ch.raw" = rjd3toolkit::seasonality_canovahansen(df_daily$births,
-        p0 = min(ch.sp), p1 = max(ch.sp),
-        np = max(ch.sp) - min(ch.sp) + 1, original = TRUE
+    "ch.raw" = rjd3toolkit::seasonality_canovahansen(
+        df_daily$births,
+        p0 = min(ch.sp),
+        p1 = max(ch.sp),
+        np = max(ch.sp) - min(ch.sp) + 1,
+        original = TRUE
     ),
-    "ch.log" = rjd3toolkit::seasonality_canovahansen(df_daily$log_births,
-        p0 = min(ch.sp), p1 = max(ch.sp),
-        np = max(ch.sp) - min(ch.sp) + 1, original = TRUE
+    "ch.log" = rjd3toolkit::seasonality_canovahansen(
+        df_daily$log_births,
+        p0 = min(ch.sp),
+        p1 = max(ch.sp),
+        np = max(ch.sp) - min(ch.sp) + 1,
+        original = TRUE
     ),
-    "ch.dlg" = rjd3toolkit::seasonality_canovahansen(diff(df_daily$log_births, lag = 1, differences = 1),
-        p0 = min(ch.sp), p1 = max(ch.sp),
-        np = max(ch.sp) - min(ch.sp) + 1, original = TRUE
+    "ch.dlg" = rjd3toolkit::seasonality_canovahansen(
+        diff(df_daily$log_births, lag = 1, differences = 1),
+        p0 = min(ch.sp),
+        p1 = max(ch.sp),
+        np = max(ch.sp) - min(ch.sp) + 1,
+        original = TRUE
     )
 )
 
@@ -70,22 +78,27 @@ ggplot(df_ch) +
 library(rjd3toolkit)
 
 # Define a national calendar
-french_calendar <- national_calendar(days = list(
-    fixed_day(7, 14), # Bastille Day
-    fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victory Day
-    special_day("NEWYEAR"),
-    special_day("CHRISTMAS"),
-    special_day("MAYDAY"),
-    special_day("EASTERMONDAY"),
-    special_day("ASCENSION"),
-    special_day("WHITMONDAY"),
-    special_day("ASSUMPTION"),
-    special_day("ALLSAINTSDAY"),
-    special_day("ARMISTICE")
-))
+french_calendar <- national_calendar(
+    days = list(
+        fixed_day(7, 14), # Bastille Day
+        fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victory Day
+        special_day("NEWYEAR"),
+        special_day("CHRISTMAS"),
+        special_day("MAYDAY"),
+        special_day("EASTERMONDAY"),
+        special_day("ASCENSION"),
+        special_day("WHITMONDAY"),
+        special_day("ASSUMPTION"),
+        special_day("ALLSAINTSDAY"),
+        special_day("ARMISTICE")
+    )
+)
 # Generrate calendar regressors
-q <- holidays(french_calendar, "1968-01-01",
-    length = length(df_daily$births), type = "All",
+q <- holidays(
+    french_calendar,
+    "1968-01-01",
+    length = length(df_daily$births),
+    type = "All",
     nonworking = 7L
 )
 
@@ -96,27 +109,40 @@ q <- holidays(french_calendar, "1968-01-01",
 
 # Reg-Arima estimation
 
-pre.mult <- rjd3highfreq::fractionalAirlineEstimation(df_daily$log_births,
+pre.mult <- rjd3highfreq::fractionalAirlineEstimation(
+    df_daily$log_births,
     x = q, # q= calendar regressors matrix
     periods = c(7, 365.25),
-    ndiff = 2, ar = FALSE, mean = FALSE,
+    ndiff = 2,
+    ar = FALSE,
+    mean = FALSE,
     outliers = c("ao", "wo"), # type of outliers detected
     criticalValue = 0, # automatically set
-    precision = 1e-9, approximateHessian = TRUE
+    precision = 1e-9,
+    approximateHessian = TRUE
 )
 
 # Retrieving estimated outlier & calendar effects (coefs, se, student)
 
 regs_mult <- data.frame(
     "Variable" = pre.mult$model$variables,
-    "Coef"     = pre.mult$model$b,
-    "Coef_SE"  = sqrt(diag(pre.mult$model$bcov))
-) %>% mutate(Tstat = round(Coef / Coef_SE, 2))
+    "Coef" = pre.mult$model$b,
+    "Coef_SE" = sqrt(diag(pre.mult$model$bcov))
+) %>%
+    mutate(Tstat = round(Coef / Coef_SE, 2))
 
 # adding names for calendar regressors
 calendar_regressors <- c(
-    "Bastille_day", "Victory_day", "NEWYEAR", "CHRISTMAS", "MAYDAY",
-    "EASTERMONDAY", "ASCENSION", "WHITMONDAY", "ASSUMPTION", "ALLSAINTSDAY",
+    "Bastille_day",
+    "Victory_day",
+    "NEWYEAR",
+    "CHRISTMAS",
+    "MAYDAY",
+    "EASTERMONDAY",
+    "ASCENSION",
+    "WHITMONDAY",
+    "ASSUMPTION",
+    "ALLSAINTSDAY",
     "ARMISTICE"
 )
 
@@ -125,12 +151,16 @@ regs_mult$Variable[1:11] <- calendar_regressors
 # Formatting outliers dates
 nb_outliers <- nrow(regs_mult) - length(calendar_regressors)
 
-outliers <- regs_mult$Variable[(length(calendar_regressors) + 1):nrow(regs_mult)]
+outliers <- regs_mult$Variable[
+    (length(calendar_regressors) + 1):nrow(regs_mult)
+]
 outliers_names <- substr(outliers, 1, 2)
 outliers_position <- substr(outliers, 4, 9)
 outliers_dates <- as.character(df_daily$date[as.numeric(outliers_position)])
 outliers_renamed <- paste0(outliers_names, ".", outliers_dates)
-regs_mult$Variable[(length(calendar_regressors) + 1):nrow(regs_mult)] <- outliers_renamed
+regs_mult$Variable[
+    (length(calendar_regressors) + 1):nrow(regs_mult)
+] <- outliers_renamed
 regs_mult
 
 
@@ -155,7 +185,8 @@ amb.dow <- rjd3highfreq::fractionalAirlineDecomposition(
     period = 7, # DOW pattern
     sn = FALSE, # Signal (SA)-noise decomposition
     stde = FALSE, # Calculate standard deviations
-    nbcasts = 0, nfcasts = 0
+    nbcasts = 0,
+    nfcasts = 0
 ) # Numbers of back- and forecasts
 
 # Extract DOY pattern from DOW-adjusted linearised data
@@ -164,15 +195,20 @@ amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
     period = 365.2425, # DOY pattern
     sn = FALSE,
     stde = FALSE,
-    nbcasts = 0, nfcasts = 0
+    nbcasts = 0,
+    nfcasts = 0
 )
 
 
 # Compute final components and SA series
 # calendar component
 df_daily <- df_daily %>%
-    mutate(cal.cmp = exp(pre.mult$model$xreg[, seq_along(calendar_regressors)] %*%
-        pre.mult$model$b[seq_along(calendar_regressors)]))
+    mutate(
+        cal.cmp = exp(
+            pre.mult$model$xreg[, seq_along(calendar_regressors)] %*%
+                pre.mult$model$b[seq_along(calendar_regressors)]
+        )
+    )
 
 # final dow, doy and sa
 df_daily <- df_daily %>%
@@ -195,7 +231,6 @@ ggplot(df_daily) +
 # (6) X11 decomposition
 # -------------------------------------------------------------------------------------------------
 
-
 #### Run X-11 on linearised data in level (so exp() if linearization in log)
 
 # Extract DOW pattern highest frequency first
@@ -207,8 +242,10 @@ x11.dow <- rjd3x11plus::x11plus(
     trend.degree = 3, # Polynomial degree
     trend.kernel = "Henderson", # Kernel function
     trend.asymmetric = "CutAndNormalize", # Truncation method
-    seas.s0 = "S3X9", seas.s1 = "S3X9", # Seasonal filters
-    extreme.lsig = 1.5, extreme.usig = 2.5
+    seas.s0 = "S3X9",
+    seas.s1 = "S3X9", # Seasonal filters
+    extreme.lsig = 1.5,
+    extreme.usig = 2.5
 ) # Sigma-limits
 
 # Extract DOY pattern from DOW-adjusted data
@@ -220,8 +257,10 @@ x11.doy <- rjd3x11plus::x11plus(
     trend.degree = 3,
     trend.kernel = "Henderson",
     trend.asymmetric = "CutAndNormalize",
-    seas.s0 = "S3X3", seas.s1 = "S3X3",
-    extreme.lsig = 1.5, extreme.usig = 2.5
+    seas.s0 = "S3X3",
+    seas.s1 = "S3X3",
+    extreme.lsig = 1.5,
+    extreme.usig = 2.5
 )
 
 
@@ -240,8 +279,12 @@ tail(df_daily)
 # Compute final components and SA series
 # calendar component
 df_daily <- df_daily %>%
-    mutate(cal.cmp = exp(pre.mult$model$xreg[, seq_along(calendar_regressors)] %*%
-        pre.mult$model$b[seq_along(calendar_regressors)]))
+    mutate(
+        cal.cmp = exp(
+            pre.mult$model$xreg[, seq_along(calendar_regressors)] %*%
+                pre.mult$model$b[seq_along(calendar_regressors)]
+        )
+    )
 
 # final dow, doy and sa
 df_daily <- df_daily %>%

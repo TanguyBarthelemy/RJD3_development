@@ -1,5 +1,15 @@
-fractionalAirlineEstimation_new <- function(y, periods, x = NULL, ndiff = 2, ar = FALSE, mean = FALSE,
-                                            outliers = NULL, criticalValue = 6, precision = 1e-12, approximateHessian = FALSE) {
+fractionalAirlineEstimation_new <- function(
+    y,
+    periods,
+    x = NULL,
+    ndiff = 2,
+    ar = FALSE,
+    mean = FALSE,
+    outliers = NULL,
+    criticalValue = 6,
+    precision = 1e-12,
+    approximateHessian = FALSE
+) {
     checkmate::assertNumeric(y, null.ok = FALSE)
     checkmate::assertNumeric(criticalValue, len = 1, null.ok = FALSE)
     checkmate::assertNumeric(precision, len = 1, null.ok = FALSE)
@@ -11,9 +21,17 @@ fractionalAirlineEstimation_new <- function(y, periods, x = NULL, ndiff = 2, ar 
     }
     jrslt <- .jcall(
         "demetra/highfreq/r/FractionalAirlineProcessor",
-        "Ljdplus/highfreq/ExtendedAirlineEstimation;", "estimate",
-        as.numeric(y), rjd3toolkit::.r2jd_matrix(x), mean, .jarray(periods),
-        as.integer(ndiff), ar, joutliers, criticalValue, precision,
+        "Ljdplus/highfreq/ExtendedAirlineEstimation;",
+        "estimate",
+        as.numeric(y),
+        rjd3toolkit::.r2jd_matrix(x),
+        mean,
+        .jarray(periods),
+        as.integer(ndiff),
+        ar,
+        joutliers,
+        criticalValue,
+        precision,
         approximateHessian
     )
     model <- list(
@@ -27,8 +45,14 @@ fractionalAirlineEstimation_new <- function(y, periods, x = NULL, ndiff = 2, ar 
         component_wo = rjd3toolkit::.proc_vector(jrslt, "component_wo"),
         component_ao = rjd3toolkit::.proc_vector(jrslt, "component_ao"),
         component_ls = rjd3toolkit::.proc_vector(jrslt, "component_ls"),
-        component_outliers = rjd3toolkit::.proc_vector(jrslt, "component_outliers"),
-        component_userdef_reg_variables = rjd3toolkit::.proc_vector(jrslt, "component_userdef_reg_variables"),
+        component_outliers = rjd3toolkit::.proc_vector(
+            jrslt,
+            "component_outliers"
+        ),
+        component_userdef_reg_variables = rjd3toolkit::.proc_vector(
+            jrslt,
+            "component_userdef_reg_variables"
+        ),
         component_mean = rjd3toolkit::.proc_vector(jrslt, "component_mean")
     )
 
@@ -50,7 +74,9 @@ fractionalAirlineEstimation_new <- function(y, periods, x = NULL, ndiff = 2, ar 
     ))
 }
 
-print_JDFractionalAirlineEstimation <- function(x, digits = max(3L, getOption("digits") - 3L) # , starting = as.Date("1968-01-01")
+print_JDFractionalAirlineEstimation <- function(
+    x,
+    digits = max(3L, getOption("digits") - 3L) # , starting = as.Date("1968-01-01")
 ) {
     print_vect <- function(.x) {
         s <- .x
@@ -66,7 +92,8 @@ print_JDFractionalAirlineEstimation <- function(x, digits = max(3L, getOption("d
         if (n_max < 16 && length(s) %% 4 == 0) dimension <- 4
         if (n_max < 13 && length(s) %% 5 == 0) dimension <- 5
 
-        out <- matrix(c(s, rep("", dimension - (((length(s) - 1) %% dimension) + 1))),
+        out <- matrix(
+            c(s, rep("", dimension - (((length(s) - 1) %% dimension) + 1))),
             ncol = dimension
         ) |>
             apply(MARGIN = 1, paste, collapse = "\t") |>
@@ -77,9 +104,12 @@ print_JDFractionalAirlineEstimation <- function(x, digits = max(3L, getOption("d
         invisible(.x)
     }
 
-    nb_outliers <- sum((x$model$variables |>
-        substr(1L, 2L) |>
-        toupper()) %in% c("AO", "WO", "LS"))
+    nb_outliers <- sum(
+        (x$model$variables |>
+            substr(1L, 2L) |>
+            toupper()) %in%
+            c("AO", "WO", "LS")
+    )
     nb_reg_cjo <- length(x$model$variables) - nb_outliers
 
     summary_coeff <- data.frame(
@@ -87,7 +117,10 @@ print_JDFractionalAirlineEstimation <- function(x, digits = max(3L, getOption("d
         "Coef" = x$model$b,
         "Coef_SE" = sqrt(diag(x$model$bcov))
     )
-    summary_coeff$Tstat <- round(summary_coeff$Coef / summary_coeff$Coef_SE, digits)
+    summary_coeff$Tstat <- round(
+        summary_coeff$Coef / summary_coeff$Coef_SE,
+        digits
+    )
     summary_coeff$Coef <- round(summary_coeff$Coef, digits)
     summary_coeff$Coef_SE <- round(summary_coeff$Coef_SE, digits)
 
@@ -118,10 +151,14 @@ print_JDFractionalAirlineEstimation <- function(x, digits = max(3L, getOption("d
     est_ma_params <- data.frame(
         MA_parameter = c(
             "Theta(1)",
-            paste0("Theta(", paste0(
-                "period = ",
-                x$model$periods
-            ), ")")
+            paste0(
+                "Theta(",
+                paste0(
+                    "period = ",
+                    x$model$periods
+                ),
+                ")"
+            )
         ),
         Coef = x$estimation$parameters,
         Coef_SE = sqrt(diag(x$estimation$covariance)),
@@ -135,7 +172,12 @@ print_JDFractionalAirlineEstimation <- function(x, digits = max(3L, getOption("d
     print(est_ma_params, row.names = FALSE)
 
     cat("\n")
-    cat("Number of calendar regressors:", nb_reg_cjo, ", Number of outliers :", nb_outliers)
+    cat(
+        "Number of calendar regressors:",
+        nb_reg_cjo,
+        ", Number of outliers :",
+        nb_outliers
+    )
     cat("\n\n")
 
     # if(nb_reg_cjo > 0) {
@@ -173,22 +215,31 @@ print_JDFractionalAirlineEstimation <- function(x, digits = max(3L, getOption("d
     cat("Number of observations:", formatC(x$likelihood$nobs, digits = digits))
     cat("\n")
 
-    cat("Sum of square residuals:", formatC(x$likelihood$ssq, digits = digits),
-        "on", x$likelihood$df, "degrees of freedom",
+    cat(
+        "Sum of square residuals:",
+        formatC(x$likelihood$ssq, digits = digits),
+        "on",
+        x$likelihood$df,
+        "degrees of freedom",
         sep = " "
     )
     cat("\n")
 
-    cat("Log likelihood = ", formatC(x$likelihood$ll, digits = digits),
-        ", \n\taic = ", formatC(x$likelihood$aic, digits = digits),
-        ", \n\taicc = ", formatC(x$likelihood$aicc, digits = digits),
+    cat(
+        "Log likelihood = ",
+        formatC(x$likelihood$ll, digits = digits),
+        ", \n\taic = ",
+        formatC(x$likelihood$aic, digits = digits),
+        ", \n\taicc = ",
+        formatC(x$likelihood$aicc, digits = digits),
         ", \n\tbic(corrected for length) = ",
         formatC(x$likelihood$bicc, digits = digits),
         sep = ""
     )
     cat("\n")
 
-    cat("Hannan–Quinn information criterion = ",
+    cat(
+        "Hannan–Quinn information criterion = ",
         formatC(x$likelihood$hannanquinn, digits = digits),
         sep = ""
     )

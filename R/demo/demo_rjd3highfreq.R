@@ -2,7 +2,6 @@
 #######                Démonstration de rjd3highfreq                     #######
 ################################################################################
 
-
 # Chargement des packages ------------------------------------------------------
 
 # La PR n'a pas été accepté donc il faut installer mon package rjd3toolkit
@@ -16,7 +15,10 @@ library("rjd3toolkit")
 
 # Chargement data --------------------------------------------------------------
 
-df_daily <- read.csv("./data/TS_daily_births_franceM_1968_2020.csv", sep = ";") |>
+df_daily <- read.csv(
+    "./data/TS_daily_births_franceM_1968_2020.csv",
+    sep = ";"
+) |>
     dplyr::mutate(
         log_births = log(births),
         date = as.Date(date)
@@ -29,14 +31,20 @@ df_daily <- read.csv("./data/TS_daily_births_franceM_1968_2020.csv", sep = ";") 
 # day        = indicates the day of the week, D1=Monday...D7=Sunday
 # month      = indicates the day of the month, M01=January...M12=December
 
-
 # Calendar regressors ----------------------------------------------------------
-
 
 # Names for calendar regressors
 calendar_regressors <- c(
-    "Bastille_day", "Victory_day", "NEWYEAR", "CHRISTMAS", "MAYDAY",
-    "EASTERMONDAY", "ASCENSION", "WHITMONDAY", "ASSUMPTION", "ALLSAINTSDAY",
+    "Bastille_day",
+    "Victory_day",
+    "NEWYEAR",
+    "CHRISTMAS",
+    "MAYDAY",
+    "EASTERMONDAY",
+    "ASCENSION",
+    "WHITMONDAY",
+    "ASSUMPTION",
+    "ALLSAINTSDAY",
     "ARMISTICE"
 )
 
@@ -69,7 +77,6 @@ q <- holidays(
 
 # Muti AMB decomposition with extended fractional Airline Model ----------------
 
-
 f <- function(
     # input time series
     y,
@@ -94,7 +101,8 @@ f <- function(
     nfcasts = 0,
     # To perform a multiplicative model
     log = FALSE,
-    y_time = NULL) {
+    y_time = NULL
+) {
     if (is.null(y_time) && !is.null(x)) {
         y_time <- rownames(x)
     }
@@ -118,8 +126,8 @@ f <- function(
         # Retrieving estimated outlier & calendar effects (coefs, SE, student)
         regs <- data.frame(
             "Variable" = pre_adj$model$variables,
-            "Coef"     = pre_adj$model$b,
-            "Coef_SE"  = sqrt(diag(pre_adj$model$bcov))
+            "Coef" = pre_adj$model$b,
+            "Coef_SE" = sqrt(diag(pre_adj$model$bcov))
         )
         regs$Tstat <- round(regs$Coef / regs$Coef_SE, 2)
         pre_adj$model <- c(pre_adj$model, list(regressors_coefficients = regs))
@@ -127,7 +135,10 @@ f <- function(
 
     # Retrieving estimated MA parameters (coefs, se, student)
     MA_coeffs <- data.frame(
-        "MA parameter" = c("Theta(1)", paste0("Theta(period = ", pre_adj$model$periods, ")")),
+        "MA parameter" = c(
+            "Theta(1)",
+            paste0("Theta(period = ", pre_adj$model$periods, ")")
+        ),
         "Coef" = pre_adj$estimation$parameters,
         "Coef_SE" = sqrt(diag(pre_adj$estimation$covariance)),
         check.names = FALSE
@@ -156,7 +167,8 @@ f <- function(
     # calendar component
     cal.cmp <- rep(0, length(y))
     if (!is.null(x)) {
-        cal.cmp <- pre_adj$model$xreg[, seq_len(ncol(x))] %*% pre_adj$model$b[seq_len(ncol(x))]
+        cal.cmp <- pre_adj$model$xreg[, seq_len(ncol(x))] %*%
+            pre_adj$model$b[seq_len(ncol(x))]
     }
 
     # final s components
@@ -204,5 +216,9 @@ out <- f(
     nbcasts = 0,
     nfcasts = 0,
     log = TRUE,
-    y_time = seq.Date(from = as.Date("1968-01-01"), length.out = length(df_daily$log_births), by = "days")
+    y_time = seq.Date(
+        from = as.Date("1968-01-01"),
+        length.out = length(df_daily$log_births),
+        by = "days"
+    )
 )

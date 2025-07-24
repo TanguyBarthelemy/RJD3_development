@@ -84,7 +84,9 @@ i_rjdverse <- amb.multi$decomposition$i
 library("prophet")
 
 df_holidays <- data.frame(
-    holiday=rownames(cal_reg)[apply(cal_reg, MARGIN = 1, \(x) sum(x) > 0) |> which()]
+    holiday = rownames(cal_reg)[
+        apply(cal_reg, MARGIN = 1, \(x) sum(x) > 0) |> which()
+    ]
 )
 
 m <- prophet(
@@ -113,7 +115,8 @@ library("forecast")
 fit2 <- tbats(
     births$births,
     seasonal.periods = c(7, 365.2425),
-    use.trend = TRUE, use.arma.errors = TRUE
+    use.trend = TRUE,
+    use.arma.errors = TRUE
 )
 
 # Décomposition

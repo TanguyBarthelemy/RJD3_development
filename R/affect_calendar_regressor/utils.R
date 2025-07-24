@@ -11,24 +11,40 @@ create_reg_cjo_sets <- function(regs_cjo) {
         REG2 = regs_cjo[, c("REG2_AC1", "REG2_AC2")],
         REG3 = regs_cjo[, c("REG3_AC1", "REG3_AC2", "REG3_AC3")],
         REG5 = regs_cjo[, c(
-            "REG5_AC1", "REG5_AC2", "REG5_AC3",
-            "REG5_AC4", "REG5_AC5"
+            "REG5_AC1",
+            "REG5_AC2",
+            "REG5_AC3",
+            "REG5_AC4",
+            "REG5_AC5"
         )],
         REG6 = regs_cjo[, c(
-            "REG6_AC1", "REG6_AC2", "REG6_AC3",
-            "REG6_AC4", "REG6_AC5", "REG6_AC6"
+            "REG6_AC1",
+            "REG6_AC2",
+            "REG6_AC3",
+            "REG6_AC4",
+            "REG6_AC5",
+            "REG6_AC6"
         )],
         NO_CJO_LY = LY,
         REG1_LY = regs_cjo[, c("REG1_AC1", "LY")],
         REG2_LY = regs_cjo[, c("REG2_AC1", "REG2_AC2", "LY")],
         REG3_LY = regs_cjo[, c("REG3_AC1", "REG3_AC2", "REG3_AC3", "LY")],
         REG5_LY = regs_cjo[, c(
-            "REG5_AC1", "REG5_AC2", "REG5_AC3",
-            "REG5_AC4", "REG5_AC5", "LY"
+            "REG5_AC1",
+            "REG5_AC2",
+            "REG5_AC3",
+            "REG5_AC4",
+            "REG5_AC5",
+            "LY"
         )],
         REG6_LY = regs_cjo[, c(
-            "REG6_AC1", "REG6_AC2", "REG6_AC3",
-            "REG6_AC4", "REG6_AC5", "REG6_AC6", "LY"
+            "REG6_AC1",
+            "REG6_AC2",
+            "REG6_AC3",
+            "REG6_AC4",
+            "REG6_AC5",
+            "REG6_AC6",
+            "LY"
         )]
     )
 
@@ -45,7 +61,8 @@ create_spec_sets <- function() {
             from = as.Date("2020-03-01"),
             to = as.Date("2022-02-01"),
             by = "month"
-        ) |> as.character(),
+        ) |>
+            as.character(),
         usrdef.outliersType = rep("AO", times = 2 * 12),
         estimate.from = "2013-01-01"
     )
@@ -71,10 +88,13 @@ create_spec_sets <- function() {
 one_diagnostic <- function(serie, spec) {
     mod <- RJDemetra::x13(series = serie, spec = spec)
 
-    res_td <- mod$diagnostics$residuals_test[c(
-        "f-test on sa (td)",
-        "f-test on i (td)"
-    ), "P.value"]
+    res_td <- mod$diagnostics$residuals_test[
+        c(
+            "f-test on sa (td)",
+            "f-test on i (td)"
+        ),
+        "P.value"
+    ]
 
     note <- sum((res_td < .05) * 2:1)
     aicc <- mod$regarima$loglik["aicc", ]
@@ -93,7 +113,8 @@ all_diagnostics <- function(serie, spec_sets) {
         output <- one_diagnostic(spec = spec, serie = serie)
         cat("Done !\n")
         return(output)
-    }) |> do.call(what = rbind)
+    }) |>
+        do.call(what = rbind)
 
     output <- cbind(
         regs = names(spec_sets),
@@ -139,7 +160,17 @@ select_regs <- function(series) {
 
     output <- sapply(X = seq_len(ncol(series)), FUN = function(k) {
         name_serie <- colnames(series)[k]
-        cat(paste0("\nSérie ", name_serie, " en cours... ", k, "/", ncol(series)), "\n")
+        cat(
+            paste0(
+                "\nSérie ",
+                name_serie,
+                " en cours... ",
+                k,
+                "/",
+                ncol(series)
+            ),
+            "\n"
+        )
         return(select_reg_one_serie(series[, k], name = name_serie))
     })
     output <- as.data.frame(cbind(

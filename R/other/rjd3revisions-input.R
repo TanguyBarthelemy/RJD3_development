@@ -2,9 +2,15 @@
 
 check_long <- function(x, date_format = "%Y-%m-%d") {
     checkmate::assert_data_frame(x, ncols = 3L)
-    checkmate::assert_numeric(x[, 3, drop = TRUE], .var.name = "The third column")
+    checkmate::assert_numeric(
+        x[, 3, drop = TRUE],
+        .var.name = "The third column"
+    )
     rev_date <- convert_rev_date(x[, 1, drop = TRUE], date_format = date_format)
-    time_period <- convert_time_period(x[, 2, drop = TRUE], date_format = date_format)
+    time_period <- convert_time_period(
+        x[, 2, drop = TRUE],
+        date_format = date_format
+    )
 
     # Long format
     long <- x
@@ -21,10 +27,12 @@ check_vertical <- function(x, ...) {
     return(UseMethod("check_vertical", x))
 }
 
-check_vertical.mts <- function(x,
-                               date_format = "%Y-%m-%d",
-                               periodicity = NULL,
-                               ...) {
+check_vertical.mts <- function(
+    x,
+    date_format = "%Y-%m-%d",
+    periodicity = NULL,
+    ...
+) {
     # Check data type
     checkmate::assert_matrix(x, mode = "numeric")
 
@@ -36,15 +44,20 @@ check_vertical.mts <- function(x,
 
     # Vertical format
     vertical <- x
-    colnames(vertical) <- as.character(convert_rev_date(colnames(vertical), date_format))
+    colnames(vertical) <- as.character(convert_rev_date(
+        colnames(vertical),
+        date_format
+    ))
 
     return(vertical)
 }
 
-check_vertical.matrix <- function(x,
-                                  date_format = "%Y-%m-%d",
-                                  periodicity = c(4L, 12L),
-                                  ...) {
+check_vertical.matrix <- function(
+    x,
+    date_format = "%Y-%m-%d",
+    periodicity = c(4L, 12L),
+    ...
+) {
     # Check periodicity
     periodicity <- match.arg(arg = NULL, choices = periodicity)
 
@@ -56,8 +69,14 @@ check_vertical.matrix <- function(x,
 
     # Vertical format
     vertical <- x
-    colnames(vertical) <- as.character(convert_rev_date(colnames(vertical), date_format))
-    rownames(vertical) <- as.character(convert_time_period(rownames(vertical), date_format))
+    colnames(vertical) <- as.character(convert_rev_date(
+        colnames(vertical),
+        date_format
+    ))
+    rownames(vertical) <- as.character(convert_time_period(
+        rownames(vertical),
+        date_format
+    ))
 
     # Check date periods
     real_time_period <- convert_time_period(rownames(vertical), date_format)
@@ -97,8 +116,14 @@ check_vertical.default <- function(x, ...) {
 
 check_horizontal <- function(x, date_format = "%Y-%m-%d") {
     horizontal <- x
-    colnames(horizontal) <- as.character(convert_time_period(colnames(horizontal), date_format))
-    rownames(horizontal) <- as.character(convert_rev_date(rownames(horizontal), date_format))
+    colnames(horizontal) <- as.character(convert_time_period(
+        colnames(horizontal),
+        date_format
+    ))
+    rownames(horizontal) <- as.character(convert_rev_date(
+        rownames(horizontal),
+        date_format
+    ))
 
     return(horizontal)
 }
@@ -108,7 +133,10 @@ check_horizontal <- function(x, date_format = "%Y-%m-%d") {
 
 convert_time_period <- function(x, date_format = "%Y-%m-%d") {
     check_quarter <- all(grepl(pattern = "^\\d{4}( ?[TtQq]?0?[1-4])?$", x = x))
-    check_month <- all(grepl(pattern = "^\\d{4}( ?[Mm]?(1[0-2]|0?[1-9]))?$", x = x))
+    check_month <- all(grepl(
+        pattern = "^\\d{4}( ?[Mm]?(1[0-2]|0?[1-9]))?$",
+        x = x
+    ))
     check_date <- !(any(is.na(as.Date(x, format = date_format))))
 
     if (check_date) {
@@ -123,18 +151,25 @@ convert_time_period <- function(x, date_format = "%Y-%m-%d") {
         month <- 3 * as.integer(quarter) - 2
         return(as.Date(paste(year, month, "01", sep = "-")))
     } else {
-        stop("Time periods not in a correct format.",
-             "Examples of correct formats are ",
-             "2023M1, 2023 M07 2023 Q1, 2023 m12, 2023q01, 2023 T2, 2023 ",
-             "or you can specify the format of your date with the argument `format_date`")
+        stop(
+            "Time periods not in a correct format.",
+            "Examples of correct formats are ",
+            "2023M1, 2023 M07 2023 Q1, 2023 m12, 2023q01, 2023 T2, 2023 ",
+            "or you can specify the format of your date with the argument `format_date`"
+        )
     }
 }
 
 convert_rev_date <- function(x, date_format = "%Y-%m-%d") {
     checkmate::assert_atomic(unique(x), min.len = 2)
-    checkmate::assert_choice(class(x), choices = c("character", "integer", "Date"))
+    checkmate::assert_choice(
+        class(x),
+        choices = c("character", "integer", "Date")
+    )
     if (any(is.na(as.Date(x, format = date_format)))) {
-        stop("Revisions date not in a correct format. You can specify the format of your date with the argument `format_date`")
+        stop(
+            "Revisions date not in a correct format. You can specify the format of your date with the argument `format_date`"
+        )
     }
     return(as.Date(x, format = date_format))
 }
@@ -153,7 +188,11 @@ from_long_to_vertical <- function(x, date_format = "%Y-%m-%d", periodicity) {
     time_periods <- vertical$time
     vertical <- as.matrix(vertical[, -1])
     rownames(vertical) <- as.character(time_periods)
-    return(check_vertical(vertical, date_format = date_format, periodicity = periodicity))
+    return(check_vertical(
+        vertical,
+        date_format = date_format,
+        periodicity = periodicity
+    ))
 }
 
 from_long_to_horizontal <- function(x) {
@@ -191,7 +230,12 @@ from_vertical_to_long <- function(x, date_format = "%Y-%m-%d") {
         )
     } else if (frequency(x) == 4L) {
         time_period <- seq.Date(
-            from = as.Date(paste0(start(x)[1], "-", 3 * start(x)[2] - 2, "-01")),
+            from = as.Date(paste0(
+                start(x)[1],
+                "-",
+                3 * start(x)[2] - 2,
+                "-01"
+            )),
             by = "quarter",
             length.out = nrow(x)
         )
@@ -199,7 +243,11 @@ from_vertical_to_long <- function(x, date_format = "%Y-%m-%d") {
     rownames(vertical) <- as.character(time_period)
 
     long <- reshape(
-        data = data.frame(time = rownames(vertical), vertical, check.names = FALSE),
+        data = data.frame(
+            time = rownames(vertical),
+            vertical,
+            check.names = FALSE
+        ),
         direction = "long",
         varying = colnames(vertical),
         v.names = "obs_values",
@@ -227,7 +275,12 @@ from_vertical_to_horizontal <- function(x, date_format = "%Y-%m-%d") {
         )
     } else if (frequency(x) == 4L) {
         time_period <- seq.Date(
-            from = as.Date(paste0(start(x)[1], "-", 3 * start(x)[2] - 2, "-01")),
+            from = as.Date(paste0(
+                start(x)[1],
+                "-",
+                3 * start(x)[2] - 2,
+                "-01"
+            )),
             by = "quarter",
             length.out = nrow(x)
         )
@@ -247,7 +300,11 @@ from_horizontal_to_long <- function(x, date_format = "%Y-%m-%d") {
     horizontal <- check_horizontal(x, date_format = date_format)
 
     long <- reshape(
-        data = data.frame(revdate = rownames(horizontal), horizontal, check.names = FALSE),
+        data = data.frame(
+            revdate = rownames(horizontal),
+            horizontal,
+            check.names = FALSE
+        ),
         direction = "long",
         varying = colnames(horizontal),
         v.names = "obs_values",
@@ -264,12 +321,20 @@ from_horizontal_to_long <- function(x, date_format = "%Y-%m-%d") {
     return(long)
 }
 
-from_horizontal_to_vertical <- function(x, date_format = "%Y-%m-%d", periodicity) {
+from_horizontal_to_vertical <- function(
+    x,
+    date_format = "%Y-%m-%d",
+    periodicity
+) {
     horizontal <- check_horizontal(x, date_format = date_format)
     return(check_vertical(t(horizontal), date_format, periodicity))
 }
 
-from_horizontal_to_diagonal <- function(x, date_format = "%Y-%m-%d", periodicity) {
+from_horizontal_to_diagonal <- function(
+    x,
+    date_format = "%Y-%m-%d",
+    periodicity
+) {
     horizontal <- check_horizontal(x, date_format = date_format)
     diagonal <- apply(
         X = horizontal,
@@ -312,18 +377,19 @@ from_horizontal_to_diagonal <- function(x, date_format = "%Y-%m-%d", periodicity
 }
 
 
-
 # Create_vintages function ------------------------------------------------------
 
 create_vintages <- function(x, ...) {
     return(UseMethod("create_vintages", x))
 }
 
-create_vintages.data.frame <- function(x,
-                                       type = c("long", "horizontal", "vertical"),
-                                       date_format = "%Y-%m-%d",
-                                       periodicity = c(4L, 12L),
-                                       ...) {
+create_vintages.data.frame <- function(
+    x,
+    type = c("long", "horizontal", "vertical"),
+    date_format = "%Y-%m-%d",
+    periodicity = c(4L, 12L),
+    ...
+) {
     # check type
     type <- match.arg(type)
 
@@ -337,9 +403,16 @@ create_vintages.data.frame <- function(x,
         # Horizontal format
         horizontal <- from_long_to_horizontal(long)
         # Vertical format
-        vertical <- from_long_to_vertical(long, date_format = date_format, periodicity = periodicity)
+        vertical <- from_long_to_vertical(
+            long,
+            date_format = date_format,
+            periodicity = periodicity
+        )
         # Diagonal format
-        diagonal <- from_horizontal_to_diagonal(horizontal, periodicity = periodicity)
+        diagonal <- from_horizontal_to_diagonal(
+            horizontal,
+            periodicity = periodicity
+        )
 
         return(structure(
             list(
@@ -355,11 +428,13 @@ create_vintages.data.frame <- function(x,
     }
 }
 
-create_vintages.mts <- function(x,
-                                type = c("long", "horizontal", "vertical"),
-                                date_format = "%Y-%m-%d",
-                                periodicity = NULL,
-                                ...) {
+create_vintages.mts <- function(
+    x,
+    type = c("long", "horizontal", "vertical"),
+    date_format = "%Y-%m-%d",
+    periodicity = NULL,
+    ...
+) {
     # check type
     type <- match.arg(type)
 
@@ -374,7 +449,10 @@ create_vintages.mts <- function(x,
         # Long format
         long <- from_vertical_to_long(vertical, date_format)
         # Diagonal format
-        diagonal <- from_horizontal_to_diagonal(horizontal, periodicity = frequency(vertical))
+        diagonal <- from_horizontal_to_diagonal(
+            horizontal,
+            periodicity = frequency(vertical)
+        )
     }
 
     return(structure(
@@ -388,11 +466,13 @@ create_vintages.mts <- function(x,
     ))
 }
 
-create_vintages.matrix <- function(x,
-                                   type = c("long", "horizontal", "vertical"),
-                                   date_format = "%Y-%m-%d",
-                                   periodicity = c(4L, 12L),
-                                   ...) {
+create_vintages.matrix <- function(
+    x,
+    type = c("long", "horizontal", "vertical"),
+    date_format = "%Y-%m-%d",
+    periodicity = c(4L, 12L),
+    ...
+) {
     # check type
     type <- match.arg(type)
 
@@ -412,11 +492,18 @@ create_vintages.matrix <- function(x,
         horizontal <- check_horizontal(x, date_format = date_format)
 
         # Vertical format
-        vertical <- from_horizontal_to_vertical(horizontal, date_format = date_format, periodicity = periodicity)
+        vertical <- from_horizontal_to_vertical(
+            horizontal,
+            date_format = date_format,
+            periodicity = periodicity
+        )
         # Long format
         long <- from_horizontal_to_long(horizontal, date_format)
         # Diagonal format
-        diagonal <- from_horizontal_to_diagonal(horizontal, periodicity = frequency(vertical))
+        diagonal <- from_horizontal_to_diagonal(
+            horizontal,
+            periodicity = frequency(vertical)
+        )
     } else if (type == "vertical") {
         # Vertical format
         vertical <- check_vertical(x, date_format, periodicity)
@@ -426,7 +513,10 @@ create_vintages.matrix <- function(x,
         # Long format
         long <- from_vertical_to_long(vertical, date_format)
         # Diagonal format
-        diagonal <- from_horizontal_to_diagonal(horizontal, periodicity = frequency(vertical))
+        diagonal <- from_horizontal_to_diagonal(
+            horizontal,
+            periodicity = frequency(vertical)
+        )
     }
 
     return(structure(
@@ -449,17 +539,49 @@ create_vintages.default <- function(x, ...) {
 
 df <- data.frame(
     rev_date = c(
-        rep("2022-07-31", 4), rep("2022-08-31", 4),
-        rep("2022-09-30", 4), rep("2022-10-31", 4),
-        rep("2022-11-30", 4), rep("2022-12-31", 4),
-        rep("2023-01-31", 4), rep("2023-02-28", 4)
+        rep("2022-07-31", 4),
+        rep("2022-08-31", 4),
+        rep("2022-09-30", 4),
+        rep("2022-10-31", 4),
+        rep("2022-11-30", 4),
+        rep("2022-12-31", 4),
+        rep("2023-01-31", 4),
+        rep("2023-02-28", 4)
     ),
     time_period = c(rep(c("2022Q1", "2022Q2", "2022Q3", "2022Q4"), 8)),
     obs_value = c(
-        .8, .2, NA, NA, .8, .1, NA, NA,
-        .7, .1, NA, NA, .7, .2, .5, NA,
-        .7, .2, .5, NA, .7, .3, .7, NA,
-        .7, .2, .7, .4, .7, .3, .7, .3
+        .8,
+        .2,
+        NA,
+        NA,
+        .8,
+        .1,
+        NA,
+        NA,
+        .7,
+        .1,
+        NA,
+        NA,
+        .7,
+        .2,
+        .5,
+        NA,
+        .7,
+        .2,
+        .5,
+        NA,
+        .7,
+        .3,
+        .7,
+        NA,
+        .7,
+        .2,
+        .7,
+        .4,
+        .7,
+        .3,
+        .7,
+        .3
     )
 )
 
@@ -472,19 +594,21 @@ horizontal_1 <- vintages$horizontal_view
 vintages_1 <- create_vintages(df, type = "long", periodicity = 4L)
 vintages_2 <- create_vintages(vertical_1, type = "vertical", periodicity = 4L)
 vintages_3 <- create_vintages(vertical_2, type = "vertical", periodicity = 4L)
-vintages_4 <- create_vintages(horizontal_1, type = "horizontal", periodicity = 4L)
+vintages_4 <- create_vintages(
+    horizontal_1,
+    type = "horizontal",
+    periodicity = 4L
+)
 
 waldo::compare(vintages_1, vintages_2)
 waldo::compare(vintages_1, vintages_3)
 waldo::compare(vintages_1, vintages_4)
-
 
 # A tetsre :
 
 # - changer le format de la date
 # - changer la périodicité
 # - changer le format date mais avec lettre
-
 
 # Restes... --------------------------------------------------------------------
 

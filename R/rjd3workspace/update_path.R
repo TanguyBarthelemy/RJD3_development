@@ -8,15 +8,28 @@ check_information <- function(jws, idx_sap = NULL, idx_sai = NULL) {
     for (id_sap in idx_sap) {
         jsap_i <- rjdemetra3::.jws_sap(jws_path, idx = id_sap)
 
-        if (!is.null(idx_sai) && max(idx_sai) > rjdemetra3::.jsap_sa_count(jsap_i)) {
-            stop("The SAI n°", max(idx_sai), " doesn't exist in the SAP n°", id_sap)
+        if (
+            !is.null(idx_sai) &&
+                max(idx_sai) > rjdemetra3::.jsap_sa_count(jsap_i)
+        ) {
+            stop(
+                "The SAI n°",
+                max(idx_sai),
+                " doesn't exist in the SAP n°",
+                id_sap
+            )
         }
     }
 
     return(invisible(TRUE))
 }
 
-spreadsheet_update_path <- function(jws, new_path, idx_sap = NULL, idx_sai = NULL) {
+spreadsheet_update_path <- function(
+    jws,
+    new_path,
+    idx_sap = NULL,
+    idx_sai = NULL
+) {
     check_information(jws = jws, idx_sap, idx_sai)
 
     idx_sap <- unique(idx_sap)
@@ -38,7 +51,9 @@ spreadsheet_update_path <- function(jws, new_path, idx_sap = NULL, idx_sai = NUL
             jsai <- rjdemetra3::.jsap_sa(jsap, idx = id_sai)
 
             old_jd3_ts <- rjdemetra3::get_ts(jsai)
-            properties <- rjd3providers::spreadsheet_id_properties(old_jd3_ts$metadata$`@id`)
+            properties <- rjd3providers::spreadsheet_id_properties(
+                old_jd3_ts$metadata$`@id`
+            )
             properties$file <- new_path
             new_id <- rjd3providers::spreadsheet_to_id(properties)
 
@@ -75,7 +90,9 @@ txt_update_path <- function(jws, new_path, idx_sap = NULL, idx_sai = NULL) {
             jsai <- rjdemetra3::.jsap_sa(jsap, idx = id_sai)
 
             old_jd3_ts <- rjdemetra3::get_ts(jsai)
-            properties <- rjd3providers::txt_id_properties(old_jd3_ts$metadata$`@id`)
+            properties <- rjd3providers::txt_id_properties(
+                old_jd3_ts$metadata$`@id`
+            )
             properties$file <- new_path
             new_id <- rjd3providers::txt_to_id(properties)
 

@@ -16,13 +16,11 @@ x <- googlesheets4::read_sheet(
 
 colnames(x)
 current_v2 <- x |>
-    filter(Type == "Series",
-           !is.na(`{RJDemetra} user-defined output`)) |>
+    filter(Type == "Series", !is.na(`{RJDemetra} user-defined output`)) |>
     pull(`{RJDemetra} user-defined output`)
 
 current_v3 <- x |>
-    filter(Type == "Series",
-           !is.na(`{rjd3x13} user-defined output`)) |>
+    filter(Type == "Series", !is.na(`{rjd3x13} user-defined output`)) |>
     pull(`{rjd3x13} user-defined output`)
 
 other_v3_items <- c(
@@ -41,7 +39,10 @@ other_v3_items <- c(
     .[!startsWith(., prefix = "m-statistics.")] %>%
     .[!. %in% c("period", "adjust", "log")]
 
-mod_v3 <- rjd3x13::x13(AirPassengers, userdefined = setdiff(other_v3_items, x$`{rjd3x13} user-defined output`))
+mod_v3 <- rjd3x13::x13(
+    AirPassengers,
+    userdefined = setdiff(other_v3_items, x$`{rjd3x13} user-defined output`)
+)
 
 # classes <- mod$user_defined |> lapply(class)
 # classes[!classes %in% c("ts", "NULL")]

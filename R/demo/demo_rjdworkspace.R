@@ -50,14 +50,16 @@ transfer_series(
 
 # Existing series
 transfer_series(
-    ws_from = ws_input, ws_to = ws_output,
+    ws_from = ws_input,
+    ws_to = ws_output,
     pos_mp_from = 2,
     pos_mp_to = 2,
     print_indications = TRUE,
     replace_series = FALSE
 )
 transfer_series(
-    ws_from = ws_input, ws_to = ws_output,
+    ws_from = ws_input,
+    ws_to = ws_output,
     pos_mp_from = 2,
     pos_mp_to = 2,
     print_indications = TRUE,
@@ -66,7 +68,8 @@ transfer_series(
 
 # Missing MP
 transfer_series(
-    ws_from = ws_input, ws_to = ws_output,
+    ws_from = ws_input,
+    ws_to = ws_output,
     name_mp_from = "SAProcessing-1",
     name_mp_to = "New-SAProcessing-from-R",
     print_indications = TRUE,
@@ -74,7 +77,8 @@ transfer_series(
 )
 
 transfer_series(
-    ws_from = ws_input, ws_to = ws_output,
+    ws_from = ws_input,
+    ws_to = ws_output,
     name_mp_from = "SAProcessing-1",
     name_mp_to = "New-SAProcessing-from-R",
     print_indications = TRUE,
@@ -101,20 +105,26 @@ ws_input <- RJDemetra::load_workspace("WS/ws_input.xml")
 
 # Pas de remplacement
 replace_series(
-    ws_from = ws_input, ws_to = ws_output,
-    mp_from_name = "SAProcessing-2", mp_to_name = "SAProcessing-2",
+    ws_from = ws_input,
+    ws_to = ws_output,
+    mp_from_name = "SAProcessing-2",
+    mp_to_name = "SAProcessing-2",
     selected_series = c("RF0812", "RF1020", "RF1039")
 )
 
 replace_series(
-    ws_from = ws_input, ws_to = ws_output,
-    mp_from_name = "SAProcessing-2", mp_to_name = "SAProcessing-2",
+    ws_from = ws_input,
+    ws_to = ws_output,
+    mp_from_name = "SAProcessing-2",
+    mp_to_name = "SAProcessing-2",
     selected_series = c("RF1041", "RF1042")
 )
 
 replace_series(
-    ws_from = ws_input, ws_to = ws_output,
-    mp_from_name = "SAProcessing-2", mp_to_name = "SAProcessing-3",
+    ws_from = ws_input,
+    ws_to = ws_output,
+    mp_from_name = "SAProcessing-2",
+    mp_to_name = "SAProcessing-3",
     selected_series = c("RF1039", "RF1042")
 )
 
@@ -270,7 +280,10 @@ print(get_comment(x = sa_item_1))
 print(get_comment(x = mp3))
 
 new_sa_item_2 <- set_comment(x = sa_item_2, comment = "Commentaire depuis R")
-new_sa_item_3 <- set_comment(x = sa_item_3, comment = "Modification du commentaire depuis R")
+new_sa_item_3 <- set_comment(
+    x = sa_item_3,
+    comment = "Modification du commentaire depuis R"
+)
 
 replace_sa_item(mp = mp3, pos = 5, sa_item = new_sa_item_2)
 replace_sa_item(mp = mp3, pos = 4, sa_item = new_sa_item_3)
@@ -308,7 +321,8 @@ sa_item <- ws_output |>
 new_sa_item <- set_spec(sa_item = sa_item, spec = spec_input)
 replace_sa_item(
     mp = ws_output |> RJDemetra::get_object(3),
-    pos = 5, sa_item = new_sa_item
+    pos = 5,
+    sa_item = new_sa_item
 )
 
 RJDemetra::save_workspace(ws_output, "./WS/ws_output.xml")
@@ -329,16 +343,19 @@ move_data()
 # source("./R/rjd3workspace/new_developpements/new_change_path.R", encoding = "UTF-8")
 update_path2(
     ws_xml_path = "./WS/ws_path.xml",
-    raw_data_path = "./data_temp/path_2/data_ipi.csv", pos_mp = 1
+    raw_data_path = "./data_temp/path_2/data_ipi.csv",
+    pos_mp = 1
 )
 update_path2(
     ws_xml_path = "./WS/ws_path.xml",
-    raw_data_path = "./data_temp/path_2/data_ipi.xls", pos_mp = 2
+    raw_data_path = "./data_temp/path_2/data_ipi.xls",
+    pos_mp = 2
 )
 update_path2(
     ws_xml_path = "./WS/ws_path.xml",
     raw_data_path = "./data_temp/path_2/data_ipi.xlsx",
-    pos_mp = 3, pos_sa_item = 4
+    pos_mp = 3,
+    pos_sa_item = 4
 )
 
 move_data()

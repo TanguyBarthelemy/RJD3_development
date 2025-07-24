@@ -2,12 +2,24 @@
 
 # P2 : Seasonal adjustment in R with JD+ ----------------------------------
 
-ipi <- read.csv2("../../Présentations/Tsace_RJD_Webinar_Dec22/Data/IPI_nace4.csv")
+ipi <- read.csv2(
+    "../../Présentations/Tsace_RJD_Webinar_Dec22/Data/IPI_nace4.csv"
+)
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 # creating a TS object from a data frame
-y_raw <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 6))
-y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9))
+y_raw <- ts(
+    ipi[, "RF3030"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2019, 6)
+)
+y_new <- ts(
+    ipi[, "RF3030"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2019, 9)
+)
 
 
 # X13 v2
@@ -18,13 +30,6 @@ sa_x13_v2 # Tout est implémenté (jusqu'à un certain niveau)
 # Tramo-Seats
 sa_ts_v2 <- RJDemetra::tramoseats(y_raw, spec = "RSAfull")
 sa_ts_v2 # Tout est implémenté (jusqu'à un certain niveau)
-
-
-
-
-
-
-
 
 
 # X13 v3
@@ -49,7 +54,6 @@ sa_x13_v3$estimation_spec$regarima # Pas de print
 # - JD3_regarima_output --> JD3_REGARIMA_OUTPUT
 
 # Voir l'intérieur si il faut pas trop re-définir
-
 
 sa_x13_v3$estimation_spec$x11 # Pas de print
 sa_x13_v3$estimation_spec$benchmarking # Pas de class
@@ -80,7 +84,6 @@ sa_ts_v3$result_spec # Pareil que pour estimation_spec (recursivement)
 sa_ts_v3$user_defined
 
 
-
 # Reg-Arima part from X13 only (different default spec names, cf help pages)
 regA_v2 <- RJDemetra::regarima_x13(y_raw, spec = "RG5c")
 regA_v2
@@ -93,12 +96,10 @@ tramo_v2
 sa_regarima_v3 <- rjd3x13::regarima(y_raw, spec = "RG5c")
 # Tout est inclus dans sa_x13_v3
 
-
 # Tramo seats
 # sa_tramo_v3 <- rjd3tramoseats::tramo(y_raw, spec = "TRfull")
 
 # "fast." versions...(just results, cf output structure)
-
 
 # X11 (spec option)
 X11_v2 <- RJDemetra::x13(y_raw, spec = "X11")
@@ -185,7 +186,6 @@ sa_x13_v3_UD$user_defined$decomposition.b1
 plot(sa_x13_v2, type_chart = "sa-trend", first_date = c(2015, 1))
 # plot(sa_x13_v2, type = "cal-seas-irr", first_date = c(2015, 1))
 
-
 # regarima
 layout(matrix(1:6, 3, 2))
 plot(sa_x13_v2$regarima, ask = FALSE)
@@ -212,7 +212,8 @@ ggplot2::autoplot(sa_x13_v3)
 # adding user defined ouliers
 # first create a new spec modifying the previous one
 spec_1 <- x13_spec(sa_x13_v2)
-spec_2 <- x13_spec(spec_1,
+spec_2 <- x13_spec(
+    spec_1,
     estimate.from = "2004-01-01",
     usrdef.outliersEnabled = TRUE,
     usrdef.outliersType = c("LS", "AO"),
@@ -233,20 +234,21 @@ spec_1 <- sa_x13_v3_UD$estimation_spec
 
 # set a new spec
 ## add outliers
-spec_2 <- rjd3modelling::add_outlier(spec_1,
-    type = c("AO"), c("2015-01-01", "2010-01-01")
+spec_2 <- rjd3modelling::add_outlier(
+    spec_1,
+    type = c("AO"),
+    c("2015-01-01", "2010-01-01")
 )
 ## set trading days
-spec_2 <- rjd3modelling::set_tradingdays(spec_2,
-    option = "workingdays"
-)
+spec_2 <- rjd3modelling::set_tradingdays(spec_2, option = "workingdays")
 # set x11 options
 spec_2 <- set_x11(spec_2, henderson.filter = 13)
 # apply with `fast.x13` (results only)
 fast.x13(y, spec_2)
 
 # defining user defined trading days
-spec_td <- x13_spec(spec_1,
+spec_td <- x13_spec(
+    spec_1,
     tradingdays.option = "UserDefined",
     tradingdays.test = "None",
     usrdef.varEnabled = TRUE,
@@ -257,7 +259,8 @@ spec_td <- x13_spec(spec_1,
 # new sa processing
 sa_x13_v2_4 <- x13(y_raw, spec_td)
 # user defined intervention variable
-spec_int <- x13_spec(spec_1,
+spec_int <- x13_spec(
+    spec_1,
     usrdef.varEnabled = TRUE,
     # the user defined variable will be assigned to the trend component
     usrdef.varType = "Trend",
@@ -268,7 +271,12 @@ sa_x13_v2_5 <- x13(y_raw, spec_int)
 
 
 # define a user defined trading days regressor
-td_reg1 <- rjd3modelling::td(12, start = start(y_raw), length = length(y_raw), groups = c(1, 1, 1, 1, 1, 0, 0))
+td_reg1 <- rjd3modelling::td(
+    12,
+    start = start(y_raw),
+    length = length(y_raw),
+    groups = c(1, 1, 1, 1, 1, 0, 0)
+)
 
 # define a context
 my_context <- rjd3modelling::modelling_context(variables = list(a = xvar))
@@ -278,7 +286,11 @@ spec_td <- rjd3x13::spec_regarima_default(name = "rg3") |>
     rjd3modelling::add_usrdefvar(id = "r.a")
 
 # new reg-arima estimation
-reg_a_estimation <- rjd3x13::regarima(window(ts, start = 1985, end = 2013), spec_td, context = my_context)
+reg_a_estimation <- rjd3x13::regarima(
+    window(ts, start = 1985, end = 2013),
+    spec_td,
+    context = my_context
+)
 
 
 sa_x13_v3$estimation_spec$regarima$arima
@@ -289,7 +301,8 @@ current_result_spec <- sa_x13_v3$result_spec
 current_domain_spec <- sa_x13_v3$estimation_spec
 
 # generate NEW spec for refresh
-refreshed_spec <- x13.refresh(current_result_spec, # point spec to be refreshed
+refreshed_spec <- x13.refresh(
+    current_result_spec, # point spec to be refreshed
     current_domain_spec, # domain spec (set of constraints)
     policy = "Outliers",
     period = 12, # monthly series
@@ -306,28 +319,35 @@ rjd3highfreq::fractionalAirlineEstimation(
     df_daily$log_births, # here series in log
     x = q, # q= calendar
     periods = 7, # approx  c(7,365.25)
-    ndiff = 2, ar = FALSE, mean = FALSE,
+    ndiff = 2,
+    ar = FALSE,
+    mean = FALSE,
     outliers = c("ao", "wo", "LS"),
     # WO compensation
     criticalValue = 0, # computed in the algorithm
-    precision = 1e-9, approximateHessian = TRUE
+    precision = 1e-9,
+    approximateHessian = TRUE
 )
 
 # calendar regressors can be defined with the rjd3modelling package
 
 # step 1: p=7
-x11.dow <- rjd3highfreq::x11(exp(pre.mult$model$linearized),
+x11.dow <- rjd3highfreq::x11(
+    exp(pre.mult$model$linearized),
     period = 7, # DOW pattern
     mul = TRUE,
     trend.horizon = 9, # 1/2 Filter length : not too long vs p
     trend.degree = 3, # Polynomial degree
     trend.kernel = "Henderson", # Kernel function
     trend.asymmetric = "CutAndNormalize", # Truncation method
-    seas.s0 = "S3X9", seas.s1 = "S3X9", # Seasonal filters
-    extreme.lsig = 1.5, extreme.usig = 2.5
+    seas.s0 = "S3X9",
+    seas.s1 = "S3X9", # Seasonal filters
+    extreme.lsig = 1.5,
+    extreme.usig = 2.5
 ) # Sigma-limits
 # step 2: p=365.25
-x11.doy <- rjd3highfreq::x11(x11.dow$decomposition$sa, # previous sa
+x11.doy <- rjd3highfreq::x11(
+    x11.dow$decomposition$sa, # previous sa
     period = 365.2425, # DOY pattern
     mul = TRUE
 ) # other parameters skipped here
@@ -340,7 +360,8 @@ amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
     period = 365.2425, # DOY pattern
     sn = FALSE, # Signal (SA)-noise decomposition
     stde = FALSE, # Compute standard deviations
-    nbcasts = 0, nfcasts = 0
+    nbcasts = 0,
+    nfcasts = 0
 ) # Numbers of back- and forecasts
 
 library("rjd3modelling")
@@ -349,10 +370,7 @@ fr_cal <- calendar.new()
 calendar.holiday(fr_cal, "NEWYEAR")
 calendar.holiday(fr_cal, "EASTERMONDAY")
 calendar.holiday(fr_cal, "MAYDAY")
-calendar.fixedday(fr_cal,
-    month = 5, day = 8,
-    start = "1982-01-01"
-)
+calendar.fixedday(fr_cal, month = 5, day = 8, start = "1982-01-01")
 # calendar.holiday(fr_cal, "WHITMONDAY") # Equivalent to:
 calendar.easter(fr_cal, offset = 61)
 
@@ -383,7 +401,8 @@ ls <- ls.variable(s = s, date = "2001-01-01")
 tc <- tc.variable(s = s, date = "2001-01-01", rate = 0.7) # Customizable rate
 so <- so.variable(s = s, date = "2003-05-01")
 ramp <- ramp.variable(s = s, range = c("2001-01-01", "2001-12-01"))
-plot(ts.union(ao, ls, tc, so, ramp),
+plot(
+    ts.union(ao, ls, tc, so, ramp),
     plot.type = "single",
     col = c("red", "lightgreen", "orange", "blue", "black")
 )
@@ -393,7 +412,8 @@ print(system.time(
     for (i in 1:1000) {
         j <- rjd3modelling::sarima.estimate(
             data = log(rjd3toolkit::ABS$X0.2.09.10.M),
-            order = c(2, 1, 1), seasonal = list(order = c(0, 1, 1), period = 12)
+            order = c(2, 1, 1),
+            seasonal = list(order = c(0, 1, 1), period = 12)
         )
     }
 ))
@@ -405,7 +425,8 @@ print(system.time(
     for (i in 1:1000) {
         r <- arima(
             x = log(rjd3toolkit::ABS$X0.2.09.10.M),
-            order = c(2, 1, 1), seasonal = list(order = c(0, 1, 1), period = 12)
+            order = c(2, 1, 1),
+            seasonal = list(order = c(0, 1, 1), period = 12)
         )
     }
 ))
@@ -414,7 +435,6 @@ print(system.time(
 
 print(j$likelihood)
 print(r)
-
 
 
 # P3 : Wrangling workspaces ----------------------------------------------------
@@ -450,7 +470,6 @@ spec_x13 <- RJDemetra::x13_spec(spec = "RSA3")
 model_sa_1 <- RJDemetra::x13(raw_data, spec = spec_x13)
 
 
-
 # P4 : Production in R ----------------------------------------------------
 
 # choose the demetra_m.csv file generated by the cruncher
@@ -478,7 +497,8 @@ condition1 <- list(
     conditions_modalities = c("Bad", "Severe")
 )
 
-BQ <- compute_score(BQ,
+BQ <- compute_score(
+    BQ,
     n_contrib_score = 5,
     conditional_indicator = list(condition1),
     na.rm = TRUE

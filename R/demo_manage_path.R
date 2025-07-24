@@ -1,4 +1,3 @@
-
 # Chargement package -----------------------------------------------------------
 
 library("rjd3x13")
@@ -63,7 +62,7 @@ set_priority(jsap, idx = 2, priority = 20L)
 set_priority(jsap, idx = 3, priority = 7L)
 
 # add to rjd3workspace: changement ou ajout d'une meta data pour le sai item (hors TS)
-put_metadata <- function (jsap, idx, key, value) {
+put_metadata <- function(jsap, idx, key, value) {
     jsai <- jsap_sai(jsap, idx = idx)
 
     meta <- .jcall(jsai, "Ljava/util/Map;", "getMeta")
@@ -128,12 +127,16 @@ get_raw_data(jsai_r)
 # from csv to csv (cf sai1): meme structure (sinon changer formats, séparateurs): faire un exemple
 getwd()
 txt_update_path(
-    jws_r, idx_sap = 1L, idx_sai = 1L,
+    jws_r,
+    idx_sap = 1L,
+    idx_sai = 1L,
     new_path = normalizePath(file.path("Data/IPI_nace4.csv"))
 )
 # xls même noms
 spreadsheet_update_path(
-    jws_r, idx_sap = 1L, idx_sai = 2L,
+    jws_r,
+    idx_sap = 1L,
+    idx_sai = 2L,
     new_path = normalizePath(file.path("Data/ipi_nace4_ind.xlsx"))
 )
 
@@ -153,4 +156,3 @@ set_ts(jsap_r, 3L, new_ts_object3) # on remplace le ts object dans le sai item 3
 # remplace aussi les raw data : garder les mêmes ....
 
 save_workspace(jws_r, "ws2.xml", replace = TRUE)
-

@@ -26,19 +26,13 @@ sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
 stop("Specific TRAMO...")
 
 spec_x13_d1 <- rjd3tramoseats::spec_tramo("trfull")
-spec_x13_d1 <- set_easter(spec_x13_d1,
-    type = "Standard"
-)
+spec_x13_d1 <- set_easter(spec_x13_d1, type = "Standard")
 
 spec_x13_d2 <- rjd3tramoseats::spec_tramo("trfull")
-spec_x13_d2 <- set_easter(spec_x13_d2,
-    type = "IncludeEaster"
-)
+spec_x13_d2 <- set_easter(spec_x13_d2, type = "IncludeEaster")
 
 spec_x13_d3 <- rjd3tramoseats::spec_tramo("trfull")
-spec_x13_d3 <- set_easter(spec_x13_d3,
-    type = "IncludeEasterMonday"
-)
+spec_x13_d3 <- set_easter(spec_x13_d3, type = "IncludeEasterMonday")
 
 waldo::compare(spec_x13_d1, spec_x13_d2)
 waldo::compare(spec_x13_d2, spec_x13_d3)
@@ -52,27 +46,32 @@ waldo::compare(sa1, sa3)
 
 # Calendar regressor ------------------
 
-french_calendar <- national_calendar(days = list(
-    fixed_day(7, 14), # Fete nationale
-    fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
-    special_day("NEWYEAR"), # Nouvelle année
-    special_day("CHRISTMAS"), # Noël
-    special_day("MAYDAY"), # 1er mai
-    special_day("EASTERMONDAY"), # Lundi de Pâques
-    special_day("ASCENSION"), # attention +39 et pas 40 jeudi ascension
-    special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
-    special_day("ASSUMPTION"), # Assomption
-    special_day("ALLSAINTSDAY"), # Toussaint
-    special_day("ARMISTICE")
-))
-
-weighted_cal <- weighted_calendar(list(french_calendar, french_calendar), c(0.1, 0.5))
-
-final_cal <- chained_calendar(french_calendar, weighted_cal, break_date = "2005-05-01")
-
-calendar_td(weighted_cal,
-    frequency = 12, start = c(1990, 12), length = 500
+french_calendar <- national_calendar(
+    days = list(
+        fixed_day(7, 14), # Fete nationale
+        fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
+        special_day("NEWYEAR"), # Nouvelle année
+        special_day("CHRISTMAS"), # Noël
+        special_day("MAYDAY"), # 1er mai
+        special_day("EASTERMONDAY"), # Lundi de Pâques
+        special_day("ASCENSION"), # attention +39 et pas 40 jeudi ascension
+        special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
+        special_day("ASSUMPTION"), # Assomption
+        special_day("ALLSAINTSDAY"), # Toussaint
+        special_day("ARMISTICE")
+    )
 )
-calendar_td(chained_calendar,
-    frequency = 12, start = c(1990, 12), length = 500
+
+weighted_cal <- weighted_calendar(
+    list(french_calendar, french_calendar),
+    c(0.1, 0.5)
 )
+
+final_cal <- chained_calendar(
+    french_calendar,
+    weighted_cal,
+    break_date = "2005-05-01"
+)
+
+calendar_td(weighted_cal, frequency = 12, start = c(1990, 12), length = 500)
+calendar_td(chained_calendar, frequency = 12, start = c(1990, 12), length = 500)

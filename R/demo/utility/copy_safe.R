@@ -12,7 +12,6 @@ pull_out_fire <- function(ws_name, id = NULL) {
     }
     secured_path <- file.path("./WS/SECURED", id)
 
-
     if (!dir.exists("./WS/SECURED/")) {
         dir.create("./WS/SECURED/")
     }
@@ -42,7 +41,8 @@ bring_back <- function(id) {
             to = "./WS",
             overwrite = TRUE,
             recursive = TRUE
-        ) |> invisible()
+        ) |>
+            invisible()
         unlink(objects_secured_path[index_object], recursive = TRUE)
     }
 

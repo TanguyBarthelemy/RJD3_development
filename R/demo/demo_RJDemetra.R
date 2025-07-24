@@ -32,7 +32,8 @@ new_ws <- new_workspace()
 new_multiprocessing(workspace = new_ws, name = "SAP-1")
 
 spec_out <- x13_spec(
-    spec = "RSA5c", usrdef.outliersEnabled = TRUE,
+    spec = "RSA5c",
+    usrdef.outliersEnabled = TRUE,
     usrdef.outliersType = c("LS", "AO"),
     usrdef.outliersDate = c("2008-10-01", "2002-01-01"),
     usrdef.outliersCoef = c(36, 14),
@@ -119,8 +120,10 @@ sa_ts <- RJDemetra::jtramoseats(ipi_c_eu[, "FR"])
 
 # Ajout d'un nouveau SA-item dans le 3ème MP
 add_sa_item(
-    workspace = ws, multiprocessing = "SAProcessing-3",
-    sa_obj = sa_ts, name = "IPI_EU_FR"
+    workspace = ws,
+    multiprocessing = "SAProcessing-3",
+    sa_obj = sa_ts,
+    name = "IPI_EU_FR"
 )
 # mp3 |> get_all_objects() |> length()
 

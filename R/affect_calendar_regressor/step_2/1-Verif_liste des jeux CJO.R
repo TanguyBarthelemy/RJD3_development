@@ -2,15 +2,12 @@
 ######      Vérification de la bonne attribution des régresseurs CJO      ######
 ################################################################################
 
-
 # Ce programme permet de:
 # 1) extraire les noms de series et les modeles associes dans le fichier xml
 # + de verifier qu'il n'y a pas de doublon -> on n'en veut pas dans le fichier xml final
 # 2) d'importer le fichier Choix_CJO + verif doublons (ca ne devrait pas etre le cas par construction)
 # 3) verifier que les deux fichiers concordent et isole les series pour lesquelles ca n'est pas le cas
 # 4) exporter des tables d'analyse si necessaire
-
-
 
 # Chargement des packages -------------------------------------------------
 
@@ -117,11 +114,13 @@ head(result)
 result[duplicated(result), ]
 # result[result$serie=="RF3212",]
 
-
-
 #### 2) Lecture des specifs retenues dans le fichier excel Choix_CJO et verif d'absence de doublons
 
-choix_cjo <- read.xlsx(file = "Choix_cjo_temp/Resultats_CJO_2022_export.xls", header = TRUE, sheetIndex = 1)
+choix_cjo <- read.xlsx(
+    file = "Choix_cjo_temp/Resultats_CJO_2022_export.xls",
+    header = TRUE,
+    sheetIndex = 1
+)
 # choix_cjo <- read.csv2(file = "V:/Methodo-ICA/Campagne_annuelle_2022/IPI/Donnees/Choix_CJO_2020.csv")
 head(choix_cjo)
 choix_cjo <- choix_cjo[, -1]
@@ -134,8 +133,6 @@ colnames(choix_cjo)[1] <- "serie" # pour homogeneiser
 # verif des doublons
 choix_cjo[duplicated(choix_cjo), ]
 # Si besoin, pour regarder les diff specifs associees à une meme serie: choix_cjo[choix_cjo$serie=="",]
-
-
 
 #### 3) Comparaison des series presentes et modeles associes à chaque serie
 
@@ -157,13 +154,14 @@ pbs <- comparaison[comparaison$divergence, ]
 pbs
 # -> pbs doit etre vide
 
-
 ### !!! attention, il faut absolument que chaque serie n'apparaisse qu'une seule fois dans chaque fichier/ws!!
 # Sinon ca cree des decalages.
 
-
-
 #### 4) Si besoin d'exporter
 
-write.csv2(pbs, "N:/L120/SECTION IIA/CVS/Analyse IPI/problemes_modeles.csv", row.names = FALSE)
+write.csv2(
+    pbs,
+    "N:/L120/SECTION IIA/CVS/Analyse IPI/problemes_modeles.csv",
+    row.names = FALSE
+)
 pbs

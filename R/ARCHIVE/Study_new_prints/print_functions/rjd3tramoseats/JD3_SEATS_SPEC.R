@@ -1,4 +1,7 @@
-print_JD3_SEATS_SPEC <- function(x, enable_print_style = getOption("enable_print_style")) {
+print_JD3_SEATS_SPEC <- function(
+    x,
+    enable_print_style = getOption("enable_print_style")
+) {
     if (enable_print_style) {
         style_pre_code <- "\033[4m\033[1m"
         style_post_code <- "\033[22m\033[24m"
@@ -7,7 +10,6 @@ print_JD3_SEATS_SPEC <- function(x, enable_print_style = getOption("enable_print
     }
 
     cat(style_pre_code, "Specification SEATS", style_post_code, "\n", sep = "")
-
 
     cat("Approximation mode: ", x$approximation, "\n", sep = "")
     cat("MA unit root boundary: ", x$xl, "\n", sep = "")

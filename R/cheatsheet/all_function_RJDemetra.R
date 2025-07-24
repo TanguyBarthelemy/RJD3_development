@@ -2,7 +2,6 @@
 #########          Comparaison wrangling workspace v2 --> v3           #########
 ################################################################################
 
-
 # Chargement des library -------------------------------------------------------
 
 library("RJDemetra")
@@ -64,12 +63,21 @@ View(rjdv2)
 #
 
 ws_fct <- c(
-    "new_workspace", "new_multiprocessing",
-    "load_workspace", "save_workspace",
+    "new_workspace",
+    "new_multiprocessing",
+    "load_workspace",
+    "save_workspace",
     "compute",
-    "load_spec", "save_spec",
-    "get_all_objects", "get_object", "get_name", "get_ts",
-    "get_model", "get_jmodel", "get_indicators", "count",
+    "load_spec",
+    "save_spec",
+    "get_all_objects",
+    "get_object",
+    "get_name",
+    "get_ts",
+    "get_model",
+    "get_jmodel",
+    "get_indicators",
+    "count",
     "add_sa_item"
 )
 
@@ -113,16 +121,21 @@ res_tramoseats <- tramoseats(series = y1, spec = spec_tramoseats)
 
 # All functions beginning with j
 
-
 # Access functions -------------------------------------------------------------
 
 # All functions beginning with s_
 
 ws_fct2 <- c(
-    "regarima_x13", "regarima_tramoseats", "regarima",
-    "x13", "tramoseats",
-    "regarima_spec_x13", "regarima_spec_tramoseats", "regarima_spec",
-    "x13_spec", "tramoseats_spec"
+    "regarima_x13",
+    "regarima_tramoseats",
+    "regarima",
+    "x13",
+    "tramoseats",
+    "regarima_spec_x13",
+    "regarima_spec_tramoseats",
+    "regarima_spec",
+    "x13_spec",
+    "tramoseats_spec"
 )
 
 remaining <- rjdv2_without_ws |>
@@ -131,7 +144,6 @@ remaining <- rjdv2_without_ws |>
     subset(!fct %in% ws_fct2)
 
 View(remaining)
-
 
 # Other functions --------------------------------------------------------------
 

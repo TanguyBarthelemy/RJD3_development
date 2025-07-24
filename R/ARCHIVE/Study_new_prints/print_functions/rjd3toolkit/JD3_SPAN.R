@@ -19,7 +19,14 @@ print_JD3_SPAN <- function(x, ...) {
     } else if (type == "LAST") {
         x <- paste("Last", n1, "periods", sep = " ")
     } else if (type == "EXCLUDING") {
-        x <- paste("All but first", n0, "periods and last", n1, "periods", sep = " ")
+        x <- paste(
+            "All but first",
+            n0,
+            "periods and last",
+            n1,
+            "periods",
+            sep = " "
+        )
     } else {
         x <- "Undefined"
     }

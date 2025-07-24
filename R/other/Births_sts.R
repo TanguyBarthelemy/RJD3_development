@@ -61,22 +61,27 @@ df_daily <- readRDS("./data/Births.RDS")
 library(rjd3toolkit)
 
 # Define a national calendar
-frenchCalendar <- national_calendar(days = list(
-    fixed_day(7, 14), # Bastille Day
-    fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victory Day
-    special_day("NEWYEAR"),
-    special_day("CHRISTMAS"),
-    special_day("MAYDAY"),
-    special_day("EASTERMONDAY"),
-    special_day("ASCENSION"),
-    special_day("WHITMONDAY"),
-    special_day("ASSUMPTION"),
-    special_day("ALLSAINTSDAY"),
-    special_day("ARMISTICE")
-))
+frenchCalendar <- national_calendar(
+    days = list(
+        fixed_day(7, 14), # Bastille Day
+        fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victory Day
+        special_day("NEWYEAR"),
+        special_day("CHRISTMAS"),
+        special_day("MAYDAY"),
+        special_day("EASTERMONDAY"),
+        special_day("ASCENSION"),
+        special_day("WHITMONDAY"),
+        special_day("ASSUMPTION"),
+        special_day("ALLSAINTSDAY"),
+        special_day("ARMISTICE")
+    )
+)
 # Generate calendar regressors
-q <- holidays(frenchCalendar, "1968-01-01",
-    length = length(df_daily$births), type = "All",
+q <- holidays(
+    frenchCalendar,
+    "1968-01-01",
+    length = length(df_daily$births),
+    type = "All",
     nonworking = as.integer(7)
 )
 
@@ -86,13 +91,17 @@ q <- holidays(frenchCalendar, "1968-01-01",
 library(rjd3highfreq)
 # Reg-Arima estimation
 
-pre.mult <- rjd3highfreq::fractionalAirlineEstimation(df_daily$log_births,
+pre.mult <- rjd3highfreq::fractionalAirlineEstimation(
+    df_daily$log_births,
     x = q, # q= calendar regressors matrix
     periods = c(7, 365.25),
-    ndiff = 2, ar = FALSE, mean = FALSE,
+    ndiff = 2,
+    ar = FALSE,
+    mean = FALSE,
     outliers = c("ao", "wo"), # type of outliers detected
     criticalValue = 0, # automatically set
-    precision = 1e-9, approximateHessian = TRUE
+    precision = 1e-9,
+    approximateHessian = TRUE
 )
 
 # Retrieving estimated outlier & calendar effects (coefs, se, student)
@@ -189,8 +198,11 @@ pre.mult <- rjd3highfreq::fractionalAirlineEstimation(df_daily$log_births,
 
 # Copyright: Brian Monsell, BLS (code version of 29 July 2020)
 
-set_critical_value <- function(dnobs, # Effective number of observations
-                               Cvalfa = 0.01) { # Level of significance
+set_critical_value <- function(
+    dnobs, # Effective number of observations
+    Cvalfa = 0.01
+) {
+    # Level of significance
     pmod <- 2.0 - sqrt(1.0 + Cvalfa)
     acv <- sqrt(2.0 * log(dnobs))
     bcv <- acv - (log(log(dnobs)) + log(2.0 * 2.0 * pi)) / (2.0 * acv)
@@ -209,19 +221,28 @@ library(rjd3sts)
 ###  model on the linearized data from extended airline
 bsm <- model()
 # create components
-llt <- locallineartrend("llt",
-    levelVariance = .01, fixedLevelVariance = FALSE,
-    slopevariance = .01, fixedSlopeVariance = FALSE
+llt <- locallineartrend(
+    "llt",
+    levelVariance = .01,
+    fixedLevelVariance = FALSE,
+    slopevariance = .01,
+    fixedSlopeVariance = FALSE
 )
 
-seasDOW <- seasonal("seasDOW",
-    period = 7, type = "Trigonometric",
-    variance = .01, fixed = FALSE
+seasDOW <- seasonal(
+    "seasDOW",
+    period = 7,
+    type = "Trigonometric",
+    variance = .01,
+    fixed = FALSE
 )
 
-seasDOY <- seasonal("seasDOY",
-    period = 365.2425, type = "Trigonometric",
-    variance = .01, fixed = FALSE
+seasDOY <- seasonal(
+    "seasDOY",
+    period = 365.2425,
+    type = "Trigonometric",
+    variance = .01,
+    fixed = FALSE
 )
 
 noise <- noise("wn", variance = .01, fixed = FALSE)
@@ -248,9 +269,12 @@ data <- as.numeric(pre.mult$model$linearized)
 ## collect computing times
 start <- Sys.time()
 
-rslt <- rjd3sts::estimate(bsm, data,
+rslt <- rjd3sts::estimate(
+    bsm,
+    data,
     marginal = FALSE,
-    concentrated = TRUE, initialization = "SqrtDiffuse"
+    concentrated = TRUE,
+    initialization = "SqrtDiffuse"
 )
 end <- Sys.time()
 

@@ -2,9 +2,7 @@
 
 # Import data -------------------------------------------------------------
 
-raw_series_ipi <- read.csv("./data/IPI_nace4.csv",
-    sep = ";", dec = "."
-)
+raw_series_ipi <- read.csv("./data/IPI_nace4.csv", sep = ";", dec = ".")
 
 series_ipi_ts <- raw_series_ipi |>
     ts(start = 1994L, frequency = 12L)
