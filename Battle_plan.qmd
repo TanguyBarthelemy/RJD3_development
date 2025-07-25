@@ -48,6 +48,21 @@ Currently working on (details in TOPICS..)
 - Anna Holes and vignettes (5main)
     - rjd3workspace 
     - ...
+    
+#### Toolkit to cran 
+
+see issue with list 
+
+- distribs 
+reste : verif avec R base 
+mail JP for inverse Gaussian 
+
+#### Topics around toolkit 
+
+- saiso det (trigo, buys b)
+
+- package uroot et bilan test saiso 
+(cf old doc nbb, cf txt post disc JP, canova)
 
 ### Output doc 
 
@@ -55,80 +70,11 @@ Currently working on (details in TOPICS..)
 link to java dico ?
 pb = mise en forme (check first)
 
+do
 - idem tramoseats
 - str d'un modele complet print and document 
 
-### Tanguy 
 
-
-
-
-#### Prod Ipi et ICA 2025
-
-Ipi prep et orga / 
-
-- reu de calendrier à organiser direct à la rentrée 
-
-- obj comp WS ref auto 
-
-- prep prod en v3 GUI et R
-
-
-Ica prep et orga 
-
-- reu de calendrier à organiser mi janvier (Florian Lecrivain)
-
-- attendre d'avoir fini l'ipi pour commencer 
-
-#### CRAN
-
-relance dialogue sur version java 
-
-#### JD+ et packages 
-
-Issues / Dvlpter meeting 
-
-#### Nettoyage N
-
-"N:/L120/SECTION MTS/JD_Installation_configuration"
-
-simple fichier de texte avec des liens ?
-
-"N:/L120/SECTION MTS/Admin_Section"
-
-mettre à jour calendrier concours 
-
-deplacer fichiier envt de travail dans 
-"N:/L120/SECTION MTS/JD_Installation_configuration" (?)
-
-
-
-#### Functions to transfer to rjd3providers 
-
-data_to_ts()
-    Promote a R time series to a "full" ts of JDemetra+
-
-	
-to_ts()
-    Creates a time series object
-
-to_tscollection()
-    Creates a collection of time series
-
-
-#### JD Cruncher 
-
-Done
-
-- adaptation to tramo (first in v2)= if tramo remove (!!) all the x11 specific tests
-
-- adaptation to v3
-
-#### rjd3toolkit 
-
-- functions time series to rjd3providers (see timeseries.R)
-
-- likelihood becomes .likelihood
 
 #### output et dicos 
 
@@ -142,27 +88,6 @@ gros tableau
 
 ## DT on SA production 
 
-### Format et Structure Repos
-
-objectif : DT = book, 2 books : 1 in english, 2 en français
-
-Step 1: produire le DT in English (roughly)
-
-1 Repo de travail (privé): Production chain description 
-
-contient 
-1 le book = DT in english (with R code..)
-
-2 additionnal resources, useful to write the book
-
-3 R development (rjd3 production)= > use rjd3development + repo for package
-
-Step 1b: repo public pour DT anglais 
-
-
-Step 2: repo à créer pour DT en français (public)
-
-DT = book pdf + page de garde
 
 ## JD+ online Documentation 
 
@@ -261,10 +186,6 @@ DOC
 
 ### R packages V2
 
-#### RJDemetra 
-
-add : print model span 
-
 
 #### rjdqa 
 
@@ -274,22 +195,7 @@ REVIEW
 
 alain : tableau supplementaitre
 
-#### JD Cruncher 
 
-- adaptation to tramo (first in v2)= if tramo remove (!!) all the x11 specific tests
-
-- adaptation to v3
-
-- parametrage poids indicateurs: up date doc + example! done ??
-
-- ajouter valeurs coefficients et p-values (pour selection cjo) 
-
-aujourd'hui: ajout params dans options d'output, lecture ad hoc de demetra_m.csv
-but lire direct avec JDCruncheR (to do 1h)
-
-- test validité chemin avant de cruncher (to do 1h)
-
-- habillage output sans excel 
 
                                                                                                                                  
 
