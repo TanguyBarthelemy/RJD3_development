@@ -1,6 +1,4 @@
-raw_series_ipi <- read.csv("./data/IPI_nace4.csv",
-    sep = ";", dec = "."
-)
+raw_series_ipi <- read.csv("./data/IPI_nace4.csv", sep = ";", dec = ".")
 series_ipi_ts <- raw_series_ipi |>
     ts(start = 1990L, frequency = 12L)
 
@@ -23,9 +21,11 @@ mod <- RJDemetra::x13(
 )
 
 # Ici il ne faut pas formatter en ts
-RJDemetra::x13(ts(raw_series_ipi[, 1], start = 1990, frequency = 12), spec = spec) # erreur à cause du format date
+RJDemetra::x13(
+    ts(raw_series_ipi[, 1], start = 1990, frequency = 12),
+    spec = spec
+) # erreur à cause du format date
 #-----------------------------------------------------
-
 
 create_reg_cjo_sets <- function(regs_cjo) {
     REG1 <- regs_cjo[, "REG1_AC1", drop = FALSE]
@@ -40,24 +40,40 @@ create_reg_cjo_sets <- function(regs_cjo) {
         REG2 = regs_cjo[, c("REG2_AC1", "REG2_AC2")],
         REG3 = regs_cjo[, c("REG3_AC1", "REG3_AC2", "REG3_AC3")],
         REG5 = regs_cjo[, c(
-            "REG5_AC1", "REG5_AC2", "REG5_AC3",
-            "REG5_AC4", "REG5_AC5"
+            "REG5_AC1",
+            "REG5_AC2",
+            "REG5_AC3",
+            "REG5_AC4",
+            "REG5_AC5"
         )],
         REG6 = regs_cjo[, c(
-            "REG6_AC1", "REG6_AC2", "REG6_AC3",
-            "REG6_AC4", "REG6_AC5", "REG6_AC6"
+            "REG6_AC1",
+            "REG6_AC2",
+            "REG6_AC3",
+            "REG6_AC4",
+            "REG6_AC5",
+            "REG6_AC6"
         )],
         NO_CJO_LY = LY,
         REG1_LY = regs_cjo[, c("REG1_AC1", "LY")],
         REG2_LY = regs_cjo[, c("REG2_AC1", "REG2_AC2", "LY")],
         REG3_LY = regs_cjo[, c("REG3_AC1", "REG3_AC2", "REG3_AC3", "LY")],
         REG5_LY = regs_cjo[, c(
-            "REG5_AC1", "REG5_AC2", "REG5_AC3",
-            "REG5_AC4", "REG5_AC5", "LY"
+            "REG5_AC1",
+            "REG5_AC2",
+            "REG5_AC3",
+            "REG5_AC4",
+            "REG5_AC5",
+            "LY"
         )],
         REG6_LY = regs_cjo[, c(
-            "REG6_AC1", "REG6_AC2", "REG6_AC3",
-            "REG6_AC4", "REG6_AC5", "REG6_AC6", "LY"
+            "REG6_AC1",
+            "REG6_AC2",
+            "REG6_AC3",
+            "REG6_AC4",
+            "REG6_AC5",
+            "REG6_AC6",
+            "LY"
         )]
     )
 
@@ -82,7 +98,6 @@ create_spec_sets <- function() {
         return(spec)
     })
 
-
     return(spec_sets)
 }
 
@@ -91,10 +106,13 @@ spec_sets <- create_spec_sets()
 one_diagnostic <- function(serie, spec) {
     mod <- RJDemetra::x13(series = serie, spec = spec)
 
-    res_td <- mod$diagnostics$residuals_test[c(
-        "f-test on sa (td)",
-        "f-test on i (td)"
-    ), "P.value"]
+    res_td <- mod$diagnostics$residuals_test[
+        c(
+            "f-test on sa (td)",
+            "f-test on i (td)"
+        ),
+        "P.value"
+    ]
 
     note <- sum((res_td < .05) * 2:1)
     aicc <- mod$regarima$loglik["aicc", ]
@@ -103,7 +121,8 @@ one_diagnostic <- function(serie, spec) {
 }
 
 all_diagnostics <- function(serie) {
-    output <- lapply(X = spec_sets, FUN = one_diagnostic, serie = serie) |> do.call(what = rbind)
+    output <- lapply(X = spec_sets, FUN = one_diagnostic, serie = serie) |>
+        do.call(what = rbind)
     output <- cbind(
         regs = rownames(output),
         data.frame(output)
@@ -146,7 +165,10 @@ select_regs <- function(series) {
 
     output <- sapply(X = seq_len(ncol(series)), FUN = function(k) {
         name_serie <- colnames(series)[k]
-        cat(paste0("Série ", name_serie, " en cours... ", k, "/", ncol(series)), "\n")
+        cat(
+            paste0("Série ", name_serie, " en cours... ", k, "/", ncol(series)),
+            "\n"
+        )
         return(select_reg_one_serie(series[, k], name = name_serie))
     })
     output <- cbind(serie = colnames(series), reg_selected = output)

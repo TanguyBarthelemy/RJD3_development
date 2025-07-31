@@ -13,7 +13,6 @@
 #   5) Utilisation du package ggdemetra
 #   6) Création de rapport automatisés avec rjdmarkdown
 
-
 # Paramètres et initialisation -------------------------------------------------
 
 # Si RJDemetra n'est pas installé sur votre poste,
@@ -67,30 +66,51 @@ serie_brute <- ipi_3030_ts
 # Regresseurs cjo
 regs_cjo <- read.csv("./data/regs_cjo.csv", sep = ";", dec = ".")
 reg1 <- ts(subset(regs_cjo, select = REG1_AC1), start = 1990, frequency = 12)
-reg2 <- ts(subset(regs_cjo, select = c(REG2_AC1, REG2_AC2)),
-    start = 1990, frequency = 12
+reg2 <- ts(
+    subset(regs_cjo, select = c(REG2_AC1, REG2_AC2)),
+    start = 1990,
+    frequency = 12
 )
-reg3 <- ts(subset(regs_cjo, select = c(REG3_AC1, REG3_AC2, REG3_AC3)),
-    start = 1990, frequency = 12
+reg3 <- ts(
+    subset(regs_cjo, select = c(REG3_AC1, REG3_AC2, REG3_AC3)),
+    start = 1990,
+    frequency = 12
 )
 reg5 <- ts(
-    subset(regs_cjo, select = c(
-        REG5_AC1, REG5_AC2, REG5_AC3,
-        REG5_AC4, REG5_AC5
-    )),
-    start = 1990, frequency = 12
+    subset(
+        regs_cjo,
+        select = c(
+            REG5_AC1,
+            REG5_AC2,
+            REG5_AC3,
+            REG5_AC4,
+            REG5_AC5
+        )
+    ),
+    start = 1990,
+    frequency = 12
 )
 reg6 <- ts(
-    subset(regs_cjo, select = c(
-        REG6_AC1, REG6_AC2, REG6_AC3,
-        REG6_AC4, REG6_AC5, REG6_AC6
-    )),
-    start = 1990, frequency = 12
+    subset(
+        regs_cjo,
+        select = c(
+            REG6_AC1,
+            REG6_AC2,
+            REG6_AC3,
+            REG6_AC4,
+            REG6_AC5,
+            REG6_AC6
+        )
+    ),
+    start = 1990,
+    frequency = 12
 )
 
 # Variable d'intervention = régresseur externe
-reg_externe_df <- read.csv("./data/regresseur_externe.csv",
-    sep = ";", dec = "."
+reg_externe_df <- read.csv(
+    "./data/regresseur_externe.csv",
+    sep = ";",
+    dec = "."
 )
 reg_externe_ts <- ts(reg_externe_df[, -1], start = c(1990, 1), frequency = 12)
 
@@ -201,7 +221,6 @@ model_sa_x13$diagnostics$variance_decomposition
 
 # Cadre = pre-ajustement + decomposion
 
-
 ### Modèle 2 -------------------------------------------------------------------
 
 #### Specs ---------------------------------------------------------------------
@@ -225,7 +244,6 @@ spec_2 <- x13_spec(
 # le modèle REG-ARIMA sera ré-estimé à partir du  "2004-01-01"
 # La décomposition sera faite sur toute la période néanmoins
 
-
 #### SA processing -------------------------------------------------------------
 
 model_sa_x13_2 <- x13(serie_brute, spec = spec_2)
@@ -245,9 +263,12 @@ model_sa_x13_2 <- x13(serie_brute, spec = spec_2)
 # Le coefficient de la moyenne mobile saisonnière ma(1) ("arima.bq = 1) n'est
 # pas fixé par l'utilisateur ("Undefined")
 spec_3 <- x13_spec(
-    spec = spec_1, automdl.enabled = FALSE,
-    arima.p = 1, arima.q = 1,
-    arima.bp = 0, arima.bq = 1,
+    spec = spec_1,
+    automdl.enabled = FALSE,
+    arima.p = 1,
+    arima.q = 1,
+    arima.bp = 0,
+    arima.bq = 1,
     arima.coefEnabled = TRUE,
     arima.coef = c(-.8, -.6, 0), # 0 stands for not fixed
     arima.coefType = c(rep("Fixed", 2), "Undefined")
@@ -375,7 +396,8 @@ added_user_variables <- user_defined_variables("X13-ARIMA")[
 print(added_user_variables)
 
 # Model avec des user-defined
-model_sa_x13_UD <- x13(serie_brute,
+model_sa_x13_UD <- x13(
+    serie_brute,
     spec = "RSA5c",
     userdefined = added_user_variables
 )
@@ -413,7 +435,8 @@ ipi_RF2740_plot <- ggplot(
     geom_line() +
     labs(
         title = "Industrial Production Index (IPI)",
-        x = "date", y = "RF2740"
+        x = "date",
+        y = "RF2740"
     )
 ipi_RF2740_plot
 
@@ -424,7 +447,8 @@ spec_RSA3_WD <- RJDemetra::x13_spec("RSA3", tradingdays.option = "WorkingDays")
 enhanced_plot <- ipi_RF2740_plot +
     # fonction "geom_sa" : ajouts de SA composants
     geom_sa(
-        component = "y_f", linetype = 2,
+        component = "y_f",
+        linetype = 2,
         spec = spec_RSA3_WD
     ) +
     geom_sa(component = "sa", color = "red") +
@@ -433,17 +457,21 @@ enhanced_plot <- ipi_RF2740_plot +
     geom_outlier(
         geom = "label_repel",
         vjust = 4,
-        ylim = c(NA, 65), force = 10,
+        ylim = c(NA, 65),
+        force = 10,
         arrow = arrow(
             length = unit(.03, "npc"),
-            type = "closed", ends = "last"
+            type = "closed",
+            ends = "last"
         )
     ) +
     # Ajout du modèle Arima
     geom_arima(
         geom = "label",
-        x_arima = -Inf, y_arima = -Inf,
-        vjust = -1, hjust = -.1,
+        x_arima = -Inf,
+        y_arima = -Inf,
+        vjust = -1,
+        hjust = -.1,
         message = FALSE
     )
 
@@ -459,7 +487,9 @@ diagnostics <- c(
 enhanced_plot +
     geom_diagnostics(
         diagnostics = diagnostics,
-        ymin = 130, ymax = 200, xmin = 2019,
+        ymin = 130,
+        ymax = 200,
+        xmin = 2019,
         table_theme = gridExtra::ttheme_default(base_size = 6)
     )
 
@@ -467,7 +497,6 @@ enhanced_plot +
 # rjdmarkdown ------------------------------------------------------------------
 
 # Préparation de rapports automatiques avec rjdmarkdown
-
 
 # print_preprocessing() pour le modèle du pré-ajustement
 # print_decomposition() pour la décomposition
@@ -483,11 +512,13 @@ print_diagnostics(model_sa_x13)
 # Creation fichier markdown directement
 jsa_x13 <- RJDemetra::jx13(serie_brute)
 
-create_rmd(jsa_x13,
+create_rmd(
+    jsa_x13,
     output_file = "./output/rapport_ipi_3030.Rmd",
     output_format = "pdf_document"
 )
-create_rmd(jsa_x13,
+create_rmd(
+    jsa_x13,
     output_file = "./output/rapport_ipi_3030.Rmd",
     output_format = "html_document"
 )

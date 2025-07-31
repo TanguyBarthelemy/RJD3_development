@@ -22,15 +22,27 @@ setwd("../../../../Production/SSMSI/")
 
 # liste WS = liste des fichiers xml du repertoire
 # On doit obtenir les .xml WS_export_choix_cjo.xml et WS_import_choix_cjo.xml
-WS_xml <- list.files(path = "./Choix CJO/WS", pattern = "*.xml", full.names = TRUE)
+WS_xml <- list.files(
+    path = "./Choix CJO/WS",
+    pattern = "*.xml",
+    full.names = TRUE
+)
 
 # liste des dossier ws : idem sans le .xml
 # On doit obtenir les dossiers WS_export_choix_cjo et WS_import_choix_cjo
-WS_dossier <- list.dirs(path = "./Choix CJO/WS", full.names = TRUE, recursive = FALSE)
+WS_dossier <- list.dirs(
+    path = "./Choix CJO/WS",
+    full.names = TRUE,
+    recursive = FALSE
+)
 
 # liste des noms de WS
 # On doit obtenir les dossiers WS_export_choix_cjo et WS_import_choix_cjo
-WS_name <- list.dirs(path = "./Choix CJO/WS", full.names = FALSE, recursive = FALSE)
+WS_name <- list.dirs(
+    path = "./Choix CJO/WS",
+    full.names = FALSE,
+    recursive = FALSE
+)
 
 
 # Paramètres et options du cruncher --------------------------------------------
@@ -43,7 +55,9 @@ getOption("cruncher_bin_directory")
 # Exemple d'option à poser :
 # options(cruncher_bin_directory = "Y:/Logiciels/jwsacruncher-2.2.0/jdemetra-cli-2.2.0/bin")
 # options(cruncher_bin_directory = "Y:/Logiciels/JDemetraplus/jwsacruncher-2.2.3/bin/")
-options(cruncher_bin_directory = "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.4/bin/")
+options(
+    cruncher_bin_directory = "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.4/bin/"
+)
 
 # Séries issues de la décomposition
 getOption("default_tsmatrix_series")
@@ -128,7 +142,12 @@ getOption("default_matrix_item")
 #                                 "diagnostics.residual trading days tests.f-test on i (td):2",
 #                                 "diagnostics.quality"
 # ))
-options(default_matrix_item = c(getOption("default_matrix_item"), "regression.td(*):4"))
+options(
+    default_matrix_item = c(
+        getOption("default_matrix_item"),
+        "regression.td(*):4"
+    )
+)
 
 
 # Calcul des bilans qualité  ---------------------------------------------------
@@ -153,8 +172,16 @@ for (i_ws in seq_along(WS_xml)) {
     print("✔️️ Crunché !")
 
     # Liste des SA processing = sous-répertoire du dossier Output
-    SAP_dossier <- list.dirs(paste0(WS_dossier[i_ws], "/Output"), recursive = FALSE, full.names = TRUE)
-    SAP_nom <- list.dirs(paste0(WS_dossier[i_ws], "/Output"), recursive = FALSE, full.names = FALSE)
+    SAP_dossier <- list.dirs(
+        paste0(WS_dossier[i_ws], "/Output"),
+        recursive = FALSE,
+        full.names = TRUE
+    )
+    SAP_nom <- list.dirs(
+        paste0(WS_dossier[i_ws], "/Output"),
+        recursive = FALSE,
+        full.names = FALSE
+    )
 
     # On initialise une liste qui contiendra les informations pour chaque SAP
     liste_BQ_sap <- list()
@@ -166,7 +193,8 @@ for (i_ws in seq_along(WS_xml)) {
         # on recupere les diagnostics
         BQ <- extract_QR(paste0(SAP_dossier[i_sap], "/demetra_m.csv"))
         # on calcule le score
-        BQ <- compute_score(BQ,
+        BQ <- compute_score(
+            BQ,
             n_contrib_score = 5,
             conditional_indicator = list(list(
                 indicator = "oos_mse",
@@ -200,8 +228,16 @@ for (i_ws in seq_along(WS_xml)) {
     print(paste0("WS n°", i_ws, " : ", WS_name[i_ws]))
 
     # récupération des noms de chaque SA processing ainsi que de leur chemin
-    SAP_nom <- list.dirs(paste0(WS_dossier[i_ws], "/Output"), recursive = FALSE, full.names = FALSE)
-    SAP_dossier <- list.dirs(paste0(WS_dossier[i_ws], "/Output"), recursive = FALSE, full.names = TRUE)
+    SAP_nom <- list.dirs(
+        paste0(WS_dossier[i_ws], "/Output"),
+        recursive = FALSE,
+        full.names = FALSE
+    )
+    SAP_dossier <- list.dirs(
+        paste0(WS_dossier[i_ws], "/Output"),
+        recursive = FALSE,
+        full.names = TRUE
+    )
 
     # On initialise une liste qui contiendra les informations pour chaque SAP
     liste_sap <- list()
@@ -212,13 +248,20 @@ for (i_ws in seq_along(WS_xml)) {
 
         # Lecture de la matrice demetra_m
         demetra_m <- read.csv(
-            file = paste0(SAP_dossier[i_sap], "/demetra_m.csv"), sep = ";",
-            dec = ",", stringsAsFactors = FALSE, na.strings = c("NA", "?")
+            file = paste0(SAP_dossier[i_sap], "/demetra_m.csv"),
+            sep = ";",
+            dec = ",",
+            stringsAsFactors = FALSE,
+            na.strings = c("NA", "?")
         )
         head(demetra_m)
         colnames(demetra_m)
         # Noms de série
-        demetra_m$series <- gsub("(^ *)|(* $)", "", gsub("(^.* \\* )|(\\[frozen\\])", "", demetra_m$X))
+        demetra_m$series <- gsub(
+            "(^ *)|(* $)",
+            "",
+            gsub("(^.* \\* )|(\\[frozen\\])", "", demetra_m$X)
+        )
 
         # On recupere les noms des series et l'aic corrige = aicc
         df_res_jeu_cjo <- demetra_m[, c("series", "aicc")]
@@ -252,7 +295,10 @@ for (i_ws in seq_along(WS_xml)) {
             # si on a un seul regresseur JO
             if (length(td_var_names) > 1) {
                 # Ajout du ftest (= F joint)
-                td_var_table <- cbind(td_var_table, "F-test" = demetra_m$td.ftest)
+                td_var_table <- cbind(
+                    td_var_table,
+                    "F-test" = demetra_m$td.ftest
+                )
             }
 
             # Nouveaux indicateurs ajoutés au BQ = aicc + vars cjo
@@ -280,7 +326,11 @@ for (i_ws in seq_along(WS_xml)) {
         head(df_res_jeu_cjo)
 
         # ajout du schema
-        df_res_jeu_cjo$schema <- ifelse(demetra_m$log == 0, "Additif", "Multiplicatif")
+        df_res_jeu_cjo$schema <- ifelse(
+            demetra_m$log == 0,
+            "Additif",
+            "Multiplicatif"
+        )
         head(df_res_jeu_cjo)
 
         # ajout du modele arima
@@ -302,7 +352,11 @@ for (i_ws in seq_along(WS_xml)) {
         head(df_res_jeu_cjo)
 
         # Changement du nom avec ajout du jeu de régresseurs
-        colnames(df_res_jeu_cjo)[-1] <- paste0(colnames(df_res_jeu_cjo)[-1], "_", SAP_nom[i_sap])
+        colnames(df_res_jeu_cjo)[-1] <- paste0(
+            colnames(df_res_jeu_cjo)[-1],
+            "_",
+            SAP_nom[i_sap]
+        )
         head(df_res_jeu_cjo)
 
         # Ajout à une liste de toutes les tables des SA processing du WS
@@ -315,5 +369,15 @@ for (i_ws in seq_along(WS_xml)) {
 
 names(liste_coeff_WS) <- WS_name
 
-tot_PN <- purrr::reduce(.x = liste_coeff_WS$WS_PN_choix_cjo, .f = merge, by = "series", all = TRUE)
-tot_GN <- purrr::reduce(.x = liste_coeff_WS$WS_GN_choix_cjo, .f = merge, by = "series", all = TRUE)
+tot_PN <- purrr::reduce(
+    .x = liste_coeff_WS$WS_PN_choix_cjo,
+    .f = merge,
+    by = "series",
+    all = TRUE
+)
+tot_GN <- purrr::reduce(
+    .x = liste_coeff_WS$WS_GN_choix_cjo,
+    .f = merge,
+    by = "series",
+    all = TRUE
+)

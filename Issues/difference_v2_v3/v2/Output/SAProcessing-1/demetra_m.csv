@@ -1,0 +1,14 @@
+;mean;;mse;
+Europe * France;Good;0,546;Good;0,534
+Europe * Spain;Good;0,154;Good;0,24
+Europe * Greece;Good;0,2;Good;0,195
+Asia * China;Good;0,372;Good;0,621
+Asia * Japon;Good;0,692;Good;0,167
+Asia * India;Uncertain;0,012;Good;0,155
+Africa * Gabon;Uncertain;0,017;Uncertain;0,07
+Africa * Cameroun;Uncertain;0,085;Uncertain;0,03
+Africa * Guinée equatoriale;Good;0,947;Bad;0,004
+Africa * Namibie;Uncertain;0,059;Good;0,441
+Africa * Ethiopie;Good;0,24;Uncertain;0,048
+North America * USA;Good;0,95;Good;0,865
+North America * Canada;Good;0,818;Good;0,971

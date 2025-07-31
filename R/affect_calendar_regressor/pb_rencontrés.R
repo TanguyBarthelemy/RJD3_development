@@ -1,6 +1,4 @@
-raw_series_ipi <- read.csv("./data/IPI_nace4.csv",
-    sep = ";", dec = "."
-)
+raw_series_ipi <- read.csv("./data/IPI_nace4.csv", sep = ";", dec = ".")
 series_ipi_ts <- raw_series_ipi |>
     ts(start = 1990L, frequency = 12L)
 
@@ -23,5 +21,8 @@ mod <- RJDemetra::x13(
 )
 
 # Ici il ne faut pas formatter en ts
-RJDemetra::x13(ts(raw_series_ipi[, 1], start = 1990, frequency = 12), spec = spec) # erreur à cause du format date
+RJDemetra::x13(
+    ts(raw_series_ipi[, 1], start = 1990, frequency = 12),
+    spec = spec
+) # erreur à cause du format date
 #-----------------------------------------------------

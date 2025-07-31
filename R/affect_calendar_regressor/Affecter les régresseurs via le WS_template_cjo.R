@@ -13,7 +13,11 @@ series_ipi_ts <- raw_series_ipi |>
 
 raw_data <- series_ipi_ts[, 2:5]
 
-choix_cjo <- read.csv("./R/affect_calendar_regressor/regs_chosen.csv", sep = ";", dec = ".")
+choix_cjo <- read.csv(
+    "./R/affect_calendar_regressor/regs_chosen.csv",
+    sep = ";",
+    dec = "."
+)
 
 ws_cjo <- load_workspace(file = "./WS/ws_cjo.xml")
 compute(ws_cjo)
@@ -21,9 +25,12 @@ compute(ws_cjo)
 for (i in seq_len(ncol(raw_data))) {
     name_serie <- colnames(raw_data)[i]
     regs_cjo <- choix_cjo$reg[choix_cjo$series == name_serie]
-    transfer_series(ws_cjo, ws_auto,
+    transfer_series(
+        ws_cjo,
+        ws_auto,
         selected_series = name_serie,
-        pos_sap_to = 1, name_sap_from = regs_cjo
+        pos_sap_to = 1,
+        name_sap_from = regs_cjo
     )
 }
 

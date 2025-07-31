@@ -2,7 +2,6 @@
 #######           Démonstration des packages en version 3                #######
 ################################################################################
 
-
 # Chargement des packages ------------------------------------------------------
 
 # library("rjd3toolkit")
@@ -76,8 +75,16 @@ all_sa_sap1 <- read_sap(jsap1)
 sa1_sap1 <- .jsa_read(jsa1_sap1)
 res_sa1_sap1 <- .jsa_results(jsa1_sap1)
 
-jestimation <- .jcall(jsa1_sap1, "Ljdplus/sa/base/api/SaEstimation;", "getEstimation")
-jrslt <- .jcall(jestimation, "Ljdplus/toolkit/base/api/information/Explorable;", "getResults")
+jestimation <- .jcall(
+    jsa1_sap1,
+    "Ljdplus/sa/base/api/SaEstimation;",
+    "getEstimation"
+)
+jrslt <- .jcall(
+    jestimation,
+    "Ljdplus/toolkit/base/api/information/Explorable;",
+    "getResults"
+)
 rjd3toolkit::.proc_dictionary2(jrslt)
 
 
@@ -114,7 +121,12 @@ jsa1_sap1 <- .jsap_sa(jsap1, idx = 1)
 add_sa_item(jsap = jsap1, name = "ABS_1", x = sa_x13)
 add_sa_item(jsap = jsap1, name = "ABS_2", x = sa_ts)
 add_sa_item(jsap = jsap1, name = "ABS_3", x = jsa1_sap1)
-add_sa_item(jsap = jsap1, name = "ABS_4", x = rjd3toolkit::ABS[, 1], spec = spec1)
+add_sa_item(
+    jsap = jsap1,
+    name = "ABS_4",
+    x = rjd3toolkit::ABS[, 1],
+    spec = spec1
+)
 
 # Suppression d'un SA-item du 2ème SAP
 remove_sa_item(jsap = jsap3, idx = 5)

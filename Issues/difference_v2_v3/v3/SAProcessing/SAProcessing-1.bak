@@ -7,7 +7,7 @@
 France</string>
             </item>
             <item name="ts">
-                <ts name="Europe&#10;France (frozen)" source="" identifier="d6e4abe6-fc49-4d75-81cc-723ebd16c845">
+                <ts name="Europe&#10;France (frozen)" source="" identifier="42571e42-2223-4d9e-99a8-e6f547b761f2">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -15,7 +15,7 @@ France</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=France&amp;sheetName=Europe"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>
@@ -429,7 +429,7 @@ France</string>
 Spain</string>
             </item>
             <item name="ts">
-                <ts name="Europe&#10;Spain (frozen)" source="" identifier="e314961f-11b8-4e0a-91fc-784ec6c3d2a9">
+                <ts name="Europe&#10;Spain (frozen)" source="" identifier="9dd8b5c1-1f9c-4e45-945e-0758e97c15ae">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -437,7 +437,7 @@ Spain</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=Spain&amp;sheetName=Europe"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>
@@ -1163,7 +1163,7 @@ Spain</string>
 Greece</string>
             </item>
             <item name="ts">
-                <ts name="Europe&#10;Greece (frozen)" source="" identifier="e6bfa662-cfd4-4f21-9ed8-46712d24dbd5">
+                <ts name="Europe&#10;Greece (frozen)" source="" identifier="51d05ab5-aa71-4600-8033-406286339797">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -1171,7 +1171,7 @@ Greece</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=Greece&amp;sheetName=Europe"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>
@@ -1395,7 +1395,7 @@ Greece</string>
 China</string>
             </item>
             <item name="ts">
-                <ts name="Asia&#10;China (frozen)" source="" identifier="ff7b8fcd-c9fc-43ff-ac39-698ac1774a5f">
+                <ts name="Asia&#10;China (frozen)" source="" identifier="cc16dafa-c229-4acc-aae2-5756f57fff48">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -1403,7 +1403,7 @@ China</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=China&amp;sheetName=Asia"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>
@@ -1578,7 +1578,7 @@ China</string>
 Japon</string>
             </item>
             <item name="ts">
-                <ts name="Asia&#10;Japon (frozen)" source="" identifier="db3fec94-a4be-4cc6-a04d-b21d9eefb711">
+                <ts name="Asia&#10;Japon (frozen)" source="" identifier="beaa4ab0-b7e6-4976-99c4-8c687e24f722">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -1586,7 +1586,7 @@ Japon</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=Japon&amp;sheetName=Asia"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>
@@ -1741,7 +1741,7 @@ Japon</string>
 India</string>
             </item>
             <item name="ts">
-                <ts name="Asia&#10;India (frozen)" source="" identifier="1f48ceed-c3bd-489e-b5a2-ee6285c47db9">
+                <ts name="Asia&#10;India (frozen)" source="" identifier="a9939341-3dac-4b0a-803b-193484abb5db">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -1749,7 +1749,7 @@ India</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=India&amp;sheetName=Asia"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>
@@ -1999,7 +1999,7 @@ India</string>
 Gabon</string>
             </item>
             <item name="ts">
-                <ts name="Africa&#10;Gabon (frozen)" source="" identifier="9447a9a4-e765-447d-a528-54aacf9e38f7">
+                <ts name="Africa&#10;Gabon (frozen)" source="" identifier="411ec8f9-d2a9-47b8-8348-4ce76cb5530a">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -2007,7 +2007,7 @@ Gabon</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=Gabon&amp;sheetName=Africa"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>
@@ -2316,7 +2316,7 @@ Gabon</string>
 Cameroun</string>
             </item>
             <item name="ts">
-                <ts name="Africa&#10;Cameroun (frozen)" source="" identifier="949135c5-a8a3-484b-a487-aa24cbc6674b">
+                <ts name="Africa&#10;Cameroun (frozen)" source="" identifier="3191c455-2062-4ea6-9c0f-ace82a3ad726">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -2324,7 +2324,7 @@ Cameroun</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=Cameroun&amp;sheetName=Africa"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>
@@ -2938,7 +2938,7 @@ Cameroun</string>
 Guinée equatoriale</string>
             </item>
             <item name="ts">
-                <ts name="Africa&#10;Guinée equatoriale (frozen)" source="" identifier="be3f1da1-49ec-4bbb-a769-b7fe4c9c9598">
+                <ts name="Africa&#10;Guinée equatoriale (frozen)" source="" identifier="4d8d9a16-b4f8-4d9e-8087-d3f421032409">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -2946,7 +2946,7 @@ Guinée equatoriale</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=Guin%C3%A9e+equatoriale&amp;sheetName=Africa"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>
@@ -3816,7 +3816,7 @@ Guinée equatoriale</string>
 Namibie</string>
             </item>
             <item name="ts">
-                <ts name="Africa&#10;Namibie (frozen)" source="" identifier="1fecdf07-8275-40d9-a1bf-be06679b259a">
+                <ts name="Africa&#10;Namibie (frozen)" source="" identifier="f292eac4-51c0-4759-b8cf-987bd912926c">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -3824,7 +3824,7 @@ Namibie</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=Namibie&amp;sheetName=Africa"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>
@@ -4157,7 +4157,7 @@ Namibie</string>
 Ethiopie</string>
             </item>
             <item name="ts">
-                <ts name="Africa&#10;Ethiopie (frozen)" source="" identifier="6b4211d5-a7fe-4358-a5eb-d8c17b0ad1bf">
+                <ts name="Africa&#10;Ethiopie (frozen)" source="" identifier="1d12fd18-d86c-4be5-b3b7-53485ba64cb8">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -4165,7 +4165,7 @@ Ethiopie</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=Ethiopie&amp;sheetName=Africa"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>
@@ -4389,7 +4389,7 @@ Ethiopie</string>
 USA</string>
             </item>
             <item name="ts">
-                <ts name="North America&#10;USA (frozen)" source="" identifier="1d5fc124-8b96-4db9-927e-71a7a6aaba4c">
+                <ts name="North America&#10;USA (frozen)" source="" identifier="7038ac86-c26c-4e3e-81bb-5de8fdd4db36">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -4397,7 +4397,7 @@ USA</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=USA&amp;sheetName=North+America"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>
@@ -4589,7 +4589,7 @@ USA</string>
 Canada</string>
             </item>
             <item name="ts">
-                <ts name="North America&#10;Canada (frozen)" source="" identifier="9f473115-bde5-41f4-ae60-77e300780c03">
+                <ts name="North America&#10;Canada (frozen)" source="" identifier="113304ae-acca-4b96-bd55-e1746153b5fd">
                     <freq>12</freq>
                     <firstYear>1990</firstYear>
                     <firstPeriod>1</firstPeriod>
@@ -4597,7 +4597,7 @@ Canada</string>
                     <metaData>
                         <property name="@source" value="XCLPRVDR"/>
                         <property name="@id" value="demetra://tsprovider/XCLPRVDR/20111201/SERIES?file=C%3A%5CUsers%5CUTZK0M%5CDocuments%5CProjets+R%5CProjets+MTS%5CPackages%5Crjduniverse%5Ctest%5CRJD3_development%5Cdata%5Cworld.xlsx#seriesName=Canada&amp;sheetName=North+America"/>
-                        <property name="@timestamp" value="2025-03-26"/>
+                        <property name="@timestamp" value="2025-07-22"/>
                     </metaData>
                 </ts>
             </item>

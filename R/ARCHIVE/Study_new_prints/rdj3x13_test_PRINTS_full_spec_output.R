@@ -24,7 +24,6 @@
 #   - retirer les commentaires
 # - changer nom "name" pour les user-defined variables en "label"
 
-
 # Chargement packages ----------------------------------------------------------
 
 library("rjd3toolkit")
@@ -50,8 +49,18 @@ ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 
 # creating a TS object from a data frame
-y_raw <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2021, 12))
-y_new <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022, 9))
+y_raw <- ts(
+    ipi[, "RF0812"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2021, 12)
+)
+y_new <- ts(
+    ipi[, "RF0812"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2022, 9)
+)
 
 
 # LAYERS -----------------------------------------------------------------------
@@ -118,7 +127,8 @@ print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 spec_x13_d <- set_basic(
     spec_x13_d,
     type = "Excluding",
-    n0 = 60, n1 = 60,
+    n0 = 60,
+    n1 = 60,
     preliminary.check = TRUE,
     preprocessing = TRUE
 )
@@ -180,7 +190,8 @@ spec_x13_d <- rjd3x13::spec_x13("rsa5c")
 
 spec_x13_d <- set_outlier(
     spec_x13_d,
-    span.type = "From", d0 = "2012-01-01",
+    span.type = "From",
+    d0 = "2012-01-01",
     outliers.type = c("LS", "TC"),
     # critical.value = 5,
     # tc.rate = 0.85
@@ -191,7 +202,8 @@ print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
 spec_x13_d <- set_outlier(
     spec_x13_d,
-    span.type = "Last", n1 = 60,
+    span.type = "Last",
+    n1 = 60,
     outliers.type = c("LS", "TC"),
     critical.value = 5,
     tc.rate = 0.85
@@ -230,9 +242,7 @@ sa_x13_d$result$preprocessing
 sa_x13_d$result$final
 
 # disabled
-spec_x13_d <- set_automodel(spec_x13_d,
-    enabled = FALSE
-)
+spec_x13_d <- set_automodel(spec_x13_d, enabled = FALSE)
 print_JD3_X13_SPEC(spec_x13_d)
 print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
@@ -240,7 +250,8 @@ print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
 spec_x13_d <- rjd3x13::spec_x13("rsa5c")
 
-spec_x13_d <- set_benchmarking(spec_x13_d,
+spec_x13_d <- set_benchmarking(
+    spec_x13_d,
     enabled = TRUE,
     target = "Original",
     rho = 0.8,
@@ -314,29 +325,23 @@ spec_x13_d <- rjd3x13::spec_x13("rsa5c")
 spec_x13_d <- rjd3x13::spec_x13("rsa3")
 
 # TradingDays
-spec_x13_d <- set_tradingdays(spec_x13_d,
-    option = "TradingDays"
-)
+spec_x13_d <- set_tradingdays(spec_x13_d, option = "TradingDays")
 # WD
-spec_x13_d <- set_tradingdays(spec_x13_d,
-    option = "WorkingDays"
-)
+spec_x13_d <- set_tradingdays(spec_x13_d, option = "WorkingDays")
 # TD3C
-spec_x13_d <- set_tradingdays(spec_x13_d,
-    option = "TD3c"
-)
+spec_x13_d <- set_tradingdays(spec_x13_d, option = "TD3c")
 # None
-spec_x13_d <- set_tradingdays(spec_x13_d,
-    option = "None"
-)
+spec_x13_d <- set_tradingdays(spec_x13_d, option = "None")
 # User defined + tard
 
 # Stock td
 spec_x13_d <- set_tradingdays(spec_x13_d, stocktd = 28)
 
 # Exemple avec TD4
-spec_x13_d <- set_tradingdays(spec_x13_d,
-    option = "TD4", test = "None",
+spec_x13_d <- set_tradingdays(
+    spec_x13_d,
+    option = "TD4",
+    test = "None",
     coef = c(0.7, NA, 0.5),
     coef.type = c("Fixed", "Estimated", "Fixed"),
     leapyear = "LengthOfPeriod",
@@ -349,16 +354,19 @@ spec_x13_d$regarima$regression$td
 
 
 stop("Tester Holidays")
-stop("Stock TD ne peut pas s'affichzer correctement car :
+stop(
+    "Stock TD ne peut pas s'affichzer correctement car :
      - comment est ce que c'est estimé ?
-     - si je fais stock td avant ou après un autre td (on NONE), il n'y a pas de warning ou d'error et les specs sont les mêmes...")
+     - si je fais stock td avant ou après un autre td (on NONE), il n'y a pas de warning ou d'error et les specs sont les mêmes..."
+)
 
 
 ### set_easter -----------------------------------------------------------------
 
 # Classic easter
 spec_x13_d <- rjd3x13::spec_x13("rsa5c")
-spec_x13_d <- set_easter(spec_x13_d,
+spec_x13_d <- set_easter(
+    spec_x13_d,
     enabled = TRUE,
     duration = 12,
     coef = 0.6,
@@ -378,7 +386,6 @@ print_JD3_REGARIMA_SPEC(spec_x13_d$regarima)
 
 # type = "Unused" : TRAMO specific
 # "Unused", "Standard", "IncludeEaster", "IncludeEasterMonday"
-
 
 # Estimation
 sa_x13_d <- rjd3x13::x13(y_raw, spec_x13_d)
@@ -434,20 +441,30 @@ sa_x13_d$result$preprocessing
 # (to be added with add_usrdefvar)
 
 iv1 <- intervention_variable(
-    frequency = 12, start = c(2000, 1), length = 60,
-    starts = "2001-01-01", ends = "2001-12-01"
+    frequency = 12,
+    start = c(2000, 1),
+    length = 60,
+    starts = "2001-01-01",
+    ends = "2001-12-01"
 )
 plot(iv1)
 
 iv2 <- intervention_variable(
-    frequency = 12, start = c(2000, 1), length = 60,
-    starts = "2001-01-01", ends = "2001-12-01", delta = 2
+    frequency = 12,
+    start = c(2000, 1),
+    length = 60,
+    starts = "2001-01-01",
+    ends = "2001-12-01",
+    delta = 2
 )
 plot(iv2)
 
 iv3 <- intervention_variable(
-    frequency = 12, start = c(2000, 1), length = 80,
-    starts = c("2002-01-01", "2003-05-01"), ends = c("2002-12-01", "2004-01-01")
+    frequency = 12,
+    start = c(2000, 1),
+    length = 80,
+    starts = c("2002-01-01", "2003-05-01"),
+    ends = c("2002-12-01", "2004-01-01")
 )
 plot(iv3)
 
@@ -455,30 +472,43 @@ plot(iv3)
 # (to be added with set_trading days)
 
 regs_td <- td(
-    s = y_raw, groups = c(1, 2, 3, 4, 5, 6, 0),
+    s = y_raw,
+    groups = c(1, 2, 3, 4, 5, 6, 0),
     contrasts = TRUE
 )
 
-french_calendar <- national_calendar(days = list(
-    fixed_day(7, 14), # Fete nationale
-    fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
-    special_day("NEWYEAR"), # Nouvelle année
-    special_day("CHRISTMAS"), # Noël
-    special_day("MAYDAY"), # 1er mai
-    special_day("EASTERMONDAY"), # Lundi de Pâques
-    special_day("ASCENSION"), # attention +39 et pas 40 jeudi ascension
-    special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
-    special_day("ASSUMPTION"), # Assomption
-    special_day("ALLSAINTSDAY"), # Toussaint
-    special_day("ARMISTICE")
-))
+french_calendar <- national_calendar(
+    days = list(
+        fixed_day(7, 14), # Fete nationale
+        fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
+        special_day("NEWYEAR"), # Nouvelle année
+        special_day("CHRISTMAS"), # Noël
+        special_day("MAYDAY"), # 1er mai
+        special_day("EASTERMONDAY"), # Lundi de Pâques
+        special_day("ASCENSION"), # attention +39 et pas 40 jeudi ascension
+        special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
+        special_day("ASSUMPTION"), # Assomption
+        special_day("ALLSAINTSDAY"), # Toussaint
+        special_day("ARMISTICE")
+    )
+)
 
-weighted_cal <- weighted_calendar(list(french_calendar, french_calendar), c(0.1, 0.5))
+weighted_cal <- weighted_calendar(
+    list(french_calendar, french_calendar),
+    c(0.1, 0.5)
+)
 
-final_cal <- chained_calendar(french_calendar, weighted_cal, break_date = "2005-05-01")
+final_cal <- chained_calendar(
+    french_calendar,
+    weighted_cal,
+    break_date = "2005-05-01"
+)
 
-reg_fr <- calendar_td(french_calendar,
-    frequency = 12, start = c(1990, 12), length = 500
+reg_fr <- calendar_td(
+    french_calendar,
+    frequency = 12,
+    start = c(1990, 12),
+    length = 500
 )
 
 ### Creating context for all external regressors -------------------------------
@@ -490,7 +520,8 @@ variables <- list(
     Thursday = regs_td[, 4],
     Friday = regs_td[, 5],
     Saturday = regs_td[, 6],
-    reg1 = iv1, reg2 = iv2
+    reg1 = iv1,
+    reg2 = iv2
 )
 
 my_context <- modelling_context(variables = variables)
@@ -553,7 +584,8 @@ sa_x13_d$result$preprocessing
 
 current_result_spec <- sa_x13_d$result_spec
 current_domain_spec <- sa_x13_d$estimation_spec
-spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+spec_x13_ref <- x13_refresh(
+    current_result_spec, # point spec to be refreshed
     current_domain_spec, # domain spec (set of constraints)
     policy = "FixedParameters"
 )

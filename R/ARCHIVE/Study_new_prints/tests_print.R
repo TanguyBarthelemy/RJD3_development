@@ -2,7 +2,6 @@
 #######                   Test des prints en version 3                   #######
 ################################################################################
 
-
 # Chargement des packages ------------------------------------------------------
 
 library("rjd3toolkit")
@@ -37,22 +36,27 @@ df_daily <- read.csv2("./data/TS_daily_births_franceM_1968_2020.csv") |>
 
 ### PRE TREATMENT: fractional Airline model ------------------------------------
 
-french_calendar <- national_calendar(days = list(
-    fixed_day(7, 14), # Fete nationale
-    fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
-    special_day("NEWYEAR"), # Nouvelle année
-    special_day("CHRISTMAS"), # Noël
-    special_day("MAYDAY"), # 1er mai
-    special_day("EASTERMONDAY"), # Lundi de Pâques
-    special_day("ASCENSION"), # attention +39 et pas 40 jeudi ascension
-    special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
-    special_day("ASSUMPTION"), # Assomption
-    special_day("ALLSAINTSDAY"), # Toussaint
-    special_day("ARMISTICE")
-))
+french_calendar <- national_calendar(
+    days = list(
+        fixed_day(7, 14), # Fete nationale
+        fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
+        special_day("NEWYEAR"), # Nouvelle année
+        special_day("CHRISTMAS"), # Noël
+        special_day("MAYDAY"), # 1er mai
+        special_day("EASTERMONDAY"), # Lundi de Pâques
+        special_day("ASCENSION"), # attention +39 et pas 40 jeudi ascension
+        special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
+        special_day("ASSUMPTION"), # Assomption
+        special_day("ALLSAINTSDAY"), # Toussaint
+        special_day("ARMISTICE")
+    )
+)
 
-q <- holidays(french_calendar, "1968-01-01",
-    length = length(df_daily$births), type = "All",
+q <- holidays(
+    french_calendar,
+    "1968-01-01",
+    length = length(df_daily$births),
+    type = "All",
     nonworking = 7L
 )
 
@@ -60,18 +64,25 @@ pre.mult <- fractionalAirlineEstimation(
     y = df_daily$log_births,
     x = q, # q = regs de calendrier
     periods = 7,
-    ndiff = 2, ar = FALSE, mean = FALSE,
-    outliers = c("ao", "wo"), criticalValue = 0,
-    precision = 1e-9, approximateHessian = TRUE
+    ndiff = 2,
+    ar = FALSE,
+    mean = FALSE,
+    outliers = c("ao", "wo"),
+    criticalValue = 0,
+    precision = 1e-9,
+    approximateHessian = TRUE
 )
 
 pre.mult_cal <- fractionalAirlineEstimation_new(
     y = df_daily$log_births,
     x = q, # q = regs de calendrier
     periods = c(7, 28),
-    ndiff = 2, ar = FALSE, mean = FALSE,
+    ndiff = 2,
+    ar = FALSE,
+    mean = FALSE,
     # outliers = c("ao", "wo"), criticalValue = 0,
-    precision = 1e-9, approximateHessian = TRUE
+    precision = 1e-9,
+    approximateHessian = TRUE
 )
 
 print(pre.mult)
@@ -89,8 +100,10 @@ x11.dow <- rjd3highfreq::x11(
     trend.degree = 3, # Polynomial degree
     trend.kernel = "Henderson", # Kernel function
     trend.asymmetric = "CutAndNormalize", # Truncation method
-    seas.s0 = "S3X9", seas.s1 = "S3X9", # Seasonal filters
-    extreme.lsig = 1.5, extreme.usig = 2.5
+    seas.s0 = "S3X9",
+    seas.s1 = "S3X9", # Seasonal filters
+    extreme.lsig = 1.5,
+    extreme.usig = 2.5
 )
 
 x11.doy <- rjd3highfreq::x11(
@@ -101,8 +114,10 @@ x11.doy <- rjd3highfreq::x11(
     trend.degree = 3,
     trend.kernel = "Henderson",
     trend.asymmetric = "CutAndNormalize",
-    seas.s0 = "S3X3", seas.s1 = "S3X3",
-    extreme.lsig = 1.5, extreme.usig = 2.5
+    seas.s0 = "S3X3",
+    seas.s1 = "S3X3",
+    extreme.lsig = 1.5,
+    extreme.usig = 2.5
 )
 
 print(x11.dow)
@@ -117,7 +132,8 @@ amb.dow <- fractionalAirlineDecomposition_new(
     period = 7, # DOW pattern
     sn = FALSE, # Signal (SA)-noise decomposition
     stde = FALSE, # Calculate standard deviations
-    nbcasts = 0, nfcasts = 0
+    nbcasts = 0,
+    nfcasts = 0
 ) # Numbers of back- and forecasts
 
 amb.doy <- fractionalAirlineDecomposition_new(
@@ -125,7 +141,8 @@ amb.doy <- fractionalAirlineDecomposition_new(
     period = 365.2425, # DOY pattern
     sn = FALSE,
     stde = FALSE,
-    nbcasts = 0, nfcasts = 0
+    nbcasts = 0,
+    nfcasts = 0
 )
 
 amb.multi <- multiAirlineDecomposition_new(
@@ -133,7 +150,8 @@ amb.multi <- multiAirlineDecomposition_new(
     periods = c(7, 365.2425), # DOW pattern
     ar = FALSE,
     stde = FALSE, # Calculate standard deviations
-    nbcasts = 0, nfcasts = 0
+    nbcasts = 0,
+    nfcasts = 0
 )
 
 print(amb.dow)
@@ -177,9 +195,20 @@ print(reg_v3$result) # JD3_REGARIMA_RSLTS
 # Classe JD3_REGARIMA_SPEC
 sp <- spec_regarima("RG5C")
 
-sp <- rjd3toolkit::add_outlier(sp, type = c("AO", "LS"), date = c("2015-01-01", "2010-01-01"))
+sp <- rjd3toolkit::add_outlier(
+    sp,
+    type = c("AO", "LS"),
+    date = c("2015-01-01", "2010-01-01")
+)
 
-sp <- set_outlier(sp, span.type = "BETWEEN", d0 = "2000-01-01", d1 = "2015-01-01", n0 = 10, n1 = 20)
+sp <- set_outlier(
+    sp,
+    span.type = "BETWEEN",
+    d0 = "2000-01-01",
+    d1 = "2015-01-01",
+    n0 = 10,
+    n1 = 20
+)
 
 sp <- sp |>
     rjd3toolkit::set_easter(enabled = TRUE, duration = 450) |>
@@ -191,7 +220,8 @@ print_JD3_REGARIMA_SPEC(sp)
 
 # Classe JD3_X11_SPEC
 init_spec <- spec_x11()
-new_spec <- set_x11(init_spec,
+new_spec <- set_x11(
+    init_spec,
     mode = "LogAdditive",
     seasonal.comp = 1,
     seasonal.filter = "S3X9",
@@ -285,29 +315,38 @@ sum_sar <- sarima1 |> summary()
 
 # Classe JD3_CALENDARDEFINITION ??
 # Classe JD3_CALENDAR
-french_calendar <- national_calendar(days = list(
-    fixed_day(7, 14), # Fete nationale
-    fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
-    special_day("NEWYEAR"), # Nouvelle année
-    special_day("CHRISTMAS"), # Noël
-    special_day("MAYDAY"), # 1er mai
-    special_day("EASTERMONDAY"), # Lundi de Pâques
-    special_day("ASCENSION"), # attention +39 et pas 40 jeudi ascension
-    special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
-    special_day("ASSUMPTION"), # Assomption
-    special_day("ALLSAINTSDAY"), # Toussaint
-    special_day("ARMISTICE")
-))
+french_calendar <- national_calendar(
+    days = list(
+        fixed_day(7, 14), # Fete nationale
+        fixed_day(5, 8, validity = list(start = "1982-05-08")), # Victoire 2nd guerre mondiale
+        special_day("NEWYEAR"), # Nouvelle année
+        special_day("CHRISTMAS"), # Noël
+        special_day("MAYDAY"), # 1er mai
+        special_day("EASTERMONDAY"), # Lundi de Pâques
+        special_day("ASCENSION"), # attention +39 et pas 40 jeudi ascension
+        special_day("WHITMONDAY"), # Lundi de Pentecôte (1/2 en 2005 a verif)
+        special_day("ASSUMPTION"), # Assomption
+        special_day("ALLSAINTSDAY"), # Toussaint
+        special_day("ARMISTICE")
+    )
+)
 print(french_calendar)
 print_JD3_CALENDAR(french_calendar)
 
 # Classe JD3_WEIGHTEDCALENDAR
-weighted_cal <- weighted_calendar(list(french_calendar, french_calendar), c(0.5, 0.5))
+weighted_cal <- weighted_calendar(
+    list(french_calendar, french_calendar),
+    c(0.5, 0.5)
+)
 print(weighted_cal)
 print_JD3_WEIGHTEDCALENDAR(weighted_cal)
 
 # Classe JD3_CHAINEDCALENDAR
-final_cal <- chained_calendar(french_calendar, weighted_cal, break_date = "2005-05-01")
+final_cal <- chained_calendar(
+    french_calendar,
+    weighted_cal,
+    break_date = "2005-05-01"
+)
 print(final_cal)
 print_JD3_CHAINEDCALENDAR(final_cal)
 

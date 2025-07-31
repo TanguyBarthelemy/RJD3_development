@@ -1,17 +1,34 @@
-fractionalAirlineDecomposition_new <- function(y, period, sn = FALSE, stde = FALSE, nbcasts = 0, nfcasts = 0) {
+fractionalAirlineDecomposition_new <- function(
+    y,
+    period,
+    sn = FALSE,
+    stde = FALSE,
+    nbcasts = 0,
+    nfcasts = 0
+) {
     checkmate::assertNumeric(y, null.ok = FALSE)
     checkmate::assertNumeric(period, len = 1, null.ok = FALSE)
     checkmate::assertLogical(sn, len = 1, null.ok = FALSE)
     jrslt <- .jcall(
         "demetra/highfreq/r/FractionalAirlineProcessor",
         "Ljdplus/highfreq/LightExtendedAirlineDecomposition;",
-        "decompose", as.numeric(y), period, sn, stde, as.integer(nbcasts),
+        "decompose",
+        as.numeric(y),
+        period,
+        sn,
+        stde,
+        as.integer(nbcasts),
         as.integer(nfcasts)
     )
     return(jd2r_fractionalAirlineDecomposition_new(jrslt, sn, stde, period))
 }
 
-jd2r_fractionalAirlineDecomposition_new <- function(jrslt, sn = FALSE, stde = FALSE, period) {
+jd2r_fractionalAirlineDecomposition_new <- function(
+    jrslt,
+    sn = FALSE,
+    stde = FALSE,
+    period
+) {
     ncmps <- rjd3toolkit::.proc_int(jrslt, "ucarima.size")
     model <- rjd3highfreq:::arima_extract(jrslt, "ucarima_model")
     cmps <- lapply(1:ncmps, function(cmp) {
@@ -70,25 +87,43 @@ jd2r_fractionalAirlineDecomposition_new <- function(jrslt, sn = FALSE, stde = FA
     ))
 }
 
-multiAirlineDecomposition_new <- function(y, periods, ndiff = 2, ar = FALSE, stde = FALSE, nbcasts = 0,
-                                          nfcasts = 0) {
+multiAirlineDecomposition_new <- function(
+    y,
+    periods,
+    ndiff = 2,
+    ar = FALSE,
+    stde = FALSE,
+    nbcasts = 0,
+    nfcasts = 0
+) {
     if (length(periods) == 1) {
-        return(fractionalAirlineDecomposition(y, periods,
+        return(fractionalAirlineDecomposition(
+            y,
+            periods,
             stde = stde,
-            nbcasts = nbcasts, nfcasts = nfcasts
+            nbcasts = nbcasts,
+            nfcasts = nfcasts
         ))
     }
     checkmate::assertNumeric(y, null.ok = FALSE)
     jrslt <- .jcall(
         "demetra/highfreq/r/FractionalAirlineProcessor",
         "Ljdplus/highfreq/LightExtendedAirlineDecomposition;",
-        "decompose", as.numeric(y), .jarray(periods), as.integer(ndiff),
-        ar, stde, as.integer(nbcasts), as.integer(nfcasts)
+        "decompose",
+        as.numeric(y),
+        .jarray(periods),
+        as.integer(ndiff),
+        ar,
+        stde,
+        as.integer(nbcasts),
+        as.integer(nfcasts)
     )
     if (length(periods) == 1) {
         return(jd2r_fractionalAirlineDecomposition_new(
-            jrslt, FALSE,
-            stde, periods
+            jrslt,
+            FALSE,
+            stde,
+            periods
         ))
     } else {
         return(jd2r_multiAirlineDecomposition_new(jrslt, stde, periods))
@@ -134,18 +169,24 @@ jd2r_multiAirlineDecomposition_new <- function(jrslt, stde = FALSE, periods) {
     ))
 }
 
-print_JDFractionalAirlineDecomposition <- function(x, digits = max(3L, getOption("digits") - 3L) # ,
-                                                   # starting = as.Date("1968-01-01")
+print_JDFractionalAirlineDecomposition <- function(
+    x,
+    digits = max(3L, getOption("digits") - 3L) # ,
+    # starting = as.Date("1968-01-01")
 ) {
     # Estimated MA parameters (coefs, se, student)
     nb_freq <- (x$estimation$parameters |> length()) - 1L
     est_ma_params <- data.frame(
         MA_parameter = c(
             "Theta(1)",
-            paste0("Theta(", paste0(
-                "period = ",
-                x$estimation$periods
-            ), ")")
+            paste0(
+                "Theta(",
+                paste0(
+                    "period = ",
+                    x$estimation$periods
+                ),
+                ")"
+            )
         ),
         Coef = x$estimation$parameters,
         Coef_SE = sqrt(diag(x$estimation$covariance)),
@@ -170,22 +211,31 @@ print_JDFractionalAirlineDecomposition <- function(x, digits = max(3L, getOption
     cat("Number of observations:", formatC(x$likelihood$nobs, digits = digits))
     cat("\n")
 
-    cat("Sum of square residuals:", formatC(x$likelihood$ssq, digits = digits),
-        "on", x$likelihood$df, "degrees of freedom",
+    cat(
+        "Sum of square residuals:",
+        formatC(x$likelihood$ssq, digits = digits),
+        "on",
+        x$likelihood$df,
+        "degrees of freedom",
         sep = " "
     )
     cat("\n")
 
-    cat("Log likelihood = ", formatC(x$likelihood$ll, digits = digits),
-        ", \n\taic = ", formatC(x$likelihood$aic, digits = digits),
-        ", \n\taicc = ", formatC(x$likelihood$aicc, digits = digits),
+    cat(
+        "Log likelihood = ",
+        formatC(x$likelihood$ll, digits = digits),
+        ", \n\taic = ",
+        formatC(x$likelihood$aic, digits = digits),
+        ", \n\taicc = ",
+        formatC(x$likelihood$aicc, digits = digits),
         ", \n\tbic(corrected for length) = ",
         formatC(x$likelihood$bicc, digits = digits),
         sep = ""
     )
     cat("\n")
 
-    cat("Hannan–Quinn information criterion = ",
+    cat(
+        "Hannan–Quinn information criterion = ",
         formatC(x$likelihood$hannanquinn, digits = digits),
         sep = ""
     )

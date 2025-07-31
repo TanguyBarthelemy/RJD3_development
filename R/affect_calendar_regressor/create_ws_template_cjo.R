@@ -16,7 +16,15 @@ for (k in seq_along(spec_sets)) {
     for (i in seq_len(ncol(raw_data))) {
         name_serie <- colnames(raw_data)[i]
 
-        cat(paste0("SA-Item ", i, "/", ncol(raw_data), ", serie : ", name_serie, "..."))
+        cat(paste0(
+            "SA-Item ",
+            i,
+            "/",
+            ncol(raw_data),
+            ", serie : ",
+            name_serie,
+            "..."
+        ))
         sa_item <- x13(
             series = series_ipi_ts[, i],
             spec = spec

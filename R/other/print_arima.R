@@ -29,7 +29,6 @@ class(mod$result_spec$regarima$arima)
 
 # Alors à quoi sert la classe JD3_SARIMA_ESTIMATE ?
 
-
 # Enfin si on veut différencier l'affichage, il faut pouvoir différencier
 # - les coefficuients estimés (JD3_SARIMA_ESTIMATE ?),
 # - des coefficients fixés par l'utilisateur,

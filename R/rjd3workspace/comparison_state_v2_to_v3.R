@@ -2,18 +2,28 @@
 #########          Comparaison wrangling workspace v2 --> v3           #########
 ################################################################################
 
-
 # Afficher toutes les méthodes existantes --------------------------------------
 
 a <- rbind(
-    cbind(pkg = "rjdemetra3", fct = getNamespace("rjdemetra3") |> getNamespaceExports()),
-    cbind(pkg = "rjd3toolkit", fct = getNamespace("rjd3toolkit") |> getNamespaceExports()),
-    cbind(pkg = "RJDemetra", fct = getNamespace("RJDemetra") |> getNamespaceExports()),
-    cbind(pkg = "rjdworkspace", fct = getNamespace("rjdworkspace") |> getNamespaceExports())
+    cbind(
+        pkg = "rjdemetra3",
+        fct = getNamespace("rjdemetra3") |> getNamespaceExports()
+    ),
+    cbind(
+        pkg = "rjd3toolkit",
+        fct = getNamespace("rjd3toolkit") |> getNamespaceExports()
+    ),
+    cbind(
+        pkg = "RJDemetra",
+        fct = getNamespace("RJDemetra") |> getNamespaceExports()
+    ),
+    cbind(
+        pkg = "rjdworkspace",
+        fct = getNamespace("rjdworkspace") |> getNamespaceExports()
+    )
 ) |>
     as.data.frame()
 View(a)
-
 
 # RJDemetra --------------------------------------------------------------------
 

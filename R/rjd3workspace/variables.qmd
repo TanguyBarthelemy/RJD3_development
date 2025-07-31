@@ -85,8 +85,6 @@ save_workspace(my_ws, file.path(tmp_path, "tmp2.xml"), replace = TRUE)
 Cette fonction a néanmoins 3 limitations:
 
 
-
-
 #### Plutôt `add_variable()`{.r} ?
 
 Il n'est pas possible d'exporter plusieurs variables à la fois:
@@ -199,7 +197,7 @@ add_variables(
 
 save_workspace(my_ws, file.path(tmp_path, "tmp5.xml"), replace = TRUE)
 
-readLines(file.path(tmp_path, "tmp2.xml")) |> cat(sep ="\n")
+readLines(file.path(tmp_path, "tmp5.xml")) |> cat(sep ="\n")
 
 read_variables(normalizePath(file.path(tmp_path, "tmp5/Variables/Vars-1.xml"))) |> str()
 read_variables(normalizePath(file.path(tmp_path, "tmp5/Variables/Vars-2.xml"))) |> str()
