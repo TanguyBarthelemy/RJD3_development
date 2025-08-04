@@ -9,8 +9,10 @@
 library("tictoc")
 library("flextable")
 
-nb_series <- 3
-# getwd()
+nb_series <- 50
+getwd()
+setwd(dir = "C:/Users/INSEE_User/Documents/RJD3_development/R/HF")
+
 
 tic()
 source("HF_simulations/UC_on_Sim_data_additive_det_S1.R")
@@ -38,7 +40,7 @@ toc()
 
 nb_method <- 7L
 df <- data.frame(
-  type = rep(c("Deterministic DGP", "Stochastic GDP"), each = nb_method * 3L),
+  type = rep(c("Deterministic DGP", "Stochastic DGP"), each = nb_method * 3L),
   gamma = rep(c(gamma_1, gamma_2, gamma_3, gamma_4, gamma_5, gamma_6), each = nb_method),
   sigma = c(rep(0, nb_method * 3L), rep(c(sigma_4, sigma_5, sigma_6), each = nb_method)),
   method = c("X11", "rjd-STL","MSTL", "AMB","Multi-AMB", "TBATS","PROPHET"),
@@ -79,3 +81,5 @@ bg(
     domain = NULL
   )
 )
+
+## for beamer
