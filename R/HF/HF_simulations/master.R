@@ -9,7 +9,7 @@
 library("tictoc")
 library("flextable")
 
-nb_series <- 50
+nb_series <- 1
 getwd()
 setwd(dir = "C:/Users/INSEE_User/Documents/RJD3_development/R/HF")
 
