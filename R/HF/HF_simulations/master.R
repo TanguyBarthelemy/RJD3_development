@@ -10,6 +10,10 @@ library("flextable")
 
 nb_series <- 50L
 nb_years <- 3L
+
+start_date <- as.Date("2020-01-01")
+end_date <- start_date + lubridate::years(nb_years) - lubridate::days(1L)
+
 # getwd()
 # setwd(dir = "C:/Users/INSEE_User/Documents/RJD3_development/R/HF")
 
@@ -64,6 +68,8 @@ df <- data.frame(
     sa_RMSE = c(sa_s1, sa_s2, sa_s3, sa_s4, sa_s5, sa_s6)
 )
 
+rmse_cols <- names(df)[grepl("RMSE$", names(df))]
+
 set_flextable_defaults(digits = 4L)
 
 ft <- df |>
@@ -102,18 +108,21 @@ ft <- df |>
             "sa_RMSE"
         )
     ) |>
-    set_table_properties(layout = "autofit", width = 0.8)
+    set_table_properties(layout = "autofit", width = 0.8) |>
+    bg(
+        part = "all",
+        bg = "white"
+    ) |>
+    bg(
+        j = rmse_cols,
+        bg = scales::col_numeric(
+            palette = c("white", "steelblue"),
+            domain = NULL
+        )
+    )
+
 ft
 
-rmse_cols <- names(df)[grepl("RMSE$", names(df))]
-
-bg(
-    ft,
-    j = rmse_cols,
-    bg = scales::col_numeric(
-        palette = c("white", "steelblue"), # ou toute autre palette
-        domain = NULL
-    )
-)
+save_as_image(ft, path = "~/work/table.png")
 
 ## for beamer
