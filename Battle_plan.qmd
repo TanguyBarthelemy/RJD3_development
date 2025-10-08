@@ -1,7 +1,8 @@
 ---
 title: "Battle plan for JD+ related Tools"
-format: pdf
-format: html 
+format:
+    pdf: default
+    html: default
 ---
 
 

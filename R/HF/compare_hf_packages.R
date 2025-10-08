@@ -1,14 +1,10 @@
 # Script pour tester la HF avec d'autres packages que le rjdverse
 
-library(tidyverse)
+library("tidyverse")
 
 # Import data -------------------------------------------------------------
 
-births <- read.csv2(
-    "https://raw.githubusercontent.com/TanguyBarthelemy/Tsace_RJD_Webinar_Dec22/b5fcf6b14ae47393554950547ef4788a0068a0f6/Data/TS_daily_births_franceM_1968_2020.csv"
-)
-
-df <- births %>%
+df <- rjd3toolkit::Births %>%
     mutate(ds = as.Date(date), y = births) %>%
     select(ds, y)
 
@@ -83,24 +79,22 @@ i_rjdverse <- amb.multi$decomposition$i
 
 library("prophet")
 
-df_holidays <- data.frame(
-    holiday = rownames(cal_reg)[
-        apply(cal_reg, MARGIN = 1, \(x) sum(x) > 0) |> which()
-    ]
-)
+df_holidays <- cal_reg |>
+    as.data.frame() |>
+    tibble::rownames_to_column(var = "ds") |>
+    dplyr::mutate(ds = as.Date(ds)) |>
+    tidyr::pivot_longer(-ds, names_to = "holiday") |>
+    dplyr::filter(value == 1L) |>
+    dplyr::select(holiday, ds)
+head(df_holidays)
 
-m <- prophet(
-    df,
-    weekly.seasonality = TRUE,
-    yearly.seasonality = TRUE,
-    fit = TRUE,
-    holidays =
-)
-
+m <- prophet(df, holidays = df_holidays)
 future <- make_future_dataframe(m, periods = 365)
 head(future)
+
 forecast <- predict(m, future)
 head(forecast)
+
 prophet_plot_components(m, forecast)
 
 s7_prophet <- forecast$weekly
@@ -153,10 +147,10 @@ i_mstl <- components_mstl$Remainder
 
 # feast - STL -------------------------------------------------------
 
-library(tidyverse)
-library(tsibble)
-library(feasts)
-library(lubridate)
+library("tidyverse")
+library("tsibble")
+library("feasts")
+library("lubridate")
 
 # Création d'un tsibble
 df_ts <- df |>
@@ -202,8 +196,8 @@ sa_stl_stats <- df_ts$y - s7_stl_stats - s365_stl_stats
 # plot --------------------------------------------------------------------
 
 # Chargement du package ggplot2
-library(ggplot2)
-library(plotly)
+library("ggplot2")
+library("plotly")
 
 # Création d'un data.frame
 df_s7 <- data.frame(
