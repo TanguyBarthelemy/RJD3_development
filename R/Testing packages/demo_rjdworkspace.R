@@ -381,7 +381,7 @@ ts3 <- ts(1:200, start = 2000, frequency = 12)
 
 sa_item_1 <- mp1 |> RJDemetra::get_object(1)
 sa_item_2 <- mp1 |> RJDemetra::get_object(2)
-sa_item_3 <- mp1 |> vRJDemetra::get_object(3)
+sa_item_3 <- mp1 |> RJDemetra::get_object(3)
 
 new_sa_item_1 <- set_ts(sa_item = sa_item_1, ts = ts1)
 new_sa_item_2 <- set_ts(sa_item = sa_item_2, ts = ts2)
