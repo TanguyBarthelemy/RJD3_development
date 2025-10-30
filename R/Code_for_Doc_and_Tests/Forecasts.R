@@ -22,7 +22,7 @@ y_f
 # # retrieve the object
 # sa_x13_v3_UD$user_defined$decomposition.b1
 
-You can try the following code using rjd3x13::regarima (or in a similar way rjd3tramoseats::tramo())
+# You can try the following code using rjd3x13::regarima (or in a similar way rjd3tramoseats::tramo())
 
 library(rjd3toolkit)
 library(rjd3x13)
