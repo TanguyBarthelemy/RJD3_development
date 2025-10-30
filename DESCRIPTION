@@ -1,6 +1,6 @@
 Type: Project
-Package: Content4Presentations
-Title: Ensemble des ressources de présentation pour conférences ou formations
+Package: RJD3_development
+Title: Ensemble des ressources R liés à JDemetra+
 Version: 1.0.0
 Authors@R: 
     person("Tanguy", "Barthelemy", , "tanguy.barthelemy@insee.fr", role = c("aut", "cre"))
