@@ -4,7 +4,6 @@
 #                                                                              #
 ################################################################################
 
-
 # Chargement packages ----------------------------------------------------------
 
 library("rjdworkspace")
@@ -39,7 +38,17 @@ series_name_auto <- sap_auto |> get_all_names()
 
 for (k in seq_len(sap_auto |> count())) {
     series_name <- series_name_auto[k]
-    cat(paste0("Série ", series_name, " en cours... ", k, "/", sap_auto |> count()), "\n")
+    cat(
+        paste0(
+            "Série ",
+            series_name,
+            " en cours... ",
+            k,
+            "/",
+            sap_auto |> count()
+        ),
+        "\n"
+    )
 
     sai_auto <- sap_auto |> get_object(which(series_name_auto == series_name))
     sai_ref <- sap_ref |> get_object(which(series_name_ref == series_name))
@@ -63,7 +72,12 @@ for (k in seq_len(sap_auto |> count())) {
         # new_sai2 <- rjdworkspace::set_spec(sai_auto, new_spec)
 
         # SAP 1
-        add_sa_item(workspace = ws_auto, multiprocessing = "SAProcessing-2", sa_obj = new_sai, name = series_name)
+        add_sa_item(
+            workspace = ws_auto,
+            multiprocessing = "SAProcessing-2",
+            sa_obj = new_sai,
+            name = series_name
+        )
 
         # SAP 2
         # replace_sa_item(mp = sap_auto2, pos = k, sa_item = new_sai2)

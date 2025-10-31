@@ -9,7 +9,9 @@ library("rjwsacruncher")
 
 # Fonction de cruncher' --------------------------------
 
-options(cruncher_bin_directory = "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.4/bin/")
+options(
+    cruncher_bin_directory = "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.4/bin/"
+)
 
 path_ws <- "C:\\Users\\UTZK0M\\Documents\\Projets R\\Projets MTS\\Packages\\rjduniverse\\test\\RJD3_development\\Issues\\TODO#73\\ws_tramo"
 
@@ -23,7 +25,9 @@ rjwsacruncher::cruncher_and_param(
 )
 
 # Error !
-QR_auto <- JDCruncheR::extract_QR(matrix_output_file = paste0(path_ws, "/Output/SAProcessing-1/demetra_m.csv"))
+QR_auto <- JDCruncheR::extract_QR(
+    matrix_output_file = paste0(path_ws, "/Output/SAProcessing-1/demetra_m.csv")
+)
 
 ### Etude de JDCruncheR::extract_QR --------------------------------------------
 
@@ -39,7 +43,8 @@ demetra_m <- read.csv(
 )
 
 demetra_m$series <- gsub(
-    "(^ *)|(* $)", "",
+    "(^ *)|(* $)",
+    "",
     gsub("(^.* \\* )|(\\[frozen\\])", "", demetra_m[, 1])
 )
 demetra_m$frequency <- JDCruncheR:::extractFrequency(demetra_m)
@@ -57,7 +62,10 @@ demetra_m <- cbind(
 ### Etude de JDCruncheR::extractStatQ ------------------------------------------
 
 col_q <- q_possibles <- grep("(^q$)|(^q\\.\\d$)", colnames(demetra_m))
-col_q_m2 <- q_m2_possibles <- grep("(^q\\.m2$)|(^q\\.m2\\.\\d$)", colnames(demetra_m))
+col_q_m2 <- q_m2_possibles <- grep(
+    "(^q\\.m2$)|(^q\\.m2\\.\\d$)",
+    colnames(demetra_m)
+)
 
 if (length(q_possibles) > 1) {
     col_q_possibles <- demetra_m[, q_possibles]

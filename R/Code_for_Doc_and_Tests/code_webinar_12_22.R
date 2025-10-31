@@ -2,12 +2,24 @@
 
 # P2 : Seasonal adjustment in R with JD+ ----------------------------------
 
-ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
+ipi <- read.csv2(
+    "C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv"
+)
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 # creating a TS object from a data frame
-y_raw <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 6))
-y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9))
+y_raw <- ts(
+    ipi[, "RF3030"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2019, 6)
+)
+y_new <- ts(
+    ipi[, "RF3030"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2019, 9)
+)
 
 
 # X13 v2
@@ -254,8 +266,10 @@ sa_x13_v3 # print à compléter ?
 #
 #### CALENDAR
 # define a user defined trading days regressor
-td_reg1 <- rjd3toolkit::td(12,
-    start = start(y_raw), length = length(y_raw),
+td_reg1 <- rjd3toolkit::td(
+    12,
+    start = start(y_raw),
+    length = length(y_raw),
     groups = c(1, 1, 1, 1, 1, 0, 0)
 )
 
@@ -263,7 +277,8 @@ td_reg1 <- rjd3toolkit::td(12,
 # build new specification
 spec <- rjd3x13::spec_x13("RSA3")
 # set a new specification from a default specification
-spec_ud_TD <- set_tradingdays(spec,
+spec_ud_TD <- set_tradingdays(
+    spec,
     option = "UserDefined",
     uservariable = "regs.td_reg1"
 )
@@ -281,8 +296,12 @@ sa_x13_v3_td$result$decomposition
 ###### REGRESSOR TO TREND
 
 # step 1: define a regressor, for example
-x <- rjd3toolkit::intervention_variable(12, start(y_raw), length(y_raw),
-    starts = "2001-01-01", ends = "2001-12-01"
+x <- rjd3toolkit::intervention_variable(
+    12,
+    start(y_raw),
+    length(y_raw),
+    starts = "2001-01-01",
+    ends = "2001-12-01"
 )
 # step 2: build new specification to customize or take an existing one
 spec <- rjd3x13::spec_x13("RSA3")
@@ -311,13 +330,12 @@ sa_x13_v3$result_spec$regarima$arima
 
 ## create context
 
-
-
 current_result_spec <- sa_x13_v3$result_spec
 current_domain_spec <- sa_x13_v3$estimation_spec
 
 # generate NEW spec for refresh
-refreshed_spec <- x13.refresh(current_result_spec, # point spec to be refreshed
+refreshed_spec <- x13.refresh(
+    current_result_spec, # point spec to be refreshed
     current_domain_spec, # domain spec (set of constraints)
     policy = "Outliers",
     period = 12, # monthly series
@@ -333,27 +351,32 @@ sa_x13_v3_refresh <- x13(y_new, refreshed_spec)
 ################ setting calendar variables
 
 ## ordre (anyway) : fixedday 2 easter 3 holiday
-french_calendar <- national_calendar(days = list(
-    fixed_day(7, 14), # Bastille Day
-    fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
-    special_day("NEWYEAR"),
-    special_day("CHRISTMAS"),
-    special_day("MAYDAY"),
-    special_day("EASTERMONDAY"),
-    special_day("ASCENSION"), #
-    special_day("WHITMONDAY"),
-    special_day("ASSUMPTION"),
-    special_day("ALLSAINTSDAY"),
-    special_day("ARMISTICE")
-))
+french_calendar <- national_calendar(
+    days = list(
+        fixed_day(7, 14), # Bastille Day
+        fixed_day(5, 8, validity = list(start = "1982-05-08")), # End of 2nd WW
+        special_day("NEWYEAR"),
+        special_day("CHRISTMAS"),
+        special_day("MAYDAY"),
+        special_day("EASTERMONDAY"),
+        special_day("ASCENSION"), #
+        special_day("WHITMONDAY"),
+        special_day("ASSUMPTION"),
+        special_day("ALLSAINTSDAY"),
+        special_day("ARMISTICE")
+    )
+)
 
 # frCal_2005 <- weighted_calendar(list(french_calendar), 0.5)
 # final_cal <- chained_calendar(french_calendar, frCal_2005, break_date = "2005-05-01")
 
 ### For daily data
 #### pb "type" and non working days in daily data ?
-q <- rjd3toolkit::holidays(french_calendar, "1968-01-01",
-    end = "2023-12-01", type = "All",
+q <- rjd3toolkit::holidays(
+    french_calendar,
+    "1968-01-01",
+    end = "2023-12-01",
+    type = "All",
     nonworking = 7L
 )
 
@@ -384,28 +407,35 @@ rjd3highfreq::fractionalAirlineEstimation(
     df_daily$log_births, # here series in log
     x = q, # q= calendar
     periods = 7, # approx  c(7,365.25)
-    ndiff = 2, ar = FALSE, mean = FALSE,
+    ndiff = 2,
+    ar = FALSE,
+    mean = FALSE,
     outliers = c("ao", "wo", "LS"),
     # WO compensation
     criticalValue = 0, # computed in the algorithm
-    precision = 1e-9, approximateHessian = TRUE
+    precision = 1e-9,
+    approximateHessian = TRUE
 )
 
 # calendar regressors can be defined with the rjd3toolkit package
 
 # step 1: p=7
-x11.dow <- rjd3highfreq::x11(exp(pre.mult$model$linearized),
+x11.dow <- rjd3highfreq::x11(
+    exp(pre.mult$model$linearized),
     period = 7, # DOW pattern
     mul = TRUE,
     trend.horizon = 9, # 1/2 Filter length : not too long vs p
     trend.degree = 3, # Polynomial degree
     trend.kernel = "Henderson", # Kernel function
     trend.asymmetric = "CutAndNormalize", # Truncation method
-    seas.s0 = "S3X9", seas.s1 = "S3X9", # Seasonal filters
-    extreme.lsig = 1.5, extreme.usig = 2.5
+    seas.s0 = "S3X9",
+    seas.s1 = "S3X9", # Seasonal filters
+    extreme.lsig = 1.5,
+    extreme.usig = 2.5
 ) # Sigma-limits
 # step 2: p=365.25
-x11.doy <- rjd3highfreq::x11(x11.dow$decomposition$sa, # previous sa
+x11.doy <- rjd3highfreq::x11(
+    x11.dow$decomposition$sa, # previous sa
     period = 365.2425, # DOY pattern
     mul = TRUE
 ) # other parameters skipped here
@@ -418,7 +448,8 @@ amb.doy <- rjd3highfreq::fractionalAirlineDecomposition(
     period = 365.2425, # DOY pattern
     sn = FALSE, # Signal (SA)-noise decomposition
     stde = FALSE, # Compute standard deviations
-    nbcasts = 0, nfcasts = 0
+    nbcasts = 0,
+    nfcasts = 0
 ) # Numbers of back- and forecasts
 
 library("rjd3toolkit")
@@ -427,10 +458,7 @@ fr_cal <- calendar.new()
 calendar.holiday(fr_cal, "NEWYEAR")
 calendar.holiday(fr_cal, "EASTERMONDAY")
 calendar.holiday(fr_cal, "MAYDAY")
-calendar.fixedday(fr_cal,
-    month = 5, day = 8,
-    start = "1982-01-01"
-)
+calendar.fixedday(fr_cal, month = 5, day = 8, start = "1982-01-01")
 # calendar.holiday(fr_cal, "WHITMONDAY") # Equivalent to:
 calendar.easter(fr_cal, offset = 61)
 
@@ -461,7 +489,8 @@ ls <- ls.variable(s = s, date = "2001-01-01")
 tc <- tc.variable(s = s, date = "2001-01-01", rate = 0.7) # Customizable rate
 so <- so.variable(s = s, date = "2003-05-01")
 ramp <- ramp.variable(s = s, range = c("2001-01-01", "2001-12-01"))
-plot(ts.union(ao, ls, tc, so, ramp),
+plot(
+    ts.union(ao, ls, tc, so, ramp),
     plot.type = "single",
     col = c("red", "lightgreen", "orange", "blue", "black")
 )
@@ -471,7 +500,8 @@ print(system.time(
     for (i in 1:1000) {
         j <- rjd3toolkit::sarima.estimate(
             data = log(rjd3toolkit::ABS$X0.2.09.10.M),
-            order = c(2, 1, 1), seasonal = list(order = c(0, 1, 1), period = 12)
+            order = c(2, 1, 1),
+            seasonal = list(order = c(0, 1, 1), period = 12)
         )
     }
 ))
@@ -483,7 +513,8 @@ print(system.time(
     for (i in 1:1000) {
         r <- arima(
             x = log(rjd3toolkit::ABS$X0.2.09.10.M),
-            order = c(2, 1, 1), seasonal = list(order = c(0, 1, 1), period = 12)
+            order = c(2, 1, 1),
+            seasonal = list(order = c(0, 1, 1), period = 12)
         )
     }
 ))
@@ -492,7 +523,6 @@ print(system.time(
 
 print(j$likelihood)
 print(r)
-
 
 
 # P3 : Wrangling workspaces ----------------------------------------------------
@@ -528,7 +558,6 @@ spec_x13 <- RJDemetra::x13_spec(spec = "RSA3")
 model_sa_1 <- RJDemetra::x13(raw_data, spec = spec_x13)
 
 
-
 # P4 : Production in R ----------------------------------------------------
 
 # choose the demetra_m.csv file generated by the cruncher
@@ -556,7 +585,8 @@ condition1 <- list(
     conditions_modalities = c("Bad", "Severe")
 )
 
-BQ <- compute_score(BQ,
+BQ <- compute_score(
+    BQ,
     n_contrib_score = 5,
     conditional_indicator = list(condition1),
     na.rm = TRUE

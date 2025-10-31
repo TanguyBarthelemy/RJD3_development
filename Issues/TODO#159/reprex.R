@@ -7,7 +7,9 @@ write.csv(x, file = "./Issues/TODO#159/airpassengers.csv", row.names = FALSE)
 
 # Lecture des outputs ------------------------------
 
-comparaison_GUI <- readxl::read_excel("~/../Desktop/testing_output/Difference_output_GUI_v2_v3.xlsx")
+comparaison_GUI <- readxl::read_excel(
+    "~/../Desktop/testing_output/Difference_output_GUI_v2_v3.xlsx"
+)
 names_in_file <- comparaison_GUI$RJDemetra
 names_in_file <- names_in_file[!is.na(names_in_file)]
 
@@ -17,7 +19,10 @@ names_in_file <- names_in_file[!is.na(names_in_file)]
 options(
     cruncher_bin_directory = "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.4/bin/",
     v3 = FALSE,
-    default_matrix_item = (comparaison_GUI |> subset(select = `cruncher V2`))[, 1, drop = TRUE]
+    default_matrix_item = (comparaison_GUI |> subset(select = `cruncher V2`))[,
+        1,
+        drop = TRUE
+    ]
 )
 
 path_ws <- "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#159/ws_airpassenger"
@@ -58,7 +63,8 @@ ud_var <- comparaison_GUI |>
     do.call(what = c) |>
     unique() |>
     sort()
-mod <- RJDemetra::tramoseats(AirPassengers,
+mod <- RJDemetra::tramoseats(
+    AirPassengers,
     spec = "RSAfull",
     userdefined = user_defined_variables("TRAMO-SEATS")
 )
@@ -66,7 +72,6 @@ mod <- RJDemetra::tramoseats(AirPassengers,
 # Extraction des noms non-ts = diagnostiques
 name_to_place <- setdiff(user_defined_variables("TRAMO-SEATS"), names_in_file)
 # setdiff(names(mod$user_defined), names_in_file)
-
 
 # name_to_place <- name_to_place[substr(name_to_place, 1, 13) != "decomposition"]
 for (nam in name_to_place) {

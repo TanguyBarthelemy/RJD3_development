@@ -92,8 +92,9 @@ reg_cjo_series$domainspec[is.na(reg_cjo_series$domainspec)] <- "Pas_CJO"
 head(reg_cjo_series)
 nrow(reg_cjo_series)
 
-if (nrow(reg_cjo_series) != 230)
+if (nrow(reg_cjo_series) != 230) {
     stop("Il y a un souci dans le nombre de série.")
+}
 
 
 # Etape 1 ----------------------------------------------------------------------
@@ -212,7 +213,9 @@ for (n_serie in nom_series) {
 }
 series_oubliees
 
-if (!is.null(series_oubliees)) stop("Il y a une série oubliée.")
+if (!is.null(series_oubliees)) {
+    stop("Il y a une série oubliée.")
+}
 
 # Export
 writeLines(sa_proc, chemin_sa_proc)

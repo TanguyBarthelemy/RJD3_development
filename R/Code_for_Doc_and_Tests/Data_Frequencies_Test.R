@@ -2,17 +2,34 @@
 
 # P2 : Seasonal adjustment in R with JD+ ----------------------------------
 
-ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
+ipi <- read.csv2(
+    "C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv"
+)
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 # creating a TS object from a data frame
-y_raw <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 6))
-y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9))
+y_raw <- ts(
+    ipi[, "RF3030"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2019, 6)
+)
+y_new <- ts(
+    ipi[, "RF3030"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2019, 9)
+)
 
 # 3 year length ?
 
 ### att pbs de declaration (cf GUI possibilites avec periodes)
-y12 <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(1996, 12))
+y12 <- ts(
+    ipi[, "RF3030"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(1996, 12)
+)
 y12
 
 ## comprendre le remplissage
@@ -29,7 +46,6 @@ y2 <- ts(ipi[, "RF3030"], frequency = 2, start = c(1990, 1), end = c(1996, 12))
 y2
 
 ## mise en tableau ou qqch
-
 
 # X13 v3
 sa_x13_v3 <- rjd3x13::x13(y6, spec = "rsa5c")

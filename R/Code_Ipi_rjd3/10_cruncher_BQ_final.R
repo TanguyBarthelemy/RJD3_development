@@ -2,7 +2,9 @@ library("JDCruncheR")
 library("readxl")
 library("xlsx")
 
-options(cruncher_bin_directory = "Y:/Logiciels/JDemetraplus/jwsacruncher-2.2.4/bin")
+options(
+    cruncher_bin_directory = "Y:/Logiciels/JDemetraplus/jwsacruncher-2.2.4/bin"
+)
 
 # workspace_final: ATT TEMP for test
 cruncher_and_param(
@@ -43,13 +45,16 @@ colnames(decisions_passees) <- c("series", "Ancienne Decision")
 
 # (extract_QR = fonction native du cruncher : lecture fichier csv = matrice)
 # BQ_auto <- extract_QR("workspace_final/industrie/output/SAProcessing-1/demetra_m.csv")
-BQ_auto <- extract_QR("workspace_final/industrie/output/industrie/demetra_m.csv")
+BQ_auto <- extract_QR(
+    "workspace_final/industrie/output/industrie/demetra_m.csv"
+)
 # le resultat est une liste de 3 data frames
 str(BQ_auto)
 # a ce stade, on n'a pas encore de score, ni de formule du score
 # -> compute_score : fonction native du cruncher
 # Calcul du score (personnalise) et ajout au bilan qualite:
-BQ_auto <- compute_score(BQ_auto,
+BQ_auto <- compute_score(
+    BQ_auto,
     n_contrib_score = 3,
     conditional_indicator = list(list(
         indicator = "oos_mse",
@@ -80,10 +85,12 @@ BQ_auto$score_formula
 # Ajout dans le data frame "values" des decisions de la campagne precedente
 # (on ne garde que les valeurs pour les series presentes dans values : all.x = TRUE, all.y = FALSE
 # -> on agit sur le data frame BQ_auto$values, un des 3 elements de la liste BQ_auto)
-BQ_auto$values <- merge(BQ_auto$values,
+BQ_auto$values <- merge(
+    BQ_auto$values,
     decisions_passees,
     by = "series",
-    all.x = TRUE, all.y = FALSE
+    all.x = TRUE,
+    all.y = FALSE
 )
 head(BQ_auto$values)
 
@@ -94,12 +101,18 @@ colnames(BQ_auto$values)
 ## Export d'un bilan qualite raccourci
 
 exp_auto <- BQ_auto$values[, c(
-    "series", "prio", "m7", "score", "pond", "score_pond", "1_highest_contrib_score",
-    "2_highest_contrib_score", "3_highest_contrib_score"
+    "series",
+    "prio",
+    "m7",
+    "score",
+    "pond",
+    "score_pond",
+    "1_highest_contrib_score",
+    "2_highest_contrib_score",
+    "3_highest_contrib_score"
 )]
 
 write.xlsx(exp_auto, "Bilans qualite/BQ_final.xlsx")
-
 
 
 ##########################################################################################
@@ -109,11 +122,24 @@ BQ_auto$values$decision <- ""
 colnames(BQ_auto$values)
 # # rearrangement des variables
 fichier_decisions <- BQ_auto$values[, c(
-    "series", "prio", "rebasee", "score", "score_pond", "1_highest_contrib_score", "m7", "pond", "decision",
-    "commentaire", "Ancienne Decision"
+    "series",
+    "prio",
+    "rebasee",
+    "score",
+    "score_pond",
+    "1_highest_contrib_score",
+    "m7",
+    "pond",
+    "decision",
+    "commentaire",
+    "Ancienne Decision"
 )]
 
 head(fichier_decisions)
 
 
-write.xlsx(fichier_decisions, "Bilans qualite/Decisions_2024.xlsx", showNA = FALSE)
+write.xlsx(
+    fichier_decisions,
+    "Bilans qualite/Decisions_2024.xlsx",
+    showNA = FALSE
+)

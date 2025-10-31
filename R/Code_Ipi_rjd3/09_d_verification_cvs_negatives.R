@@ -4,7 +4,11 @@
 
 # Lecture séries ----------------------------------------_____------------------
 
-IPI_cvs <- read.csv("./workspace_automatique/industrie/Output/industrie/series_sa.csv", sep = ";", dec = ",")
+IPI_cvs <- read.csv(
+    "./workspace_automatique/industrie/Output/industrie/series_sa.csv",
+    sep = ";",
+    dec = ","
+)
 
 col_incorrect <- vapply(
     X = IPI_cvs,

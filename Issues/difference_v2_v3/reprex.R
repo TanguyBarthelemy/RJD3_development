@@ -207,4 +207,3 @@ demetra_m_v2 <- read.csv(
 demetra_m <- demetra_m_v2
 
 JDCruncheR:::extractFrequency(demetra_m)
-

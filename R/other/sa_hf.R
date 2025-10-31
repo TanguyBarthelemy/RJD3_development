@@ -175,7 +175,9 @@ f <- function(
 
     # final sa
     y_trans <- y
-    if (log) y_trans <- log(y)
+    if (log) {
+        y_trans <- log(y)
+    }
     amb.sa <- y_trans - (cal.cmp + rowSums(amb_s))
 
     # group
@@ -187,7 +189,9 @@ f <- function(
         sa = amb.sa
     )
     rownames(final_decomposition) <- as.character(y_time)
-    if (log) final_decomposition <- exp(final_decomposition)
+    if (log) {
+        final_decomposition <- exp(final_decomposition)
+    }
 
     output <- c(
         list(preprocessing = pre_adj),

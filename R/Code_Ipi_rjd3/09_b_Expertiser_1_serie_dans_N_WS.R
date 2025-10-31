@@ -41,7 +41,6 @@ library("ggplot2")
 # library("xlsx")
 # library("zoo")
 
-
 # Lecture fonctions utiles ------------------------------------------------
 
 source("R/utilities.R")
@@ -107,7 +106,6 @@ for (i in summary_ws$num_ws) {
     ch <- summary_ws[i, "path"]
     print(paste("Le chemin est ", ch))
 
-
     ## Chargement du workspace -------------------------------------------------
 
     ws <- load_workspace(ch)
@@ -117,7 +115,6 @@ for (i in summary_ws$num_ws) {
     # On choisit une série (ici serie_a_exp)
     sa <- get_object(serie_ipi, which(get_all_names(serie_ipi) == serie_a_exp))
     model_sa <- get_model(sa, ws, userdefined = v_out)
-
 
     ## Séries principales ------------------------------------------------------
 
@@ -137,7 +134,6 @@ for (i in summary_ws$num_ws) {
     last_obs <- tail(main_series_df$date, n = 1)
     print(paste("Dernier point (non prevu) du ws :", last_obs))
 
-
     ## Série du preprocessing --------------------------------------------------
 
     print(paste("Séries du preprocessing du workspace", summary_ws[i, "name"]))
@@ -151,7 +147,6 @@ for (i in summary_ws$num_ws) {
     # On enleve effet de Paques et fêtes mobiles
     pre_processing_df <- subset(pre_processing_df, select = -c(ee, omhe))
     head(pre_processing_df)
-
 
     ## Output user defined -----------------------------------------------------
 
@@ -186,7 +181,6 @@ for (i in summary_ws$num_ws) {
     last_obs_prev <- tail(prev_series_df$date, n = 1)
     print(paste("Dernier point prevu du ws :", last_obs_prev))
 
-
     ## Ajustement schéma modèle ------------------------------------------------
 
     # AJUSTEMENT y_lin : prendre l exponenetielle en cas de modele multiplicatif
@@ -199,7 +193,6 @@ for (i in summary_ws$num_ws) {
 
     head(pre_processing_df)
     print(prev_series_df)
-
 
     ## Séries complémentaires --------------------------------------------------
 
@@ -220,7 +213,6 @@ for (i in summary_ws$num_ws) {
     print("Fin de série :")
     tail(comp_series_df)
 
-
     ## Réunion des tables ------------------------------------------------------
 
     # suffixe = id du ws avec _
@@ -233,7 +225,8 @@ for (i in summary_ws$num_ws) {
         merge(comp_series_df, by = "date", all = TRUE) |>
         merge(pre_processing_df, by = "date", all = TRUE)
     colnames(realises_df) <- c(
-        "date", paste0(colnames(realises_df)[-1], suffixe)
+        "date",
+        paste0(colnames(realises_df)[-1], suffixe)
     )
     print("Merge séries main + comp + prepro :")
     head(realises_df)
@@ -242,22 +235,35 @@ for (i in summary_ws$num_ws) {
 
     # Séries réalisées
     temp_main_series <- main_series_df[, c(
-        "date", "y", "sa",
-        "t", "s", "i"
+        "date",
+        "y",
+        "sa",
+        "t",
+        "s",
+        "i"
     )] |>
-        merge(comp_series_df[, c("date", "cal")],
+        merge(
+            comp_series_df[, c("date", "cal")],
             by = "date",
-            all.x = TRUE, all.y = FALSE
+            all.x = TRUE,
+            all.y = FALSE
         ) |>
-        merge(pre_processing_df[, c("date", "y_lin")],
+        merge(
+            pre_processing_df[, c("date", "y_lin")],
             by = "date",
-            all.x = TRUE, all.y = FALSE
+            all.x = TRUE,
+            all.y = FALSE
         )
     # Prévisions des séries
     temp_prev_series <- prev_series_df[, c(
         "date",
-        "y_f", "sa_f", "t_f", "s_f",
-        "i_f", "cal_f", "y_lin_f"
+        "y_f",
+        "sa_f",
+        "t_f",
+        "s_f",
+        "i_f",
+        "cal_f",
+        "y_lin_f"
     )]
     colnames(temp_prev_series) <- colnames(temp_main_series)
     extended_series_df <- rbind(
@@ -268,7 +274,8 @@ for (i in summary_ws$num_ws) {
     # Calcul des taux de croissance / évolution des séries y et sa
     ev_extended_series <- apply(
         X = subset(extended_series_df, select = c(y, sa)),
-        MARGIN = 2, FUN = tx_cr
+        MARGIN = 2,
+        FUN = tx_cr
     )
     ev_extended_series <- rbind(NA, ev_extended_series)
     colnames(ev_extended_series) <- paste0("ev_", colnames(ev_extended_series))
@@ -276,7 +283,8 @@ for (i in summary_ws$num_ws) {
     extended_series_df <- cbind(extended_series_df, ev_extended_series)
 
     colnames(extended_series_df) <- c(
-        "date", paste0(colnames(extended_series_df)[-1], suffixe)
+        "date",
+        paste0(colnames(extended_series_df)[-1], suffixe)
     )
     print("Réunion des séries réalisées et des prévisions associées :")
     head(extended_series_df)
@@ -285,7 +293,8 @@ for (i in summary_ws$num_ws) {
     # Séries prévues
 
     colnames(prev_series_df) <- c(
-        "date", paste0(colnames(prev_series_df)[-1], suffixe)
+        "date",
+        paste0(colnames(prev_series_df)[-1], suffixe)
     )
 
     ## Outliers ----------------------------------------------------------------
@@ -298,7 +307,6 @@ for (i in summary_ws$num_ws) {
         date = zoo::as.Date(time(regs_cjo_ts)),
         as.data.frame(regs_cjo_ts)
     )
-
 
     ## Réunions des différents WS ----------------------------------------------
 
@@ -344,8 +352,10 @@ extended_ws_df <- purrr::reduce(
 
 # L'ensemble des séries réalisées et forecast (mais sans être étendue)
 total_ws_df <- merge(
-    x = realises_ws_df, y = prevision_ws_df,
-    by = "date", all = TRUE
+    x = realises_ws_df,
+    y = prevision_ws_df,
+    by = "date",
+    all = TRUE
 )
 head(total_ws_df)
 tail(total_ws_df)
@@ -357,30 +367,43 @@ tail(total_ws_df)
 
 for (i in summary_ws$num_ws) {
     file_path <- paste0(
-        "./output/", summary_ws$name[i], "_",
-        serie_a_exp, ".xlsx"
+        "./output/",
+        summary_ws$name[i],
+        "_",
+        serie_a_exp,
+        ".xlsx"
     )
     xlsx::write.xlsx(
-        x = list_ws[[i]]$rea, file = file_path,
-        sheetName = "Séries réalisées", row.names = FALSE
+        x = list_ws[[i]]$rea,
+        file = file_path,
+        sheetName = "Séries réalisées",
+        row.names = FALSE
     )
     xlsx::write.xlsx(
-        x = list_ws[[i]]$prev, file = file_path,
-        sheetName = "Séries prévues", row.names = FALSE
+        x = list_ws[[i]]$prev,
+        file = file_path,
+        sheetName = "Séries prévues",
+        row.names = FALSE
     )
     xlsx::write.xlsx(
-        x = list_ws[[i]]$extended, file = file_path,
-        sheetName = "Séries réalisées étendues", row.names = FALSE
+        x = list_ws[[i]]$extended,
+        file = file_path,
+        sheetName = "Séries réalisées étendues",
+        row.names = FALSE
     )
     if (nrow(list_ws[[i]]$outliers) > 0) {
         xlsx::write.xlsx(
-            x = list_ws[[i]]$outliers, file = file_path,
-            sheetName = "Outliers", row.names = FALSE
+            x = list_ws[[i]]$outliers,
+            file = file_path,
+            sheetName = "Outliers",
+            row.names = FALSE
         )
     }
     xlsx::write.xlsx(
-        x = list_ws[[i]]$regs_cjo, file = file_path,
-        sheetName = "Régresseurs cjo", row.names = FALSE
+        x = list_ws[[i]]$regs_cjo,
+        file = file_path,
+        sheetName = "Régresseurs cjo",
+        row.names = FALSE
     )
 }
 
@@ -391,7 +414,8 @@ for (i in summary_ws$num_ws) {
 xlsx::write.xlsx(
     x = realises_ws_df,
     file = paste0("./output/Comparaison_ws_", serie_a_exp, ".xlsx"),
-    sheetName = "Séries réalisées", row.names = FALSE
+    sheetName = "Séries réalisées",
+    row.names = FALSE
 )
 
 ### Séries prévues -------------------------------------------------------------
@@ -399,7 +423,8 @@ xlsx::write.xlsx(
 xlsx::write.xlsx(
     x = prevision_ws_df,
     file = paste0("./output/Comparaison_ws_", serie_a_exp, ".xlsx"),
-    sheetName = "Séries prévues", row.names = FALSE
+    sheetName = "Séries prévues",
+    row.names = FALSE
 )
 
 ### Séries réalisées et prolongées ---------------------------------------------
@@ -407,7 +432,8 @@ xlsx::write.xlsx(
 xlsx::write.xlsx(
     x = extended_ws_df,
     file = paste0("./output/Comparaison_ws_", serie_a_exp, ".xlsx"),
-    sheetName = "Séries réalisées étendues", row.names = FALSE
+    sheetName = "Séries réalisées étendues",
+    row.names = FALSE
 )
 
 
@@ -421,8 +447,10 @@ tail(data_to_plot)
 
 data_to_plot <- data_to_plot |>
     tidyr::pivot_longer(
-        col = !date, names_to = "WS",
-        values_to = "sa", names_prefix = "sa_"
+        col = !date,
+        names_to = "WS",
+        values_to = "sa",
+        names_prefix = "sa_"
     ) |>
     dplyr::group_by(WS) |>
     subset(!is.na(sa))
@@ -445,8 +473,10 @@ tail(data_to_plot)
 
 data_to_plot <- data_to_plot |>
     tidyr::pivot_longer(
-        col = !date, names_to = "WS",
-        values_to = "ev", names_prefix = "ev_"
+        col = !date,
+        names_to = "WS",
+        values_to = "ev",
+        names_prefix = "ev_"
     ) |>
     dplyr::group_by(WS) |>
     subset(!is.na(ev))
@@ -467,7 +497,8 @@ ggplot2::ggplot(data_to_plot, ggplot2::aes(x = date, y = ev, colour = WS)) +
 # séries sa et sa_f
 
 data_to_plot <- total_ws_df[, c(
-    "date", paste0("sa_", summary_ws$id),
+    "date",
+    paste0("sa_", summary_ws$id),
     paste0("sa_f_", summary_ws$id)
 )] |>
     subset(date >= "2017-01-01")
@@ -477,12 +508,16 @@ tail(data_to_plot)
 
 data_to_plot <- data_to_plot |>
     tidyr::pivot_longer(
-        col = !date, names_to = "WS",
-        values_to = "sa", names_prefix = "sa_"
+        col = !date,
+        names_to = "WS",
+        values_to = "sa",
+        names_prefix = "sa_"
     ) |>
     tidyr::separate(
-        col = WS, sep = "f_",
-        into = c("serie", "WS"), fill = "left"
+        col = WS,
+        sep = "f_",
+        into = c("serie", "WS"),
+        fill = "left"
     ) |>
     dplyr::mutate(
         serie = dplyr::case_when(
@@ -493,7 +528,10 @@ data_to_plot <- data_to_plot |>
     ) |>
     subset(!is.na(sa))
 
-ggplot2::ggplot(data_to_plot, ggplot2::aes(x = date, y = sa, colour = WS, linetype = serie)) +
+ggplot2::ggplot(
+    data_to_plot,
+    ggplot2::aes(x = date, y = sa, colour = WS, linetype = serie)
+) +
     ggplot2::ggtitle(paste("Série", serie_a_exp)) +
     ggplot2::geom_line(linewidth = 1) +
     ggplot2::scale_linetype_manual(values = c("dashed", "solid")) +
@@ -515,8 +553,10 @@ tail(data_to_plot)
 
 data_to_plot <- data_to_plot |>
     tidyr::pivot_longer(
-        col = !date, names_to = "WS",
-        values_to = "lin", names_prefix = "y_lin_"
+        col = !date,
+        names_to = "WS",
+        values_to = "lin",
+        names_prefix = "y_lin_"
     ) |>
     dplyr::group_by(WS) |>
     subset(!is.na(lin))

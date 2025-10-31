@@ -14,7 +14,8 @@ jspec <- jsa_result[["spec"]]
 jresult <- jsa_result[["result"]]@internal
 y_ts <- get_ts(x)
 context_dictionary <- .jcall(
-    workspace, "Lec/tstoolkit/algorithm/ProcessingContext;",
+    workspace,
+    "Lec/tstoolkit/algorithm/ProcessingContext;",
     "getContext"
 )
 
@@ -34,7 +35,8 @@ freq <- frequency(y_ts)
 # x13JavaResults
 
 jrarima <- .jcall(
-    jrslt, "Lec/tstoolkit/jdr/regarima/Processor$Results;",
+    jrslt,
+    "Lec/tstoolkit/jdr/regarima/Processor$Results;",
     "regarima"
 )
 jrobct_arima <- new(Class = "RegArima_java", internal = jrarima)
@@ -43,18 +45,26 @@ if (is.null(jrobct@internal)) {
     return(NULL)
 }
 res <- jrslt$getResults()$getProcessingInformation()
-if (is.null(jrslt$getDiagnostics()) && !.jcall(
-    res, "Z",
-    "isEmpty"
-)) {
+if (
+    is.null(jrslt$getDiagnostics()) &&
+        !.jcall(
+            res,
+            "Z",
+            "isEmpty"
+        )
+) {
     proc_info <- jrslt$getResults()$getProcessingInformation()
     error_msg <- .jcall(
-        proc_info, "Ljava/lang/Object;",
-        "get", 0L
+        proc_info,
+        "Ljava/lang/Object;",
+        "get",
+        0L
     )$getErrorMessages(proc_info)
     warning_msg <- .jcall(
-        proc_info, "Ljava/lang/Object;",
-        "get", 0L
+        proc_info,
+        "Ljava/lang/Object;",
+        "get",
+        0L
     )$getWarningMessages(proc_info)
     if (!.jcall(error_msg, "Z", "isEmpty")) {
         stop(error_msg$toString())
@@ -64,8 +74,10 @@ if (is.null(jrslt$getDiagnostics()) && !.jcall(
     }
 }
 reg <- RJDemetra:::regarima_defX13(
-    jrobj = jrobct_arima, spec = spec,
-    context_dictionary = context_dictionary, extra_info = extra_info,
+    jrobj = jrobct_arima,
+    spec = spec,
+    context_dictionary = context_dictionary,
+    extra_info = extra_info,
     freq = freq
 )
 
@@ -91,9 +103,20 @@ name <- "mstats.M(1)"
 
 
 if (is.null(RJDemetra:::rjdemetra_java$clobject)) {
-    RJDemetra:::rjdemetra_java$clobject <- .jcall("java/lang/Class", "Ljava/lang/Class;", "forName", "java.lang.Object")
+    RJDemetra:::rjdemetra_java$clobject <- .jcall(
+        "java/lang/Class",
+        "Ljava/lang/Class;",
+        "forName",
+        "java.lang.Object"
+    )
 }
-s <- .jcall(rslt, "Ljava/lang/Object;", "getData", name, RJDemetra:::rjdemetra_java$clobject)
+s <- .jcall(
+    rslt,
+    "Ljava/lang/Object;",
+    "getData",
+    name,
+    RJDemetra:::rjdemetra_java$clobject
+)
 
 
 if (is.null(s)) {
@@ -132,15 +155,10 @@ if (.jinstanceof(s, "ec.tstoolkit.timeseries.simplets.TsData")) {
 }
 
 
-
-
-
 mstats <- lapply(mstats_names, function(diag) {
     RJDemetra:::result(jrobj, diag)
 })
 mstats <- matrix(unlist(mstats), ncol = 1)
-
-
 
 
 rownames(mstats) <- mstats_rownames
@@ -151,42 +169,35 @@ si_ratio <- cbind(d8 = d8, d10 = d10)
 s_filter <- result(jrobj, "decomposition.d9filter")
 t_filter <- result(jrobj, "decomposition.d12filter")
 z <- list(
-    mode = mode, mstats = mstats, si_ratio = si_ratio,
-    s_filter = s_filter, t_filter = t_filter
+    mode = mode,
+    mstats = mstats,
+    si_ratio = si_ratio,
+    s_filter = s_filter,
+    t_filter = t_filter
 )
 return(z)
 
 
-
-
-
 z <- list(
-    specification = specification, mode = jd_results$mode,
-    mstats = jd_results$mstats, si_ratio = jd_results$si_ratio,
-    s_filter = jd_results$s_filter, t_filter = jd_results$t_filter
+    specification = specification,
+    mode = jd_results$mode,
+    mstats = jd_results$mstats,
+    si_ratio = jd_results$si_ratio,
+    s_filter = jd_results$s_filter,
+    t_filter = jd_results$t_filter
 )
 class(z) <- c("decomposition_X11")
 deco <- z
 # FIN  RJDemetra:::decomp_defX13
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 fin <- RJDemetra:::final(jrobj = jrobct)
 diagn <- RJDemetra:::diagnostics(jrobj = jrobct)
 z <- list(
-    regarima = reg, decomposition = deco, final = fin,
-    diagnostics = diagn, user_defined = user_defined(
+    regarima = reg,
+    decomposition = deco,
+    final = fin,
+    diagnostics = diagn,
+    user_defined = user_defined(
         userdefined,
         jrobct
     )

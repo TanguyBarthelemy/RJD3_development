@@ -22,11 +22,9 @@
 
 ##### Missing value correction (vs GUI)
 
-
 ##### 1 Output (vs GUI + check preadj effects)
 # default output
 # user defined out put
-
 
 ######
 ###
@@ -34,16 +32,26 @@ library("rjd3toolkit")
 library("rjd3x13")
 
 
-
-
 # Data
 
-ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
+ipi <- read.csv2(
+    "C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv"
+)
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 # creating a TS object from a data frame
-y_raw <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022, 9))
-y_new <- ts(ipi[, "RF0812"], frequency = 12, start = c(1990, 1), end = c(2022, 9))
+y_raw <- ts(
+    ipi[, "RF0812"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2022, 9)
+)
+y_new <- ts(
+    ipi[, "RF0812"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2022, 9)
+)
 y_raw
 
 ## Package Doc remarks
@@ -60,15 +68,14 @@ sa_x13_d <- rjd3x13::x13(y_raw, x13_spec_d, userdefined = "decomposition.10")
 sa_x13_d$user_defined$decomposition.10
 
 
-
-
 ### issue 1: modes x11 yc rjdemetra
 
 ### issue 2: v sigmas yc rjdemetra
 
 ### ISSUE benchmarking enabled : ok works
 x13_spec_d <- rjd3x13::x13_spec("rsa5c")
-x13_spec_d <- rjd3toolkit::set_benchmarking(x13_spec_d,
+x13_spec_d <- rjd3toolkit::set_benchmarking(
+    x13_spec_d,
     enabled = TRUE,
     target = "original",
     rho = 0.8,
@@ -89,11 +96,18 @@ sa_x13_d$user_defined$y_b # NULL !!
 # modif doc
 
 rjd3toolkit::ABS$X0.2.09.10.M
-regarima_outliers(rjd3toolkit::ABS$X0.2.09.10.M,
-    order = c(1, 1, 1), seasonal = c(0, 1, 1),
+regarima_outliers(
+    rjd3toolkit::ABS$X0.2.09.10.M,
+    order = c(1, 1, 1),
+    seasonal = c(0, 1, 1),
     mean = FALSE,
-    X = NULL, X.td = NULL,
-    ao = TRUE, ls = FALSE, tc = TRUE, so = TRUE, cv = 4
+    X = NULL,
+    X.td = NULL,
+    ao = TRUE,
+    ls = FALSE,
+    tc = TRUE,
+    so = TRUE,
+    cv = 4
 )
 
 ## pb avec declaration modeles arima order=c(1,1,1)? declared as integer later
@@ -116,7 +130,6 @@ regarima_outliers(rjd3toolkit::ABS$X0.2.09.10.M,
 # need 1 create a sheer X11 customized spec, default spec = spec_x11() : OK ?
 # TO DO :make clearer the difference of "X11" and other predifined x13 specs "RSA5"
 
-
 # need 2 : customize the x11 part of an X13 spec: MET ?
 # spec de depart = "RSA5c" pex
 
@@ -125,7 +138,6 @@ regarima_outliers(rjd3toolkit::ABS$X0.2.09.10.M,
 #' @param bias TODO.: voir code JP pour tramo
 #'
 # example to be added (add spec creation code )
-
 
 # modif 1
 
@@ -138,7 +150,6 @@ regarima_outliers(rjd3toolkit::ABS$X0.2.09.10.M,
 
 # Modif 3
 #' @param x the specification to be modified, default X11 spec can be be obtained as 'x=spec_x11()'
-
 
 ### Test
 # set_x11 <- function(x,
@@ -157,7 +168,8 @@ regarima_outliers(rjd3toolkit::ABS$X0.2.09.10.M,
 
 init_spec <- spec_x11()
 # issue
-new_spec <- set_x11(init_spec,
+new_spec <- set_x11(
+    init_spec,
     mode = "LogAdditive",
     seasonal.comp = 1,
     seasonal.filter = "S3X9",
@@ -186,7 +198,8 @@ new_spec
 init_spec <- x13_spec()
 init_spec
 # issue : seasonal filter and sigma vector
-new_spec <- set_x11(init_spec,
+new_spec <- set_x11(
+    init_spec,
     mode = "LogAdditive",
     seasonal.comp = 1,
     seasonal.filter = "S3X9",
@@ -230,8 +243,10 @@ sp <- x13_spec("rg5c")
 y <- rjd3toolkit::ABS$X0.2.09.10.M
 fast_x13(y, spec = "rsa5c") # works
 x13(y, spec = "rsa5c") # works ok but issue = no print ? or no automatic print ?
-sp <- rjd3toolkit::add_outlier(sp,
-    type = c("AO"), c("2015-01-01", "2010-01-01")
+sp <- rjd3toolkit::add_outlier(
+    sp,
+    type = c("AO"),
+    c("2015-01-01", "2010-01-01")
 )
 sp <- rjd3toolkit::set_transform(
     rjd3toolkit::set_tradingdays(
@@ -240,9 +255,7 @@ sp <- rjd3toolkit::set_transform(
     ),
     fun = "None"
 )
-sp <- set_x11(sp,
-    henderson.filter = 13
-)
+sp <- set_x11(sp, henderson.filter = 13)
 fast_x13(y, spec = sp)
 
 ### pb =  modif de la spec et notamment de la partie x11
@@ -256,8 +269,10 @@ regarima(y, "rg3") # issue: no print
 #'
 #' If you want to customize a specification you have to create a specification object first
 sp <- x13_spec("rsa5c")
-sp <- rjd3toolkit::add_outlier(sp,
-    type = c("AO"), c("2015-01-01", "2010-01-01")
+sp <- rjd3toolkit::add_outlier(
+    sp,
+    type = c("AO"),
+    c("2015-01-01", "2010-01-01")
 )
 # sp <-  rjd3toolkit::set_transform(
 #'    rjd3toolkit::set_tradingdays(
@@ -332,7 +347,6 @@ sa_x13_d$result_spec$regarima$arima$bphi
 x13_spec_d$regarima$arima$btheta
 sa_x13_d$estimation_spec$regarima$arima$btheta
 sa_x13_d$result_spec$regarima$arima$btheta
-
 
 ##################### OUTPUT TEST
 ## To test vs GUI + check preadj effects: read vs and compare TS ?

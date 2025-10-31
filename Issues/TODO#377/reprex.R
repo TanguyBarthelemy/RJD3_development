@@ -18,7 +18,10 @@ rjwsacruncher::cruncher_and_param(
     log_file = "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#67/log.txt"
 )
 
-QR_auto <- JDCruncheR::extract_QR(file.path(path_ws, "Output/SAProcessing-1/demetra_m.csv"))
+QR_auto <- JDCruncheR::extract_QR(file.path(
+    path_ws,
+    "Output/SAProcessing-1/demetra_m.csv"
+))
 QR_auto |>
     compute_score(na.rm = TRUE) |>
     extract_score()
@@ -41,7 +44,10 @@ rjwsacruncher::cruncher_and_param(
     log_file = "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#67/log.txt"
 )
 
-QR_auto <- JDCruncheR::extract_QR(file.path(path_ws, "Output/SAProcessing-1/demetra_m.csv"))
+QR_auto <- JDCruncheR::extract_QR(file.path(
+    path_ws,
+    "Output/SAProcessing-1/demetra_m.csv"
+))
 QR_auto |>
     compute_score(na.rm = TRUE) |>
     extract_score()
@@ -65,7 +71,10 @@ rjwsacruncher::cruncher_and_param(
     log_file = "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#67/log.txt"
 )
 
-QR_auto <- JDCruncheR::extract_QR(file.path(path_ws, "Output/SAProcessing-1/demetra_m.csv"))
+QR_auto <- JDCruncheR::extract_QR(file.path(
+    path_ws,
+    "Output/SAProcessing-1/demetra_m.csv"
+))
 QR_auto |>
     compute_score(na.rm = TRUE) |>
     extract_score()
@@ -89,7 +98,10 @@ rjwsacruncher::cruncher_and_param(
     log_file = "C:/Users/UTZK0M/Documents/Projets R/Projets MTS/Packages/rjduniverse/test/RJD3_development/Issues/TODO#67/log.txt"
 )
 
-QR_auto <- JDCruncheR::extract_QR(file.path(path_ws, "Output/SAProcessing-1/demetra_m.csv"))
+QR_auto <- JDCruncheR::extract_QR(file.path(
+    path_ws,
+    "Output/SAProcessing-1/demetra_m.csv"
+))
 QR_auto |>
     compute_score(na.rm = TRUE) |>
     extract_score()

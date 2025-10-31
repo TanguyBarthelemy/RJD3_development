@@ -22,13 +22,13 @@
 # creates an Sarima model
 ## rjd3 modelling estimates arima model, time comp : 20 times faster that native R
 
-
 options(stringasfactors = FALSE)
 
 
-
 # Mes donnees
-ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/Donnees/IPI_nace4.csv")
+ipi <- read.csv2(
+    "C:/Users/YWYD5I/Documents/00_RJD3_Developpement/Donnees/IPI_nace4.csv"
+)
 head(ipi)
 # import en CHR...?
 str(ipi)
@@ -51,10 +51,14 @@ class(mts_ipi)
 # une serie IPI pour la suite : nom generique
 
 # creation d'un objet TS à partir d'un data frame
-serie_brute <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9))
+serie_brute <- ts(
+    ipi[, "RF3030"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2019, 9)
+)
 serie_brute
 y_raw <- serie_brute
-
 
 
 ###########################################################
@@ -67,7 +71,12 @@ library("ggdemetra")
 #  il faut une date au format ts
 # head(ipi)
 #
-mts_ipi_total <- ts(ipi[, -1], frequency = 12, start = c(1990, 1), end = c(2019, 9))
+mts_ipi_total <- ts(
+    ipi[, -1],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2019, 9)
+)
 mts_ipi <- window(mts_ipi_total, start = c(2010, 1))
 
 head(mts_ipi)
@@ -84,7 +93,8 @@ base_plot <- ggplot(data = ipi_df, mapping = aes(x = date, y = RF2740)) +
     geom_line() +
     labs(
         title = "Industrial Production Index (IPI)",
-        x = "date", y = "RF2740"
+        x = "date",
+        y = "RF2740"
     )
 base_plot
 
@@ -94,7 +104,8 @@ spec <- RJDemetra::x13_spec("RSA3", tradingdays.option = "WorkingDays")
 enhanced_plot <- base_plot +
     # function "geom_sa" adds specified components
     geom_sa(
-        component = "y_f", linetype = 2,
+        component = "y_f",
+        linetype = 2,
         spec = spec
     ) +
     geom_sa(component = "sa", color = "red") +
@@ -103,17 +114,21 @@ enhanced_plot <- base_plot +
     geom_outlier(
         geom = "label_repel",
         vjust = 4,
-        ylim = c(NA, 65), force = 10,
+        ylim = c(NA, 65),
+        force = 10,
         arrow = arrow(
             length = unit(0.03, "npc"),
-            type = "closed", ends = "last"
+            type = "closed",
+            ends = "last"
         )
     ) +
     # adding Arima Model
     geom_arima(
         geom = "label",
-        x_arima = -Inf, y_arima = -Inf,
-        vjust = -1, hjust = -0.1,
+        x_arima = -Inf,
+        y_arima = -Inf,
+        vjust = -1,
+        hjust = -0.1,
         message = FALSE
     )
 print(enhanced_plot)
@@ -124,17 +139,19 @@ diagnostics <- c(
     `Residual f-test (p-value)` = "diagnostics.ftest"
 )
 
-enhanced_plot + geom_diagnostics(
-    diagnostics = diagnostics,
-    ymin = 150, ymax = 200, xmin = 2016,
-    table_theme = gridExtra::ttheme_default(base_size = 6)
-)
+enhanced_plot +
+    geom_diagnostics(
+        diagnostics = diagnostics,
+        ymin = 150,
+        ymax = 200,
+        xmin = 2016,
+        table_theme = gridExtra::ttheme_default(base_size = 6)
+    )
 
 print(enhanced_plot)
 
 ##################
 # rjdmarkdown
-
 
 # install.packages("RJDemetra", type="source", INSTALL_opts = "--no-multiarch" )
 # library("RJDemetra")
@@ -169,7 +186,9 @@ add_sa_item(wk, "sa1", jsa_x13, "X13")
 add_sa_item(wk, "sa1", sa_ts, "TramoSeats")
 compute(wk)
 
-create_rmd(wk, "test2.Rmd",
+create_rmd(
+    wk,
+    "test2.Rmd",
     output_format = "pdf_document",
     output_options = list(
         toc = TRUE,

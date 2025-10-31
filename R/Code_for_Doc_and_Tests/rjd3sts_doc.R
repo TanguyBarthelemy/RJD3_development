@@ -4,19 +4,28 @@ bsm <- model()
 
 # Add components to the model
 
-llt <- locallineartrend("llt",
-    levelVariance = .01, fixedLevelVariance = FALSE,
-    slopevariance = .01, fixedSlopeVariance = FALSE
+llt <- locallineartrend(
+    "llt",
+    levelVariance = .01,
+    fixedLevelVariance = FALSE,
+    slopevariance = .01,
+    fixedSlopeVariance = FALSE
 )
 
-seasDOW <- seasonal("seasDOW",
-    period = 7, type = "Trigonometric",
-    variance = .01, fixed = FALSE
+seasDOW <- seasonal(
+    "seasDOW",
+    period = 7,
+    type = "Trigonometric",
+    variance = .01,
+    fixed = FALSE
 )
 
-seasDOY <- seasonal("seasDOY",
-    period = 365.2424, type = "Trigonometric",
-    variance = .01, fixed = FALSE
+seasDOY <- seasonal(
+    "seasDOY",
+    period = 365.2424,
+    type = "Trigonometric",
+    variance = .01,
+    fixed = FALSE
 )
 
 # 365.2425: le fonction l'arrondit ..
@@ -35,7 +44,6 @@ bsm
 
 
 ## avec agregation tout en meme temps (cree pour cumulator)
-
 
 # si tout par defaut pas besoin de defnir l'eq de
 # Define equation de mesure (boite vide)
@@ -56,9 +64,12 @@ class(df_daily$births)
 # data<-as.matrix(df_daily$births[1:2000])
 data <- as.numeric(df_daily$births[1:2000])
 class(data)
-rslt <- rjd3sts::estimate(bsm, data,
+rslt <- rjd3sts::estimate(
+    bsm,
+    data,
     marginal = FALSE,
-    concentrated = TRUE, initialization = "SqrtDiffuse"
+    concentrated = TRUE,
+    initialization = "SqrtDiffuse"
 )
 # View(data)
 rslt$internal
@@ -87,14 +98,17 @@ pre.tst <- pre.est / pre.esd # t-statistics
 
 ## User-defined deterministic effects
 
-out.usr <- matrix(round(
-    cbind(
-        pre.est[1:n.usr],
-        pre.esd[1:n.usr],
-        pre.tst[1:n.usr]
+out.usr <- matrix(
+    round(
+        cbind(
+            pre.est[1:n.usr],
+            pre.esd[1:n.usr],
+            pre.tst[1:n.usr]
+        ),
+        digits = c(rep(3, n.usr), rep(4, 2 * n.usr))
     ),
-    digits = c(rep(3, n.usr), rep(4, 2 * n.usr))
-), ncol = 3)
+    ncol = 3
+)
 dimnames(out.usr) <- list(
     colnames(births.reg),
     c("Est.", "SE", "t-stat.")
@@ -104,8 +118,15 @@ out.usr
 ## Automatically detected outliers
 
 n.det <- length(pre.est)
-typ.otl <- stringr::str_sub(births.bsm$model$variables[(n.usr + 1):n.det], start = 1, end = 2)
-idx.otl <- as.numeric(stringr::str_sub(births.bsm$model$variables[(n.usr + 1):n.det], start = 4))
+typ.otl <- stringr::str_sub(
+    births.bsm$model$variables[(n.usr + 1):n.det],
+    start = 1,
+    end = 2
+)
+idx.otl <- as.numeric(stringr::str_sub(
+    births.bsm$model$variables[(n.usr + 1):n.det],
+    start = 4
+))
 
 out.otl <- data.frame(
     "Type" = typ.otl,
@@ -129,14 +150,27 @@ births <- births %>%
     mutate("obs.llt" = births.bsm$model$components[, 2]) %>%
     mutate("obs.slp" = births.bsm$model$components[, 3]) %>%
     mutate("obs.woy" = births.bsm$model$components[, 4]) %>%
-    mutate("obs.hol" = as.numeric(births.bsm$model$X[, 1:n.hol] %*% pre.est[1:n.hol])) %>%
-    mutate("obs.otl" = as.numeric(births.bsm$model$X[, (n.hol + 1):n.det] %*%
-        pre.est[(n.hol + 1):n.det])) %>%
+    mutate(
+        "obs.hol" = as.numeric(
+            births.bsm$model$X[, 1:n.hol] %*% pre.est[1:n.hol]
+        )
+    ) %>%
+    mutate(
+        "obs.otl" = as.numeric(
+            births.bsm$model$X[, (n.hol + 1):n.det] %*%
+                pre.est[(n.hol + 1):n.det]
+        )
+    ) %>%
     mutate(obs.csa = obs - (obs.hol + obs.woy))
 
 # Retrieve q-ratios
 
-round(c(
-    births.bsm$bsm$final$level, births.bsm$bsm$final$slope, births.bsm$bsm$final$seasonal,
-    births.bsm$bsm$final$noise
-), 7)
+round(
+    c(
+        births.bsm$bsm$final$level,
+        births.bsm$bsm$final$slope,
+        births.bsm$bsm$final$seasonal,
+        births.bsm$bsm$final$noise
+    ),
+    7
+)

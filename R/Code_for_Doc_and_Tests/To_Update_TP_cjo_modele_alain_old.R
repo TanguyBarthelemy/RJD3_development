@@ -12,7 +12,6 @@ setwd("Z:/Anna_SMYK/0_R_Team/WG_Input")
 # Questions to configure
 #
 
-
 # # # Configurer si besoin le proxy
 # # proxy <- "http://MonNNI:MonMotDePasse@proxy-surf.rte-france.com:3128"
 # # Sys.setenv(HTTPS_PROXY = proxy)
@@ -37,7 +36,6 @@ remotes::install_github("aqlt/rjd3modelling@v0.0.7")
 remotes::install_github("aqlt/rjd3sa@v0.0.7")
 
 
-
 #  donnees
 fichier <- read.csv2("Z:/Anna_SMYK/0_Etude_SL/Donnees/IPI_nace4.csv")
 fichier[1:5, 1:10]
@@ -46,10 +44,7 @@ fichier[1:5, 1:10]
 # url <- "https://aqlt-formation-rte.netlify.app/data/data_rte.xlsx"
 # download.file(url, fichier)
 date_deb <- 1990
-ipi <- ts(fichier[, -1],
-    start = date_deb,
-    frequency = 12
-)
+ipi <- ts(fichier[, -1], start = date_deb, frequency = 12)
 
 library("rjd3modelling")
 french_calendar <- calendar.new()
@@ -57,9 +52,7 @@ french_calendar <- calendar.new()
 # fixed day in gui idem (avantage = code)
 calendar.fixedday(french_calendar, month = 5, day = 8)
 # ester related : idem GUI, ici 60 jours apres = pentecote
-calendar.easter(french_calendar,
-    offset = 60
-)
+calendar.easter(french_calendar, offset = 60)
 # holiday = special day in GUI
 calendar.holiday(french_calendar, "NEWYEAR")
 
@@ -84,8 +77,11 @@ groups <- c(1, 2, 3, 4, 5, 6, 0)
 frequency <- 12
 start <- c(2000, 1)
 # fonction htd : a partir d'un calendrier specifique
-wkd <- htd(french_calendar,
-    frequency = frequency, start = start, length = 12 * 35,
+wkd <- htd(
+    french_calendar,
+    frequency = frequency,
+    start = start,
+    length = 12 * 35,
     groups = groups
 )
 # transfo en time series
@@ -95,8 +91,11 @@ wkd <- ts(wkd, start = start, frequency = frequency)
 groups <- c(1, 1, 1, 1, 1, 0, 0)
 frequency <- 12
 start <- c(2000, 1)
-wkd <- htd(french_calendar,
-    frequency = frequency, start = start, length = 12 * 35,
+wkd <- htd(
+    french_calendar,
+    frequency = frequency,
+    start = start,
+    length = 12 * 35,
     groups = groups
 )
 wkd <- ts(wkd, start = start, frequency = frequency)
@@ -104,16 +103,15 @@ wkd <- ts(wkd, start = start, frequency = frequency)
 # td et htd renvoient des vecteurs numeriques
 
 wkd_def <- td(
-    frequency = frequency, start = start, length = 12 * 35,
+    frequency = frequency,
+    start = start,
+    length = 12 * 35,
     groups = groups
 )
 wkd_def <- ts(wkd_def, start = start, frequency = frequency)
 data <- ts.union(wkd, wkd_def)
 str(data)
-plot(data,
-    col = c("orange", "black"),
-    plot.type = "single"
-)
+plot(data, col = c("orange", "black"), plot.type = "single")
 # TP à comparer avec regresseurs insee officiels
 
 ############ regresseur LY
@@ -138,33 +136,51 @@ end <- c(2030, 1)
 length <- (end[1] - start[1]) * 12 + end[2] - start[2]
 
 ly <- leap_year(
-    frequency = frequency, start = start,
+    frequency = frequency,
+    start = start,
     end = end
 )
-reg6 <- htd(french_calendar,
-    frequency = frequency, start = start, length = length,
+reg6 <- htd(
+    french_calendar,
+    frequency = frequency,
+    start = start,
+    length = length,
     groups = c(1, 2, 3, 4, 5, 6, 0)
 )
-reg5 <- htd(french_calendar,
-    frequency = frequency, start = start, length = length,
+reg5 <- htd(
+    french_calendar,
+    frequency = frequency,
+    start = start,
+    length = length,
     groups = c(1, 2, 3, 4, 5, 0, 0)
 )
-reg3 <- htd(french_calendar,
-    frequency = frequency, start = start, length = length,
+reg3 <- htd(
+    french_calendar,
+    frequency = frequency,
+    start = start,
+    length = length,
     groups = c(1, 2, 2, 2, 2, 0, 0)
 )
-reg2 <- htd(french_calendar,
-    frequency = frequency, start = start, length = length,
+reg2 <- htd(
+    french_calendar,
+    frequency = frequency,
+    start = start,
+    length = length,
     groups = c(1, 1, 1, 1, 1, 2, 0)
 )
-reg1 <- htd(french_calendar,
-    frequency = frequency, start = start, length = length,
+reg1 <- htd(
+    french_calendar,
+    frequency = frequency,
+    start = start,
+    length = length,
     groups = c(1, 1, 1, 1, 1, 0, 0)
 )
 
 str(reg1)
-regresseurs_JO <- ts(cbind(reg1, reg2, reg3, reg5, reg6),
-    start = start, frequency = frequency
+regresseurs_JO <- ts(
+    cbind(reg1, reg2, reg3, reg5, reg6),
+    start = start,
+    frequency = frequency
 )
 regresseurs_JO <- ts.union(
     regresseurs_JO,
@@ -175,7 +191,10 @@ colnames(regresseurs_JO) <- c(
     sprintf("REG2_%s", c("lundi_a_vendredi", "samedi")),
     sprintf("REG3_%s", c("lundi", "mardi_a_vendredi")),
     sprintf("REG5_%s", c("lundi", "mardi", "mercredi", "jeudi", "vendredi")),
-    sprintf("REG6_%s", c("lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi")),
+    sprintf(
+        "REG6_%s",
+        c("lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi")
+    ),
     "leap_year"
 )
 # effet paques
@@ -215,14 +234,21 @@ summary(myreg1)
 # ### TEST contraintes lineaires avec librairie car
 # package inconnu
 library("car")
-linearHypothesis(myreg1,
+linearHypothesis(
+    myreg1,
     c("lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"),
     c(0, 0, 0, 0, 0, 0),
     test = "F"
 )
 # 2eme test
-linearHypothesis(myreg1,
-    c("lundi = mardi", "mardi = mercredi", "mercredi = jeudi", "jeudi = vendredi"),
+linearHypothesis(
+    myreg1,
+    c(
+        "lundi = mardi",
+        "mardi = mercredi",
+        "mercredi = jeudi",
+        "jeudi = vendredi"
+    ),
     test = "F"
 )
 
@@ -246,7 +272,6 @@ mysa$diagnostics
 # Sous JDemetra+, les tests affichés portent sur les
 # 8 dernières années et dans RJDemetra sur la série entière
 
-
 # Pour reproduire les résultats de JDemetra+, utiliser la fonction rjd3sa::td.f().
 # Pour le test, trois spécifications différentes sont possibles :
 # modele AR
@@ -256,7 +281,6 @@ mysa$diagnostics
 # avec yt pris en logarithme si le schéma est multiplicatif.
 # Dans tous les cas (H0):β1=⋯=β6=0 et les regresseurs utilisés
 # ne prennent pas en compte le calendrier personnalise que l’on a cree
-
 
 # Pour l'installer :
 # remotes::install_github("palatej/rjd3sa")\
@@ -311,18 +335,34 @@ td_reg_post_2003 <- td_reg_pre_2003 <-
 window(td_reg_pre_2003, end = c(2002, 12)) <- 0
 window(td_reg_post_2003, start = c(2003, 1)) <- 0
 wkd2 <- ts.union(
-    td_reg_pre_2003, td_reg_post_2003,
+    td_reg_pre_2003,
+    td_reg_post_2003,
     leap_year(frequency = 12)
 )
 colnames(wkd2) <- c(
-    paste0(c(
-        "lundi", "mardi", "mercredi", "jeudi", "vendredi",
-        "samedi"
-    ), "_av2003"),
-    paste0(c(
-        "lundi", "mardi", "mercredi", "jeudi", "vendredi",
-        "samedi"
-    ), "_ap2003"), "leap_year"
+    paste0(
+        c(
+            "lundi",
+            "mardi",
+            "mercredi",
+            "jeudi",
+            "vendredi",
+            "samedi"
+        ),
+        "_av2003"
+    ),
+    paste0(
+        c(
+            "lundi",
+            "mardi",
+            "mercredi",
+            "jeudi",
+            "vendredi",
+            "samedi"
+        ),
+        "_ap2003"
+    ),
+    "leap_year"
 )
 
 myspec2_sa <- x13_spec(
@@ -332,7 +372,9 @@ myspec2_sa <- x13_spec(
     usrdef.varType = "Calendar",
     easter.enabled = FALSE
 )
-mysa2 <- x13(ipi_fr, myspec2_sa,
+mysa2 <- x13(
+    ipi_fr,
+    myspec2_sa,
     userdefined = c("diagnostics.td-sa-last", "diagnostics.td-i-last")
 )
 summary(mysa2$regarima)

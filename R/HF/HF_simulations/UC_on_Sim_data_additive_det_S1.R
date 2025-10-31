@@ -151,12 +151,16 @@ for (j in 1:nb_series) {
         #store t
         list_X11_t[[j]] <- x11.doy$decomposition$t
         # RMSE for X11 (vs True) T
-        list_RMSE_X11_t[[j]] <- sqrt(mean((list_X11_t[[j]] - list_true_t[[j]])^2))
+        list_RMSE_X11_t[[j]] <- sqrt(mean(
+            (list_X11_t[[j]] - list_true_t[[j]])^2
+        ))
 
         #store i
         list_X11_i[[j]] <- x11.doy$decomposition$i
         # RMSE for X11 (vs True) I
-        list_RMSE_X11_i[[j]] <- sqrt(mean((list_X11_i[[j]] - list_true_i[[j]])^2))
+        list_RMSE_X11_i[[j]] <- sqrt(mean(
+            (list_X11_i[[j]] - list_true_i[[j]])^2
+        ))
 
         #store sa
         list_X11_sa[[j]] <- x11.doy$decomposition$sa
@@ -462,69 +466,75 @@ list_time_Tbats <- as.list(rep(NA, nb_series))
 
 for (j in 1:nb_series) {
     # Seasonal periodicities (in days)
-    seas_per <- c(7, 365.2425)
-    z_TBATS <- msts(
-        list_raw[[j]],
-        seasonal.periods = seas_per,
-        start = decimal_date(start_date)
-    )
-    #results
-    start <- Sys.time()
-    res <- tbats(z_TBATS, use.box.cox = FALSE, use.damped.trend = FALSE) # desp options
-    end <- Sys.time()
-    list_time_Tbats[[j]] <- round(
-        as.numeric(difftime(end, start, units = "secs")),
-        3
-    )
 
-    # Extracting components & residuals
-    comps_tbats <- tbats.components(res)
-    head(comps_tbats)
-    # class(comps_tbats)
-    # class(list_Tbats_s7[[j]])
-    # class(list_true_s7[[j]])
-    # length(list_Tbats_s7[[j]])
-    # length(list_true_s7[[j]])
+    res2 <- try({
+        seas_per <- c(7, 365.2425)
+        z_TBATS <- msts(
+            list_raw[[j]],
+            seasonal.periods = seas_per,
+            start = decimal_date(start_date)
+        )
+        #results
+        start <- Sys.time()
+        res <- tbats(z_TBATS, use.box.cox = FALSE, use.damped.trend = FALSE) # desp options
+        end <- Sys.time()
+    })
 
-    #store s7
-    list_Tbats_s7[[j]] <- as.numeric(comps_tbats[, 3])
-    # RMSE for amb (vs True) S7
-    list_RMSE_Tbats_s7[[j]] <- sqrt(mean(
-        (list_Tbats_s7[[j]] - list_true_s7[[j]])^2
-    ))
+    if (!inherits(res2, "try-error")) {
+        list_time_Tbats[[j]] <- round(
+            as.numeric(difftime(end, start, units = "secs")),
+            3
+        )
 
-    #store s365
-    list_Tbats_s365[[j]] <- as.numeric(comps_tbats[, 4])
-    # RMSE for amb (vs True) S365
-    list_RMSE_Tbats_s365[[j]] <- sqrt(mean(
-        (list_Tbats_s365[[j]] - list_true_s365[[j]])^2
-    ))
+        # Extracting components & residuals
+        comps_tbats <- tbats.components(res)
+        head(comps_tbats)
+        # class(comps_tbats)
+        # class(list_Tbats_s7[[j]])
+        # class(list_true_s7[[j]])
+        # length(list_Tbats_s7[[j]])
+        # length(list_true_s7[[j]])
 
-    #store t
-    list_Tbats_t[[j]] <- as.numeric(comps_tbats[, 2])
-    # RMSE for amb (vs True) T
-    list_RMSE_Tbats_t[[j]] <- sqrt(mean(
-        (list_Tbats_t[[j]] - list_true_t[[j]])^2
-    ))
+        #store s7
+        list_Tbats_s7[[j]] <- as.numeric(comps_tbats[, 3])
+        # RMSE for amb (vs True) S7
+        list_RMSE_Tbats_s7[[j]] <- sqrt(mean(
+            (list_Tbats_s7[[j]] - list_true_s7[[j]])^2
+        ))
 
-    #store i
-    list_Tbats_i[[j]] <- as.numeric(comps_tbats[, 1]) -
-        as.numeric(comps_tbats[, 2]) -
-        as.numeric(comps_tbats[, 3]) -
-        as.numeric(comps_tbats[, 4])
-    # RMSE for amb (vs True) T
-    list_RMSE_Tbats_i[[j]] <- sqrt(mean(
-        (list_Tbats_i[[j]] - list_true_i[[j]])^2
-    ))
+        #store s365
+        list_Tbats_s365[[j]] <- as.numeric(comps_tbats[, 4])
+        # RMSE for amb (vs True) S365
+        list_RMSE_Tbats_s365[[j]] <- sqrt(mean(
+            (list_Tbats_s365[[j]] - list_true_s365[[j]])^2
+        ))
 
-    #store sa
-    list_Tbats_sa[[j]] <- as.numeric(comps_tbats[, 1]) -
-        as.numeric(comps_tbats[, 3]) -
-        as.numeric(comps_tbats[, 4])
-    # RMSE for X11 (vs True) SA
-    list_RMSE_Tbats_sa[[j]] <- sqrt(mean(
-        (list_Tbats_sa[[j]] - list_true_sa[[j]])^2
-    ))
+        #store t
+        list_Tbats_t[[j]] <- as.numeric(comps_tbats[, 2])
+        # RMSE for amb (vs True) T
+        list_RMSE_Tbats_t[[j]] <- sqrt(mean(
+            (list_Tbats_t[[j]] - list_true_t[[j]])^2
+        ))
+
+        #store i
+        list_Tbats_i[[j]] <- as.numeric(comps_tbats[, 1]) -
+            as.numeric(comps_tbats[, 2]) -
+            as.numeric(comps_tbats[, 3]) -
+            as.numeric(comps_tbats[, 4])
+        # RMSE for amb (vs True) T
+        list_RMSE_Tbats_i[[j]] <- sqrt(mean(
+            (list_Tbats_i[[j]] - list_true_i[[j]])^2
+        ))
+
+        #store sa
+        list_Tbats_sa[[j]] <- as.numeric(comps_tbats[, 1]) -
+            as.numeric(comps_tbats[, 3]) -
+            as.numeric(comps_tbats[, 4])
+        # RMSE for X11 (vs True) SA
+        list_RMSE_Tbats_sa[[j]] <- sqrt(mean(
+            (list_Tbats_sa[[j]] - list_true_sa[[j]])^2
+        ))
+    }
 }
 list_RMSE_Tbats_s7
 list_RMSE_Tbats_s365

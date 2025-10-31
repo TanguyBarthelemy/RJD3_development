@@ -87,10 +87,18 @@ print_JDFractionalAirlineEstimation <- function(
             substr(1, n_max)
 
         dimension <- 5
-        if (length(s) %% 3 == 0) dimension <- 3
-        if (n_max < 11 && length(s) %% 6 == 0) dimension <- 6
-        if (n_max < 16 && length(s) %% 4 == 0) dimension <- 4
-        if (n_max < 13 && length(s) %% 5 == 0) dimension <- 5
+        if (length(s) %% 3 == 0) {
+            dimension <- 3
+        }
+        if (n_max < 11 && length(s) %% 6 == 0) {
+            dimension <- 6
+        }
+        if (n_max < 16 && length(s) %% 4 == 0) {
+            dimension <- 4
+        }
+        if (n_max < 13 && length(s) %% 5 == 0) {
+            dimension <- 5
+        }
 
         out <- matrix(
             c(s, rep("", dimension - (((length(s) - 1) %% dimension) + 1))),

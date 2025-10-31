@@ -1,4 +1,3 @@
-
 library(rjd3toolkit)
 library(rjd3x13)
 y <- rjd3toolkit::ABS$X0.2.09.10.M
@@ -7,9 +6,9 @@ end(y)
 userdefined_variables_x13(x = "RegArima")
 
 
-regarima_y <- rjd3x13::regarima(y, spec = "RG3",userdefined = "y_f(-1)")
+regarima_y <- rjd3x13::regarima(y, spec = "RG3", userdefined = "y_f(-1)")
 
-y_f<- regarima_y$user_defined
+y_f <- regarima_y$user_defined
 y_f
 
 # # Tout est inclus dans sa_x13_v3
@@ -37,6 +36,5 @@ regarima_y <- rjd3x13::regarima(y, spec = "RG3", userdefined = "y_f(-1)")
 # check the defaults specs in function's help page
 
 # retrieve forecasts
-y_f<- regarima_y$user_defined
+y_f <- regarima_y$user_defined
 y_f
-

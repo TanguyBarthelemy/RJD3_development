@@ -19,8 +19,6 @@ newspec <- tramoseats_spec("rsa0")
 set_specification(jsap = jsap, idx = 1L, spec = newspec) # ERROR!
 
 
-
-
 jspec <- rjd3tramoseats::.r2jd_spec_tramoseats(newspec)
 jspec <- .jcast(jspec, "jdplus/sa/base/api/SaSpecification")
 .jcall(

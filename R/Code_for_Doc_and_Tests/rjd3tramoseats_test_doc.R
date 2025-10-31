@@ -3,18 +3,29 @@
 library("rjd3toolkit")
 library("rjd3tramoseats")
 
-ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
+ipi <- read.csv2(
+    "C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv"
+)
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 # creating a TS object from a data frame
-y_raw <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 6))
-y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9))
+y_raw <- ts(
+    ipi[, "RF3030"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2019, 6)
+)
+y_new <- ts(
+    ipi[, "RF3030"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2019, 9)
+)
 
 ## Package Doc remarks
 
 ### Modifs faites
 # - adding value ranges and default values
-
 
 ## bien chercher issues (word in scattered throughout the code)
 
@@ -25,7 +36,6 @@ y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9
 # 1 basic tests for doc, clarification, adding examples
 
 # 2 extended test with esoteric configs
-
 
 ################ outlier detection
 # FILE 1 tramo_outliers.R
@@ -53,7 +63,6 @@ y_new <- ts(ipi[, "RF3030"], frequency = 12, start = c(1990, 1), end = c(2019, 9
 #' @param trend.boundary numeric: the trend boundary. The boundary beyond which an AR root is integrated in the trend component.
 #' If the modulus of the inverse real root is greater than the trend boundary, the AR root is integrated in the trend component.
 
-
 #' CHECK
 #' ' @param seas.tolerance numeric: the seasonal tolerance. The tolerance (measured in degrees) to allocate the AR non-real roots
 #' to the seasonal component (if the modulus of the inverse complex AR root is greater than the trend boundary
@@ -74,7 +83,6 @@ x <- spec_tramo("rsafull")
 # works with "wrong names" cf alain
 # pb avec full semble donner un modele airline ??
 
-
 ##### ISSUE bcasts dont work
 # 18
 
@@ -93,7 +101,8 @@ init_spec$seats$algorithm
 "ALG_BURMAN"
 
 init_spec <- tramoseats_spec("rsafull")
-new_spec <- set_seats(init_spec,
+new_spec <- set_seats(
+    init_spec,
     approximation = "Legacy",
     trend.boundary = 0.8,
     seas.boundary = 0.5,
@@ -117,8 +126,8 @@ str(sa_model$final$series)
 sa_model$final$forecasts
 
 init_spec <- spec_tramoseats("rsa4")
-init_spec$seats$
-    new_spec <- set_seats(init_spec,
+init_spec$seats$new_spec <- set_seats(
+    init_spec,
     approximation = "Legacy",
     trend.boundary = 0.95,
     seas.boundary = 0.5,
@@ -128,7 +137,6 @@ init_spec$seats$
 )
 y <- rjd3toolkit::ABS$X0.2.09.10.M
 sa <- rjd3tramoseats::tramoseats(y, spec = new_spec)
-
 
 
 sa <- rjd3tramoseats::tramoseats(y_raw, spec = new_spec)
@@ -141,11 +149,6 @@ y <- rjd3toolkit::ABS$X0.2.09.10.M
 sa <- rjd3tramoseats::tramoseats(y, spec = new_spec)
 
 
-
-
-
-
-
 ## ISSUE les arguments ex seas boundary n'ont pas le meme nom en sortie
 s
 ####### ISSUE: here no tramo estimation with a modified spec ???
@@ -154,18 +157,18 @@ u <- rjd3tramoseats::tramoseats(y)
 u$result_spec$seats$
 
 
-    #' @param bias TODO.: voir code JP pour tramo
-    #'
-    ###################################### ####################################
-    ################ set X13 spec: how to create one
-    # FILE n°3 : tramoseats_spec.R
-    # lack examples
-    # like in X13: a spec can be a string in the estimation functions
+#' @param bias TODO.: voir code JP pour tramo
+#'
+###################################### ####################################
+################ set X13 spec: how to create one
+# FILE n°3 : tramoseats_spec.R
+# lack examples
+# like in X13: a spec can be a string in the estimation functions
 
-    # rsafull, rsa5
+# rsafull, rsa5
 
-    # test with customized specs
-    s <- spec_seats()
+# test with customized specs
+s <- spec_seats()
 s
 s1 <- spec_regarima()
 s1 # RG2c ??
@@ -180,8 +183,10 @@ sp <- spec_x13("rg5c")
 y <- rjd3toolkit::ABS$X0.2.09.10.M
 fast_x13(y, spec = "rsa5c") # works
 x13(y, spec = "rsa5c") # works ok but issue = no print ? or no automatic print ?
-sp <- rjd3toolkit::add_outlier(sp,
-    type = c("AO"), c("2015-01-01", "2010-01-01")
+sp <- rjd3toolkit::add_outlier(
+    sp,
+    type = c("AO"),
+    c("2015-01-01", "2010-01-01")
 )
 sp <- rjd3toolkit::set_transform(
     rjd3toolkit::set_tradingdays(
@@ -190,9 +195,7 @@ sp <- rjd3toolkit::set_transform(
     ),
     fun = "None"
 )
-sp <- set_seats(sp,
-    henderson.filter = 13
-)
+sp <- set_seats(sp, henderson.filter = 13)
 fast_x13(y, spec = sp)
 
 ### pb =  modif de la spec et notamment de la partie seats
@@ -206,8 +209,10 @@ regarima(y, "rg3") # issue: no print
 #'
 #' If you want to customize a specification you have to create a specification object first
 sp <- spec_x13("rsa5c")
-sp <- rjd3toolkit::add_outlier(sp,
-    type = c("AO"), c("2015-01-01", "2010-01-01")
+sp <- rjd3toolkit::add_outlier(
+    sp,
+    type = c("AO"),
+    c("2015-01-01", "2010-01-01")
 )
 # sp =  rjd3toolkit::set_transform(
 #'    rjd3toolkit::set_tradingdays(
@@ -232,10 +237,14 @@ fast_x13(y, spec = sp)
 userdefined_variables_tramoseats("tramoseats")
 userdefined_variables_tramoseats("tramo")
 y <- rjd3toolkit::ABS$X0.2.09.10.M
-m <- tramoseats(y, "rsafull", userdefined = c(
-    "ycal",
-    "variancedecomposition.seasonality"
-))
+m <- tramoseats(
+    y,
+    "rsafull",
+    userdefined = c(
+        "ycal",
+        "variancedecomposition.seasonality"
+    )
+)
 
 m$user_defined$variancedecomposition.seasonality
 # m$user_defined$b20
@@ -268,7 +277,6 @@ v
 ################ tramo spec
 # FILE n°5 :
 
-
 ################ user def spec
 # FILE n°6 : tramoseats.R
 
@@ -277,7 +285,6 @@ v
 # - across help pages
 
 ### add examples, beef up seats part
-
 
 ## REFRESH
 # improve doc

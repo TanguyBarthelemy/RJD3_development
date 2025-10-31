@@ -4,25 +4,19 @@
 #                                                                              #
 ################################################################################
 
-
 # Chargement des packages R ----------------------------------------------------
 
 library("RJDemetra")
 
 ### selection AVEC et SANS recup des outliers precedents
 
-
 # Import séries brutes ---------------------------------------------------------
 ## attention ici
-raw_series_ipi <- read.csv("./donnees/IPI_nace4.csv",
-    sep = ";", dec = "."
-)
+raw_series_ipi <- read.csv("./donnees/IPI_nace4.csv", sep = ";", dec = ".")
 series_ipi_ts <- raw_series_ipi |>
     ts(start = 1990L, frequency = 12L)
 
-regs_cjo_ts <- read.csv("./REGS_CJO/regs_mens_JD.csv",
-    sep = ";", dec = "."
-) |>
+regs_cjo_ts <- read.csv("./REGS_CJO/regs_mens_JD.csv", sep = ";", dec = ".") |>
     ts(start = 1990L, frequency = 12L)
 
 create_reg_cjo_sets <- function(regs_cjo) {
@@ -38,24 +32,40 @@ create_reg_cjo_sets <- function(regs_cjo) {
         # REG2 = regs_cjo[, c("REG2_Semaine", "REG2_Samedi")],
         # REG3 = regs_cjo[, c("REG3_Lundi", "REG3_Semaine", "REG3_Samedi")],
         REG5 = regs_cjo[, c(
-            "REG5_Lundi", "REG5_Mardi", "REG5_Mercredi",
-            "REG5_Jeudi", "REG5_Vendredi"
+            "REG5_Lundi",
+            "REG5_Mardi",
+            "REG5_Mercredi",
+            "REG5_Jeudi",
+            "REG5_Vendredi"
         )],
         REG6 = regs_cjo[, c(
-            "REG6_Lundi", "REG6_Mardi", "REG6_Mercredi",
-            "REG6_Jeudi", "REG6_Vendredi", "REG6_Samedi"
+            "REG6_Lundi",
+            "REG6_Mardi",
+            "REG6_Mercredi",
+            "REG6_Jeudi",
+            "REG6_Vendredi",
+            "REG6_Samedi"
         )],
         LY = LY,
         REG1_LY = regs_cjo[, c("REG1_Semaine", "LY")],
         # REG2_LY = regs_cjo[, c("REG2_Semaine", "REG2_Samedi", "LY")],
         # REG3_LY = regs_cjo[, c("REG3_Lundi", "REG3_Semaine", "REG3_Samedi", "LY")],
         REG5_LY = regs_cjo[, c(
-            "REG5_Lundi", "REG5_Mardi", "REG5_Mercredi",
-            "REG5_Jeudi", "REG5_Vendredi", "LY"
+            "REG5_Lundi",
+            "REG5_Mardi",
+            "REG5_Mercredi",
+            "REG5_Jeudi",
+            "REG5_Vendredi",
+            "LY"
         )],
         REG6_LY = regs_cjo[, c(
-            "REG6_Lundi", "REG6_Mardi", "REG6_Mercredi",
-            "REG6_Jeudi", "REG6_Vendredi", "REG6_Samedi", "LY"
+            "REG6_Lundi",
+            "REG6_Mardi",
+            "REG6_Mercredi",
+            "REG6_Jeudi",
+            "REG6_Vendredi",
+            "REG6_Samedi",
+            "LY"
         )]
     )
 
@@ -91,10 +101,13 @@ create_spec_sets <- function() {
 one_diagnostic <- function(serie, spec) {
     mod <- RJDemetra::x13(series = serie, spec = spec)
 
-    res_td <- mod$diagnostics$residuals_test[c(
-        "f-test on sa (td)",
-        "f-test on i (td)"
-    ), "P.value"]
+    res_td <- mod$diagnostics$residuals_test[
+        c(
+            "f-test on sa (td)",
+            "f-test on i (td)"
+        ),
+        "P.value"
+    ]
 
     note <- sum((res_td < .05) * 2:1)
     aicc <- mod$regarima$loglik["aicc", ]
@@ -174,11 +187,13 @@ select_regs <- function(series, with_outliers = FALSE) {
 
         if (with_outliers) {
             # On récupère les outliers
-            sai_ref <- sap_ref |> get_object(which(series_name_ref == series_name))
+            sai_ref <- sap_ref |>
+                get_object(which(series_name_ref == series_name))
             sai_mod <- sai_ref |> get_model(workspace = ws_ref)
             regressors <- sai_mod$regarima$regression.coefficients |> rownames()
-            regressors <- regressors[substr(regressors, 1, 2) %in% c("AO", "TC", "LS", "SO")]
-
+            regressors <- regressors[
+                substr(regressors, 1, 2) %in% c("AO", "TC", "LS", "SO")
+            ]
 
             if (length(regressors) > 0) {
                 outliers_type <- regressors |> substr(start = 1, stop = 2)
@@ -187,15 +202,35 @@ select_regs <- function(series, with_outliers = FALSE) {
                     paste0("01-", ... = _) |>
                     as.Date(format = "%d-%m-%Y")
 
-                outliers_type <- outliers_type[outliers_date >= as.Date("2012-01-01")]
-                outliers_date <- outliers_date[outliers_date >= as.Date("2012-01-01")]
+                outliers_type <- outliers_type[
+                    outliers_date >= as.Date("2012-01-01")
+                ]
+                outliers_date <- outliers_date[
+                    outliers_date >= as.Date("2012-01-01")
+                ]
 
-                if (length(outliers_date) > 0) outliers <- list(type = outliers_type, date = outliers_date)
+                if (length(outliers_date) > 0) {
+                    outliers <- list(type = outliers_type, date = outliers_date)
+                }
             }
         }
 
-        cat(paste0("\nSérie ", series_name, " en cours... ", k, "/", ncol(series)), "\n")
-        return(select_reg_one_serie(serie = series[, k], name = series_name, outliers = outliers))
+        cat(
+            paste0(
+                "\nSérie ",
+                series_name,
+                " en cours... ",
+                k,
+                "/",
+                ncol(series)
+            ),
+            "\n"
+        )
+        return(select_reg_one_serie(
+            serie = series[, k],
+            name = series_name,
+            outliers = outliers
+        ))
     })
 
     output <- cbind(series = colnames(series), reg_selected = output)
@@ -210,10 +245,23 @@ series_name_ref <- ws_ref |>
     get_all_names()
 sap_ref <- ws_ref |> get_object()
 
-selected_cjo_N_outliers <- select_regs(series_ipi_ts[, -1], with_outliers = TRUE)
+selected_cjo_N_outliers <- select_regs(
+    series_ipi_ts[, -1],
+    with_outliers = TRUE
+)
 colnames(selected_cjo_N_outliers) <- c("Series", "selected_N_outliers")
-write.table(selected_cjo_N_outliers, file = "./selected_cjo_N_outliers.csv", sep = ";", row.names = FALSE)
+write.table(
+    selected_cjo_N_outliers,
+    file = "./selected_cjo_N_outliers.csv",
+    sep = ";",
+    row.names = FALSE
+)
 
 selected_cjo_N <- select_regs(series_ipi_ts[, -1], with_outliers = FALSE)
 colnames(selected_cjo_N_outliers) <- c("Series", "selected_N")
-write.table(selected_cjo_N, file = "./selected_cjo_N.csv", sep = ";", row.names = FALSE)
+write.table(
+    selected_cjo_N,
+    file = "./selected_cjo_N.csv",
+    sep = ";",
+    row.names = FALSE
+)

@@ -9,7 +9,9 @@ library("rjwsacruncher")
 
 # Fonction de cruncher' --------------------------------
 
-options(cruncher_bin_directory = "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.4/bin/")
+options(
+    cruncher_bin_directory = "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.4/bin/"
+)
 
 path_ws <- "./Issues/TODO#72/ws_accent"
 
@@ -22,6 +24,8 @@ rjwsacruncher::cruncher_and_param(
     log_file = "./Issues/TODO#72/log.txt"
 )
 
-QR_auto <- JDCruncheR::extract_QR(matrix_output_file = paste0(path_ws, "/Output/SAProcessing-1/demetra_m.csv"))
+QR_auto <- JDCruncheR::extract_QR(
+    matrix_output_file = paste0(path_ws, "/Output/SAProcessing-1/demetra_m.csv")
+)
 QR_auto_score <- JDCruncheR::compute_score(QR_auto)
 scores <- JDCruncheR::extract_score(QR_auto_score)

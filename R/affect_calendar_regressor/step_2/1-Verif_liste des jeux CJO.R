@@ -40,7 +40,9 @@ msa <- RJDemetra::get_object(ws, 1)
 # Nombre de series du multiprocessing
 n <- RJDemetra::count(msa)
 n
-if (n != 230) stop("Il n'y a pas 230 séries dans le WS.")
+if (n != 230) {
+    stop("Il n'y a pas 230 séries dans le WS.")
+}
 
 # Extraction des series du multiprocessing
 sa <- get_all_objects(msa)

@@ -1,4 +1,6 @@
-comparaison_GUI <- readxl::read_excel("~/../Desktop/testing_output/Difference_output_GUI_v2_v3.xlsx")
+comparaison_GUI <- readxl::read_excel(
+    "~/../Desktop/testing_output/Difference_output_GUI_v2_v3.xlsx"
+)
 
 ## En V2 (d'abord) -------------------------------------------------------------
 
@@ -51,10 +53,12 @@ for (input in input_cruncher_v2) {
 
 df <- data.frame()
 for (k in seq_along(list_all_output_v2)) {
-    mini_df <- cbind(names(list_all_output_v2)[k], setdiff(list_all_output_v2[[k]], "X"))
+    mini_df <- cbind(
+        names(list_all_output_v2)[k],
+        setdiff(list_all_output_v2[[k]], "X")
+    )
     df <- rbind(df, mini_df)
 }
-
 
 
 ## En V3 (Ensuite) -------------------------------------------------------------
@@ -105,7 +109,10 @@ for (input in input_cruncher_v3) {
 
 df3 <- data.frame()
 for (k in seq_along(list_all_output_v3)) {
-    mini_df <- cbind(names(list_all_output_v3)[k], setdiff(list_all_output_v3[[k]], "X"))
+    mini_df <- cbind(
+        names(list_all_output_v3)[k],
+        setdiff(list_all_output_v3[[k]], "X")
+    )
     df3 <- rbind(df3, mini_df)
 }
 
@@ -114,8 +121,20 @@ for (k in seq_along(list_all_output_v3)) {
 
 colnames(df2) <- c("input V2", "output V2")
 colnames(df3) <- c("input V3", "output V3")
-new_comp <- merge(comparaison_GUI, df2, by.x = "cruncher V2", by.y = "input V2", all = TRUE)
-new_comp <- merge(new_comp, df3, by.x = "cruncher V3", by.y = "input V3", all = TRUE)
+new_comp <- merge(
+    comparaison_GUI,
+    df2,
+    by.x = "cruncher V2",
+    by.y = "input V2",
+    all = TRUE
+)
+new_comp <- merge(
+    new_comp,
+    df3,
+    by.x = "cruncher V3",
+    by.y = "input V3",
+    all = TRUE
+)
 new_comp <- new_comp |>
     rename(
         "cruncher V3 input" = "cruncher V3",
@@ -123,6 +142,22 @@ new_comp <- new_comp |>
         "cruncher V3 output" = "output V3",
         "cruncher V2 output" = "output V2",
     ) |>
-    select("Type", "cruncher V2 input", "cruncher V2 output", "cruncher V3 input", "cruncher V3 output", "GUI output V2", "GUI output V3", "RJDemetra")
+    select(
+        "Type",
+        "cruncher V2 input",
+        "cruncher V2 output",
+        "cruncher V3 input",
+        "cruncher V3 output",
+        "GUI output V2",
+        "GUI output V3",
+        "RJDemetra"
+    )
 
-write.table(new_comp, file = "~/../Desktop/test.csv", row.names = FALSE, quote = FALSE, sep = ";", na = "")
+write.table(
+    new_comp,
+    file = "~/../Desktop/test.csv",
+    row.names = FALSE,
+    quote = FALSE,
+    sep = ";",
+    na = ""
+)

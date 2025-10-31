@@ -4,9 +4,14 @@
 
 ## Parameters ------------------------------------------------------------------
 
-comparaison_GUI <- readxl::read_excel("~/../Desktop/testing_output/Difference_output_GUI_v2_v3.xlsx")
+comparaison_GUI <- readxl::read_excel(
+    "~/../Desktop/testing_output/Difference_output_GUI_v2_v3.xlsx"
+)
 
-dej_input_v2 <- (comparaison_GUI |> subset(!is.na(`rjdverse V3 ({rjd3tramoseats} et {rjd3x13})`)))$`rjdverse V2 {RJDemetra} input - output`
+dej_input_v2 <- (comparaison_GUI |>
+    subset(
+        !is.na(`rjdverse V3 ({rjd3tramoseats} et {rjd3x13})`)
+    ))$`rjdverse V2 {RJDemetra} input - output`
 dej_input_v2 <- dej_input_v2[!is.na(dej_input_v2)]
 dej_input_v3 <- comparaison_GUI$`rjdverse V3 ({rjd3tramoseats} et {rjd3x13})`
 dej_input_v3 <- dej_input_v3[!is.na(dej_input_v3)]
@@ -79,25 +84,31 @@ spec_v2 <- RJDemetra::x13_spec(
     x11.calendarSigma = "Select",
     x11.excludeFcasts = FALSE,
     x11.sigmaVector = c(
-        "Group1", "Group1", "Group1", "Group1",
-        "Group2", "Group2", "Group1", "Group1",
-        "Group1", "Group1", "Group1", "Group1"
+        "Group1",
+        "Group1",
+        "Group1",
+        "Group1",
+        "Group2",
+        "Group2",
+        "Group1",
+        "Group1",
+        "Group1",
+        "Group1",
+        "Group1",
+        "Group1"
     ),
 )
 
-all_input_v2 <- union(RJDemetra::user_defined_variables(), comparaison_GUI$`rjdverse V2 {RJDemetra} input - output`)
+all_input_v2 <- union(
+    RJDemetra::user_defined_variables(),
+    comparaison_GUI$`rjdverse V2 {RJDemetra} input - output`
+)
 all_input_v2 <- all_input_v2[!is.na(all_input_v2)]
 
 var_v2 <- setdiff(RJDemetra::user_defined_variables(), dej_input_v2)
 
-mod_v2 <- RJDemetra::x13(x,
-    spec = spec_v2,
-    userdefined = var_v2
-)
-mod_v2 <- RJDemetra::x13(x,
-    spec = "RSA3",
-    userdefined = all_input_v2
-)
+mod_v2 <- RJDemetra::x13(x, spec = spec_v2, userdefined = var_v2)
+mod_v2 <- RJDemetra::x13(x, spec = "RSA3", userdefined = all_input_v2)
 
 ### V3 -------------------------------------------------------------------------
 
@@ -168,9 +179,18 @@ spec_v3 <- rjd3x13::x13_spec("rsa3") |>
         calendar.sigma = "Select",
         exclude.forecast = FALSE,
         sigma.vector = c(
-            1, 1, 1, 1,
-            2, 2, 1, 1,
-            1, 1, 1, 1
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
         )
     )
 
@@ -179,15 +199,10 @@ var_v3 <- setdiff(
     dej_input_v3
 )
 
-mod_v3 <- rjd3x13::x13(x,
-    spec = spec_v3,
-    userdefined = var_v3
-)
-mod_v3 <- rjd3x13::x13(x,
-    spec = "RSA3",
-    userdefined = var_v3
-)
-mod_v3 <- rjd3x13::x13(x,
+mod_v3 <- rjd3x13::x13(x, spec = spec_v3, userdefined = var_v3)
+mod_v3 <- rjd3x13::x13(x, spec = "RSA3", userdefined = var_v3)
+mod_v3 <- rjd3x13::x13(
+    x,
     spec = spec_v3,
     userdefined = c("likelihood.bic", "likelihood.bic2")
 )
@@ -226,7 +241,14 @@ for (input_v3 in list_input_v3) {
         obj_v2 <- mod_v2$user_defined[[input_v2]]
         # comparaison <- waldo::compare(obj_v2, obj_v3, tolerance = 0.001)
         # if (length(comparaison) == 0L) {
-        if (try(isTRUE(any(sapply(obj_v2, all.equal, obj_v3, tolerance = 0.0001))))) {
+        if (
+            try(isTRUE(any(sapply(
+                obj_v2,
+                all.equal,
+                obj_v3,
+                tolerance = 0.0001
+            ))))
+        ) {
             cat("Equivalence avec", input_v2, "?\n")
             print(obj_v2)
             concurrent <- c(concurrent, input_v2)
@@ -245,7 +267,11 @@ for (input_v2 in names(mod_v2$user_defined)) {
     obj_v2 <- mod_v2$user_defined[[input_v2]]
     print(obj_v2)
 
-    input_v3_GUI <- comparaison_GUI |> subset(`rjdverse V2 {RJDemetra} input - output` == input_v2, select = `cruncher V3 input`)
+    input_v3_GUI <- comparaison_GUI |>
+        subset(
+            `rjdverse V2 {RJDemetra} input - output` == input_v2,
+            select = `cruncher V3 input`
+        )
     input_v3_GUI <- input_v3_GUI[1L, 1L, drop = TRUE]
     obj_v3 <- mod_v3$user_defined[[input_v3_GUI]]
 
@@ -288,7 +314,18 @@ v <- a$user_defined$`t_f(1153)`
 cbind(AirPassengers, v) |> ts.plot()
 
 ## v2
-a <- RJDemetra::x13(x, spec = "RSA3", userdefined = c("mstats.M(*)", "mstats.M(4)", "mstats.M(2)", "mstats.M(7)", "mstats.M(11)", "mstats.M(12)"))
+a <- RJDemetra::x13(
+    x,
+    spec = "RSA3",
+    userdefined = c(
+        "mstats.M(*)",
+        "mstats.M(4)",
+        "mstats.M(2)",
+        "mstats.M(7)",
+        "mstats.M(11)",
+        "mstats.M(12)"
+    )
+)
 v <- a$user_defined$`mstats.M(3)`
 print(v)
 cbind(AirPassengers, v) |> ts.plot()

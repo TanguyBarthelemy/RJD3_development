@@ -11,12 +11,24 @@
 library("rjd3toolkit")
 library("rjd3x13")
 # Data  :
-ipi <- read.csv2("C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv")
+ipi <- read.csv2(
+    "C:/Users/YWYD5I/Documents/00_RJD3_Developpement/RJD3_development/Data/IPI_nace4.csv"
+)
 ipi$date <- as.Date(ipi$date, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 # creating a TS object from a data frame
-y_raw <- ts(ipi[, "RF0811"], frequency = 12, start = c(1990, 1), end = c(2022, 1))
-y_new <- ts(ipi[, "RF0811"], frequency = 12, start = c(1990, 1), end = c(2022, 9))
+y_raw <- ts(
+    ipi[, "RF0811"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2022, 1)
+)
+y_new <- ts(
+    ipi[, "RF0811"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2022, 9)
+)
 
 ## make refresh period long too see restimations
 
@@ -37,12 +49,14 @@ sa_x13_d$estimation_spec
 ## Layer 4: refreshed spec : policy: 1 policy per file ?
 current_result_spec <- sa_x13_d$result_spec
 current_domain_spec <- sa_x13_d$estimation_spec
-spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+spec_x13_ref <- x13_refresh(
+    current_result_spec, # point spec to be refreshed
     current_domain_spec, # domain spec (set of constraints)
     policy = "FixedParameters"
 )
 
-spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
+spec_x13_ref <- x13_refresh(
+    current_result_spec, # point spec to be refreshed
     current_domain_spec, # domain spec (set of constraints)
     policy = "Current"
 )
@@ -58,7 +72,6 @@ spec_x13_ref <- x13_refresh(current_result_spec, # point spec to be refreshed
 #            "FixedParameters", "FixedAutoRegressiveParameters", "Fixed")
 ####
 # "FixedAutoRegressiveParameters" : works with x13
-
 
 ## Layer 5: estimation with spec from refresh
 sa_x13_ref <- x13(y_new, spec_x13_ref)

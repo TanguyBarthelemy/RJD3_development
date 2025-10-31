@@ -95,6 +95,4 @@ ft <- df |>
     set_table_properties(layout = "autofit", width = 0.8)
 ft
 
-
-
 # Box plots ?---------------------------------------------------------------

@@ -91,10 +91,12 @@ summary_tot_GN <- tot_GN |>
     # Enfin, en cas d'égalité
     dplyr::filter(dplyr::row_number() == 1)
 
-if (nrow(summary_tot_PN) != 135)
+if (nrow(summary_tot_PN) != 135) {
     stop("Il y a un souci dans le nombre de série.")
-if (nrow(summary_tot_GN) != 135)
+}
+if (nrow(summary_tot_GN) != 135) {
     stop("Il y a un souci dans le nombre de série.")
+}
 
 
 # Export et écriture des tables -------------------------------------------

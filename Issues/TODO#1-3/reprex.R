@@ -36,7 +36,9 @@ bring_all_back()
 
 # Fonction de cruncher' --------------------------------
 
-options(cruncher_bin_directory = "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.4/bin/")
+options(
+    cruncher_bin_directory = "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.4/bin/"
+)
 
 # Première chose : on met les WS à l'abri
 id <- pull_out_fire("ws_output")
@@ -50,10 +52,11 @@ rjwsacruncher::cruncher_and_param(
     log_file = "./WS/log.txt"
 )
 
-QR_auto <- JDCruncheR::extract_QR("./WS/ws_output/Output/SAProcessing-1/demetra_m.csv")
+QR_auto <- JDCruncheR::extract_QR(
+    "./WS/ws_output/Output/SAProcessing-1/demetra_m.csv"
+)
 QR_auto_score <- JDCruncheR::compute_score(QR_auto, n_contrib_score = 5)
 scores <- JDCruncheR::extract_score(QR_auto_score)
-
 
 
 bring_back(id)

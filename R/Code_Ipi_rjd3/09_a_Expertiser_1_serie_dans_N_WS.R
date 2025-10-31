@@ -51,7 +51,10 @@ liste_ch_ws
 ### on obtient une version de chaque composante par ws, suffixee avec nom du ws
 for (k in seq_along(liste_ch_ws)) {
     ws_name <- liste_ws[k]
-    cat(paste0("\nWS ", ws_name, " en cours... ", k, "/", length(liste_ch_ws)), "\n")
+    cat(
+        paste0("\nWS ", ws_name, " en cours... ", k, "/", length(liste_ch_ws)),
+        "\n"
+    )
 
     suffixe <- paste0("_", liste_ws[k])
     printt(suffixe)
@@ -150,7 +153,6 @@ for (k in seq_along(liste_ch_ws)) {
 # FIN BOUCLE RECUP)
 # series realisees (= non prevues)
 # tail(df_rea)
-
 
 # Affichages graphiques ---------------------------------------------------
 

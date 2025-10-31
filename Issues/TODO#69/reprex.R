@@ -1,7 +1,9 @@
 library("JDCruncheR")
 library("rjwsacruncher")
 
-options(cruncher_bin_directory = "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.4/bin/")
+options(
+    cruncher_bin_directory = "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.4/bin/"
+)
 
 # workspace_automatique: ATT TEMP for test
 cruncher_and_param(
@@ -13,11 +15,14 @@ cruncher_and_param(
     log_file = "Issues/TODO#69/log.txt"
 )
 
-BQ_auto <- extract_QR("Issues/TODO#69/ws_ipi/Output/SAProcessing-1/demetra_m.csv")
+BQ_auto <- extract_QR(
+    "Issues/TODO#69/ws_ipi/Output/SAProcessing-1/demetra_m.csv"
+)
 
 str(BQ_auto)
 
-BQ_auto_score1 <- compute_score(BQ_auto,
+BQ_auto_score1 <- compute_score(
+    BQ_auto,
     n_contrib_score = 3,
     conditional_indicator = list(list(
         indicator = "oos_mse",
