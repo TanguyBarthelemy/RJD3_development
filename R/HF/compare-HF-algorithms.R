@@ -61,6 +61,8 @@ pre_pro <- fractionalAirlineEstimation(
     y_time = df$ds
 )
 
+y_lin <- pre_pro$model$linearized
+
 amb.multi <- rjd3highfreq::multiAirlineDecomposition(
     y = pre_pro$model$linearized, # input time series
     periods = c(7, 365.2425), # 2 frequency
@@ -79,17 +81,11 @@ i_rjdverse <- amb.multi$decomposition$i
 
 library("prophet")
 
-df_holidays <- cal_reg |>
-    as.data.frame() |>
-    tibble::rownames_to_column(var = "ds") |>
-    dplyr::mutate(ds = as.Date(ds)) |>
-    tidyr::pivot_longer(-ds, names_to = "holiday") |>
-    dplyr::filter(value == 1L) |>
-    dplyr::select(holiday, ds)
-head(df_holidays)
+df_prophet <- df |>
+    mutate(y = y_lin)
 
-m <- prophet(df, holidays = df_holidays)
-future <- make_future_dataframe(m, periods = 365)
+m <- prophet(df_prophet)
+future <- make_future_dataframe(m, periods = 0)
 head(future)
 
 forecast <- predict(m, future)
@@ -107,7 +103,7 @@ t_prophet <- forecast$trend
 library("forecast")
 
 fit2 <- tbats(
-    births$births,
+    y = y_lin,
     seasonal.periods = c(7, 365.2425),
     use.trend = TRUE,
     use.arma.errors = TRUE
@@ -129,7 +125,7 @@ library("forecast")
 
 # Créer une série ts avec saisonnalités journalière et annuelle
 # On simule deux saisons : 7 et 365.25
-y_msts <- msts(births$births, seasonal.periods = c(7, 365.2425))
+y_msts <- msts(y = y_lin, seasonal.periods = c(7, 365.2425))
 
 # Décomposition
 fit_mstl <- mstl(y_msts)
@@ -153,8 +149,7 @@ library("feasts")
 library("lubridate")
 
 # Création d'un tsibble
-df_ts <- df |>
-    mutate(ds = as.Date(ds)) |>
+df_ts <- df_prophet |>
     as_tsibble(index = ds)
 
 # Décomposition STL automatique
