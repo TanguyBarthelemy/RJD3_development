@@ -154,6 +154,7 @@ run_estimation <- function(nb_years, gamma, sigma2 = 0, deterministic = TRUE, nb
         sigma2 = sigma2,
         nb_years = nb_years,
         simulated = series_sim,
+        deterministic = deterministic,
         estimated = list(
             X11 = output_X11,
             STL = output_STL,
@@ -218,7 +219,6 @@ compute_summary <- function(outputs) {
         PROPHET = RMSE_prophet,
         MSTL = RMSE_mstl
     ) |> as.data.frame() |> tibble::rownames_to_column(var = "method") |>
-        dplyr::mutate(gamma = outputs$gamma, sigma = outputs$sigma2, .before = method) |>
         dplyr::rename(
             trend_RMSE = t,
             weekly_RMSE = s7,
@@ -226,7 +226,16 @@ compute_summary <- function(outputs) {
             remainder_RMSE = i,
             sa_RMSE = sa
         ) |>
-        dplyr::mutate(time = computing_time, nb_years = outputs$nb_years)
+        dplyr::mutate(
+            gamma = outputs$gamma,
+            sigma = outputs$sigma2,
+            type = c("Stochastic GDP", "Deterministic DGP")[outputs$nb_years + 1L]
+            .before = method
+        ) |>
+        dplyr::mutate(
+            time = computing_time,
+            nb_years = outputs$nb_years
+        )
 
     return(summary_table)
 }

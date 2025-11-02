@@ -26,7 +26,7 @@ for (method_k in unique(all_estimation$method)) {
 
     RMSE_table <- all_estimation |>
         filter(method == method_k) |>
-        select(-time, -gamma, -sigma, -method) |>
+        select(-time, -gamma, -sigma, -method, -type) |>
         pivot_longer(cols = -nb_years, values_to = "RMSE", names_to = "cmp") |>
         summarise(RMSE = mean(RMSE, na.rm = TRUE), .by = c(nb_years, cmp))
 
