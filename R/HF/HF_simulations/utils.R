@@ -31,7 +31,7 @@ my_x11 <- function(y, args1, args2) {
     })
     ending_time <- Sys.time()
 
-    if (!inherits(res_try, "try-error")) {
+    if (inherits(res_try, "try-error")) {
         return(list(
             time = NA,
             series = NULL

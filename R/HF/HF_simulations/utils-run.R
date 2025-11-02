@@ -226,7 +226,7 @@ compute_summary <- function(outputs) {
             remainder_RMSE = i,
             sa_RMSE = sa
         ) |>
-        dplyr::mutate(time = computing_time, nb_series = outputs$sigma2)
+        dplyr::mutate(time = computing_time, nb_years = outputs$nb_years)
 
     return(summary_table)
 }
