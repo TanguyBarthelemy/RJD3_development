@@ -4,16 +4,17 @@ run_estimation <- function(nb_years, gamma, sigma2 = 0, deterministic = TRUE, nb
 
     ## Define parameters -------------------------------------------------------
 
-    alpha <- 1 # paper value
-    sw <- 100 # function needed input (param /100)
+    # weekly
+    alpha <- 1
+    sw <- 100 * alpha
 
-    #yearly
-    beta <- 1 # paper value
-    sy <- 33 # function needed input (param /33)
+    # yearly
+    beta <- 1
+    sy <- 33 * beta
 
     # irregular
-    si <- gamma * 150 # function needed input (param/150)
-    sig2 <- sigma2 * 20 # function needed input (param/20)
+    si <- 150 * gamma
+    sig2 <- 20 * sigma2
 
 
     ## Simulation des séries ------------------------------------------------------
@@ -229,7 +230,7 @@ compute_summary <- function(outputs) {
         dplyr::mutate(
             gamma = outputs$gamma,
             sigma = outputs$sigma2,
-            type = c("Stochastic GDP", "Deterministic DGP")[outputs$nb_years + 1L]
+            type = c("Stochastic DGP", "Deterministic DGP")[outputs$nb_years + 1L]
             .before = method
         ) |>
         dplyr::mutate(

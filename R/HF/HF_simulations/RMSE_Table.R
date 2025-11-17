@@ -72,7 +72,7 @@ ft_color
 library("flextable")
 
 df <- data.frame(
-    type = rep(c("Deterministic DGP", "Stochastic GDP"), each = 12L),
+    type = rep(c("Deterministic DGP", "Stochastic DGP"), each = 12L),
     gamma = c(
         rep(c(0.2, 0.4, 0.6), each = 4L),
         rep(c(0.2, 0.4, 0.6), each = 4L)
