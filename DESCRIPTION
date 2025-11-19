@@ -91,7 +91,7 @@ Imports:
     prophet,
     flextable,
     tictoc,
-    tssim
+	tssim (>= 0.2.15)
 Remotes: 
     github::rjdverse/rjd3toolkit@develop,
     github::rjdverse/rjd3x13@develop,
@@ -108,6 +108,7 @@ Remotes:
     github::rjdverse/rjd3revisions@develop,
     github::AQLT/ggdemetra3,
     github::AQLT/rjd3report,
-    github::AQLT/AQLTools
+    github::AQLT/AQLTools,
+    url::https://raw.githubusercontent.com/TanguyBarthelemy/RJD3_development/main/R/HF/pkgs/tssim_0.2.15.tar.gz
 Encoding: UTF-8
 RoxygenNote: 7.3.1
