@@ -85,9 +85,10 @@ df_prophet <- df |>
     mutate(y = y_lin)
 
 m <- prophet(df_prophet)
-future <- make_future_dataframe(m, periods = 0)
+future <- make_future_dataframe(m, periods = 365)
 head(future)
 
+future$ds <- future$ds |> as.Date()
 forecast <- predict(m, future)
 head(forecast)
 
@@ -106,7 +107,7 @@ fit2 <- tbats(
     y = y_lin,
     seasonal.periods = c(7, 365.2425),
     use.trend = TRUE,
-    use.arma.errors = TRUE
+    use.arma.errors = TRUE, use.parallel = FALSE
 )
 
 # Décomposition
@@ -198,7 +199,7 @@ library("plotly")
 df_s7 <- data.frame(
     date = df$ds,
     rjdverse = s7_rjdverse,
-    prophet = s7_prophet[seq_len(19359)],
+    prophet = s7_prophet[seq_len(nrow(df))],
     tbats = s7_tbats,
     mstl = s7_mstl,
     stl = s7_stl,
@@ -213,7 +214,7 @@ View(df_s7)
 df_s365 <- data.frame(
     date = df$ds,
     rjdverse = s365_rjdverse,
-    prophet = s365_prophet[seq_len(19359)],
+    prophet = s365_prophet[seq_len(nrow(df))],
     tbats = s365_tbats,
     mstl = s365_mstl,
     stl = s365_stl,
@@ -226,7 +227,7 @@ df_s365 <- data.frame(
 df_t <- data.frame(
     date = df$ds,
     rjdverse = t_rjdverse,
-    prophet = t_prophet[seq_len(19359)],
+    prophet = t_prophet[seq_len(nrow(df))],
     tbats = t_tbats,
     mstl = t_mstl,
     stl = t_stl,
