@@ -85,10 +85,10 @@ df_prophet <- df |>
     mutate(y = y_lin)
 
 m <- prophet(df_prophet)
-future <- make_future_dataframe(m, periods = 0)
+future <- make_future_dataframe(m, periods = 1)
 head(future)
 
-forecast <- predict(m, future)
+forecast <- predict(m, future) |> head(n = nrow(df))
 head(forecast)
 
 prophet_plot_components(m, forecast)
@@ -96,6 +96,7 @@ prophet_plot_components(m, forecast)
 s7_prophet <- forecast$weekly
 s365_prophet <- forecast$yearly
 t_prophet <- forecast$trend
+
 
 
 # forecast : tbats ------------------------------------------------------------
@@ -125,7 +126,7 @@ library("forecast")
 
 # Créer une série ts avec saisonnalités journalière et annuelle
 # On simule deux saisons : 7 et 365.25
-y_msts <- msts(y = y_lin, seasonal.periods = c(7, 365.2425))
+y_msts <- msts(data = y_lin, seasonal.periods = c(7, 365.2425))
 
 # Décomposition
 fit_mstl <- mstl(y_msts)
@@ -198,7 +199,7 @@ library("plotly")
 df_s7 <- data.frame(
     date = df$ds,
     rjdverse = s7_rjdverse,
-    prophet = s7_prophet[seq_len(19359)],
+    prophet = s7_prophet,
     tbats = s7_tbats,
     mstl = s7_mstl,
     stl = s7_stl,
@@ -213,7 +214,7 @@ View(df_s7)
 df_s365 <- data.frame(
     date = df$ds,
     rjdverse = s365_rjdverse,
-    prophet = s365_prophet[seq_len(19359)],
+    prophet = s365_prophet,
     tbats = s365_tbats,
     mstl = s365_mstl,
     stl = s365_stl,
@@ -226,7 +227,7 @@ df_s365 <- data.frame(
 df_t <- data.frame(
     date = df$ds,
     rjdverse = t_rjdverse,
-    prophet = t_prophet[seq_len(19359)],
+    prophet = t_prophet,
     tbats = t_tbats,
     mstl = t_mstl,
     stl = t_stl,
