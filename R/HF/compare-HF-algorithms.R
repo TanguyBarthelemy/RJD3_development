@@ -284,9 +284,9 @@ df_t <- data.frame(
     mutate(type = "t")
 
 df_final <- rbind(df_t, df_s7, df_s365)
-df_final <- df_final |> filter(date > as.Date("2020-01-01"))
+df_final_2020 <- df_final |> filter(date > as.Date("2020-01-01"))
 
-p <- df_final %>%
+p <- df_final_2020 %>%
     ggplot(aes(x = date, y = value, color = name)) +
     geom_line() +
     facet_wrap(~type, scales = "free_y") +
@@ -298,3 +298,5 @@ p <- df_final %>%
     ) +
     theme_minimal()
 ggplotly(p)
+
+TBox::write_data(data = df_final, path = "R/HF/Birth_estimation.csv")
