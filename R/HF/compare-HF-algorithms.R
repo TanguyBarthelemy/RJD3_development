@@ -298,3 +298,5 @@ p <- df_final_2020 %>%
     ) +
     theme_minimal()
 ggplotly(p)
+
+TBox::write_data(data = df_final, path = "R/HF/Birth_estimation.csv")
