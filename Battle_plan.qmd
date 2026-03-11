@@ -1,8 +1,7 @@
 ---
 title: "Battle plan for JD+ related Tools"
-format:
-    pdf: default
-    html: default
+format: pdf
+format: html 
 ---
 
 
@@ -37,33 +36,18 @@ GUI
 
 Currently working on (details in TOPICS..)
 
+### CRAN
+
+T: rjd3workspace, rjd3production
+
 ### Git issues
 
 
-### Doc packages 
+### Vignettes
 
-- JP rjd3providers over the summer 
+T : rjd3production 
 
-- Tanguy over CRAN batch 2:
-
-- Anna Holes and vignettes (5 main)
-    - rjd3workspace 
-    - ...
-    
-#### Toolkit to cran 
-
-see issue with list 
-
-- distribs 
-reste : verif avec R base 
-mail JP for inverse Gaussian 
-
-#### Topics around toolkit 
-
-- saiso det (trigo, buys b)
-
-- package uroot et bilan test saiso 
-(cf old doc nbb, cf txt post disc JP, canova)
+A: toolkit by topic
 
 ### Output doc 
 
@@ -71,54 +55,43 @@ mail JP for inverse Gaussian
 link to java dico ?
 pb = mise en forme (check first)
 
-do
 - idem tramoseats
-- str d'un modele complet print and document 
+- str d'un modele complet print and document : cf doc book : output descprition chap 
 
 
+#### JD+ et packages 
 
-#### output et dicos 
+Issues / Dvlpter meeting 
 
-tests sur series finales
-gros tableau 
+#### Nettoyage N: done ?
 
-- remove user_defined variables functions
-- enchance java dictionnaries 
+"N:/L120/SECTION MTS/JD_Installation_configuration"
 
-### COMM
+simple fichier de texte avec des liens ?
 
-## DT on SA production 
+"N:/L120/SECTION MTS/Admin_Section"
 
+mettre à jour calendrier concours 
 
-## JD+ online Documentation 
+deplacer fichiier envt de travail dans 
+"N:/L120/SECTION MTS/JD_Installation_configuration" (?)
 
-- Chapter (appendix on output names and definitions) (Anna and Tanguy): minimalist 
-
-- Documenting new v3 features and Holes (Anna)
-
-- clean up 
-
-## R packages 
-
-### Habillage général
-
-- bring v3 pages to RJDemetra level !!!
-
-- doc functions, examples 
-
-- vignettes by topic (will be used as testes)
-
-### Dvlpt 
 
 
 
 #### Tests
 
+(share with user group)
+
 - mode (verifier formules)
 
 - seasonal filters and seasonal sigma (anna: bilan)
 
+- all calendar option 
+
+
 #### New features (test and doc)
+
 
 MAIN GUI + R
 (Anna)
@@ -132,6 +105,24 @@ MAIN GUI + R
 (tramo and or x13 ?)
 
 - change "airline" display when printing a spec 
+
+
+#### JD Cruncher 
+
+- adaptation to tramo (first in v2)= if tramo remove (!!) all the x11 specific tests
+
+- adaptation to v3
+
+- parametrage poids indicateurs: up date doc + example! done ??
+
+- ajouter valeurs coefficients et p-values (pour selection cjo) 
+
+aujourd'hui: ajout params dans options d'output, lecture ad hoc de demetra_m.csv
+but lire direct avec JDCruncheR (to do 1h)
+
+- test validité chemin avant de cruncher (to do 1h)
+
+- habillage output sans excel 
 
 #### rjd3x13
 
@@ -182,6 +173,10 @@ DOC
 #### rjd3revisions
 
 ### R packages V2
+
+#### RJDemetra 
+
+add : print model span 
 
 
 #### rjdqa 
