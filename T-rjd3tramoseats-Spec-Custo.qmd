@@ -1,0 +1,51 @@
+---
+title: "T-rjd3tramoseats spec customization"
+format: html
+---
+
+```{r}
+#| label: loading-rjdverse
+#| echo: true
+#| eval: true
+library("rjd3toolkit")
+library("rjd3tramoseats")
+```
+
+
+## Issue 1: set_outlier bug
+
+use reprex::reprex for git hub 
+tramo(
+  ts,
+  spec = c("trfull", "tr0", "tr1", "tr2", "tr3", "tr4", "tr5"),
+  context = NULL,
+  userdefined = NULL
+)
+
+```{r}
+reprex::reprex()
+
+library("rjd3toolkit")
+library("rjd3tramoseats")
+myspec_ts <- tramoseats_spec("rsafull") 
+
+# before modifying spec 
+myspec_ts$tramo$outlier$ao 
+myspec_ts$tramo$outlier$ls 
+myspec_ts$tramo$outlier$tc
+myspec_ts$tramo$outlier$so
+
+myspec_ts <- set_outlier(
+  myspec_ts,
+  outliers.type = "AO"
+)
+
+# after modifying spec 
+myspec_ts$tramo$outlier$ao 
+myspec_ts$tramo$outlier$ls 
+myspec_ts$tramo$outlier$tc
+myspec_ts$tramo$outlier$so
+
+```
+
+

@@ -1,0 +1,49 @@
+---
+title: "T-rjd3tramoseats spec customization"
+format: html
+---
+
+```{r}
+#| label: loading-rjdverse
+#| echo: true
+#| eval: true
+library("rjd3toolkit")
+library("rjd3x13")
+```
+
+
+## Issue 1: set_outlier bug: idem que tramo seats
+
+### Issue outliers automatically detected in x13 : OK 
+
+but spec structure different from TS worth to be noted 
+
+```{r}
+
+library("rjd3toolkit")
+library("rjd3x13")
+myspec_x13 <- x13_spec("RSA5") 
+
+# before modifying spec 
+myspec_x13$regarima$outlier$outliers
+
+
+myspec_x13 <- set_outlier(
+  myspec_x13,
+  outliers.type = "LS"
+)
+
+# after modifying spec 
+myspec_x13$regarima$outlier$outliers
+
+
+myspec_x13 <- set_outlier(
+  myspec_x13,
+  outliers.type = "SO"
+)
+
+# after modifying spec 
+myspec_x13$regarima$outlier$outliers
+
+```
+

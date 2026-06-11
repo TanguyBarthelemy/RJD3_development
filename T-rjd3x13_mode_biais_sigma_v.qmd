@@ -62,7 +62,9 @@ biasCorrection<-function(y, lt, ls, li, period){
 ```
 
 
-test tramo seats 
+TEST x11
+
+see doc christiane 
 
 ```{r}
 
@@ -107,6 +109,7 @@ ylin<- m$user_defined$ylin # doublon ? y lin en niveau
 # decomp serie linearisée en log
 decomposition.y_lin<- m$user_defined$decomposition.y_lin # en log
 decomposition.sa_lin<- m$user_defined$decomposition.sa_lin
+decomposition.s_lin<-m$user_defined$decomposition.s_lin
 decomposition.t_lin<- m$user_defined$decomposition.t_lin
 decomposition.i_lin<- m$user_defined$decomposition.i_lin
 # remise decomposition en niveau 
@@ -130,6 +133,7 @@ all.equal(ylin,decomposition.y_cmp)
 # sa : là on devrait voir si correction biais 
 sa_d <-round(exp(decomposition.sa_lin)-decomposition.sa_cmp,6)
 sa_d
+
 # biais
 
 # t : là on devrait voir si correction biais (remise)
@@ -137,9 +141,104 @@ t_d <-round(exp(decomposition.t_lin)-decomposition.t_cmp,6)
 t_d
 
 # s : là on devrait voir si correction biais moyenne à 1 ?
-s_d <-round(exp(decomposition.t_lin)-decomposition.t_cmp,6)
-t_d
+s_d <-round(exp(decomposition.s_lin)-decomposition.s_cmp,6)
+s_d
+# rounding for non integer periods
+nc<-round(length(y)-length(y)%%12)
+ nc
+mean(decomposition.s_lin[1:nc])
+mean(exp(decomposition.s_lin)[1:nc])
+mean(decomposition.s_cmp[1:nc])
+
+### ajouter par periode (idem que mean global ou pas, non )
+
+# i : là on devrait voir si correction biais moyenne à 1 ?
+i_d <-round(exp(decomposition.i_lin)-decomposition.i_cmp,6)
+i_d
+mean(decomposition.i_lin)
+mean(exp(decomposition.i_lin))
+mean(decomposition.i_cmp) # a ete corrigé 
+
+### on veut mean (ylin)= mean (sa_lin)
+mean(ylin)
+mean(decomposition.sa_cmp)
+# petit ecart 
+
+
+###################################################
+
+# bias correction deactivated puis calcul JP 
+s3<-set_seats(s2,bias=NA)
+# Generate the corresponding output in an estimation
+y <- rjd3toolkit::ABS$X0.2.09.10.M
+m1 <- tramoseats(y, "rsafull", s3, userdefined=user_defined_output)
+
+ 
+ # finaux en niveau 
+ y1<- m1$user_defined$y
+ s1<- m1$user_defined$s
+ t1<- m1$user_defined$t
+ i1<- m1$user_defined$i
+ylin1<- m1$user_defined$ylin # doublon ? y lin en niveau 
+# decomp serie linearisée en log
+decomposition.y_lin1<- m1$user_defined$decomposition.y_lin # en log
+decomposition.sa_lin1<- m1$user_defined$decomposition.sa_lin
+decomposition.s_lin1<-m1$user_defined$decomposition.s_lin
+decomposition.t_lin1<- m1$user_defined$decomposition.t_lin
+decomposition.i_lin1<- m1$user_defined$decomposition.i_lin
+# remise decomposition en niveau 
+decomposition.y_cmp1<- m1$user_defined$decomposition.y_cmp  #y lin en niveau ? doublon 
+decomposition.sa_cmp1<- m1$user_defined$decomposition.sa_cmp
+decomposition.t_cmp1<- m1$user_defined$decomposition.t_cmp
+decomposition.s_cmp1<- m1$user_defined$decomposition.s_cmp
+decomposition.i_cmp1<- m1$user_defined$decomposition.i_cmp  
+
+# visualiser, comparer, identifier: valider appellation
+
+# verif egalites log vs niveau 
+## y lin1 
+li<-round(decomposition.y_lin1-log(ylin1),6)
+li
+all.equal(decomposition.y_lin1,log(ylin1))
+li2<-round(ylin1-decomposition.y_cmp1,6)
+li2
+all.equal(ylin1,decomposition.y_cmp1)
+# la decomposition est faite en log et remise en niveau 
+# sa : là on devrait voir si correction biais 
+sa_d <-round(exp(decomposition.sa_lin1)-decomposition.sa_cmp1,6)
+sa_d
+
 # biais
+
+# t : là on devrait voir si correction biais (remise)
+t_d <-round(exp(decomposition.t_lin1)-decomposition.t_cmp1,6)
+t_d
+
+# s : là on devrait voir si correction biais moyenne à 1 ?
+s_d <-round(exp(decomposition.s_lin1)-decomposition.s_cmp1,6)
+s_d
+# rounding for non integer periods
+nc<-round(length(y)-length(y)%%12)
+nc
+mean(decomposition.s_lin1[1:nc])
+mean(exp(decomposition.s_lin1)[1:nc])
+mean(decomposition.s_cmp1[1:nc])
+
+# i : là on devrait voir si correction biais moyenne à 1 ?
+i_d <-round(exp(decomposition.i_lin1)-decomposition.i_cmp1,6)
+i_d
+mean(decomposition.i_lin1)
+mean(exp(decomposition.i_lin1))
+mean(decomposition.i_cmp1) # a ete corrigé 
+
+### on veut mean (ylin)= mean (sa_lin)
+mean(ylin)
+mean(decomposition.sa_cmp)
+# petit ecart 
+plot(y)
+## GROS pb aucune difference de resultat
+
+
  
 ## verif realloc components (doc)
 
