@@ -16,6 +16,8 @@ library("rjd3x13")
 JP : spectral peaks TD ref issue Markus 
 Mail ?
 
+keep it all in this file 
+
 ### Prints (voir T, july TP)
 
 - model span in print summary 
