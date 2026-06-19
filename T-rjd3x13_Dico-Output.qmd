@@ -16,6 +16,9 @@ library("rjd3x13")
 JP : spectral peaks TD ref issue Markus 
 Mail ?
 
+### Prints (voir T, july TP)
+
+- model span in print summary 
 
 
 ### Full dico objects
@@ -35,6 +38,8 @@ library(xlsx)
 a <- rjd3x13::x13_full_dictionary() |> as.data.frame()
 write.xlsx(a, "x13dico.xlsx")
 
+str(a)
+View(a)
 b <- rjd3tramoseats::tramoseats_full_dictionary() |> as.data.frame()
 write.xlsx(b, "TSdico.xlsx")
 
@@ -42,11 +47,14 @@ write.xlsx(b, "TSdico.xlsx")
 ```
 
 
+### Parallel avec GUI 
+
+same data specs 
+
 ### Create "rich" x13 model 
 
 remplir completement la spec 
-- bench
-- alloc to comps
+- alloc to comps: plus riche
 
 Obj: doc str(model) as well and comp with GUI display 
 
@@ -63,7 +71,7 @@ ipi <- read.csv2("C:/Users/YWYD5I/Documents/Formation-INS-Cameroun-Juin2026/Donn
 
 ipi$DATE <- as.Date(ipi$DATE, format = "%d/%m/%Y")
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
-View(ipi)
+# View(ipi)
 
 # # Donnees excel
 # ipi_nace4_ind <- read.xlsx(
@@ -73,8 +81,8 @@ View(ipi)
 # ipi_nace4_ind$date <- as.Date(ipi_nace4_ind$date)
 # # View(ipi_nace4_ind)
 
-# Visualisation de la série
-ipi[1, "RF3030"]
+# # Visualisation de la série
+# ipi[1, "RF3030"]
 
 
 ## Manipulation des données ----------------------------------------------------
@@ -87,6 +95,7 @@ y_raw <- ts(
     end = c(2024, 1)
 )
 y_raw[1]
+length(y_raw)
 
 # Creating calendar regressors from a calendar
 
@@ -168,7 +177,14 @@ x13_spec_user_defined <- rjd3toolkit::set_tradingdays(
     test = "None"
 )
 
-x13_spec_user_defined
+  # autoadjust = NA,
+  # leapyear = c(NA, "LeapYear", "LengthOfPeriod", "None"),
+  # leapyear.coef = NA,
+  # leapyear.coef.type = c(NA, "Fixed", "Estimated")
+
+x13_spec_user_defined$regarima$regression$td$lp
+x13_spec_user_defined$regarima$regression$td$td
+
 
 # step 5: define user defined output 
 ud<-rjd3x13::x13_dictionary()
@@ -189,8 +205,111 @@ x13_spec_user_defined$regarima$regression$users
 
 sa_x13_ud <- rjd3x13::x13(y_raw, x13_spec_user_defined, context = my_context, userdefined = ud)
 
+x13_spec_user_defined$regarima$regression$td$td # NONE ?
 
 ```
+
+
+### Specs for tests
+
+keep the same final model name for practicity of navigating UD output
+
+```{r}
+## 1 model span
+
+x13_spec_user_defined<- set_estimate(
+    x13_spec_user_defined,
+    type = "From",
+    d0 = "2012-01-01")
+sa_x13_ud <- rjd3x13::x13(y_raw, x13_spec_user_defined, context = my_context, userdefined = ud)
+
+y_raw_model<-window(y_raw, start=c(2012,1))
+length(y_raw_model)
+
+x13_spec_user_defined$regarima$estimate$span$d0
+
+
+## log and LY
+
+x13_spec_user_defined <- set_transform(
+ x13_spec_user_defined,
+  fun = "Log",
+  adjust = "LeapYear",
+  outliers = TRUE
+)
+
+sa_x13_ud <- rjd3x13::x13(y_raw, x13_spec_user_defined, context = my_context, userdefined = ud)
+
+x13_spec_user_defined$regarima$transform$adjust # adjust ex ante
+
+x13_spec_user_defined$regarima$regression$td$lp # regresseur NONE
+
+## add bench
+
+x13_spec_user_defined<- set_benchmarking(
+  x13_spec_user_defined,
+     enabled = TRUE,
+    target = "Original",
+    rho = 0.8,
+    lambda = 0.5,
+    forecast = FALSE,
+    bias = "None")
+sa_x13_ud <- rjd3x13::x13(y_raw, x13_spec_user_defined, context = my_context, userdefined = ud)
+
+## check  
+  # enabled = NA,
+  # target = c(NA, "CalendarAdjusted", "Original"),
+  # rho = NA,
+  # lambda = NA,
+  # forecast = NA,
+  # bias = c("None", "Additive", "Multiplicative")
+
+
+
+## add easter
+
+x13_spec_user_defined <- set_easter(
+  x13_spec_user_defined,
+  enabled = TRUE,
+  julian = TRUE,
+  duration = 8
+)
+  # 
+  # test = c(NA, "Add", "Remove", "None"),
+  # coef = NA,
+  # coef.type = c(NA, "Estimated", "Fixed"),
+  # type = c(NA, "Unused", "Standard", "IncludeEaster", "IncludeEasterMonday")
+
+
+sa_x13_ud <- rjd3x13::x13(y_raw, x13_spec_user_defined, context = my_context, userdefined = ud)
+
+### ADD missing values : PB estimation with missing values 
+
+y_raw[c(32,75,111,254,321)]<-NA #5
+y_raw
+
+sa_x13_ud <- rjd3x13::x13(y_raw, x13_spec_user_defined, context = my_context, userdefined = ud)
+
+### REESITIMATION : TUILE
+sa_x13_ud <- rjd3x13::x13(y_raw, x13_spec_user_defined, context = my_context, userdefined = ud)
+
+## 2 obj test non user def td 
+
+
+```
+
+
+
+#### Navigating spec 
+
+```{r}
+str(x13_spec_user_defined)
+x13_spec_user_defined$regarima$regression$td$lp
+
+```
+
+
+
 ### generate reading of ud output 
 
 ```{r}
@@ -205,9 +324,13 @@ print(sprintf("sa_x13_ud$user_defined$%s", ud[i]))
 
 - reperer là ou rien de généré à tort ou erreur 
 
+
 #### series (1st focus)
 
 ```{r}
+
+summary(sa_x13_ud)
+str(sa_x13_ud)
 
 sa_x13_ud$user_defined$period
 sa_x13_ud$user_defined$span.start
@@ -216,6 +339,10 @@ sa_x13_ud$user_defined$span.n
 sa_x13_ud$user_defined$span.missing
 sa_x13_ud$user_defined$log
 sa_x13_ud$user_defined$adjust
+
+
+
+
 sa_x13_ud$user_defined$likelihood.ll
 sa_x13_ud$user_defined$likelihood.adjustedll
 sa_x13_ud$user_defined$likelihood.ssqerr
@@ -235,36 +362,60 @@ sa_x13_ud$user_defined$arima.q
 sa_x13_ud$user_defined$arima.bp
 sa_x13_ud$user_defined$arima.bd
 sa_x13_ud$user_defined$arima.bq
-sa_x13_ud$user_defined$arima.theta
+sa_x13_ud$user_defined$arima.theta # format
+## coeff + std E + T stat: named matrix
+class(sa_x13_ud$user_defined$arima.theta)
+sa_x13_ud$user_defined$arima.theta[1,1]
+
 sa_x13_ud$user_defined$arima.phi
 sa_x13_ud$user_defined$arima.btheta
 sa_x13_ud$user_defined$arima.bphi
+
+### model span pb
 sa_x13_ud$user_defined$regression.espan.start
 sa_x13_ud$user_defined$regression.espan.end
 sa_x13_ud$user_defined$regression.espan.n
 sa_x13_ud$user_defined$regression.espan.missing
+
+
 sa_x13_ud$user_defined$regression.mean
 sa_x13_ud$user_defined$regression.nlp
-sa_x13_ud$user_defined$regression.ntd
+sa_x13_ud$user_defined$regression.ntd # number of trading day regressors user-defined or not ?
+
 sa_x13_ud$user_defined$regression.leaster
 sa_x13_ud$user_defined$regression.nmh
+
+
 sa_x13_ud$user_defined$regression.nout
 sa_x13_ud$user_defined$regression.nao
 sa_x13_ud$user_defined$regression.nls
 sa_x13_ud$user_defined$regression.ntc
 sa_x13_ud$user_defined$regression.nso
-sa_x13_ud$user_defined$regression.nusers
+sa_x13_ud$user_defined$regression.nusers # user defined vars 
+
 sa_x13_ud$user_defined$regression.mu
+
 sa_x13_ud$user_defined$regression.lp
-sa_x13_ud$user_defined$regression.td
+sa_x13_ud$user_defined$regression.td # NULL alors que td ds la spec : non user-defined 
+
 sa_x13_ud$user_defined$regression.td-derived # introuvable
 sa_x13_ud$user_defined$regression.td-ftest # introuvable
+sa_x13_ud$user_defined$
 sa_x13_ud$user_defined$regression.easter
-sa_x13_ud$user_defined$regression.outlier # contents ?
+sa_x13_ud$user_defined$regression.outlier # contents ? pb = que 1 oulier ?
 sa_x13_ud$user_defined$regression.user
-sa_x13_ud$user_defined$regression.missing
+sa_x13_ud$user_defined$regression.missing # 
+class(sa_x13_ud$user_defined$arima.theta)
+sa_x13_ud$user_defined$arima.theta[1,1]
+sa_x13_ud$user_defined$arima.theta[1,2]
+sa_x13_ud$user_defined$arima.theta[1,3]
+sa_x13_ud$user_defined$arima.theta[1,4]
+
+sa_x13_ud$user_defined$arima.theta[2,1] # rien sur 2eme missing value 
 sa_x13_ud$user_defined$residuals.res
+length(sa_x13_ud$user_defined$residuals.res)
 sa_x13_ud$user_defined$residuals.tsres
+length(sa_x13_ud$user_defined$residuals.tsres)
 sa_x13_ud$user_defined$residuals.n
 sa_x13_ud$user_defined$residuals.df
 sa_x13_ud$user_defined$residuals.dfc
@@ -545,14 +696,17 @@ sa_x13_ud$user_defined$variancedecomposition.irregular
 sa_x13_ud$user_defined$variancedecomposition.tdh
 sa_x13_ud$user_defined$variancedecomposition.others
 sa_x13_ud$user_defined$variancedecomposition.total
+
 sa_x13_ud$user_defined$quality.summary
+
+
 sa_x13_ud$user_defined$benchmarking.original
 sa_x13_ud$user_defined$benchmarking.target
 sa_x13_ud$user_defined$benchmarking.result
 
 ```
 
-### spectral peaks issue markus 
+### spectral peaks issue Markus 
 
 ```{r}
 # seasonal peaks on linearized series
@@ -582,5 +736,1000 @@ library(dygraphs)
 dygraph(sa_x13_ud$user_defined$full_res)
 
 ```
+
+
+### Output questions (JP, KW)
+
+- "untransformed" in the name...of the series: clarify 
+
+### JP envoi 1
+
+### Back log 
+
+JP : spectral peaks TD ref issue Markus 
+Mail ?
+
+     .item(AtomicDictionary.Item.builder().name(D9_GLOBALMSR).description("global moving seasonality ratio on D9").outputClass(Double.class).build())
+            .item(AtomicDictionary.Item.builder().name(D9_MSR).description("moving seasonality ratio on D9").outputClass(double[].class).build())
+            .item(AtomicDictionary.Item.builder().name(D9_MSRTABLE).description("moving seasonality on D9 (details)").outputClass(Matrix.class).build())
+            
+or D
+
+.item(AtomicDictionary.Item.builder().name(D9).description("Replacement Values for Extreme Seasonal-Irregular Values").outputClass(TsData.class).build())
+
+
+
+.builder().name(DET).description("all deterministic effects (including pre-adjustment, but without trend polynomial effect)
+
+
+FULL_RES="full_res" // full residuals. L^-1*([log]yc-[log]det)
+
+pb transormed untransformed 
+
+> sa_x13_ud$user_defined$adjust
+[1] "None"
+> sa_x13_ud$user_defined$likelihood.ll
+[1] 433.6548
+> sa_x13_ud$user_defined$likelihood.adjustedll
+[1] -1376.78
+> sa_x13_ud$user_defined$likelihood.ssqerr
+[1] 2.445155
+> sa_x13_ud$user_defined$likelihood.aic
+[1] 2777.56
+> sa_x13_ud$user_defined$likelihood.bic
+[1] 2825.185
+> sa_x13_ud$user_defined$likelihood.aicc
+[1] 2778.386
+> sa_x13_ud$user_defined$likelihood.bicc
+[1] -4.906681
+> sa_x13_ud$user_defined$likelihood.bic2
+[1] -2.035
+> sa_x13_ud$user_defined$likelihood.hannanquinn
+[1] 2796.437
+
+### STR spec comment 
+
+> str(x13_spec_user_defined)
+List of 3
+ $ regarima    :List of 7
+  ..$ basic     :List of 3
+  .. ..$ span            :List of 5
+  .. .. ..$ type: chr "ALL"
+  .. .. ..$ d0  : NULL
+  .. .. ..$ d1  : NULL
+  .. .. ..$ n0  : int 0
+  .. .. ..$ n1  : int 0
+  .. .. ..- attr(*, "class")= chr "JD3_SPAN"
+  .. ..$ preprocessing   : logi TRUE
+  .. ..$ preliminaryCheck: logi TRUE
+  ..$ transform :List of 4
+  .. ..$ fn      : chr "LOG"
+  .. ..$ adjust  : chr "LEAPYEAR"
+  .. ..$ aicdiff : num -2
+  .. ..$ outliers: logi TRUE
+  ..$ outlier   :List of 7
+  .. ..$ outliers     :List of 3
+  .. .. ..$ :List of 2
+  .. .. .. ..$ type: chr "AO"
+  .. .. .. ..$ va  : num 0
+  .. .. ..$ :List of 2
+  .. .. .. ..$ type: chr "LS"
+  .. .. .. ..$ va  : num 0
+  .. .. ..$ :List of 2
+  .. .. .. ..$ type: chr "TC"
+  .. .. .. ..$ va  : num 0
+  .. ..$ span         :List of 5
+  .. .. ..$ type: chr "ALL"
+  .. .. ..$ d0  : NULL
+  .. .. ..$ d1  : NULL
+  .. .. ..$ n0  : int 0
+  .. .. ..$ n1  : int 0
+  .. .. ..- attr(*, "class")= chr "JD3_SPAN"
+  .. ..$ defva        : num 0
+  .. ..$ method       : chr "ADDONE"
+  .. ..$ monthlytcrate: num 0.7
+  .. ..$ maxiter      : int 30
+  .. ..$ lsrun        : int 0
+  ..$ arima     :List of 7
+  .. ..$ period: int 0
+  .. ..$ d     : int 1
+  .. ..$ bd    : int 1
+  .. ..$ phi   : NULL
+  .. ..$ theta :List of 2
+  .. .. ..$ : num 0
+  .. .. ..$ : chr "UNDEFINED"
+  .. .. ..- attr(*, "dim")= int [1:2] 2 1
+  .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. ..$ : chr [1:2] "value" "type"
+  .. .. .. ..$ : NULL
+  .. ..$ bphi  : NULL
+  .. ..$ btheta:List of 2
+  .. .. ..$ : num 0
+  .. .. ..$ : chr "UNDEFINED"
+  .. .. ..- attr(*, "dim")= int [1:2] 2 1
+  .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. ..$ : chr [1:2] "value" "type"
+  .. .. .. ..$ : NULL
+  .. ..- attr(*, "class")= chr "JD3_SARIMA_ESTIMATION"
+  ..$ automodel :List of 12
+  .. ..$ enabled  : logi TRUE
+  .. ..$ ljungbox : num 0.95
+  .. ..$ tsig     : num 1
+  .. ..$ predcv   : num 0.143
+  .. ..$ ubfinal  : num 1.05
+  .. ..$ ub1      : num 1.03
+  .. ..$ ub2      : num 1.14
+  .. ..$ cancel   : num 0.1
+  .. ..$ fct      : num 1.01
+  .. ..$ acceptdef: logi FALSE
+  .. ..$ mixed    : logi TRUE
+  .. ..$ balanced : logi FALSE
+  ..$ regression:List of 8
+  .. ..$ mean         : NULL
+  .. ..$ check_mean   : logi FALSE
+  .. ..$ td           :List of 12
+  .. .. ..$ td            : chr "TD_NONE"
+  .. .. ..$ lp            : chr "NONE"
+  .. .. ..$ holidays      : chr ""
+  .. .. ..$ users         : chr [1:6] "r.Monday" "r.Tuesday" "r.Wednesday" "r.Thursday" ...
+  .. .. ..$ w             : int 0
+  .. .. ..$ test          : chr "NO"
+  .. .. ..$ auto          : chr "AUTO_NO"
+  .. .. ..$ autoadjust    : logi FALSE
+  .. .. ..$ tdcoefficients:List of 12
+  .. .. .. ..$ : num 0
+  .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. ..$ : num 0
+  .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. ..$ : num 0
+  .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. ..$ : num 0
+  .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. ..$ : num 0
+  .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. ..$ : num 0
+  .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. ..- attr(*, "dim")= int [1:2] 2 6
+  .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. ..$ : chr [1:2] "value" "type"
+  .. .. .. .. ..$ : NULL
+  .. .. ..$ lpcoefficient : NULL
+  .. .. ..$ ptest1        : num 0
+  .. .. ..$ ptest2        : num 0
+  .. ..$ easter       :List of 4
+  .. .. ..$ type       : chr "JULIAN"
+  .. .. ..$ duration   : num 8
+  .. .. ..$ test       : chr "NO"
+  .. .. ..$ coefficient: NULL
+  .. ..$ outliers     : NULL
+  .. ..$ users        :List of 1
+  .. .. ..$ :List of 5
+  .. .. .. ..$ id       : chr "r.reg1"
+  .. .. .. ..$ name     : chr "iv1"
+  .. .. .. ..$ lag      : num 0
+  .. .. .. ..$ coef     : NULL
+  .. .. .. ..$ regeffect: chr "Trend"
+  .. ..$ interventions: NULL
+  .. ..$ ramps        : NULL
+  ..$ estimate  :List of 2
+  .. ..$ span:List of 5
+  .. .. ..$ type: chr "FROM"
+  .. .. ..$ d0  : chr "2012-01-01"
+  .. .. ..$ d1  : NULL
+  .. .. ..$ n0  : int 0
+  .. .. ..$ n1  : int 0
+  .. .. ..- attr(*, "class")= chr "JD3_SPAN"
+  .. ..$ tol : num 1e-07
+  ..- attr(*, "class")= chr "JD3_REGARIMA_SPEC"
+ $ x11         :List of 12
+  ..$ mode         : chr "UNKNOWN"
+  ..$ seasonal     : logi TRUE
+  ..$ henderson    : int 0
+  ..$ sfilters     : chr "FILTER_MSR"
+  ..$ lsig         : num 1.5
+  ..$ usig         : num 2.5
+  ..$ nfcasts      : int -1
+  ..$ nbcasts      : int 0
+  ..$ sigma        : chr "NONE"
+  ..$ vsigmas      : int(0) 
+  ..$ excludefcasts: logi FALSE
+  ..$ bias         : chr "RATIO"
+  ..- attr(*, "class")= chr "JD3_X11_SPEC"
+ $ benchmarking:List of 6
+  ..$ enabled : logi TRUE
+  ..$ target  : chr "TARGET_ORIGINAL"
+  ..$ lambda  : num 0.5
+  ..$ rho     : num 0.8
+  ..$ bias    : chr "BIAS_NONE"
+  ..$ forecast: logi FALSE
+ - attr(*, "class")= chr "JD3_X13_SPEC"
+ 
+
+### STR model commented 
+
+fish out questions 
+
+
+#### FULL
+str(sa_x13_ud)
+List of 4
+ $ result         :List of 6
+  ..$ preprocessing:List of 3
+  .. ..$ description:List of 4
+  .. .. ..$ log          : logi TRUE
+  .. .. ..$ preadjustment: chr "LEAPYEAR"
+  .. .. ..$ arima        :List of 7
+  .. .. .. ..$ period: int 12
+  .. .. .. ..$ d     : int 1
+  .. .. .. ..$ bd    : int 1
+  .. .. .. ..$ phi   : NULL
+  .. .. .. ..$ theta :List of 2
+  .. .. .. .. ..$ : num -0.771
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..- attr(*, "dim")= int [1:2] 2 1
+  .. .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. .. ..$ : chr [1:2] "value" "type"
+  .. .. .. .. .. ..$ : NULL
+  .. .. .. ..$ bphi  : NULL
+  .. .. .. ..$ btheta:List of 2
+  .. .. .. .. ..$ : num -0.726
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..- attr(*, "dim")= int [1:2] 2 1
+  .. .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. .. ..$ : chr [1:2] "value" "type"
+  .. .. .. .. .. ..$ : NULL
+  .. .. .. ..- attr(*, "class")= chr "JD3_SARIMA_ESTIMATION"
+  .. .. ..$ variables    :List of 5
+  .. .. .. ..$ :List of 3
+  .. .. .. .. ..$ name: chr "iv1"
+  .. .. .. .. ..$ type: chr "UNSPECIFIED"
+  .. .. .. .. ..$ coef:'data.frame':	1 obs. of  2 variables:
+  .. .. .. .. .. ..$ value: num -0.0436
+  .. .. .. .. .. ..$ type : chr "ESTIMATED"
+  .. .. .. ..$ :List of 3
+  .. .. .. .. ..$ name: chr "usertd"
+  .. .. .. .. ..$ type: chr "TD"
+  .. .. .. .. ..$ coef:'data.frame':	6 obs. of  2 variables:
+  .. .. .. .. .. ..$ value: num [1:6] -0.00786 0.01831 0.00349 0.01563 0.022 ...
+  .. .. .. .. .. ..$ type : chr [1:6] "ESTIMATED" "ESTIMATED" "ESTIMATED" "ESTIMATED" ...
+  .. .. .. ..$ :List of 3
+  .. .. .. .. ..$ name: chr "easter"
+  .. .. .. .. ..$ type: chr "EASTER"
+  .. .. .. .. ..$ coef:'data.frame':	1 obs. of  2 variables:
+  .. .. .. .. .. ..$ value: num -0.0633
+  .. .. .. .. .. ..$ type : chr "ESTIMATED"
+  .. .. .. ..$ :List of 3
+  .. .. .. .. ..$ name: chr "TC (2020-03-01)"
+  .. .. .. .. ..$ type: chr "TC"
+  .. .. .. .. ..$ coef:'data.frame':	1 obs. of  2 variables:
+  .. .. .. .. .. ..$ value: num -0.257
+  .. .. .. .. .. ..$ type : chr "ESTIMATED"
+  .. .. .. ..$ :List of 3
+  .. .. .. .. ..$ name: chr "LS (2020-04-01)"
+  .. .. .. .. ..$ type: chr "LS"
+  .. .. .. .. ..$ coef:'data.frame':	1 obs. of  2 variables:
+  .. .. .. .. .. ..$ value: num -0.448
+  .. .. .. .. .. ..$ type : chr "ESTIMATED"
+  .. ..$ estimation :List of 7
+  .. .. ..$ y         : num [1:145] 4.82 4.79 5.02 4.81 4.75 ...
+  .. .. ..$ X         : num [1:145, 1:10] 0 0 0 0 0 0 0 0 0 0 ...
+  .. .. ..$ parameters:List of 4
+  .. .. .. ..$ val        : num [1:2] -0.771 -0.726
+  .. .. .. ..$ score      : num [1:2] 0.02026 -0.00422
+  .. .. .. ..$ cov        : num [1:2, 1:2] 2.61e-03 -6.36e-05 -6.36e-05 1.13e-02
+  .. .. .. ..$ description: chr "sarima (true signs)"
+  .. .. ..$ b         : num [1:10] -0.04359 -0.00786 0.01831 0.00349 0.01563 ...
+  .. .. ..$ bvar      : num [1:10, 1:10] 9.06e-04 1.80e-07 -1.21e-05 3.23e-05 -4.52e-05 ...
+  .. .. ..$ likelihood:List of 10
+  .. .. .. ..$ nobs         : int 145
+  .. .. .. ..$ neffectiveobs: int 132
+  .. .. .. ..$ nparams      : int 13
+  .. .. .. ..$ ll           : num 158
+  .. .. .. ..$ adjustedll   : num -487
+  .. .. .. ..$ aic          : num 1000
+  .. .. .. ..$ aicc         : num 1003
+  .. .. .. ..$ bic          : num 1038
+  .. .. .. ..$ bicc         : num -4.86
+  .. .. .. ..$ ssq          : num 0.658
+  .. .. .. ..- attr(*, "class")= chr "JD3_LIKELIHOOD"
+  .. .. ..$ res       : num [1:132] 0.1298 -0.0698 0.0427 0.0719 0.1076 ...
+  .. ..$ diagnostics:List of 14
+  .. .. ..$ mean         :List of 2
+  .. .. .. ..$ value : num -0.31
+  .. .. .. ..$ pvalue: num 0.757
+  .. .. .. ..- attr(*, "distribution")= chr "T with 132.0 degrees of freedom"
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ skewness     :List of 2
+  .. .. .. ..$ value : num 0.183
+  .. .. .. ..$ pvalue: num 0.392
+  .. .. .. ..- attr(*, "distribution")= chr "Normal with Mean = 0.0 and Stdev = 0.21320071635561044"
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ kurtosis     :List of 2
+  .. .. .. ..$ value : num 2.97
+  .. .. .. ..$ pvalue: num 0.938
+  .. .. .. ..- attr(*, "distribution")= chr "Normal with Mean = 3.0 and Stdev = 0.4264014327112209"
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ doornikhansen:List of 2
+  .. .. .. ..$ value : num 0.825
+  .. .. .. ..$ pvalue: num 0.662
+  .. .. .. ..- attr(*, "distribution")= chr "Chi2 with 2.0 degrees of freedom "
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ lb           :List of 2
+  .. .. .. ..$ value : num 24.2
+  .. .. .. ..$ pvalue: num 0.337
+  .. .. .. ..- attr(*, "distribution")= chr "Chi2 with 22.0 degrees of freedom "
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ bp           :List of 2
+  .. .. .. ..$ value : num 22
+  .. .. .. ..$ pvalue: num 0.461
+  .. .. .. ..- attr(*, "distribution")= chr "Chi2 with 22.0 degrees of freedom "
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ seaslb       :List of 2
+  .. .. .. ..$ value : num 0.295
+  .. .. .. ..$ pvalue: num 0.863
+  .. .. .. ..- attr(*, "distribution")= chr "Chi2 with 2.0 degrees of freedom "
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ seasbp       :List of 2
+  .. .. .. ..$ value : num 0.26
+  .. .. .. ..$ pvalue: num 0.878
+  .. .. .. ..- attr(*, "distribution")= chr "Chi2 with 2.0 degrees of freedom "
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ lb2          :List of 2
+  .. .. .. ..$ value : num 36.4
+  .. .. .. ..$ pvalue: num 0.0275
+  .. .. .. ..- attr(*, "distribution")= chr "Chi2 with 22.0 degrees of freedom "
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ bp2          :List of 2
+  .. .. .. ..$ value : num 32.2
+  .. .. .. ..$ pvalue: num 0.0747
+  .. .. .. ..- attr(*, "distribution")= chr "Chi2 with 22.0 degrees of freedom "
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ nruns        :List of 2
+  .. .. .. ..$ value : num 1.01
+  .. .. .. ..$ pvalue: num 0.31
+  .. .. .. ..- attr(*, "distribution")= chr "Normal with Mean = 0.0 and Stdev = 1.0"
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ lruns        :List of 2
+  .. .. .. ..$ value : num 14.8
+  .. .. .. ..$ pvalue: num 1
+  .. .. .. ..- attr(*, "distribution")= chr "Chi2 with 132.0 degrees of freedom "
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ nudruns      :List of 2
+  .. .. .. ..$ value : num 0.277
+  .. .. .. ..$ pvalue: num 0.782
+  .. .. .. ..- attr(*, "distribution")= chr "Normal with Mean = 0.0 and Stdev = 1.0"
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. .. ..$ ludruns      :List of 2
+  .. .. .. ..$ value : num 1.66
+  .. .. .. ..$ pvalue: num 1
+  .. .. .. ..- attr(*, "distribution")= chr "Chi2 with 131.0 degrees of freedom "
+  .. .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. ..- attr(*, "class")= chr "JD3_REGARIMA_RSLTS"
+  ..$ preadjust    :List of 7
+  .. ..$ a1 : Time-Series [1:409] from 1990 to 2024: 107.3 96.4 102.6 78.5 71.7 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ a1a: Time-Series [1:12] from 2024 to 2025: 121 135 128 112 142 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ a1b: NULL
+  .. ..$ a6 : Time-Series [1:421] from 1990 to 2025: 1.022 0.991 1.022 0.958 1.013 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ a7 : Time-Series [1:421] from 1990 to 2025: 1 1 1.002 0.993 1.006 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ a8 : Time-Series [1:421] from 1990 to 2025: 1.56 1.56 1.56 1.56 1.56 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ a9 : Time-Series [1:421] from 1990 to 2025: 1 1 1 1 1 1 1 1 1 1 ...
+  .. .. ..- attr(*, "name")= chr ""
+  ..$ decomposition:List of 14
+  .. ..$ d1             : Time-Series [1:421] from 1990 to 2025: 67.1 62.1 70.3 52.7 45 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d2             : Time-Series [1:409] from 1990 to 2024: 54.9 54.8 54.7 54.4 54.2 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d4             : Time-Series [1:409] from 1990 to 2024: 0.98 0.968 1.002 0.96 0.878 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d5             : Time-Series [1:421] from 1990 to 2025: 1.187 1.146 1.287 0.935 0.859 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d6             : Time-Series [1:421] from 1990 to 2025: 56.6 54.2 54.6 56.4 52.3 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d7             : Time-Series [1:421] from 1990 to 2025: 55 54.9 54.9 54.9 54.8 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d8             : Time-Series [1:421] from 1990 to 2025: 1.22 1.131 1.166 0.961 0.82 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d9             : Time-Series [1:421] from 1990 to 2025: NaN NaN 1.28 NaN NaN ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d10            : Time-Series [1:421] from 1990 to 2025: 1.196 1.143 1.287 0.944 0.851 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d11            : Time-Series [1:421] from 1990 to 2025: 56.1 54.4 49.8 55.8 52.8 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d12            : Time-Series [1:421] from 1990 to 2025: 54.8 54.8 54.8 54.8 54.7 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d13            : Time-Series [1:421] from 1990 to 2025: 1.024 0.992 0.909 1.02 0.965 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ final_seasonal : int 3
+  .. ..$ final_henderson: int 23
+  .. ..- attr(*, "class")= chr "JD3X11"
+  ..$ final        :List of 13
+  .. ..$ d11final: Time-Series [1:409] from 1990 to 2024: 87.8 85.1 77.9 87.4 82.6 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d12final: Time-Series [1:409] from 1990 to 2024: 85.8 85.7 85.7 85.7 85.7 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d13final: Time-Series [1:409] from 1990 to 2024: 1.024 0.992 0.909 1.02 0.965 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d16     : Time-Series [1:409] from 1990 to 2024: 1.222 1.133 1.317 0.898 0.867 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d18     : Time-Series [1:409] from 1990 to 2024: 1.022 0.991 1.024 0.951 1.019 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d11a    : Time-Series [1:12] from 2024 to 2025: 122 124 124 127 125 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d12a    : Time-Series [1:12] from 2024 to 2025: 124 124 125 125 126 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d16a    : Time-Series [1:12] from 2024 to 2025: 0.995 1.086 1.034 0.878 1.132 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ d18a    : Time-Series [1:12] from 2024 to 2025: 1.027 1.002 1.025 0.974 1 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ e1      : Time-Series [1:409] from 1990 to 2024: 107.3 96.4 112.9 78.5 71.7 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ e2      : Time-Series [1:409] from 1990 to 2024: 87.8 85.1 54.8 87.4 82.6 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ e3      : Time-Series [1:409] from 1990 to 2024: 1.024 0.992 1 1.02 0.965 ...
+  .. .. ..- attr(*, "name")= chr ""
+  .. ..$ e11     : Time-Series [1:409] from 1990 to 2024: 87.8 85.1 49.8 87.4 82.6 ...
+  .. .. ..- attr(*, "name")= chr ""
+  ..$ mstats       :List of 13
+  .. ..$ m1 : num 1
+  .. ..$ m2 : num 0.819
+  .. ..$ m3 : num 2.1
+  .. ..$ m4 : num 0.578
+  .. ..$ m5 : num 1.98
+  .. ..$ m6 : num 0.186
+  .. ..$ m7 : num 0.361
+  .. ..$ m8 : num 0.834
+  .. ..$ m9 : num 0.397
+  .. ..$ m10: num 0.93
+  .. ..$ m11: num 0.887
+  .. ..$ q  : num 0.907
+  .. ..$ qm2: num 0.918
+  ..$ diagnostics  :List of 7
+  .. ..$ vardecomposition:List of 6
+  .. .. ..$ cycle    : num 0.196
+  .. .. ..$ seasonal : num 0.279
+  .. .. ..$ irregular: num 0.0373
+  .. .. ..$ calendar : num 0.0256
+  .. .. ..$ others   : num 0.545
+  .. .. ..$ total    : num 1.08
+  .. ..$ seas.ftest.i    :List of 2
+  .. .. ..$ value : num 0.546
+  .. .. ..$ pvalue: num 0.872
+  .. .. ..- attr(*, "distribution")= chr "F with 11.0 degrees of freedom in the nominator and 395.0 degrees of freedom in the denominator"
+  .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. ..$ seas.ftest.sa   :List of 2
+  .. .. ..$ value : num 0.133
+  .. .. ..$ pvalue: num 1
+  .. .. ..- attr(*, "distribution")= chr "F with 11.0 degrees of freedom in the nominator and 393.0 degrees of freedom in the denominator"
+  .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. ..$ seas.qstest.i   :List of 2
+  .. .. ..$ value : num 0
+  .. .. ..$ pvalue: num 1
+  .. .. ..- attr(*, "distribution")= chr "Chi2 with 2.0 degrees of freedom "
+  .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. ..$ seas.qstest.sa  :List of 2
+  .. .. ..$ value : num 0
+  .. .. ..$ pvalue: num 1
+  .. .. ..- attr(*, "distribution")= chr "Chi2 with 2.0 degrees of freedom "
+  .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. ..$ td.ftest.i      :List of 2
+  .. .. ..$ value : num 2.39
+  .. .. ..$ pvalue: num 0.0279
+  .. .. ..- attr(*, "distribution")= chr "F with 6.0 degrees of freedom in the nominator and 401.0 degrees of freedom in the denominator"
+  .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  .. ..$ td.ftest.sa     :List of 2
+  .. .. ..$ value : num 2.29
+  .. .. ..$ pvalue: num 0.0345
+  .. .. ..- attr(*, "distribution")= chr "F with 6.0 degrees of freedom in the nominator and 401.0 degrees of freedom in the denominator"
+  .. .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..- attr(*, "class")= chr "JD3_X13_RSLTS"
+ $ estimation_spec:List of 3
+  ..$ regarima    :List of 7
+  .. ..$ basic     :List of 3
+  .. .. ..$ span            :List of 5
+  .. .. .. ..$ type: chr "ALL"
+  .. .. .. ..$ d0  : NULL
+  .. .. .. ..$ d1  : NULL
+  .. .. .. ..$ n0  : int 0
+  .. .. .. ..$ n1  : int 0
+  .. .. .. ..- attr(*, "class")= chr "JD3_SPAN"
+  .. .. ..$ preprocessing   : logi TRUE
+  .. .. ..$ preliminaryCheck: logi TRUE
+  .. ..$ transform :List of 4
+  .. .. ..$ fn      : chr "LOG"
+  .. .. ..$ adjust  : chr "LEAPYEAR"
+  .. .. ..$ aicdiff : num -2
+  .. .. ..$ outliers: logi TRUE
+  .. ..$ outlier   :List of 7
+  .. .. ..$ outliers     :List of 3
+  .. .. .. ..$ :List of 2
+  .. .. .. .. ..$ type: chr "AO"
+  .. .. .. .. ..$ va  : num 0
+  .. .. .. ..$ :List of 2
+  .. .. .. .. ..$ type: chr "LS"
+  .. .. .. .. ..$ va  : num 0
+  .. .. .. ..$ :List of 2
+  .. .. .. .. ..$ type: chr "TC"
+  .. .. .. .. ..$ va  : num 0
+  .. .. ..$ span         :List of 5
+  .. .. .. ..$ type: chr "ALL"
+  .. .. .. ..$ d0  : NULL
+  .. .. .. ..$ d1  : NULL
+  .. .. .. ..$ n0  : int 0
+  .. .. .. ..$ n1  : int 0
+  .. .. .. ..- attr(*, "class")= chr "JD3_SPAN"
+  .. .. ..$ defva        : num 0
+  .. .. ..$ method       : chr "ADDONE"
+  .. .. ..$ monthlytcrate: num 0.7
+  .. .. ..$ maxiter      : int 30
+  .. .. ..$ lsrun        : int 0
+  .. ..$ arima     :List of 7
+  .. .. ..$ period: int 0
+  .. .. ..$ d     : int 1
+  .. .. ..$ bd    : int 1
+  .. .. ..$ phi   : NULL
+  .. .. ..$ theta :List of 2
+  .. .. .. ..$ : num 0
+  .. .. .. ..$ : chr "UNDEFINED"
+  .. .. .. ..- attr(*, "dim")= int [1:2] 2 1
+  .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. ..$ : chr [1:2] "value" "type"
+  .. .. .. .. ..$ : NULL
+  .. .. ..$ bphi  : NULL
+  .. .. ..$ btheta:List of 2
+  .. .. .. ..$ : num 0
+  .. .. .. ..$ : chr "UNDEFINED"
+  .. .. .. ..- attr(*, "dim")= int [1:2] 2 1
+  .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. ..$ : chr [1:2] "value" "type"
+  .. .. .. .. ..$ : NULL
+  .. .. ..- attr(*, "class")= chr "JD3_SARIMA_ESTIMATION"
+  .. ..$ automodel :List of 12
+  .. .. ..$ enabled  : logi TRUE
+  .. .. ..$ ljungbox : num 0.95
+  .. .. ..$ tsig     : num 1
+  .. .. ..$ predcv   : num 0.143
+  .. .. ..$ ubfinal  : num 1.05
+  .. .. ..$ ub1      : num 1.03
+  .. .. ..$ ub2      : num 1.14
+  .. .. ..$ cancel   : num 0.1
+  .. .. ..$ fct      : num 1.01
+  .. .. ..$ acceptdef: logi FALSE
+  .. .. ..$ mixed    : logi TRUE
+  .. .. ..$ balanced : logi FALSE
+  .. ..$ regression:List of 8
+  .. .. ..$ mean         : NULL
+  .. .. ..$ check_mean   : logi FALSE
+  .. .. ..$ td           :List of 12
+  .. .. .. ..$ td            : chr "TD_NONE"
+  .. .. .. ..$ lp            : chr "NONE"
+  .. .. .. ..$ holidays      : chr ""
+  .. .. .. ..$ users         : chr [1:6] "r.Monday" "r.Tuesday" "r.Wednesday" "r.Thursday" ...
+  .. .. .. ..$ w             : int 0
+  .. .. .. ..$ test          : chr "NO"
+  .. .. .. ..$ auto          : chr "AUTO_NO"
+  .. .. .. ..$ autoadjust    : logi FALSE
+  .. .. .. ..$ tdcoefficients:List of 12
+  .. .. .. .. ..$ : num 0
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..$ : num 0
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..$ : num 0
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..$ : num 0
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..$ : num 0
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..$ : num 0
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..- attr(*, "dim")= int [1:2] 2 6
+  .. .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. .. ..$ : chr [1:2] "value" "type"
+  .. .. .. .. .. ..$ : NULL
+  .. .. .. ..$ lpcoefficient : NULL
+  .. .. .. ..$ ptest1        : num 0
+  .. .. .. ..$ ptest2        : num 0
+  .. .. ..$ easter       :List of 4
+  .. .. .. ..$ type       : chr "JULIAN"
+  .. .. .. ..$ duration   : int 8
+  .. .. .. ..$ test       : chr "NO"
+  .. .. .. ..$ coefficient: NULL
+  .. .. ..$ outliers     : NULL
+  .. .. ..$ users        :List of 1
+  .. .. .. ..$ :List of 5
+  .. .. .. .. ..$ id       : chr "r.reg1"
+  .. .. .. .. ..$ name     : chr "iv1"
+  .. .. .. .. ..$ lag      : int 0
+  .. .. .. .. ..$ coef     :List of 2
+  .. .. .. .. .. ..$ value: num 0
+  .. .. .. .. .. ..$ type : chr "UNDEFINED"
+  .. .. .. .. ..$ regeffect: chr "Trend"
+  .. .. ..$ interventions: NULL
+  .. .. ..$ ramps        : NULL
+  .. ..$ estimate  :List of 2
+  .. .. ..$ span:List of 5
+  .. .. .. ..$ type: chr "FROM"
+  .. .. .. ..$ d0  : Date[1:1], format: "2012-01-01"
+  .. .. .. ..$ d1  : NULL
+  .. .. .. ..$ n0  : int 0
+  .. .. .. ..$ n1  : int 0
+  .. .. .. ..- attr(*, "class")= chr "JD3_SPAN"
+  .. .. ..$ tol : num 1e-07
+  .. ..- attr(*, "class")= chr "JD3_REGARIMA_SPEC"
+  ..$ x11         :List of 12
+  .. ..$ mode         : chr "UNKNOWN"
+  .. ..$ seasonal     : logi TRUE
+  .. ..$ henderson    : int 0
+  .. ..$ sfilters     : chr "FILTER_MSR"
+  .. ..$ lsig         : num 1.5
+  .. ..$ usig         : num 2.5
+  .. ..$ nfcasts      : int -1
+  .. ..$ nbcasts      : int 0
+  .. ..$ sigma        : chr "NONE"
+  .. ..$ vsigmas      : int(0) 
+  .. ..$ excludefcasts: logi FALSE
+  .. ..$ bias         : chr "RATIO"
+  .. ..- attr(*, "class")= chr "JD3_X11_SPEC"
+  ..$ benchmarking:List of 6
+  .. ..$ enabled : logi TRUE
+  .. ..$ target  : chr "TARGET_ORIGINAL"
+  .. ..$ lambda  : num 0.5
+  .. ..$ rho     : num 0.8
+  .. ..$ bias    : chr "BIAS_NONE"
+  .. ..$ forecast: logi FALSE
+  ..- attr(*, "class")= chr "JD3_X13_SPEC"
+ $ result_spec    :List of 3
+  ..$ regarima    :List of 7
+  .. ..$ basic     :List of 3
+  .. .. ..$ span            :List of 5
+  .. .. .. ..$ type: chr "ALL"
+  .. .. .. ..$ d0  : NULL
+  .. .. .. ..$ d1  : NULL
+  .. .. .. ..$ n0  : int 0
+  .. .. .. ..$ n1  : int 0
+  .. .. .. ..- attr(*, "class")= chr "JD3_SPAN"
+  .. .. ..$ preprocessing   : logi TRUE
+  .. .. ..$ preliminaryCheck: logi TRUE
+  .. ..$ transform :List of 4
+  .. .. ..$ fn      : chr "LOG"
+  .. .. ..$ adjust  : chr "LEAPYEAR"
+  .. .. ..$ aicdiff : num -2
+  .. .. ..$ outliers: logi TRUE
+  .. ..$ outlier   :List of 7
+  .. .. ..$ outliers     : list()
+  .. .. ..$ span         :List of 5
+  .. .. .. ..$ type: chr "ALL"
+  .. .. .. ..$ d0  : NULL
+  .. .. .. ..$ d1  : NULL
+  .. .. .. ..$ n0  : int 0
+  .. .. .. ..$ n1  : int 0
+  .. .. .. ..- attr(*, "class")= chr "JD3_SPAN"
+  .. .. ..$ defva        : num 0
+  .. .. ..$ method       : chr "ADDONE"
+  .. .. ..$ monthlytcrate: num 0.7
+  .. .. ..$ maxiter      : int 30
+  .. .. ..$ lsrun        : int 0
+  .. ..$ arima     :List of 7
+  .. .. ..$ period: int 12
+  .. .. ..$ d     : int 1
+  .. .. ..$ bd    : int 1
+  .. .. ..$ phi   : NULL
+  .. .. ..$ theta :List of 2
+  .. .. .. ..$ : num -0.771
+  .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. ..- attr(*, "dim")= int [1:2] 2 1
+  .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. ..$ : chr [1:2] "value" "type"
+  .. .. .. .. ..$ : NULL
+  .. .. ..$ bphi  : NULL
+  .. .. ..$ btheta:List of 2
+  .. .. .. ..$ : num -0.726
+  .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. ..- attr(*, "dim")= int [1:2] 2 1
+  .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. ..$ : chr [1:2] "value" "type"
+  .. .. .. .. ..$ : NULL
+  .. .. ..- attr(*, "class")= chr "JD3_SARIMA_ESTIMATION"
+  .. ..$ automodel :List of 12
+  .. .. ..$ enabled  : logi FALSE
+  .. .. ..$ ljungbox : num 0.95
+  .. .. ..$ tsig     : num 1
+  .. .. ..$ predcv   : num 0.143
+  .. .. ..$ ubfinal  : num 1.05
+  .. .. ..$ ub1      : num 1.03
+  .. .. ..$ ub2      : num 1.14
+  .. .. ..$ cancel   : num 0.1
+  .. .. ..$ fct      : num 1.01
+  .. .. ..$ acceptdef: logi FALSE
+  .. .. ..$ mixed    : logi TRUE
+  .. .. ..$ balanced : logi FALSE
+  .. ..$ regression:List of 8
+  .. .. ..$ mean         : NULL
+  .. .. ..$ check_mean   : logi FALSE
+  .. .. ..$ td           :List of 12
+  .. .. .. ..$ td            : chr "TD_NONE"
+  .. .. .. ..$ lp            : chr "NONE"
+  .. .. .. ..$ holidays      : chr ""
+  .. .. .. ..$ users         : chr [1:6] "r.Monday" "r.Tuesday" "r.Wednesday" "r.Thursday" ...
+  .. .. .. ..$ w             : int 0
+  .. .. .. ..$ test          : chr "NO"
+  .. .. .. ..$ auto          : chr "AUTO_NO"
+  .. .. .. ..$ autoadjust    : logi FALSE
+  .. .. .. ..$ tdcoefficients:List of 12
+  .. .. .. .. ..$ : num -0.00786
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..$ : num 0.0183
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..$ : num 0.00349
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..$ : num 0.0156
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..$ : num 0.022
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..$ : num -0.0207
+  .. .. .. .. ..$ : chr "ESTIMATED"
+  .. .. .. .. ..- attr(*, "dim")= int [1:2] 2 6
+  .. .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. .. .. .. ..$ : chr [1:2] "value" "type"
+  .. .. .. .. .. ..$ : NULL
+  .. .. .. ..$ lpcoefficient : NULL
+  .. .. .. ..$ ptest1        : num 0
+  .. .. .. ..$ ptest2        : num 0
+  .. .. ..$ easter       :List of 4
+  .. .. .. ..$ type       : chr "STANDARD"
+  .. .. .. ..$ duration   : int 8
+  .. .. .. ..$ test       : chr "NO"
+  .. .. .. ..$ coefficient:List of 2
+  .. .. .. .. ..$ value: num -0.0633
+  .. .. .. .. ..$ type : chr "ESTIMATED"
+  .. .. ..$ outliers     :List of 2
+  .. .. .. ..$ :List of 4
+  .. .. .. .. ..$ name: chr "TC (2020-03-01)"
+  .. .. .. .. ..$ pos : Date[1:1], format: "2020-03-01"
+  .. .. .. .. ..$ code: chr "TC"
+  .. .. .. .. ..$ coef:List of 2
+  .. .. .. .. .. ..$ value: num -0.257
+  .. .. .. .. .. ..$ type : chr "ESTIMATED"
+  .. .. .. ..$ :List of 4
+  .. .. .. .. ..$ name: chr "LS (2020-04-01)"
+  .. .. .. .. ..$ pos : Date[1:1], format: "2020-04-01"
+  .. .. .. .. ..$ code: chr "LS"
+  .. .. .. .. ..$ coef:List of 2
+  .. .. .. .. .. ..$ value: num -0.448
+  .. .. .. .. .. ..$ type : chr "ESTIMATED"
+  .. .. ..$ users        :List of 1
+  .. .. .. ..$ :List of 5
+  .. .. .. .. ..$ id       : chr "r.reg1"
+  .. .. .. .. ..$ name     : chr "iv1"
+  .. .. .. .. ..$ lag      : int 0
+  .. .. .. .. ..$ coef     :List of 2
+  .. .. .. .. .. ..$ value: num -0.0436
+  .. .. .. .. .. ..$ type : chr "ESTIMATED"
+  .. .. .. .. ..$ regeffect: chr "Trend"
+  .. .. ..$ interventions: NULL
+  .. .. ..$ ramps        : NULL
+  .. ..$ estimate  :List of 2
+  .. .. ..$ span:List of 5
+  .. .. .. ..$ type: chr "FROM"
+  .. .. .. ..$ d0  : Date[1:1], format: "2012-01-01"
+  .. .. .. ..$ d1  : NULL
+  .. .. .. ..$ n0  : int 0
+  .. .. .. ..$ n1  : int 0
+  .. .. .. ..- attr(*, "class")= chr "JD3_SPAN"
+  .. .. ..$ tol : num 1e-07
+  .. ..- attr(*, "class")= chr "JD3_REGARIMA_SPEC"
+  ..$ x11         :List of 12
+  .. ..$ mode         : chr "UNKNOWN"
+  .. ..$ seasonal     : logi TRUE
+  .. ..$ henderson    : int 0
+  .. ..$ sfilters     : chr "FILTER_MSR"
+  .. ..$ lsig         : num 1.5
+  .. ..$ usig         : num 2.5
+  .. ..$ nfcasts      : int -1
+  .. ..$ nbcasts      : int 0
+  .. ..$ sigma        : chr "NONE"
+  .. ..$ vsigmas      : int(0) 
+  .. ..$ excludefcasts: logi FALSE
+  .. ..$ bias         : chr "RATIO"
+  .. ..- attr(*, "class")= chr "JD3_X11_SPEC"
+  ..$ benchmarking:List of 6
+  .. ..$ enabled : logi TRUE
+  .. ..$ target  : chr "TARGET_ORIGINAL"
+  .. ..$ lambda  : num 0.5
+  .. ..$ rho     : num 0.8
+  .. ..$ bias    : chr "BIAS_NONE"
+  .. ..$ forecast: logi FALSE
+  ..- attr(*, "class")= chr "JD3_X13_SPEC"
+ $ user_defined   :List of 334
+  ..$ period                              : num 12
+  ..$ span.start                          : chr "1990-01-01T00:00:00/P1M"
+  ..$ span.end                            : chr "2024-01-01T00:00:00/P1M"
+  ..$ span.n                              : num 409
+  ..$ span.missing                        : num 0
+  ..$ log                                 : num 1
+  ..$ adjust                              : chr "LeapYear"
+  ..$ likelihood.ll                       : num 158
+  ..$ likelihood.adjustedll               : num -487
+  ..$ likelihood.ssqerr                   : num 0.658
+  ..$ likelihood.aic                      : num 1000
+  ..$ likelihood.bic                      : num 1038
+  ..$ likelihood.aicc                     : num 1003
+  ..$ likelihood.bicc                     : num -4.86
+  ..$ likelihood.bic2                     : num -1.91
+  ..$ likelihood.hannanquinn              : num 1015
+  ..$ likelihood.nparams                  : num 13
+  ..$ likelihood.nobs                     : num 145
+  ..$ likelihood.neffectiveobs            : num 132
+  ..$ likelihood.df                       : num 119
+  ..$ arima.p                             : num 0
+  ..$ arima.d                             : num 1
+  ..$ arima.q                             : num 1
+  ..$ arima.bp                            : num 0
+  ..$ arima.bd                            : num 1
+  ..$ arima.bq                            : num 1
+  ..$ arima.theta(*)                      : num [1, 1:4] -0.771 0.0507 -15.2156 0
+  .. ..- attr(*, "dimnames")=List of 2
+  .. .. ..$ : NULL
+  .. .. ..$ : chr [1:4] "Estimate" "Std. Error" "T-stat" "Pr(>|t|)"
+  ..$ arima.phi(*)                        : NULL
+  ..$ arima.btheta(*)                     : num [1, 1:4] -7.26e-01 1.05e-01 -6.89 2.86e-10
+  .. ..- attr(*, "dimnames")=List of 2
+  .. .. ..$ : NULL
+  .. .. ..$ : chr [1:4] "Estimate" "Std. Error" "T-stat" "Pr(>|t|)"
+  ..$ arima.bphi(*)                       : NULL
+  ..$ regression.espan.start              : chr "2012-01-01T00:00:00/P1M"
+  ..$ regression.espan.end                : chr "2024-01-01T00:00:00/P1M"
+  ..$ regression.espan.n                  : num 145
+  ..$ regression.espan.missing            : num 0
+  ..$ regression.mean                     : num 0
+  ..$ regression.nlp                      : num 0
+  ..$ regression.ntd                      : num 6
+  ..$ regression.leaster                  : num 0
+  ..$ regression.nmh                      : num 1
+  ..$ regression.nout                     : num 2
+  ..$ regression.nao                      : num 0
+  ..$ regression.nls                      : num 1
+  ..$ regression.ntc                      : num 1
+  ..$ regression.nso                      : num 0
+  ..$ regression.nusers                   : num 1
+  ..$ regression.mu                       : NULL
+  ..$ regression.lp                       : NULL
+  ..$ regression.td(*)                    : num [1, 1:4] -0.00786 0.00896 -0.87736 0.38204
+  .. ..- attr(*, "dimnames")=List of 2
+  .. .. ..$ : chr "r.Monday"
+  .. .. ..$ : chr [1:4] "Estimate" "Std. Error" "T-stat" "Pr(>|t|)"
+  ..$ regression.td-derived               : NULL
+  ..$ regression.td-ftest                 :List of 2
+  .. ..$ value : num 7.4
+  .. ..$ pvalue: num 9.5e-07
+  .. ..- attr(*, "distribution")= chr "F with 6.0 degrees of freedom in the nominator and 120.0 degrees of freedom in the denominator"
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ regression.easter                   : num [1, 1:4] -0.0633 0.0882 -0.718 0.4741
+  .. ..- attr(*, "dimnames")=List of 2
+  .. .. ..$ : chr "julian easter [8]"
+  .. .. ..$ : chr [1:4] "Estimate" "Std. Error" "T-stat" "Pr(>|t|)"
+  ..$ regression.outlier(*)               : num [1, 1:4] -2.57e-01 5.86e-02 -4.40 2.39e-05
+  .. ..- attr(*, "dimnames")=List of 2
+  .. .. ..$ : chr "TC (2020-03)"
+  .. .. ..$ : chr [1:4] "Estimate" "Std. Error" "T-stat" "Pr(>|t|)"
+  ..$ regression.user(*)                  : num [1, 1:4] -0.0436 0.0301 -1.4481 0.1502
+  .. ..- attr(*, "dimnames")=List of 2
+  .. .. ..$ : chr "iv1"
+  .. .. ..$ : chr [1:4] "Estimate" "Std. Error" "T-stat" "Pr(>|t|)"
+  ..$ regression.missing(*)               : NULL
+  ..$ residuals.res                       : num [1:122] -0.1483 -0.0517 -0.0366 -0.0213 -0.04 ...
+  ..$ residuals.tsres                     : Time-Series [1:132] from 2013 to 2024: 0.1298 -0.0698 0.0427 0.0719 0.1076 ...
+  ..$ residuals.n                         : num 132
+  ..$ residuals.df                        : num 122
+  ..$ residuals.dfc                       : num 120
+  ..$ residuals.ser                       : num 0.0741
+  ..$ residuals.ser_ml                    : num 0.0706
+  ..$ residuals.type                      : chr "QR_Transformed"
+  ..$ residuals.mean                      :List of 2
+  .. ..$ value : num -0.31
+  .. ..$ pvalue: num 0.757
+  .. ..- attr(*, "distribution")= chr "T with 132.0 degrees of freedom"
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.skewness                  :List of 2
+  .. ..$ value : num 0.183
+  .. ..$ pvalue: num 0.392
+  .. ..- attr(*, "distribution")= chr "Normal with Mean = 0.0 and Stdev = 0.21320071635561044"
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.kurtosis                  :List of 2
+  .. ..$ value : num 2.97
+  .. ..$ pvalue: num 0.938
+  .. ..- attr(*, "distribution")= chr "Normal with Mean = 3.0 and Stdev = 0.4264014327112209"
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.doornikhansen             :List of 2
+  .. ..$ value : num 0.825
+  .. ..$ pvalue: num 0.662
+  .. ..- attr(*, "distribution")= chr "Chi2 with 2.0 degrees of freedom "
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.lb                        :List of 2
+  .. ..$ value : num 24.2
+  .. ..$ pvalue: num 0.337
+  .. ..- attr(*, "distribution")= chr "Chi2 with 22.0 degrees of freedom "
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.bp                        :List of 2
+  .. ..$ value : num 22
+  .. ..$ pvalue: num 0.461
+  .. ..- attr(*, "distribution")= chr "Chi2 with 22.0 degrees of freedom "
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.lb2                       :List of 2
+  .. ..$ value : num 36.4
+  .. ..$ pvalue: num 0.0275
+  .. ..- attr(*, "distribution")= chr "Chi2 with 22.0 degrees of freedom "
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.bp2                       :List of 2
+  .. ..$ value : num 32.2
+  .. ..$ pvalue: num 0.0747
+  .. ..- attr(*, "distribution")= chr "Chi2 with 22.0 degrees of freedom "
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.seaslb                    :List of 2
+  .. ..$ value : num 0.295
+  .. ..$ pvalue: num 0.863
+  .. ..- attr(*, "distribution")= chr "Chi2 with 2.0 degrees of freedom "
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.seasbp                    :List of 2
+  .. ..$ value : num 0.26
+  .. ..$ pvalue: num 0.878
+  .. ..- attr(*, "distribution")= chr "Chi2 with 2.0 degrees of freedom "
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.nruns                     :List of 2
+  .. ..$ value : num 1.01
+  .. ..$ pvalue: num 0.31
+  .. ..- attr(*, "distribution")= chr "Normal with Mean = 0.0 and Stdev = 1.0"
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.lruns                     :List of 2
+  .. ..$ value : num 14.8
+  .. ..$ pvalue: num 1
+  .. ..- attr(*, "distribution")= chr "Chi2 with 132.0 degrees of freedom "
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.nudruns                   :List of 2
+  .. ..$ value : num 0.277
+  .. ..$ pvalue: num 0.782
+  .. ..- attr(*, "distribution")= chr "Normal with Mean = 0.0 and Stdev = 1.0"
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ residuals.ludruns                   :List of 2
+  .. ..$ value : num 1.66
+  .. ..$ pvalue: num 1
+  .. ..- attr(*, "distribution")= chr "Chi2 with 131.0 degrees of freedom "
+  .. ..- attr(*, "class")= chr [1:2] "JD3_TEST" "JD3"
+  ..$ regression.ml.parameters            : num [1:2] -0.771 -0.726
+  ..$ regression.ml.pcovar                : num [1:2, 1:2] 2.61e-03 -6.36e-05 -6.36e-05 1.13e-02
+  ..$ regression.ml.pcovar-ml             : num [1:2, 1:2] 2.35e-03 -5.74e-05 -5.74e-05 1.02e-02
+  ..$ regression.ml.pcorr                 : num [1:2, 1:2] 1 -0.0117 -0.0117 1
+  ..$ regression.ml.pscore                : num [1:2] 0.02026 -0.00422
+  ..$ regression.details.description      : chr [1:10] "iv1" "r.Monday" "r.Tuesday" "r.Wednesday" ...
+  ..$ regression.details.type             : int [1:10] 2 6 6 6 6 6 6 6 5 2
+  ..$ regression.details.coefficients     : num [1:10] -0.04359 -0.00786 0.01831 0.00349 0.01563 ...
+  ..$ regression.details.covar            : num [1:10, 1:10] 9.06e-04 1.80e-07 -1.21e-05 3.23e-05 -4.52e-05 ...
+  ..$ regression.details.covar-ml         : num [1:10, 1:10] 8.17e-04 1.62e-07 -1.09e-05 2.91e-05 -4.08e-05 ...
+  ..$ y                                   : Time-Series [1:409] from 1990 to 2024: 107.3 96.4 102.6 78.5 71.7 ...
+  ..$ y_f(?)                              : Time-Series [1:12] from 2024 to 2025: 121 135 128 112 142 ...
+  ..$ y_ef(?)                             : Time-Series [1:12] from 2024 to 2025: 8.82 10.4 11.35 10.2 11.7 ...
+  ..$ y_b(?)                              : NULL
+  ..$ y_eb(?)                             : NULL
+  ..$ yc                                  : Time-Series [1:409] from 1990 to 2024: 107.3 96.4 102.6 78.5 71.7 ...
+  ..$ yc_f(?)                             : Time-Series [1:12] from 2024 to 2025: 121 135 128 112 142 ...
+  ..$ yc_b(?)                             : NULL
+  ..$ ylin                                : Time-Series [1:409] from 1990 to 2024: 67.1 62.1 64 52.7 45 ...
+  ..$ ylin_f(?)                           : Time-Series [1:12] from 2024 to 2025: 118 135 125 115 142 ...
+  ..$ ylin_b(?)                           : NULL
+  ..$ det                                 : Time-Series [1:409] from 1990 to 2024: 1.6 1.55 1.6 1.49 1.59 ...
+  ..$ det_f(?)                            : Time-Series [1:12] from 2024 to 2025: 1.027 1.002 1.025 0.974 1 ...
+  .. [list output truncated]
+  ..- attr(*, "class")= chr "user_defined"
+ - attr(*, "class")= chr "JD3_X13_OUTPUT"
+> 
+
+
+
+sa_x13_ud$user_defined$period
+
 
 

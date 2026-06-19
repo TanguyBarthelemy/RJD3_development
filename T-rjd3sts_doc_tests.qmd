@@ -1,0 +1,31 @@
+---
+title: "T rjd3sts doc and tests"
+format: html
+---
+
+```{r}
+#| label: loading-rjdverse
+#| echo: true
+#| eval: true
+## installl v dvlplt
+# install.packages("remotes")
+# remotes::install_github("rjdverse/rjd3sts")
+library("rjd3toolkit")
+library("rjd3sts")
+```
+
+
+## Objectifs: state of affairs
+
+why now: be able to get clarifications in Madrid 
+
+### State and improvement path 
+
+
+### Deliverables and steps 
+
+### Questions 
+
+
+### References 
+

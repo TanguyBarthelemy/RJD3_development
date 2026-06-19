@@ -1,0 +1,27 @@
+Paths to Dicos in jdemetra main code 
+
+================= x13: 
+
+https://github.com/annasmyk/jdplus-main/blob/develop/jdplus-main-base/jdplus-x13-base-parent/jdplus-x13-base-api/src/main/java/jdplus/x13/base/api/x13/X13Dictionaries.java
+
+final stuff
+
+M1 Quality Control Statistic
+
+E1 : Série brute corrigée des points les plus atypiques
+E2 : Série désaisonnalisée corrigée des points les plus atypiques
+E3 : Composante irrégulière finale corrigée des points les plus atypiques
+E11 : Estimation robuste de la série désaisonnalisée finale
+
+E1 : Original series corrected for biggest outliers
+E2 : Final seasonally adjusted series corrected for biggest outliers
+E3 : Final Irregular corrected for biggest outliers
+E11  Robust estimation of final seasonally adjusted series
+
+
+=========== pre adjustment 
+
+https://github.com/annasmyk/jdplus-main/tree/develop/jdplus-main-base/jdplus-toolkit-base-parent/jdplus-toolkit-base-api/src/main/java/jdplus/toolkit/base/api/dictionaries
+
+
+Bayesian information criterion corrected for sample size 
