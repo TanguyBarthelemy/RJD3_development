@@ -68,12 +68,13 @@ Obj: doc str(model) as well and comp with GUI display
 # Données CSV
 # ipi <- read.csv2(file.path("Data", "IPI_nace4.csv"))
 
-ipi <- read.csv2("C:/Users/YWYD5I/Documents/Formation-INS-Cameroun-Juin2026/Donnees/IPI_nace4.csv")
+ipi <- read.csv2("data/IPI_nace4.csv")
+str(ipi)
 # obj comp avec GUI 
 
-ipi$DATE <- as.Date(ipi$DATE, format = "%d/%m/%Y")
+ipi$DATE <- as.Date(ipi$date, format = "%d/%m/%Y") # careful on date spelling
 ipi[, -1] <- sapply(ipi[, -1], as.numeric)
-# View(ipi)
+View(ipi)
 
 # # Donnees excel
 # ipi_nace4_ind <- read.xlsx(
@@ -89,7 +90,7 @@ ipi[, -1] <- sapply(ipi[, -1], as.numeric)
 
 ## Manipulation des données ----------------------------------------------------
 
-# Création d'un objet ts en R
+# Création d'un objet ts
 y_raw <- ts(
     ipi[, "RF3030"],
     frequency = 12,
@@ -165,6 +166,7 @@ rjd3toolkit::.r2jd_modellingcontext(my_context)$getTsVariableDictionary()
 ### Step 4: Add regressors to specification
 
 x13_spec <- rjd3x13::x13_spec("rsa3")
+# x13_spec_user_defined<- rjd3x13::x13_spec("rsa3")
 x13_spec_user_defined <- rjd3toolkit::set_tradingdays(
     x = x13_spec,
     option = "UserDefined",
@@ -290,9 +292,20 @@ sa_x13_ud <- rjd3x13::x13(y_raw, x13_spec_user_defined, context = my_context, us
 y_raw[c(32,75,111,254,321)]<-NA #5
 y_raw
 
+
+# Création d'un objet ts
+y_raw <- ts(
+    ipi[, "RF3030"],
+    frequency = 12,
+    start = c(1990, 1),
+    end = c(2024, 1)
+)
+y_raw[1]
+length(y_raw)
+
 sa_x13_ud <- rjd3x13::x13(y_raw, x13_spec_user_defined, context = my_context, userdefined = ud)
 
-### REESITIMATION : TUILE
+### REESITIMATION : TUILE if missing values 
 sa_x13_ud <- rjd3x13::x13(y_raw, x13_spec_user_defined, context = my_context, userdefined = ud)
 
 ## 2 obj test non user def td 
@@ -314,7 +327,8 @@ x13_spec_user_defined$regarima$regression$td$lp
 
 ### generate reading of ud output 
 
-```{r}
+```{r, eval=FALSE}
+
 n <- length(ud)
 n
 for (i in 1:n){
@@ -324,7 +338,9 @@ print(sprintf("sa_x13_ud$user_defined$%s", ud[i]))
 
 ### check output and comment 
 
-- reperer là ou rien de généré à tort ou erreur 
+Reperer là ou rien de généré à tort ou erreur 
+
+- span
 
 
 #### series (1st focus)
@@ -349,11 +365,15 @@ sa_x13_ud$user_defined$likelihood.ll
 sa_x13_ud$user_defined$likelihood.adjustedll
 sa_x13_ud$user_defined$likelihood.ssqerr
 sa_x13_ud$user_defined$likelihood.aic
-sa_x13_ud$user_defined$likelihood.bic
 sa_x13_ud$user_defined$likelihood.aicc
+#a clarifier 
+sa_x13_ud$user_defined$likelihood.bic
 sa_x13_ud$user_defined$likelihood.bicc
 sa_x13_ud$user_defined$likelihood.bic2
+
 sa_x13_ud$user_defined$likelihood.hannanquinn
+
+# savoir deduire les resultats
 sa_x13_ud$user_defined$likelihood.nparams
 sa_x13_ud$user_defined$likelihood.nobs
 sa_x13_ud$user_defined$likelihood.neffectiveobs
@@ -373,17 +393,18 @@ sa_x13_ud$user_defined$arima.phi
 sa_x13_ud$user_defined$arima.btheta
 sa_x13_ud$user_defined$arima.bphi
 
-### model span pb
+### model psan OK
 sa_x13_ud$user_defined$regression.espan.start
 sa_x13_ud$user_defined$regression.espan.end
 sa_x13_ud$user_defined$regression.espan.n
 sa_x13_ud$user_defined$regression.espan.missing
 
-
+## here methodo clarifications
 sa_x13_ud$user_defined$regression.mean
 sa_x13_ud$user_defined$regression.nlp
 sa_x13_ud$user_defined$regression.ntd # number of trading day regressors user-defined or not ?
 
+### TUILE ici
 sa_x13_ud$user_defined$regression.leaster
 sa_x13_ud$user_defined$regression.nmh
 
@@ -393,7 +414,8 @@ sa_x13_ud$user_defined$regression.nao
 sa_x13_ud$user_defined$regression.nls
 sa_x13_ud$user_defined$regression.ntc
 sa_x13_ud$user_defined$regression.nso
-sa_x13_ud$user_defined$regression.nusers # user defined vars 
+sa_x13_ud$user_defined$regression.nusers # user defined vars : how is 
+## how is tis counted 
 
 sa_x13_ud$user_defined$regression.mu
 
@@ -448,6 +470,7 @@ sa_x13_ud$user_defined$regression.details.type
 sa_x13_ud$user_defined$regression.details.coefficients
 sa_x13_ud$user_defined$regression.details.covar
 sa_x13_ud$user_defined$regression.details.covar-ml #introuvable 
+
 sa_x13_ud$user_defined$y
 sa_x13_ud$user_defined$y_f
 sa_x13_ud$user_defined$y_ef
