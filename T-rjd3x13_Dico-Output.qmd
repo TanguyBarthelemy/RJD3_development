@@ -630,6 +630,7 @@ sa_x13_ud$user_defined$decomposition.seasonal-filters  # pb
 sa_x13_ud$user_defined$decomposition.d9-global-msr  # pb 
 sa_x13_ud$user_defined$decomposition.d9-msr  # pb 
 sa_x13_ud$user_defined$decomposition.d9-msr-table  # pb 
+
 sa_x13_ud$user_defined$finals.d11
 sa_x13_ud$user_defined$finals.d12
 sa_x13_ud$user_defined$finals.d13
@@ -647,6 +648,9 @@ sa_x13_ud$user_defined$finals.e1
 sa_x13_ud$user_defined$finals.e2
 sa_x13_ud$user_defined$finals.e3
 sa_x13_ud$user_defined$finals.e11
+
+
+
 # pb not generated: mauvais ecriture, missing param : missing `` (TRAP°)
 sa_x13_ud$user_defined$`diagnostics.seas-lin-combined`
 sa_x13_ud$user_defined$`diagnostics.seas-lin-evolutive`
@@ -762,6 +766,15 @@ dygraph(sa_x13_ud$user_defined$full_res)
 
 ```
 
+
+### Issues yc GUI 
+
+cf word doc GUI output issues in this repo for full capture 
+
+### Displaying model span and estimation span 
+
+same info twice 
+check v2
 
 ### Output questions (JP, KW)
 
