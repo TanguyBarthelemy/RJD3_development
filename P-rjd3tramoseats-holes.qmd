@@ -1,0 +1,76 @@
+---
+title: "P rjd3tramoseats Print Holes"
+format: html
+---
+
+```{r}
+library("rjd3toolkit")
+library("rjd3tramoseats")
+## be on develop version
+y<-ABS$X0.2.14.10.M
+str(y)
+plot(y)
+```
+### Issue 1 : missing params in set_seats spec print 
+
+```{r}
+
+spec_init <- tramoseats_spec() 
+spec_init
+
+
+#forecasts, backcast, biais
+spec_ud <-set_seats(spec_init,fcasts = -2,
+  bcasts = -1,
+  algorithm = "KalmanSmoother",
+  bias= TRUE)
+
+spec_ud
+
+spec_ud$seats$
+  #   
+  # approximation = c(NA, "None", "Legacy", "Noisy"),
+  # trend.boundary = NA,
+  # seas.boundary = NA,
+         # MISSING       # seas.boundary.unique = NA,
+  # seas.tolerance = NA,
+  # ma.boundary = NA,
+  # fcasts = NA,
+  # bcasts = NA,
+  # algorithm = c(NA, "Burman", "KalmanSmoother"),
+  # bias = NA
+
+```
+
+### Issue 2: outliers detection in spec print
+
+```{r}
+spec_init <- tramoseats_spec() 
+spec_init
+
+spec_ud<- set_outlier(
+  spec_init,
+  span.type = "Between",
+  d0 = "2000-01-03",
+  d1 = "2012-06-30",
+  n0 = 0,
+  n1 = 0,
+  outliers.type = c("AO","LS"),
+  critical.value = 6
+)
+
+spec_ud
+
+
+spec_init$tramo$outlier$enabled
+spec_init$tramo$outlier$span$type
+
+x$outlier$span 
+spec_init$tramo$outlier$span$type
+sa_ts<- tramoseats(y,spec_init)
+summary(sa_ts)
+
+```
+
+
+

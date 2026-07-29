@@ -9,16 +9,10 @@ format: html
 #| eval: true
 library("rjd3toolkit")
 library("rjd3tramoseats")
-## be on develop version 
-library("rjd3toolkit")
-library("rjd3x13")
-y<-ABS$X0.2.14.10.M
-str(y)
-plot(y)
 ```
 
 
-## Issue 1: bais doc
+## Issue 1: biais doc
 
 - be able to explain formulas (WB stuff)
 
@@ -67,11 +61,41 @@ biasCorrection<-function(y, lt, ls, li, period){
 ```
 
 
-### test rjd3tramoseats 
+### test rjd3x13
+
+- pb bias param doesn't appear in PRINT
 
 
 #### bais by default
 ```{r}
+
+
+library(rjd3x13)
+
+init_spec <- x11_spec()
+
+init_spec <- x13_spec()
+
+new_spec <- set_x11(init_spec,
+     mode = "LogAdditive",
+     seasonal.comp = 1,
+     seasonal.filter = "S3X9",
+     henderson.filter = 7,
+     lsigma = 1.7,
+     usigma = 2.7,
+     fcasts = -1,
+     bcasts = -1,
+     calendar.sigma = "All",
+     sigma.vector = NA,
+     exclude.forecast = FALSE,
+     bias = "SMOOTH"
+ )
+ 
+m<-rjd3x13::x13(AirPassengers,new_spec)
+m$result$decomposition$final_seasonal
+
+
+plot(m)
 
 library("rjd3tramoseats")
 

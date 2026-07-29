@@ -1,0 +1,283 @@
+---
+title: "Prints: rjd3x13 Holes"
+format: html
+---
+
+## Load and raw data 
+```{r}
+## be on develop version 
+library("rjd3toolkit")
+library("rjd3x13")
+y<-ABS$X0.2.14.10.M
+str(y)
+plot(y)
+```
+
+## Prints (voir T, july TP)
+
+- model span in print summary 
+
+JD3_X13_RSLTS vs JD3_X13_OUTPUT ?
+
+## Bias spec pb 
+
+- of mode Log additive can be bias set to NONE ? or at least ratio ?
+
+- simulate series with potentially high bias , and test 
+
+- in JD+ doc book + details provide details on bais formeula 
+
+
+
+
+### Mode
+
+back this up with java 
+- improve explanation 
+if pre-adjustemnt
+
+without pred-adjustment 
+
+cf GUi 
+
+### obj first layer doc to avoid big mistakes: JULY 2026
+
+- release end of july 
+
+### obj 2: october release 
+
+- clean formaulas and tests for mode and bias 
+
+
+
+## philo
+
+- if a parameter can be se in spec : should be visible in psec print 
+ex bias, mode 
+
+- if a parameter can be selected by algo: ex seaso and trend filters 
+should de printed in results 
+
+
+- series span and estimation span should be printed in results 
+
+
+### Issues and Mails to set up 
+
+keep it all in this file 
+
+
+
+### Add bias and mode tp spec print 
+
+mode will be called mode X-11 to draw attention specific part 
+
+```{r}
+
+
+### problem no TRACE of specified pparams 
+## 
+spec_init<-x13_spec()
+spec_init
+## has transfo to be set to log to be able to estimate : NO ! (the case in GUI ?)
+spec_ud <- set_x11(spec_init,
+     mode = "LogAdditive",
+     seasonal.comp = 1,
+     seasonal.filter = "S3X9",
+     henderson.filter = 7,
+     lsigma = 1.7,
+     usigma = 2.7,
+     fcasts = -1,
+     bcasts = -1,
+     calendar.sigma = "All",
+     sigma.vector = NA,
+     exclude.forecast = FALSE,
+     bias= "NA"
+ )
+# bias=..
+
+
+
+spec_ud
+
+class(spec_ud)
+
+sa_x13_ud <- rjd3x13::x13(y,spec_ud)
+
+sa_x13_ud$result$preprocessing$description$log
+summary(sa_x13_ud)
+
+spec_ud$x11$
+
+
+# if transfo set to add ?
+spec_init<-x13_spec()
+
+spec_init
+spec_ud <- set_transform(spec_init,fun="NONE")
+spec_ud
+## has transfo to be set to log to be able to estimate : NO ! (the case in GUI ?)
+spec_ud <- set_x11(spec_ud,
+     mode = "LogAdditive",
+     seasonal.comp = 1,
+     seasonal.filter = "S3X9",
+     henderson.filter = 7,
+     lsigma = 1.7,
+     usigma = 2.7,
+     fcasts = -1,
+     bcasts = -1,
+     calendar.sigma = "All",
+     sigma.vector = NA,
+     exclude.forecast = FALSE,
+     bias= "NA"
+ )
+
+spec_ud
+
+# creating something incoherent: pe adj: level and log additive !
+### estimation works : warning missing ? or doc ?
+
+sa_test<-x13(y,spec_ud)
+summary(sa_test)
+##mode and biais cannot be retrieved to see what happened ?
+
+## preadj mode is here 
+### in results 
+sa_test$result$preprocessing$description$log
+### in result_spec 
+sa_test$result_spec$regarima$transform$fn
+## X11 mode ? HERE 
+### in results 
+sa_test$result$preadjust
+
+### in result_spec : not operating 
+sa_test$result_spec$x11$mode
+## not applied I guess
+                   
+## if add model detected automatically what happens ?
+
+
+
+```
+
+## Test additive compbine with pseudo additive 
+
+
+## Test mode X11 without preadj spec 
+
+questions :
+Can mode be set to "Undefined" here and estimation work 
+
+```{r}
+spec_x11_i<-x11_spec()
+spec_x11_i 
+
+# multiplicative by default
+spec_ud <- set_x11(spec_x11_i,
+     seasonal.comp = 1,
+     seasonal.filter = "S3X9",
+     henderson.filter = 7,
+     lsigma = 1.7,
+     usigma = 2.7,
+     fcasts = -1,
+     bcasts = -1,
+     calendar.sigma = "All",
+     sigma.vector = NA,
+     exclude.forecast = FALSE,
+     bias= "NA"
+ )
+spec_ud
+sa_x11<-x11(AirPassengers,spec_ud)
+sa_x11$d10
+
+# if set to "Undefined", displayed as UNKOWN: what happens: additive ?
+
+c(NA, "Undefined", "Additive", "Multiplicative", "LogAdditive", "PseudoAdditive")
+
+# if set to pseudo additive : then a multiplicative d10 ??
+
+spec_ud <- set_x11(spec_x11_i,
+     mode = "PseudoAdditive",
+     seasonal.comp = 1,
+     seasonal.filter = "S3X9",
+     henderson.filter = 7,
+     lsigma = 1.7,
+     usigma = 2.7,
+     fcasts = -1,
+     bcasts = -1,
+     calendar.sigma = "All",
+     sigma.vector = NA,
+     exclude.forecast = FALSE,
+     bias= "NA"
+ )
+
+spec_ud
+sa_x11<-x11(AirPassengers,spec_ud)
+sa_x11$d10
+
+
+
+
+# estimation: happens : but how to know the chosen mode ?
+## add user defined output ?
+sa_x11<-x11(AirPassengers,spec_ud)
+
+ud<-rjd3x13::x13_dictionary()
+sa_x11<-x11(y,spec_ud,userdefined = ud)
+
+sa_x11$user_defined$mode # undefined, so really used: has to be det with d10 ?
+sa_x11$user_defined$d10
+sa_x11$user_defined$y
+plot(sa_x11$d10) # level 
+lines(sa_x11)
+# ## plot ne marche pas
+# plot(sa_x11)
+
+################ HUGE souci
+
+## IMPROVE X11 results : no result spec = PB 
+sa_x11$user_defined$
+
+```
+
+
+### Add bias and mode  to model summary 
+
+```{r}
+
+sa_x13_ud <- rjd3x13::x13(y,spec_ud)
+sa_x13_ud
+class(sa_x13_ud)
+summary(sa_x13_ud)
+
+
+```
+
+
+### check estimation span
+
+```{r}
+
+```
+
+
+
+
+#### Navigating spec 
+
+```{r}
+str(x13_spec_user_defined)
+x13_spec_user_defined$regarima$regression$td$lp
+
+```
+
+## X11 function and x11 spec 
+
+### pb diplay of results 
+
+"rien", même dans user-defined 
+
+### qd mode incoherent ou mal défini que se passe t il ?
+
+pas de restriction sur mode 
+
