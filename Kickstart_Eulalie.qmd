@@ -1,0 +1,100 @@
+---
+title: "Kickstart Eulalie"
+format: html
+---
+
+
+## Formations
+
+### Formations à revoir pas à pas 
+
+les notres : refaire tourner le code 
+
+- les slides sont sous  "contents..."
+
+- le materiel complet est sous "N:/L120/SECTION MTS/0_Echanges" et / ou mon github
+
+- le code revu/ ameliorer est à mettresous RJD3_development 
+
+- les améliorations dans les slides dans contents 
+
+    - mineures / corrections : direct 
+    
+    - plus struturelles : PR
+
+### ESTP à lire
+
+dans "N:/L120/SECTION MTS/0_Echanges"
+
+- ESTP beginner 2023 et 2025
+
+- ESTP ad
+
+## rjdverse
+
+### TP packages
+
+Avec Tanguy
+
+- modif doc
+
+- print (optionnel)
+
+
+### Calendar fucntions in toolkit 
+
+Avec Tanguy
+
+- try to improve doc and examples  ...(testing, Tnaguy abcpde doc)
+    - in packages 
+    - in calendar chap of quarto book 
+    
+TOP: vignette on calendar wrangling with rjd3 toolkit
+
+
+
+### Packages de production
+
+Fully Test, improve doc if necessar (PR)
+
+- rjwsacruncher
+
+- rjd3QR + GUI
+
+- fully test rjd3 production
+
+optional: adapt output comparison to tramo seats  compare()
+
+- rjd3 workspace: use main functions 
+
+
+
+
+### SA in R with JD+
+
+- create rich spec 
+
+- understand str "model"
+
+- compare  with GUI (be able to do the same)
+
+deliverable : doc corresp GUI / R : pdf with insertions 
+
+
+
+
+## Later 
+
+
+### Dashboards and plug-ins
+
+- bbk...
+
+
+### Test
+
+- freq in spec in GUI 
+
+- frequencies x13
+
+
