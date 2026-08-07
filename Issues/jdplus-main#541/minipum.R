@@ -4,7 +4,7 @@ library("dplyr")
 
 # V2 ----------------------------------------------------------------------
 
-cruncher_bin_directory_v2 <- "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-2.2.6/bin/"
+cruncher_bin_directory_v2 <- "C:/INSEE/LogicielsPortables/jwsacruncher-2.2.6/bin/"
 options(
     cruncher_bin_directory = cruncher_bin_directory_v2,
     is_cruncher_v3 = FALSE,
@@ -67,7 +67,7 @@ demetra_m_v2 <- read.csv(
 
 # V3 ----------------------------------------------------------------------
 
-cruncher_bin_directory_v3 <- "C:/Users/UTZK0M/Software/jdemetra-related/jwsacruncher-3.5.1/bin/"
+cruncher_bin_directory_v3 <- "C:/INSEE/LogicielsPortables/jwsacruncher-3.7.1/bin/"
 options(
     cruncher_bin_directory = cruncher_bin_directory_v3,
     is_cruncher_v3 = TRUE,
