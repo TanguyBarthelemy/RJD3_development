@@ -47,6 +47,8 @@ add_LS <- function(y, date, n) {
 
 ## Séries avec des outliers ------------------------------------------------
 
+set.seed(1L)
+
 y <- AirPassengers |>
     add_AO() |>
     add_LS(n = 3L)
@@ -93,4 +95,61 @@ sa_camplet <- ts(res$data$sa, start = 1949L, frequency = 12L)
 
 plot(y, type = "l")
 lines(sa_camplet, type = "l", col = "red")
+lines(sa_jd, col = "blue")
+
+
+
+## Série modèle multiplicatif ------------------------------------------------
+
+set.seed(1L)
+
+s <- abs(rnorm(11, mean = 1))
+s <- c(s, 1/prod(s))
+y <- ts(100 * seq_len(12 * 10) * s, start = 1949L, frequency = 12L)
+
+
+### Code JD+ --------------------------------------------------------------------
+
+mod <- x13(y)
+sa_jd <- mod$result$final$d11final
+
+
+### Code CAMPLET ----------------------------------------------------------------
+
+res <- camplet(y, )
+sa_camplet <- ts(res$data$sa, start = 1949L, frequency = 12L)
+
+
+### Comparaison -----------------------------------------------------------------
+
+plot(y, type = "l", ylim = c(0, max(y, sa_camplet, sa_jd)))
+lines(sa_camplet, col = "red")
+lines(sa_jd, col = "blue")
+
+
+## Série modèle additif ------------------------------------------------
+
+set.seed(2L)
+
+s <- rnorm(11, sd = 10)
+s <- c(s, -sum(s))
+y <- ts(100 + seq_len(12 * 10) + s, start = 1949L, frequency = 12L)
+
+
+### Code JD+ --------------------------------------------------------------------
+
+mod <- x13(y)
+sa_jd <- mod$result$final$d11final
+
+
+### Code CAMPLET ----------------------------------------------------------------
+
+res <- camplet(y, )
+sa_camplet <- ts(res$data$sa, start = 1949L, frequency = 12L)
+
+
+### Comparaison -----------------------------------------------------------------
+
+plot(y, type = "l", ylim = c(0, max(y, sa_camplet, sa_jd)))
+lines(sa_camplet, col = "red")
 lines(sa_jd, col = "blue")
